@@ -1,0 +1,7 @@
+{
+  "name": "tcc-vamos-frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
