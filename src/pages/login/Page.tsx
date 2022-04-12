@@ -15,26 +15,26 @@ const Page: React.FC = () => {
     const history = useHistory();
     const [email, setEmail] = useState<string>("eve.holt@reqres.in");
     const [password, setPassword] = useState<string>("cityslicka");
-    const [iserror, setIserror] = useState<boolean>(false);
+    const [isError, setIsError] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
 
   const handleLogin = () => {
     // validação de inputs
     if (!email) {
         setMessage("Por favor, informe um e-mail válido");
-        setIserror(true);
+        setIsError(true);
         return;
     }
 
     if (validateEmail(email) === false) {
         setMessage("E-mail inválido");
-        setIserror(true);
+        setIsError(true);
         return;
     }
 
     if (!password || password.length < 6) {
         setMessage("Por favor, digite a sua senha");
-        setIserror(true);
+        setIsError(true);
         return;
     }
 
@@ -54,7 +54,7 @@ const Page: React.FC = () => {
       })
       .catch((error) => {
         setMessage("Falha na autenticação! Por favor, crie uma conta");
-        setIserror(true);
+        setIsError(true);
       });
   };
 
@@ -85,8 +85,8 @@ const Page: React.FC = () => {
         <IonRow>
             <IonCol>
                 <IonAlert
-                    isOpen={iserror}
-                    onDidDismiss={() => setIserror(false)}
+                    isOpen={isError}
+                    onDidDismiss={() => setIsError(false)}
                     cssClass="my-custom-class"
                     header={"Error!"}
                     message={message}
