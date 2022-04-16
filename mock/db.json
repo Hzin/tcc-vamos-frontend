@@ -1,0 +1,12 @@
+{
+  "cadastro-van":[
+    {
+      "id": 1,
+      "placa": "DBE2356",
+      "marca": "Fiat",
+      "modelo": "Ducatto",
+      "numPassageiros": 14,
+      "alugado" : false
+    }
+  ]
+}

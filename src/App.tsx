@@ -6,6 +6,7 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Cadastro from './pages/Cadastro';
+import Vans from './pages/Vans';
 import MainPages from './pages/MainPages';
 
 /* Core CSS required for Ionic components to work properly */
@@ -36,6 +37,7 @@ const App: React.FC = () => (
         <IonRouterOutlet>
           <Route exact path="/mainpages" component={MainPages}></Route>
           <Route exact path="/cadastro" component={Cadastro}></Route>
+          <Route exact path="/cadastro-van" component={Vans}></Route>
           <Route exact path="/">
             <Redirect to="/cadastro" />
           </Route>
