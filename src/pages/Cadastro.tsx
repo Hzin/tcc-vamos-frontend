@@ -1,25 +1,66 @@
 import { IonIcon, IonItem, IonLabel, IonInput, IonBackButton, IonButton, IonButtons, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonToolbar } from '@ionic/react';
 import { arrowBack, logoFacebook, mail } from 'ionicons/icons';
-// import CustomField from '../components/CustomField';
 import { Action } from '../components/Action';
 import { useEffect, useState } from 'react';
-// import { validateForm } from '../data/utils';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import './Cadastro.css';
 import ModalExample from '../components/Email';
+import * as UsersService from '../services/users'
 
 const Cadastro: React.FC = () => {
+  const history = useHistory();
+  
   const [ errors, setErrors ] = useState(false);
-  const createAccount = () => {
 
-    // const errors = validateForm();
-    setErrors(errors);
+  const [email, setEmail] = useState({});
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [birthDate, setBirthDate] = useState<string>('');
 
-    // if (!errors.length) {
+  const handleSubmit = async () => {
+    // setDisableSubmitButton(true)
+    // event.preventDefault();
+    // const data = new FormData(event.currentTarget);
 
-        //  Submit your form here
-    // }
-  }
+    const signUpForm = {
+      name: firstName,
+      last_name: lastName,
+      email: email,
+      password: password,
+      birth_date: birthDate
+    }
+
+    console.log(signUpForm);
+
+    await UsersService.create(signUpForm).catch(error => {
+      if (!error.response) return
+
+      if (error.response.data.message) {
+        // setAlertContent(error.response.data.message);
+      } else {
+        // setAlertContent('Houve um erro ao realizar o cadastro.');
+      }
+      
+      // setAlertSeverity('error');
+      // setAlert(true);
+      // setDisableSubmitButton(false)
+    }).then(response => {
+      if (!response) return;
+  
+      history.push(
+        {
+          pathname: '/home',
+          state: {
+            detail: 'signedUp',
+            alertSeverity: 'success',
+            alertContent: 'Usuário cadastrado com sucesso!'
+          }
+        }
+      )
+    });
+  };
 
   const { name } = useParams<{ name: string; }>();
 
@@ -49,37 +90,63 @@ const Cadastro: React.FC = () => {
             </IonItem> */}
             <IonRow>
                 <IonCol size="12">
-                    <div id='nome-sobrenome'>
-                      <IonItem>
-                        <IonLabel position='floating'>Nome</IonLabel>
-                        <IonInput clearInput></IonInput>
-                      </IonItem>
-                      <IonItem>
-                        <IonLabel position='floating'>Sobrenome</IonLabel>
-                        <IonInput clearInput></IonInput>
-                      </IonItem>
-                    </div>
-                    
+                  <div id='nome-sobrenome'>
                     <IonItem>
-                      <IonLabel position='floating'>E-mail</IonLabel>
-                      <IonInput clearInput type='email'></IonInput>
+                      <IonLabel position='floating'>Nome</IonLabel>
+                      <IonInput 
+                        type='text'
+                        clearInput
+                        onIonInput={(e: any) => setFirstName(e.target.value)}
+                      >
+                      </IonInput>
                     </IonItem>
+                    <IonItem>
+                      <IonLabel position='floating'>Sobrenome</IonLabel>
+                      <IonInput 
+                        clearInput
+                        onIonInput={(e: any) => setLastName(e.target.value)}
+                      >
+                      </IonInput>
+                    </IonItem>
+                  </div>
+                  
+                  <IonItem>
+                    <IonLabel position='floating'>E-mail</IonLabel>
+                    <IonInput 
+                      clearInput 
+                      type='email'
+                      onIonInput={(e: any) => setEmail(e.target.value)}
+                    >
+                    </IonInput>
+                  </IonItem>
 
-                    <IonItem>
-                      <IonLabel position='stacked'>Data de nascimento</IonLabel>
-                      <IonInput type='date'></IonInput>
-                    </IonItem>
-                    
-                    <IonItem>
-                      <IonLabel position='floating'>Senha</IonLabel>
-                      <IonInput clearInput type='password'></IonInput>
-                    </IonItem>
-                    <IonItem>
-                      <IonLabel position='floating'>Confirme a senha</IonLabel>
-                      <IonInput clearInput type='password'></IonInput>
-                    </IonItem>
-                    
-                    <IonButton className="ion-margin-top" expand="block" onClick={ createAccount }>Cadastrar-se</IonButton>
+                  <IonItem>
+                    <IonLabel position='stacked'>Data de nascimento</IonLabel>
+                    <IonInput 
+                      type='date'
+                      onIonInput={(e: any) => setBirthDate(e.target.value)}
+                    >
+                    </IonInput>
+                  </IonItem>
+                  
+                  <IonItem>
+                    <IonLabel position='floating'>Senha</IonLabel>
+                    <IonInput 
+                      clearInput 
+                      type='password'
+                      onIonInput={(e: any) => setPassword(e.target.value)}
+                    ></IonInput>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel position='floating'>Confirme a senha</IonLabel>
+                    <IonInput 
+                      clearInput 
+                      type='password'
+                      onIonInput={(e: any) => setConfirmPassword(e.target.value)}
+                    ></IonInput>
+                  </IonItem>
+                  
+                  <IonButton className="ion-margin-top" expand="block" onClick={ handleSubmit }>Cadastrar-se</IonButton>
                 </IonCol>
             </IonRow>
             <small className='ion-margin-top'>
