@@ -6,7 +6,7 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Cadastro from './pages/Cadastro';
-import Vans from './pages/Vans';
+import Vans from './pages/CadastroVan';
 import MainPages from './pages/MainPages';
 
 /* Core CSS required for Ionic components to work properly */

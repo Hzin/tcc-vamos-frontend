@@ -1,7 +1,8 @@
 export type Van = {
   id: number;
-  placa: string;
-  modelo: string;
-  numPassageiros: number;
-  alugado: boolean
-}
+  carPlate: string;
+  carBrand: string;
+  carModel: string;
+  maxPassengers: number;
+  isRent: string;
+};
