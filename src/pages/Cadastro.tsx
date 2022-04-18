@@ -1,4 +1,4 @@
-import { IonIcon, IonItem, IonLabel, IonInput, IonBackButton, IonButton, IonButtons, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonToolbar } from '@ionic/react';
+import { IonProgressBar, IonItem, IonLabel, IonInput, IonBackButton, IonButton, IonButtons, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonToolbar } from '@ionic/react';
 import { arrowBack, logoFacebook, mail } from 'ionicons/icons';
 import { Action } from '../components/Action';
 import { useEffect, useState } from 'react';
@@ -25,11 +25,10 @@ const Cadastro: React.FC = () => {
     // const data = new FormData(event.currentTarget);
 
     const signUpForm = {
-      name: firstName,
-      last_name: lastName,
+      name: firstName +' '+ lastName,
       email: email,
-      password: password,
-      birth_date: birthDate
+      birth_date: birthDate,
+      password: password
     }
 
     console.log(signUpForm);
@@ -154,6 +153,7 @@ const Cadastro: React.FC = () => {
             </small>
             <Action message="Já tem conta?" text="Login" link="/login" />
         </IonGrid>
+        {/* <IonProgressBar type="indeterminate"></IonProgressBar><br /> */}
 			</IonContent>
 		</IonPage>
   );
