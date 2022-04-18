@@ -59,11 +59,12 @@ const Page: React.FC = () => {
     };
 
     const api = axios.create({
-      baseURL: `https://reqres.in/api`,
+      baseURL: `https://625dc16c4c36c7535779792c.mockapi.io/api/v1`,
     });
 
     api
-      .post("/login", loginData)
+      // .post("/login", loginData)
+      .get("/users/2")
       .then((res) => {
         // login bem-sucedido
         history.push("/dashboard/" + email);
