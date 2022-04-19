@@ -8,6 +8,9 @@ import { IonReactRouter } from '@ionic/react-router';
 import Cadastro from './pages/Cadastro';
 import MainPages from './pages/MainPages';
 
+// importação das páginas
+import Login from './pages/login/Login';
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
 
