@@ -142,6 +142,8 @@ const Cadastro: React.FC = () => {
                         type='text'
                         clearInput
                         onIonInput={(e: any) => setFirstName(e.target.value)}
+                        // error={isError}
+                        // onIonChange={(e: any) => setFirstName(e.detail.value)}
                       >
                       </IonInput>
                     </IonItem>
