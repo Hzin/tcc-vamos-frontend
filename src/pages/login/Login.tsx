@@ -149,7 +149,7 @@ const Page: React.FC = () => {
                 Login
               </IonButton>
               <p style={{ fontSize: "medium" }}>
-                Ainda não possui uma conta? <a href="#">Cadastre-se aqui!</a>
+                Ainda não possui uma conta? <a href="cadastro">Cadastre-se aqui!</a>
               </p>
             </IonCol>
           </IonRow>
