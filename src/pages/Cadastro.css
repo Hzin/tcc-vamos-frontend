@@ -1,3 +1,7 @@
 #nome-sobrenome{
     display: flex;
 }
+
+.toast-notification{
+    --background: rgb(255, 0, 0);
+}
