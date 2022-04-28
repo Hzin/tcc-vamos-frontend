@@ -20,6 +20,9 @@ import {
   IonAlert,
 } from "@ionic/react";
 
+import * as sessionRoutes from '../../services/session';
+import LocalStorage from "../../LocalStorage";
+
 function validateEmail(email: string) {
   const re =
     /^((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$/;
@@ -33,7 +36,7 @@ const Page: React.FC = () => {
   const [isError, setIsError] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // validação de inputs
     if (!email) {
       setMessage("Por favor, informe um e-mail válido");
@@ -53,26 +56,28 @@ const Page: React.FC = () => {
       return;
     }
 
-    const loginData = {
+    const singinForm = {
       email: email,
       password: password,
     };
 
-    const api = axios.create({
-      baseURL: `https://625dc16c4c36c7535779792c.mockapi.io/api/v1`,
-    });
+    await sessionRoutes.create(singinForm).then(response => {
+      // if (!response) return
 
-    api
-      // .post("/login", loginData)
-      .get("/users/2")
-      .then((res) => {
-        // login bem-sucedido
-        history.push("/dashboard/" + email);
-      })
-      .catch((error) => {
-        setMessage("Falha na autenticação! Por favor, crie uma conta");
-        setIsError(true);
-      });
+      const { token } = response
+
+      LocalStorage.setToken(token);
+
+      history.push({ pathname: '/home' });
+    }).catch(error => {
+      // if (!error.response) return
+
+      // se o backend retornou uma mensagem de erro customizada
+      // if (error.response.data.message) {
+
+      console.dir('error: ', {error})
+      alert('erro')
+    })
   };
 
   return (
