@@ -7,8 +7,8 @@ let token: string | null;
 let header: AxiosRequestHeaders;
 
 interface createData {
-    email: string,
-    password: string,
+  login: string,
+  password: string,
 }
 
 function updateHeader() {

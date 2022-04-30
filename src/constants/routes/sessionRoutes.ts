@@ -1,4 +1,4 @@
-const sessionRoutesDefault = '/session';
+const sessionRoutesDefault = '/sessions';
 const sessionRoutes = {
   create: {
     url: `${sessionRoutesDefault}/`
