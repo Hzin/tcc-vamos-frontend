@@ -75,7 +75,12 @@ const Page: React.FC = () => {
     };
 
     await sessionRoutes.create(singinForm).then(response => {
-      // if (!response) return
+      if (response.status === 'error') {
+        setMessage(response.message);
+        setIsError(true);
+
+        return
+      }
 
       const { token } = response.token
 
@@ -88,8 +93,8 @@ const Page: React.FC = () => {
       // se o backend retornou uma mensagem de erro customizada
       // if (error.response.data.message) {
 
-      console.dir('error: ', {error})
-      alert('erro')
+      console.dir('Houve um erro: ', {error})
+      alert('Houve um erro')
     })
   };
 
