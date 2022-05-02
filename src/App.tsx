@@ -5,7 +5,7 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Cadastro from './pages/Cadastro';
+import Cadastro from './pages/Cadastro/Cadastro';
 import MainPages from './pages/MainPages';
 
 /* Core CSS required for Ionic components to work properly */
