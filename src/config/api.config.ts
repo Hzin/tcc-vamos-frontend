@@ -1,7 +1,7 @@
 import environment from "../environments/environment";
 
-function getBaseUrl() {
-  const { hostname } = window.location;
+const getBaseUrl = (): string => {
+  // const { hostname } = window.location;
   const { url } = environment;
 
   let apiUrl = null;

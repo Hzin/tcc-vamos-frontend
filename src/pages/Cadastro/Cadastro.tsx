@@ -1,11 +1,11 @@
 import { IonToast, IonProgressBar, IonItem, IonLabel, IonInput, IonBackButton, IonButton, IonButtons, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonToolbar } from '@ionic/react';
 import { arrowBack, logoFacebook, mail } from 'ionicons/icons';
-import { Action } from '../components/Action';
+import { Action } from '../../components/Action';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import './Cadastro.css';
-import ModalExample from '../components/Email';
-import * as UsersService from '../services/users'
+import ModalExample from '../../components/Email';
+import * as UsersService from '../../services/users'
 
 const Cadastro: React.FC = () => {
   const history = useHistory();
