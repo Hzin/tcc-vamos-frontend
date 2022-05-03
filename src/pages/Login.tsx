@@ -3,12 +3,10 @@ import {
   IonHeader,
   IonPage,
   IonTitle,
-  IonToolbar,
-  IonButtons,
+  IonToolbar
 } from "@ionic/react";
 import React, { useState } from "react";
-import axios from "axios";
-import { IonGrid, IonRow, IonCol } from "@ionic/react";
+import { IonGrid, IonRow, IonCol, IonToast } from "@ionic/react";
 import { personCircle } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import {
@@ -20,10 +18,13 @@ import {
   IonAlert,
 } from "@ionic/react";
 
-import * as sessionRoutes from '../../services/session';
-import LocalStorage from "../../LocalStorage";
+import * as sessionRoutes from '../services/session';
+import LocalStorage from '../LocalStorage';
 
 const Page: React.FC = () => {
+  const [showToast, setShowToast] = useState(false);
+  const [messageToast, setMessageToast ] = useState('');
+  
   const history = useHistory();
   const [email, setEmail] = useState<string>("matheusalb3213@gmail.com");
   const [password, setPassword] = useState<string>("123456");
@@ -38,26 +39,26 @@ const Page: React.FC = () => {
 
   const validateForm = () => {
     if (!email) {
-      setMessage("Por favor, informe um e-mail válido");
-      setIsError(true);
+      setMessageToast("Por favor, informe o e-mail");
+      setShowToast(true);
       return false;
     }
 
-    if (validateEmail(email) === false) {
-      setMessage("E-mail inválido");
-      setIsError(true);
+    if (!validateEmail(email)) {
+      setMessageToast("E-mail inválido");
+      setShowToast(true);
       return false;
     }
 
     if (!password) {
-      setMessage("Por favor, digite a sua senha");
-      setIsError(true);
+      setMessageToast("Por favor, digite a sua senha");
+      setShowToast(true);
       return false;
     }
 
-    if(password.length < 6) {
-      setMessage("A senha deve conter ao menos 6 dígitos");
-      setIsError(true);
+    if(password.length < 7 || password.length > 12) {
+      setMessageToast("A senha deve conter entre 7 e 12 dígitos");
+      setShowToast(true);
       return false;
     }
 
@@ -76,8 +77,8 @@ const Page: React.FC = () => {
 
     await sessionRoutes.create(singinForm).then(response => {
       if (response.status === 'error') {
-        setMessage(response.message);
-        setIsError(true);
+        setMessageToast(response.message);
+        setShowToast(true);
 
         return
       }
@@ -92,8 +93,7 @@ const Page: React.FC = () => {
 
       // se o backend retornou uma mensagem de erro customizada
       // if (error.response.data.message) {
-
-      console.dir('Houve um erro: ', {error})
+      console.dir('Houve um erro: ', { error })
       alert('Houve um erro')
     })
   };
@@ -177,6 +177,15 @@ const Page: React.FC = () => {
             </IonCol>
           </IonRow>
         </IonGrid>
+
+        <IonToast
+          // cssClass={"toast-notification"}
+          color='danger'      
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={messageToast}
+          duration={2500}
+        />
       </IonContent>
     </IonPage>
   );
