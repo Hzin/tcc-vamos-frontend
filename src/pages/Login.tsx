@@ -20,6 +20,7 @@ import {
 
 import * as sessionRoutes from '../services/session';
 import LocalStorage from '../LocalStorage';
+import { Action } from "../components/Action";
 
 const Page: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
@@ -165,14 +166,14 @@ const Page: React.FC = () => {
           <IonRow>
             <IonCol>
               <p style={{ fontSize: "small" }}>
-                Clicando no botão de "LOGIN", você concorda com a nossa{" "}
+                Clicando no botão de "Login", você concorda com a nossa{" "}
                 <a href="#">política de termos e serviços</a>
               </p>
               <IonButton expand="block" onClick={handleLogin}>
                 Login
               </IonButton>
               <p style={{ fontSize: "medium" }}>
-                Ainda não possui uma conta? <a href="#">Cadastre-se aqui!</a>
+                <Action message="Ainda não possui uma conta?" text="Cadastre-se aqui!" link="/cadastro" />
               </p>
             </IonCol>
           </IonRow>
