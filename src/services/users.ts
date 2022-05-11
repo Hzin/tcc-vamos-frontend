@@ -1,7 +1,7 @@
 import instance from '../services/api';
 // import LocalStorage from '../LocalStorage';
 
-let token:string;
+// let token:string;
 let header:string;
 
 function updateHeader() {
