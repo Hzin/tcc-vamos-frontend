@@ -14,8 +14,8 @@ interface createData {
 function updateHeader() {
   token = LocalStorage.getToken();
   header = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
+    "Accept": 'application/json',
+    "Content-Type": 'application/json',
     "Authorization": 'Bearer ' + token
   }
 }

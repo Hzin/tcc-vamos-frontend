@@ -7,15 +7,12 @@ import {
 } from "@ionic/react";
 import React, { useState } from "react";
 import { IonGrid, IonRow, IonCol, IonToast } from "@ionic/react";
-import { personCircle } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import {
   IonItem,
   IonLabel,
   IonInput,
   IonButton,
-  IonIcon,
-  IonAlert,
 } from "@ionic/react";
 
 import * as sessionRoutes from '../services/session';
@@ -29,11 +26,10 @@ const Page: React.FC = () => {
   const history = useHistory();
   const [email, setEmail] = useState<string>("matheusalb3213@gmail.com");
   const [password, setPassword] = useState<string>("123456");
-  const [isError, setIsError] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
 
   function validateEmail(email: string) {
     const re =
+      // eslint-disable-next-line no-control-regex
       /^((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$/;
     return re.test(String(email).toLowerCase());
   }
@@ -107,15 +103,6 @@ const Page: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonRow>
-        <IonCol>
-          <IonIcon
-            style={{ fontSize: "70px", color: "#0040ff" }}
-            icon={personCircle}
-          />
-        </IonCol>
-      </IonRow>
-
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
@@ -124,19 +111,6 @@ const Page: React.FC = () => {
         </IonHeader>
 
         <IonGrid>
-          <IonRow>
-            <IonCol>
-              <IonAlert
-                isOpen={isError}
-                onDidDismiss={() => setIsError(false)}
-                cssClass="my-custom-class"
-                header={"Error!"}
-                message={message}
-                buttons={["Dismiss"]}
-              />
-            </IonCol>
-          </IonRow>
-
           <IonRow>
             <IonCol>
               <IonItem>
@@ -165,10 +139,6 @@ const Page: React.FC = () => {
 
           <IonRow>
             <IonCol>
-              <p style={{ fontSize: "small" }}>
-                Clicando no botão de "Login", você concorda com a nossa{" "}
-                <a href="#">política de termos e serviços</a>
-              </p>
               <IonButton expand="block" onClick={handleLogin}>
                 Login
               </IonButton>

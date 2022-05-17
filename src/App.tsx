@@ -29,7 +29,7 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-// import Tabs from './components/Tabs';
+import Perfil from './pages/Perfil';
 
 setupIonicReact();
 
@@ -41,6 +41,8 @@ const App: React.FC = () => (
           <Route exact path="/mainpages" component={MainPages}></Route>
           <Route exact path="/cadastro" component={Cadastro}></Route>
           <Route exact path="/login" component={Login}></Route>
+          <Route exact path="/perfil" component={Perfil}></Route>
+          {/* <Route exact path="/perfil/edit" component={Perfil}></Route> TODO */}
           <Route exact path="/">
             <Redirect to="/cadastro" />
           </Route>
