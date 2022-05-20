@@ -1,8 +1,6 @@
 import {
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
+  IonBackButton,
+  IonButtons,
   IonContent,
   IonFab,
   IonFabButton,
@@ -13,20 +11,77 @@ import {
   IonItem,
   IonLabel,
   IonPage,
+  IonTextarea,
   IonTitle,
+  IonToast,
   IonToolbar
 } from "@ionic/react";
-import React, { useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { IonRow, IonCol } from "@ionic/react";
-import { createOutline } from "ionicons/icons";
 
 import './Perfil.css'
+import { useHistory, useLocation } from "react-router";
+import { saveOutline } from "ionicons/icons";
 
-const Perfil: React.FC = () => {
-  const [email, setEmail] = useState<string>("matheusalb3213@gmail.com");
+import isEqual from 'lodash.isequal';
 
-  const handleEditProfile = () => {
-    alert('oi')
+import * as usersRoutes from '../services/users';
+
+interface userData {
+  name: string;
+  bio: string;
+  email: string;
+}
+
+interface LocationState {
+  userData: userData
+}
+
+const PerfilEditar: React.FC = () => {
+  const history = useHistory();
+  const location = useLocation<LocationState>();
+
+  const [showToast, setShowToast] = useState(false);
+  const [messageToast, setMessageToast] = useState('');
+
+  const [userData, setUserData] = useState({
+    name: '',
+    bio: '',
+    email: ''
+  });
+
+  const [inputValues, setInputValues] = useReducer(
+    (state: any, newState: any) => ({ ...state, ...newState }),
+    {
+      name: '',
+      bio: '',
+      email: ''
+    }
+  );
+
+  useEffect(() => {
+    setUserData(location.state.userData)
+    setInputValues({'name': userData.name, 'email': userData.email, 'bio': userData.bio});
+  }, [userData]);
+
+  const handleUpdateUserData = () => {
+    usersRoutes.update(inputValues).then(response => {
+      if (response.status === 'error') {
+        setMessageToast(response.message);
+        setShowToast(true);
+
+        return
+      }
+
+      console.log(response)
+    }).catch((err) => {
+      setMessageToast(err);
+      setShowToast(true);
+    })
+  }
+
+  const hasChangedSinceInitialState = () => {
+    return isEqual(userData, inputValues)
   }
 
   return (
@@ -34,6 +89,9 @@ const Perfil: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonTitle>Editar perfil</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="perfil" />
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
 
@@ -48,19 +106,48 @@ const Perfil: React.FC = () => {
           <IonRow>
             <IonCol>
               <IonItem>
-                <IonLabel position="floating"> Email</IonLabel>
+                <IonLabel position="stacked"> Nome completo</IonLabel>
+                <IonInput
+                  type="text"
+                  value={inputValues.name}
+                  onIonChange={(e) => setInputValues({'name': e.detail.value!})}
+                ></IonInput>
+              </IonItem>
+              <IonItem>
+                <IonLabel position="stacked"> Email</IonLabel>
                 <IonInput
                   type="email"
-                  value={email}
-                  onIonChange={(e) => setEmail(e.detail.value!)}
+                  value={inputValues.email}
+                  onIonChange={(e) => setInputValues({'email': e.detail.value!})}
                 ></IonInput>
+              </IonItem>
+              <IonItem>
+                <IonLabel position="stacked"> Biografia</IonLabel>
+                <IonTextarea
+                  value={inputValues.bio}
+                  onIonChange={(e) => setInputValues({'bio': e.detail.value!})}
+                ></IonTextarea>
               </IonItem>
             </IonCol>
           </IonRow>
         </IonGrid>
+
+        <IonFab vertical="bottom" horizontal="end" slot="fixed">
+          <IonFabButton disabled={hasChangedSinceInitialState()} onClick={handleUpdateUserData}>
+            <IonIcon icon={saveOutline} />
+          </IonFabButton>
+        </IonFab>
+
+        <IonToast
+          color='danger'      
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={messageToast}
+          duration={2500}
+        />
       </IonContent>
     </IonPage>
   );
 };
 
-export default Perfil;
+export default PerfilEditar;

@@ -31,64 +31,63 @@ const Perfil: React.FC = () => {
   const [inputValues, setInputValues] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
     {
-      fullname: '',
-      bio: ''
+      name: '',
+      bio: '',
+      email: ''
     }
   );
 
   const history = useHistory();
 
-  const loadUserData = async () => {
-    let userId = ''
-
-    await sessionRoutes.refresh().then(response => {
-      if (response.status === 'error') {
-        setMessageToast(response.message);
-        setShowToast(true);
-
-        return
-      }
-
-      userId = response.userId
-    }).catch(error => {
-      console.dir('Houve um erro: ', { error })
-      alert('Houve um erro')
-    })
-
-    await usersRoutes.getById(userId).then(response => {
-      if (response.status === 'error') {
-        setMessageToast(response.message.data)
-        setShowToast(true);
-
-        return
-      }
-
-      const userData = response.data
-
-      setInputValues({'fullname': userData.name, 'bio': userData.bio});
-    }).catch(error => {
-      console.dir('Houve um erro: ', { error })
-      alert('Houve um erro')
-    })
-  }
-
   useEffect(() => {
-    const userToken = LocalStorage.getToken()
-
-    if (!userToken) {
+    const redirectUserToLogin = () => {
       // TODO, não impede o usuário de retornar a página de login
       history.push({ pathname: '/login' });
       setMessageToast("Por favor, autentique-se!");
       setShowToast(true);
     }
+  
+    const loadUserData = async () => {
+      let userId = ''
+  
+      await sessionRoutes.refresh().then(response => {
+        if (response.status === 'error') {
+          setMessageToast(response.message);
+          setShowToast(true);
+  
+          return
+        }
+  
+        userId = response.userId
+      }).catch(() => {
+        redirectUserToLogin()
+      })
+  
+      await usersRoutes.getById(userId).then(response => {
+        if (response.status === 'error') {
+          setMessageToast(response.message.data)
+          setShowToast(true);
+  
+          return
+        }
+  
+        const userData = response.data
+  
+        setInputValues({'name': userData.name, 'bio': userData.bio, 'email': userData.email});
+      }).catch(() => {
+        redirectUserToLogin()
+      })
+    }
+
+    const userToken = LocalStorage.getToken()
+
+    if (!userToken) {
+      redirectUserToLogin()
+    }
 
     // const refreshResponse = refreshSession()
     loadUserData()
-  }, []);
-
-  const handleEditProfile = () => {
-    alert('oi')
-  }
+  }, [history]);
 
   return (
     <IonPage>
@@ -116,7 +115,7 @@ const Perfil: React.FC = () => {
             </IonRow>
 
             <IonCardHeader>
-              <IonCardTitle class="ion-text-center">{inputValues.fullname}</IonCardTitle>
+              <IonCardTitle class="ion-text-center">{inputValues.name}</IonCardTitle>
             </IonCardHeader>
           </IonCardContent>
         </IonCard>
@@ -130,8 +129,8 @@ const Perfil: React.FC = () => {
           </IonCardContent>
         </IonCard>
 
-        <IonFab vertical="bottom" horizontal="end" slot="fixed" onClick={handleEditProfile}>
-          <IonFabButton>
+        <IonFab vertical="bottom" horizontal="end" slot="fixed">
+          <IonFabButton onClick={() => history.push({ pathname: '/perfil/editar', state: { userData: inputValues } })}>
             <IonIcon icon={createOutline} />
           </IonFabButton>
         </IonFab>

@@ -5,6 +5,9 @@ const usersRoutes = {
   },
   get: {
     url: `${usersRoutesDefault}`
+  },
+  update: {
+    url: `${usersRoutesDefault}/edit`
   }
 }
 

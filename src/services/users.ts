@@ -29,10 +29,16 @@ export interface CadastroResponse {
 }
 
 export interface CadastroRequest {
-    name: string;
-    email: string;
-    birth_date: string;
-    password: string;
+  name: string;
+  email: string;
+  birth_date: string;
+  password: string;
+}
+
+export interface UpdateUserRequest {
+  name: string;
+  email: string;
+  bio: string;
 }
 
 // export async function get(cpf) {
@@ -53,5 +59,12 @@ export async function getById(userId: string) {
   updateHeader();
 
   const response = await instance.get(userRoutes.get.url + `/${userId}`, { headers: header });
+  return response.data;
+}
+
+export async function update(userData: UpdateUserRequest) {
+  updateHeader();
+
+  const response = await instance.patch(userRoutes.update.url, userData, { headers: header });
   return response.data;
 }
