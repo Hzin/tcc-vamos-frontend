@@ -25,7 +25,7 @@ const Page: React.FC = () => {
   
   const history = useHistory();
   const [email, setEmail] = useState<string>("matheusalb3213@gmail.com");
-  const [password, setPassword] = useState<string>("123456");
+  const [password, setPassword] = useState<string>("12345678");
 
   function validateEmail(email: string) {
     const re =
