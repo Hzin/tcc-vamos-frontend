@@ -30,6 +30,7 @@ export interface CadastroResponse {
 
 export interface CadastroRequest {
   name: string;
+  lastname: string;
   email: string;
   birth_date: string;
   password: string;

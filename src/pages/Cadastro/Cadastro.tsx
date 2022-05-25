@@ -70,7 +70,8 @@ const Cadastro: React.FC = () => {
     if(name != '' && email != '' && birthDate != '' && password != '' && confirmPassword != '') {
       if(password === confirmPassword){
         const signUpForm = {
-          name: firstName +' '+ lastName,
+          name: firstName,
+          lastname: lastName,
           email: email,
           birth_date: birthDate,
           password: password

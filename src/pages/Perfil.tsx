@@ -32,8 +32,10 @@ const Perfil: React.FC = () => {
     (state: any, newState: any) => ({ ...state, ...newState }),
     {
       name: '',
+      lastname: '',
+      email: '',
+      birth_date: '',
       bio: '',
-      email: ''
     }
   );
 
@@ -73,7 +75,13 @@ const Perfil: React.FC = () => {
   
         const userData = response.data
   
-        setInputValues({'name': userData.name, 'bio': userData.bio, 'email': userData.email});
+        setInputValues({
+          'name': userData.name,
+          'lastname': userData.lastname,
+          'email': userData.email,
+          'birth_date': userData.birth_date,
+          'bio': userData.bio
+        });
       }).catch(() => {
         redirectUserToLogin()
       })
@@ -115,7 +123,7 @@ const Perfil: React.FC = () => {
             </IonRow>
 
             <IonCardHeader>
-              <IonCardTitle class="ion-text-center">{inputValues.name}</IonCardTitle>
+              <IonCardTitle class="ion-text-center">{inputValues.name} {inputValues.lastname}</IonCardTitle>
             </IonCardHeader>
           </IonCardContent>
         </IonCard>
