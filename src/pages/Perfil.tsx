@@ -29,6 +29,7 @@ import * as usersRoutes from '../services/api/users';
 
 import './Perfil.css'
 import LocalStorage from "../LocalStorage";
+import { refreshSession } from "../services/refreshSession";
 
 const Perfil: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
@@ -57,19 +58,14 @@ const Perfil: React.FC = () => {
   
     const loadUserData = async () => {
       let userId = ''
-  
-      await sessionRoutes.refresh().then(response => {
-        if (response.status === 'error') {
-          setMessageToast(response.message);
-          setShowToast(true);
-  
-          return
-        }
-  
-        userId = response.userId
-      }).catch(() => {
+
+      // verify if user is authenticated
+      const refreshedSession = await refreshSession()
+
+      if (refreshedSession.error) {
         redirectUserToLogin()
-      })
+        return
+      }
   
       await usersRoutes.getById(userId).then(response => {
         if (response.status === 'error') {
