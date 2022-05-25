@@ -3,11 +3,17 @@ import {
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
+  IonChip,
   IonContent,
   IonFab,
   IonFabButton,
+  IonGrid,
   IonHeader,
   IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonListHeader,
   IonPage,
   IonTitle,
   IonToast,
@@ -18,8 +24,8 @@ import React, { useState, useEffect, useReducer } from "react";
 import { IonRow, IonCol } from "@ionic/react";
 import { createOutline } from "ionicons/icons";
 
-import * as sessionRoutes from '../services/session';
-import * as usersRoutes from '../services/users';
+import * as sessionRoutes from '../services/api/session';
+import * as usersRoutes from '../services/api/users';
 
 import './Perfil.css'
 import LocalStorage from "../LocalStorage";
@@ -136,6 +142,32 @@ const Perfil: React.FC = () => {
           {inputValues.bio ? inputValues.bio : 'Sem biografia.'}
           </IonCardContent>
         </IonCard>
+
+        <IonCard>
+          <IonCardContent>
+            <IonLabel>Status do perfil</IonLabel>
+            <IonChip>
+              <IonLabel color="primary">Passageiro</IonLabel>
+            </IonChip>
+          </IonCardContent>
+        </IonCard>
+
+        <IonList>
+        <IonListHeader>Dashboard</IonListHeader>
+          <IonItem>
+            <IonIcon></IonIcon>
+            <IonLabel>Confirmar perfil</IonLabel>
+          </IonItem>
+          <IonItem>
+            <IonLabel>Cadastrar Van</IonLabel>
+          </IonItem>
+          <IonItem>
+            <IonLabel>Pagamentos</IonLabel>
+          </IonItem>
+          <IonItem>
+            <IonLabel>Avaliações</IonLabel>
+          </IonItem>
+        </IonList>
 
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
           <IonFabButton onClick={() => history.push({ pathname: '/perfil/editar', state: { userData: inputValues } })}>

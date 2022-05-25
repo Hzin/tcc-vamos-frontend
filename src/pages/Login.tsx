@@ -5,7 +5,7 @@ import {
   IonTitle,
   IonToolbar
 } from "@ionic/react";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { IonGrid, IonRow, IonCol, IonToast } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import {
@@ -15,9 +15,10 @@ import {
   IonButton,
 } from "@ionic/react";
 
-import * as sessionRoutes from '../services/session';
+import * as sessionRoutes from '../services/api/session';
 import LocalStorage from '../LocalStorage';
 import { Action } from "../components/Action";
+import { UserContext } from "../App";
 
 const Page: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
@@ -26,6 +27,8 @@ const Page: React.FC = () => {
   const history = useHistory();
   const [email, setEmail] = useState<string>("matheusalb3213@gmail.com");
   const [password, setPassword] = useState<string>("12345678");
+
+  const user = useContext(UserContext);
 
   function validateEmail(email: string) {
     const re =
@@ -83,6 +86,8 @@ const Page: React.FC = () => {
       const { token } = response.token
 
       LocalStorage.setToken(token);
+
+      user.setIsLoggedIn(true);
 
       history.push({ pathname: '/home' });
     }).catch(error => {

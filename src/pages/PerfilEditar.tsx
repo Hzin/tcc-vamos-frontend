@@ -25,7 +25,7 @@ import { saveOutline } from "ionicons/icons";
 
 import isEqual from 'lodash.isequal';
 
-import * as usersRoutes from '../services/users';
+import * as usersRoutes from '../services/api/users';
 
 import './Cadastro/Cadastro.css'
 

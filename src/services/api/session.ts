@@ -1,6 +1,6 @@
-import instance from '../services/api';
-import sessionRoutes from '../constants/routes/sessionRoutes';
-import LocalStorage from '../LocalStorage';
+import instance from './api';
+import sessionRoutes from '../../constants/routes/sessionRoutes';
+import LocalStorage from '../../LocalStorage';
 import { AxiosRequestHeaders } from 'axios';
 
 let token: string | null;

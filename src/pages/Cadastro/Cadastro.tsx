@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import './Cadastro.css';
 import ModalExample from '../../components/Email';
-import * as UsersService from '../../services/users'
+import * as UsersService from '../../services/api/users'
 
 const Cadastro: React.FC = () => {
   const history = useHistory();
@@ -114,7 +114,7 @@ const Cadastro: React.FC = () => {
 			<IonHeader>
 				<IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton text={''} icon={arrowBack} defaultHref='mainpages' />
+            <IonBackButton text={''} icon={arrowBack} defaultHref='login' />
           </IonButtons>
 				</IonToolbar>
 			</IonHeader>
