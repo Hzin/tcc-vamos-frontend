@@ -143,7 +143,7 @@ const Perfil: React.FC = () => {
             <IonCardTitle>Biografia</IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-          {inputValues.bio ? inputValues.bio : 'Sem biografia.'}
+          {inputValues.bio ? inputValues.bio : 'Sem biografia.' }
           </IonCardContent>
         </IonCard>
 
@@ -155,8 +155,7 @@ const Perfil: React.FC = () => {
 
         <IonList>
         <IonListHeader>Configurações</IonListHeader>
-          {/* <IonItem button onClick={() => history.push({ pathname: '/perfil/editar', state: { userData: inputValues } })}> */}
-          <IonItem button>
+          <IonItem button onClick={() => history.push({ pathname: '/perfil/editar', state: { userData: inputValues } })}>
             <IonIcon icon={createOutline} slot="start" />
             <IonLabel>Editar perfil</IonLabel>
           </IonItem>
@@ -164,7 +163,7 @@ const Perfil: React.FC = () => {
             <IonIcon icon={shieldCheckmarkOutline} slot="start" />
             <IonLabel>Completar perfil</IonLabel>
           </IonItem>
-          <IonItem button>
+          <IonItem button onClick={() => history.push({ pathname: '/cadastro-van'})}>
             <IonIcon icon={carOutline} slot="start" />
             <IonLabel>Cadastrar Van</IonLabel>
           </IonItem>
