@@ -1,7 +1,14 @@
 #avatar {
     border-radius: 50%;
-    width: 64px;
-    height: 64px;
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#profile-status {
+    text-align: center;
 }
 
 IonIcon {

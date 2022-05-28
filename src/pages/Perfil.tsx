@@ -5,8 +5,6 @@ import {
   IonCardTitle,
   IonChip,
   IonContent,
-  IonFab,
-  IonFabButton,
   IonHeader,
   IonIcon,
   IonItem,
@@ -20,8 +18,7 @@ import {
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import React, { useState, useEffect, useReducer } from "react";
-import { IonRow, IonCol } from "@ionic/react";
-import { createOutline } from "ionicons/icons";
+import { cardOutline, carOutline, createOutline, exitOutline, shieldCheckmarkOutline, starOutline } from "ionicons/icons";
 
 import './Perfil.css'
 import LocalStorage from "../LocalStorage";
@@ -125,17 +122,19 @@ const Perfil: React.FC = () => {
         
         <IonCard>
           <IonCardContent>
-            <IonRow>
-              <IonCol></IonCol>
-              <IonCol>
-                <img src="https://static.generated.photos/vue-static/home/feed/adult.png" alt="avatar" className='avatar' id='avatar'/>
-              </IonCol>
-              <IonCol></IonCol>
-            </IonRow>
-
+              {/* <img src="https://static.generated.photos/vue-static/home/feed/adult.png" alt="avatar" className='avatar' id='avatar'/> */}
+              <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/faa68f71f3b2a48ca89228c2c2aa72d3" alt="avatar" className='avatar' id='avatar'/>
             <IonCardHeader>
               <IonCardTitle class="ion-text-center">{inputValues.name} {inputValues.lastname}</IonCardTitle>
             </IonCardHeader>
+
+            <div id='profile-status'>
+              <IonLabel>Status: </IonLabel>
+              <IonChip>
+                {/* TODO, deve vir do backend */}
+                <IonLabel color="primary">Passageiro</IonLabel>
+              </IonChip>
+            </div>
           </IonCardContent>
         </IonCard>
 
@@ -148,37 +147,40 @@ const Perfil: React.FC = () => {
           </IonCardContent>
         </IonCard>
 
-        <IonCard>
+        {/* <IonCard>
           <IonCardContent>
-            <IonLabel>Status do perfil</IonLabel>
-            <IonChip>
-              <IonLabel color="primary">Passageiro</IonLabel>
-            </IonChip>
+            
           </IonCardContent>
-        </IonCard>
+        </IonCard> */}
 
         <IonList>
-        <IonListHeader>Dashboard</IonListHeader>
-          <IonItem>
-            <IonIcon></IonIcon>
-            <IonLabel>Confirmar perfil</IonLabel>
+        <IonListHeader>Configurações</IonListHeader>
+          {/* <IonItem button onClick={() => history.push({ pathname: '/perfil/editar', state: { userData: inputValues } })}> */}
+          <IonItem button>
+            <IonIcon icon={createOutline} slot="start" />
+            <IonLabel>Editar perfil</IonLabel>
           </IonItem>
-          <IonItem>
+          <IonItem button>
+            <IonIcon icon={shieldCheckmarkOutline} slot="start" />
+            <IonLabel>Completar perfil</IonLabel>
+          </IonItem>
+          <IonItem button>
+            <IonIcon icon={carOutline} slot="start" />
             <IonLabel>Cadastrar Van</IonLabel>
           </IonItem>
-          <IonItem>
+          <IonItem button>
+            <IonIcon icon={cardOutline} slot="start" />
             <IonLabel>Pagamentos</IonLabel>
           </IonItem>
-          <IonItem>
+          <IonItem button>
+            <IonIcon icon={starOutline} slot="start" />
             <IonLabel>Avaliações</IonLabel>
           </IonItem>
+          <IonItem button>
+            <IonIcon icon={exitOutline} slot="start" />
+            <IonLabel>Sair da conta</IonLabel>
+          </IonItem>
         </IonList>
-
-        <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={() => history.push({ pathname: '/perfil/editar', state: { userData: inputValues } })}>
-            <IonIcon icon={createOutline} />
-          </IonFabButton>
-        </IonFab>
 
         <IonToast
           color='danger'      
