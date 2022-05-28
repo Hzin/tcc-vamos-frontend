@@ -34,8 +34,8 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import SeuPerfil from './pages/SeuPerfil';
-import SeuPerfilEditar from './pages/SeuPerfilEditar';
+import Perfil from './pages/Perfil';
+import PerfilEditar from './pages/PerfilEditar';
 import { search, home, person } from 'ionicons/icons';
 import { useState, useContext, useEffect } from 'react';
 import React from 'react';
@@ -46,8 +46,8 @@ const routes = (
   <>
     <Route exact path="/cadastro" component={Cadastro}></Route>
     <Route exact path="/login" component={Login}></Route>
-    <Route exact path="/perfil" component={SeuPerfil}></Route>
-    <Route exact path="/perfil/editar" component={SeuPerfilEditar}></Route>
+    <Route exact path="/perfil" component={Perfil}></Route>
+    <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
     <Route exact path="/cadastro-van" component={CadastroVan}></Route>
     <Route exact path="/">
       <Redirect to="/cadastro" />
