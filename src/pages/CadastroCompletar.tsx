@@ -62,7 +62,7 @@ const items = [
   },
 ]
 
-const PerfilCompletar: React.FC = () => {
+const CadastroCompletar: React.FC = () => {
   const history = useHistory();
   const location = useLocation<LocationState>();
 
@@ -121,7 +121,7 @@ const PerfilCompletar: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Completar perfil</IonTitle>
+          <IonTitle>Completar cadastro</IonTitle>
           <IonButtons slot="start">
             <IonBackButton defaultHref="/perfil" />
           </IonButtons>
@@ -146,4 +146,4 @@ const PerfilCompletar: React.FC = () => {
   );
 };
 
-export default PerfilCompletar;
+export default CadastroCompletar;

@@ -190,7 +190,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
               </IonItem>
               <IonItem button onClick={() => history.push({ pathname: '/perfil/completar', state: { userData: inputValues } })}>
                 <IonIcon icon={shieldCheckmarkOutline} slot="start" />
-                <IonLabel>Completar perfil</IonLabel>
+                <IonLabel>Completar cadastro</IonLabel>
               </IonItem>
               <IonItem button onClick={() => history.push({ pathname: '/cadastro-van'})}>
                 <IonIcon icon={carOutline} slot="start" />

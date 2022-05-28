@@ -17,7 +17,7 @@ import Login from './pages/Login';
 import Home from './pages/Home';
 import Perfil from './pages/Perfil';
 import PerfilEditar from './pages/PerfilEditar';
-import PerfilCompletar from './pages/PerfilCompletar';
+import CadastroCompletar from './pages/CadastroCompletar';
 import CadastroVan from './pages/CadastroVan';
 
 /* Core CSS required for Ionic components to work properly */
@@ -51,7 +51,7 @@ const routes = (
   <Route exact path="/home" component={Home}></Route>
   <Route exact path="/perfil" component={Perfil}></Route>
   <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
-  <Route exact path="/perfil/completar" component={PerfilCompletar}></Route>
+  <Route exact path="/perfil/completar" component={CadastroCompletar}></Route>
   <Route exact path="/usuario/:id" component={Perfil}></Route>
   <Route exact path="/cadastro-van" component={CadastroVan}></Route>
   <Route exact path="/">
