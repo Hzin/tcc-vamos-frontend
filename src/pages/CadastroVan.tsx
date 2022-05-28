@@ -10,25 +10,32 @@ import {
   IonHeader,
   IonPage,
   IonToolbar,
-  IonText,
   IonTitle,
   IonList,
   IonCheckbox,
-  IonItemDivider,
   IonListHeader,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/react";
 
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 
 import * as yup from 'yup';
 
 import { ApiClient } from "../services/api-client.service";
+
+import carsService from '../services/functions/carsService'
 
 import "./CadastroVan.css";
 
 const CadastroVan: React.FC = () => {
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
+
+  const [carModels, setCarModels] = useState([{
+    id_model: '',
+    name: ''
+  }]);
 
   const [inputValues, setInputValues] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
@@ -197,6 +204,29 @@ const CadastroVan: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    let isMounted = true
+
+    const getCarsModels = async () => {
+      const carModelsRes = await carsService.getAllCarModels()
+  
+      if (carModelsRes.error) {
+        console.log('Houve um erro')
+        return
+      }
+  
+      if (carModelsRes.data) {
+        if (isMounted) {
+          setCarModels(carModelsRes.data)
+        }
+      }
+    }
+
+    getCarsModels()
+
+    return () => { isMounted = false }
+  }, [])
+
   return (
     <IonPage>
       <IonHeader>
@@ -223,7 +253,7 @@ const CadastroVan: React.FC = () => {
             />
           </IonItem>
 
-          <IonItem>
+          {/* <IonItem>
             <IonLabel position='floating'>Marca </IonLabel>
             <IonInput
               type='text'
@@ -231,6 +261,15 @@ const CadastroVan: React.FC = () => {
               placeholder='Digite a Marca do Veículo'
               onIonInput={(e: any) => setInputValues({ carBrand: e.target.value })}
             />
+          </IonItem> */}
+
+          <IonItem>
+            <IonLabel>Marca</IonLabel>
+            <IonSelect value={inputValues.marca}>
+              { carModels ? carModels.map((carModel, index) => {
+                return (<IonSelectOption key={index} value={carModel.name}>{carModel.name}</IonSelectOption>)
+              }) : <></> }
+            </IonSelect>
           </IonItem>
 
           <IonItem>
