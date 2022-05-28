@@ -10,10 +10,15 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Cadastro from './pages/Cadastro/Cadastro';
 
 // importação das páginas
+import Cadastro from './pages/Cadastro/Cadastro';
 import Login from './pages/Login';
+import Home from './pages/Home';
+import Perfil from './pages/Perfil';
+import PerfilEditar from './pages/PerfilEditar';
+import CadastroCompletar from './pages/CadastroCompletar';
+import CadastroVan from './pages/CadastroVan';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -33,26 +38,26 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import Perfil from './pages/Perfil';
-import PerfilEditar from './pages/PerfilEditar';
 import { search, home, person } from 'ionicons/icons';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import React from 'react';
-
-import sessionsService from './services/functions/sessionsService'
 
 setupIonicReact();
 
 const routes = (
-  <>
-    <Route exact path="/cadastro" component={Cadastro}></Route>
-    <Route exact path="/login" component={Login}></Route>
-    <Route exact path="/perfil" component={Perfil}></Route>
-    <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
-    <Route exact path="/">
-      <Redirect to="/cadastro" />
-    </Route>
-  </>)
+<>
+  <Route exact path="/cadastro" component={Cadastro}></Route>
+  <Route exact path="/login" component={Login}></Route>
+  <Route exact path="/home" component={Home}></Route>
+  <Route exact path="/perfil" component={Perfil}></Route>
+  <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
+  <Route exact path="/perfil/completar" component={CadastroCompletar}></Route>
+  <Route exact path="/usuario/:id" component={Perfil}></Route>
+  <Route exact path="/cadastro-van" component={CadastroVan}></Route>
+  <Route exact path="/">
+    <Redirect to="/login" />
+  </Route>
+</>)
 
 interface IUserManager {
   setIsLoggedIn: Function;
@@ -65,26 +70,11 @@ const user: IUserManager = {
 export const UserContext = React.createContext<IUserManager>(user);
 
 const IonicApp: React.FC = () => {
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const user = useContext(UserContext);
 
   user.setIsLoggedIn = setIsLoggedIn;
-
-  useEffect(() => {
-    const verifyAuthenticatedUser = async () => {
-      const refreshSessionRes = await sessionsService.refreshSession()
-
-      if (refreshSessionRes.error) {
-        return
-      }
-
-      if (refreshSessionRes.userId) {
-        setIsLoggedIn(true)
-      }
-    }
-
-    verifyAuthenticatedUser()
-  })
 
   return(
   <IonApp>

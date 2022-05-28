@@ -5,8 +5,6 @@ import {
   IonCardTitle,
   IonChip,
   IonContent,
-  IonFab,
-  IonFabButton,
   IonHeader,
   IonIcon,
   IonItem,
@@ -19,17 +17,29 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
-import React, { useState, useEffect, useReducer } from "react";
-import { IonRow, IonCol } from "@ionic/react";
-import { createOutline } from "ionicons/icons";
+import React, { useState, useEffect, useReducer, useContext } from "react";
+import { cardOutline, carOutline, createOutline, exitOutline, shieldCheckmarkOutline, starOutline } from "ionicons/icons";
 
 import './Perfil.css'
 import LocalStorage from "../LocalStorage";
 
 import sessionsService from '../services/functions/sessionsService'
 import usersService from '../services/functions/usersService'
+import { UserContext } from "../App";
 
-const Perfil: React.FC = () => {
+interface ScanNewProps {
+  match:  {
+    params: {
+      id: string;
+    }
+  }
+}
+
+const Perfil: React.FC<ScanNewProps> = (props) => {
+  const user = useContext(UserContext);
+
+  const [isVisitor, setIsVisitor] = useState(true)
+
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState('');
 
@@ -53,28 +63,44 @@ const Perfil: React.FC = () => {
     setShowToast(true);
   }
 
+  const logoff = () => {
+    LocalStorage.clearToken()
+    user.setIsLoggedIn(false);
+    history.push({ pathname: '/login' });
+  }
+
   useEffect(() => {
     const loadUserData = async () => {
       let userId = ''
-  
+
       // verify if user is authenticated
-      const refreshSessionRes = await sessionsService.refreshSession()
+      if (props.match.params.id) {
+        userId = props.match.params.id
+      } else {
+        const refreshSessionRes = await sessionsService.refreshSession()
   
-      if (refreshSessionRes.error) {
-        redirectUserToLogin()
-        return
-      }
-  
-      if (refreshSessionRes.userId) {
-        userId = refreshSessionRes.userId
+        if (refreshSessionRes.error) {
+          redirectUserToLogin()
+          return
+        }
+    
+        if (refreshSessionRes.userId) {
+          userId = refreshSessionRes.userId
+        }
       }
       
       // get user info by ID
       const getByIdRes = await usersService.getById(userId)
   
       if (getByIdRes.error) {
-        setMessageToast(getByIdRes.error.errorMessage)
-        setShowToast(true)
+        if (isVisitor && props.match.params.id) {
+          setMessageToast('Usuário não existe!')
+          setShowToast(true)
+          history.push({ pathname: '/home' })
+        } else {
+          setMessageToast(getByIdRes.error.errorMessage)
+          setShowToast(true)
+        }
   
         return
       }
@@ -90,6 +116,10 @@ const Perfil: React.FC = () => {
             'birth_date': userData.birth_date,
             'bio': userData.bio
           });
+
+          if (!props.match.params.id) {
+            setIsVisitor(false)
+          }
         }
       }
     }
@@ -106,7 +136,6 @@ const Perfil: React.FC = () => {
 
     return () => { isMounted = false };
   }, []);
-  // }, [history]);
 
   return (
     <IonPage>
@@ -116,7 +145,7 @@ const Perfil: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen>
+      <IonContent>
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">Seu perfil</IonTitle>
@@ -125,17 +154,18 @@ const Perfil: React.FC = () => {
         
         <IonCard>
           <IonCardContent>
-            <IonRow>
-              <IonCol></IonCol>
-              <IonCol>
-                <img src="https://static.generated.photos/vue-static/home/feed/adult.png" alt="avatar" className='avatar' id='avatar'/>
-              </IonCol>
-              <IonCol></IonCol>
-            </IonRow>
-
+              {/* <img src="https://static.generated.photos/vue-static/home/feed/adult.png" alt="avatar" className='avatar' id='avatar'/> */}
+              <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/faa68f71f3b2a48ca89228c2c2aa72d3" alt="avatar" className='avatar' id='avatar'/>
             <IonCardHeader>
               <IonCardTitle class="ion-text-center">{inputValues.name} {inputValues.lastname}</IonCardTitle>
             </IonCardHeader>
+
+            <div id='profile-status'>
+              <IonChip>
+                {/* TODO, deve vir do backend */}
+                <IonLabel color="primary">Passageiro</IonLabel>
+              </IonChip>
+            </div>
           </IonCardContent>
         </IonCard>
 
@@ -144,41 +174,41 @@ const Perfil: React.FC = () => {
             <IonCardTitle>Biografia</IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-          {inputValues.bio ? inputValues.bio : 'Sem biografia.'}
+          {inputValues.bio ? inputValues.bio : 'Sem biografia.' }
           </IonCardContent>
         </IonCard>
 
-        <IonCard>
-          <IonCardContent>
-            <IonLabel>Status do perfil</IonLabel>
-            <IonChip>
-              <IonLabel color="primary">Passageiro</IonLabel>
-            </IonChip>
-          </IonCardContent>
-        </IonCard>
+        {/* // TODO, card de informações de contato */}
 
-        <IonList>
-        <IonListHeader>Dashboard</IonListHeader>
-          <IonItem>
-            <IonIcon></IonIcon>
-            <IonLabel>Confirmar perfil</IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonLabel>Cadastrar Van</IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonLabel>Pagamentos</IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonLabel>Avaliações</IonLabel>
-          </IonItem>
-        </IonList>
-
-        <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={() => history.push({ pathname: '/perfil/editar', state: { userData: inputValues } })}>
-            <IonIcon icon={createOutline} />
-          </IonFabButton>
-        </IonFab>
+        { !isVisitor ?
+          <IonList>
+            <IonListHeader>Configurações</IonListHeader>
+              <IonItem button onClick={() => history.push({ pathname: '/perfil/editar', state: { userData: inputValues } })}>
+                <IonIcon icon={createOutline} slot="start" />
+                <IonLabel>Editar perfil</IonLabel>
+              </IonItem>
+              <IonItem button onClick={() => history.push({ pathname: '/perfil/completar', state: { userData: inputValues } })}>
+                <IonIcon icon={shieldCheckmarkOutline} slot="start" />
+                <IonLabel>Completar cadastro</IonLabel>
+              </IonItem>
+              <IonItem button onClick={() => history.push({ pathname: '/cadastro-van'})}>
+                <IonIcon icon={carOutline} slot="start" />
+                <IonLabel>Cadastrar Van</IonLabel>
+              </IonItem>
+              <IonItem>
+                <IonIcon icon={cardOutline} slot="start" />
+                <IonLabel>Pagamentos</IonLabel>
+              </IonItem>
+              <IonItem>
+                <IonIcon icon={starOutline} slot="start" />
+                <IonLabel>Avaliações</IonLabel>
+              </IonItem>
+              <IonItem button onClick={logoff}>
+                <IonIcon icon={exitOutline} slot="start" />
+                <IonLabel>Sair da conta</IonLabel>
+              </IonItem>
+          </IonList> : <></>
+        }
 
         <IonToast
           color='danger'      
