@@ -161,7 +161,6 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             </IonCardHeader>
 
             <div id='profile-status'>
-              <IonLabel>Status: </IonLabel>
               <IonChip>
                 {/* TODO, deve vir do backend */}
                 <IonLabel color="primary">Passageiro</IonLabel>
