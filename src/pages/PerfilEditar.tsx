@@ -112,12 +112,6 @@ const PerfilEditar: React.FC = () => {
       </IonHeader>
 
       <IonContent>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Editar perfil</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        
         <IonGrid>
           <IonRow>
             <IonCol size="12">

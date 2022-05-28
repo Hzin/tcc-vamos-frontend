@@ -15,6 +15,9 @@ import { IonReactRouter } from '@ionic/react-router';
 import Cadastro from './pages/Cadastro/Cadastro';
 import Login from './pages/Login';
 import Home from './pages/Home';
+import Perfil from './pages/Perfil';
+import PerfilEditar from './pages/PerfilEditar';
+import PerfilCompletar from './pages/PerfilCompletar';
 import CadastroVan from './pages/CadastroVan';
 
 /* Core CSS required for Ionic components to work properly */
@@ -35,27 +38,26 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import Perfil from './pages/Perfil';
-import PerfilEditar from './pages/PerfilEditar';
 import { search, home, person } from 'ionicons/icons';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import React from 'react';
 
 setupIonicReact();
 
 const routes = (
-  <>
-    <Route exact path="/cadastro" component={Cadastro}></Route>
-    <Route exact path="/login" component={Login}></Route>
-    <Route exact path="/home" component={Home}></Route>
-    <Route exact path="/perfil" component={Perfil}></Route>
-    <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
-    <Route exact path="/usuario/:id" component={Perfil}></Route>
-    <Route exact path="/cadastro-van" component={CadastroVan}></Route>
-    <Route exact path="/">
-      <Redirect to="/login" />
-    </Route>
-  </>)
+<>
+  <Route exact path="/cadastro" component={Cadastro}></Route>
+  <Route exact path="/login" component={Login}></Route>
+  <Route exact path="/home" component={Home}></Route>
+  <Route exact path="/perfil" component={Perfil}></Route>
+  <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
+  <Route exact path="/perfil/completar" component={PerfilCompletar}></Route>
+  <Route exact path="/usuario/:id" component={Perfil}></Route>
+  <Route exact path="/cadastro-van" component={CadastroVan}></Route>
+  <Route exact path="/">
+    <Redirect to="/login" />
+  </Route>
+</>)
 
 interface IUserManager {
   setIsLoggedIn: Function;

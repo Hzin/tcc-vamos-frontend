@@ -188,7 +188,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                 <IonIcon icon={createOutline} slot="start" />
                 <IonLabel>Editar perfil</IonLabel>
               </IonItem>
-              <IonItem>
+              <IonItem button onClick={() => history.push({ pathname: '/perfil/completar', state: { userData: inputValues } })}>
                 <IonIcon icon={shieldCheckmarkOutline} slot="start" />
                 <IonLabel>Completar perfil</IonLabel>
               </IonItem>
