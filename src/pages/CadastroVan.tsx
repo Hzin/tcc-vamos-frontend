@@ -11,62 +11,71 @@ import {
   IonHeader,
   IonPage,
   IonToolbar,
-  IonTitle,
   IonText,
   IonRadioGroup,
   IonRadio
 } from "@ionic/react";
 
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 
 import { ApiClient } from "../services/api-client.service";
-import { arrowBack } from "ionicons/icons";
+
 import "./CadastroVan.css";
 
-
 const CadastroVan: React.FC = () => {
-
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
 
-  const [carPlate, setCarPlate] = useState<string>("");
-  const [carBrand, setCarBrand] = useState<string>("");
-  const [carModel, setCarModel] = useState<string>("");
-  const [maxPassengers, setMaxPassengers] = useState<number>(1);
-  const [isRent, setIsRent] = useState<boolean>(false);
-  const [carRentalName, setCarRentalName] = useState<string>("");
-  const [postalCode, setPostalCode] = useState<string>("");
-  const [street, setStreet] = useState<string>("");
-  const [number, setNumber] = useState<string>("");
-  const [complement, setComplement] = useState<string>("");
-  const [city, setCity] = useState<string>("");
-  const [state, setState] = useState<string>("");
+  const [inputValues, setInputValues] = useReducer(
+    (state: any, newState: any) => ({ ...state, ...newState }),
+    {
+      carPlate: '',
+      carBrand: '',
+      carModel: '',
+      maxPassengers: 1,
+      isRent: false,
+      carRentalName: '',
+      postalCode: '',
+      street: '',
+      number: '',
+      complement: '',
+      city: '',
+      state: '',
+    }
+  );
 
   const vanForm = {
-    carPlate,
-    carBrand,
-    carModel,
-    maxPassengers,
-    isRent,
-    carRentalName,
+    carPlate: inputValues.carPlate,
+    carBrand: inputValues.carBrand,
+    carModel: inputValues.carModel,
+    maxPassengers: inputValues.maxPassengers,
+    isRent: inputValues.isRent,
+    carRentalName: inputValues.carRentalName,
     carRentalAddress: {
-      postalCode,
-      street,
-      number,
-      complement,
-      city,
-      state
+      postalCode: inputValues.postalCode,
+      street: inputValues.street,
+      number: inputValues.number,
+      complement: inputValues.complement,
+      city: inputValues.city,
+      state: inputValues.state,
     }
   };
 
   const clearRentalData = () => {
-    setCarRentalName("");
-    setPostalCode("");
-    setStreet("");
-    setNumber("");
-    setComplement("");
-    setCity("");
-    setState("");
+    setInputValues({
+        carPlate: '',
+        carBrand: '',
+        carModel: '',
+        maxPassengers: 1,
+        isRent: false,
+        carRentalName: '',
+        postalCode: '',
+        street: '',
+        number: '',
+        complement: '',
+        city: '',
+        state: '',
+    })
   };
 
   const validateForm = (): boolean => {
@@ -163,12 +172,9 @@ const CadastroVan: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color='primary'>
-          <IonTitle>VanMos App v1.0</IonTitle>
+        <IonToolbar>
           <IonButtons slot='start'>
-            <IonBackButton icon={arrowBack} defaultHref='cadastro-van'>
-              Return
-            </IonBackButton>
+            <IonBackButton defaultHref='/perfil' />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -183,7 +189,7 @@ const CadastroVan: React.FC = () => {
               type='text'
               clearInput
               placeholder='Digite a Placa do Veículo'
-              onIonInput={(e: any) => setCarPlate(e.target.value)}
+              onIonInput={(e: any) => setInputValues({ carPlate: e.target.value })}
             />
           </IonItem>
 
@@ -193,7 +199,7 @@ const CadastroVan: React.FC = () => {
               type='text'
               clearInput
               placeholder='Digite a Marca do Veículo'
-              onIonInput={(e: any) => setCarBrand(e.target.value)}
+              onIonInput={(e: any) => setInputValues({ carBrand: e.target.value })}
             />
           </IonItem>
 
@@ -203,7 +209,7 @@ const CadastroVan: React.FC = () => {
               type='text'
               clearInput
               placeholder='Digite o Modelo do Veículo'
-              onIonInput={(e: any) => setCarModel(e.target.value)}
+              onIonInput={(e: any) => setInputValues({ carModel: e.target.value })}
             />
           </IonItem>
 
@@ -215,7 +221,7 @@ const CadastroVan: React.FC = () => {
               type='text'
               clearInput
               placeholder='Digite o número máximo de passageiros'
-              onIonInput={(e: any) => setMaxPassengers(e.target.value)}
+              onIonInput={(e: any) => setInputValues({ maxPassengers: e.target.value })}
             />
           </IonItem>
 
@@ -227,7 +233,7 @@ const CadastroVan: React.FC = () => {
               <div>
                 <IonRadioGroup
                   style={{ display: "flex", width: "100%" }}
-                  onIonChange={(e: any) => setIsRent(e.target.value)}
+                  onIonChange={(e: any) => setInputValues({ isRent: e.target.value })}
                 >
                   <IonItem lines='none' style={{ flexGrow: 2 }}>
                     <IonLabel position='fixed'>Sim</IonLabel>
@@ -243,7 +249,7 @@ const CadastroVan: React.FC = () => {
             </IonText>
           </IonItem>
 
-          {isRent && (
+          {inputValues.isRent && (
             <div>
               <IonItem>
                 <IonLabel position='floating'>Nome do Locador *</IonLabel>
@@ -251,7 +257,7 @@ const CadastroVan: React.FC = () => {
                   type='text'
                   clearInput
                   placeholder='Digite o nome do locador do veículo'
-                  onIonInput={(e: any) => setCarRentalName(e.target.value)}
+                  onIonInput={(e: any) => setInputValues({ carRentalName: e.target.value })}
                 />
               </IonItem>
               <IonText>
@@ -266,7 +272,7 @@ const CadastroVan: React.FC = () => {
                     type='text'
                     clearInput
                     placeholder='Digite o endereço completo do locador do veículo'
-                    onIonInput={(e: any) => setPostalCode(e.target.value)}
+                    onIonInput={(e: any) => setInputValues({ postalCode: e.target.value })}
                   />
                 </IonItem>
                 <IonItem>
@@ -275,7 +281,7 @@ const CadastroVan: React.FC = () => {
                     type='text'
                     clearInput
                     placeholder='Digite o nome da rua'
-                    onIonInput={(e: any) => setStreet(e.target.value)}
+                    onIonInput={(e: any) => setInputValues({ street: e.target.value })}
                   />
                 </IonItem>
 
@@ -285,7 +291,7 @@ const CadastroVan: React.FC = () => {
                     type='text'
                     clearInput
                     placeholder='Digite o número'
-                    onIonInput={(e: any) => setNumber(e.target.value)}
+                    onIonInput={(e: any) => setInputValues({ number: e.target.value })}
                   />
                 </IonItem>
 
@@ -295,7 +301,7 @@ const CadastroVan: React.FC = () => {
                     type='text'
                     clearInput
                     placeholder='Digite o endereço completo'
-                    onIonInput={(e: any) => setComplement(e.target.value)}
+                    onIonInput={(e: any) => setInputValues({ complement: e.target.value })}
                   />
                 </IonItem>
 
@@ -305,7 +311,7 @@ const CadastroVan: React.FC = () => {
                     type='text'
                     clearInput
                     placeholder='Digite a cidade'
-                    onIonInput={(e: any) => setCity(e.target.value)}
+                    onIonInput={(e: any) => setInputValues({ city: e.target.value })}
                   />
                 </IonItem>
 
@@ -315,7 +321,7 @@ const CadastroVan: React.FC = () => {
                     type='text'
                     clearInput
                     placeholder='Digite o estado'
-                    onIonInput={(e: any) => setState(e.target.value)}
+                    onIonInput={(e: any) => setInputValues({ state: e.target.value })}
                   />
                 </IonItem>
               </IonText>
