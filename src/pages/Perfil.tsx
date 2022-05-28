@@ -17,7 +17,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 import { cardOutline, carOutline, createOutline, exitOutline, shieldCheckmarkOutline, starOutline } from "ionicons/icons";
 
 import './Perfil.css'
@@ -25,8 +25,11 @@ import LocalStorage from "../LocalStorage";
 
 import sessionsService from '../services/functions/sessionsService'
 import usersService from '../services/functions/usersService'
+import { UserContext } from "../App";
 
 const Perfil: React.FC = () => {
+  const user = useContext(UserContext);
+
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState('');
 
@@ -52,6 +55,7 @@ const Perfil: React.FC = () => {
 
   const logoff = () => {
     LocalStorage.clearToken()
+    user.setIsLoggedIn(false);
     history.push('/login')
   }
 
@@ -108,7 +112,6 @@ const Perfil: React.FC = () => {
 
     return () => { isMounted = false };
   }, []);
-  // }, [history]);
 
   return (
     <IonPage>
