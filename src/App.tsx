@@ -1,12 +1,16 @@
 import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
+  IonIcon,
+  IonLabel,
   IonRouterOutlet,
+  IonTabBar,
+  IonTabButton,
+  IonTabs,
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Cadastro from './pages/Cadastro/Cadastro';
-import MainPages from './pages/MainPages';
 
 // importação das páginas
 import Login from './pages/Login';
@@ -31,26 +35,78 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import Perfil from './pages/Perfil';
 import PerfilEditar from './pages/PerfilEditar';
+import { search, home, person } from 'ionicons/icons';
+import { useState, useContext, useEffect } from 'react';
+import React from 'react';
 
 setupIonicReact();
 
-const App: React.FC = () => (
+const routes = (
+  <>
+    <Route exact path="/cadastro" component={Cadastro}></Route>
+    <Route exact path="/login" component={Login}></Route>
+    <Route exact path="/perfil" component={Perfil}></Route>
+    <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
+    <Route exact path="/">
+      <Redirect to="/cadastro" />
+    </Route>
+  </>)
+
+interface IUserManager {
+  setIsLoggedIn: Function;
+}
+
+const user: IUserManager = {
+  setIsLoggedIn: () => {}
+};
+
+export const UserContext = React.createContext<IUserManager>(user);
+
+const IonicApp: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const user = useContext(UserContext);
+
+  user.setIsLoggedIn = setIsLoggedIn;
+
+  useEffect(() => {
+    // TODO, verifica se usuário está logado
+    // fazer com serviço externo (evita duplicações)
+  })
+
+  return(
   <IonApp>
     <IonReactRouter>
-      
-        <IonRouterOutlet>
-          <Route exact path="/mainpages" component={MainPages}></Route>
-          <Route exact path="/cadastro" component={Cadastro}></Route>
-          <Route exact path="/login" component={Login}></Route>
-          <Route exact path="/perfil" component={Perfil}></Route>
-          <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
-          <Route exact path="/">
-            <Redirect to="/cadastro" />
-          </Route>
-        </IonRouterOutlet>
-        
-    </IonReactRouter>
+        {isLoggedIn ? (
+          <IonTabs>
+            <IonRouterOutlet>{routes}</IonRouterOutlet>
+            
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="buscar" href="/buscar">
+                <IonIcon icon={search} />
+                <IonLabel>Buscar</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="home" href="/home">
+                <IonIcon icon={home} />
+                <IonLabel>Home</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="perfil" href="/perfil">
+                <IonIcon icon={person} />
+                <IonLabel>Perfil</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+        ) : (<IonRouterOutlet>{routes}</IonRouterOutlet>)}
+      </IonReactRouter>
   </IonApp>
-);
+  )
+}
+
+const App: React.FC = () => {
+  return (
+    <UserContext.Provider value={user}>
+      <IonicApp />
+    </UserContext.Provider>
+  );
+};
 
 export default App;

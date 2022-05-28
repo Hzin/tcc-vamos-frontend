@@ -1,7 +1,7 @@
 const usersRoutesDefault = '/users';
 const usersRoutes = {
   create: {
-    url: `${usersRoutesDefault}/create`
+    url: `${usersRoutesDefault}`
   },
   get: {
     url: `${usersRoutesDefault}`

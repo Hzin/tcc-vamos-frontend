@@ -25,12 +25,16 @@ import { saveOutline } from "ionicons/icons";
 
 import isEqual from 'lodash.isequal';
 
-import * as usersRoutes from '../services/users';
+import * as usersRoutes from '../services/api/users';
+
+import './Cadastro/Cadastro.css'
 
 interface userData {
   name: string;
-  bio: string;
+  lastname: string;
   email: string;
+  birth_date: string;
+  bio: string;
 }
 
 interface LocationState {
@@ -46,22 +50,34 @@ const PerfilEditar: React.FC = () => {
 
   const [userData, setUserData] = useState({
     name: '',
+    lastname: '',
+    email: '',
+    birth_date: '',
     bio: '',
-    email: ''
   });
 
   const [inputValues, setInputValues] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
     {
       name: '',
+      lastname: '',
+      email: '',
+      birth_date: '',
       bio: '',
-      email: ''
     }
   );
 
   useEffect(() => {
+    let userData = location.state.userData
+
     setUserData(location.state.userData)
-    setInputValues({'name': userData.name, 'email': userData.email, 'bio': userData.bio});
+    setInputValues({
+      'name': userData.name,
+      'lastname': userData.lastname,
+      'email': userData.email,
+      'birth_date': userData.birth_date,
+      'bio': userData.bio
+    });
   }, [userData]);
 
   const handleUpdateUserData = () => {
@@ -90,7 +106,7 @@ const PerfilEditar: React.FC = () => {
         <IonToolbar>
           <IonTitle>Editar perfil</IonTitle>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="perfil" />
+            <IonBackButton defaultHref="/perfil" />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -104,15 +120,27 @@ const PerfilEditar: React.FC = () => {
         
         <IonGrid>
           <IonRow>
-            <IonCol>
-              <IonItem>
-                <IonLabel position="stacked"> Nome completo</IonLabel>
-                <IonInput
-                  type="text"
-                  value={inputValues.name}
-                  onIonChange={(e) => setInputValues({'name': e.detail.value!})}
-                ></IonInput>
-              </IonItem>
+            <IonCol size="12">
+              <div id='nome-sobrenome'>
+                <IonItem>
+                  <IonLabel position="stacked"> Nome</IonLabel>
+                  <IonInput
+                    type="text"
+                    value={inputValues.name}
+                    onIonChange={(e) => setInputValues({'name': e.detail.value!})}
+                  ></IonInput>
+                </IonItem>
+
+                <IonItem>
+                  <IonLabel position="stacked"> Sobrenome</IonLabel>
+                  <IonInput
+                    type="text"
+                    value={inputValues.lastname}
+                    onIonChange={(e) => setInputValues({'lastname': e.detail.value!})}
+                  ></IonInput>
+                </IonItem>
+              </div>
+
               <IonItem>
                 <IonLabel position="stacked"> Email</IonLabel>
                 <IonInput
@@ -121,6 +149,17 @@ const PerfilEditar: React.FC = () => {
                   onIonChange={(e) => setInputValues({'email': e.detail.value!})}
                 ></IonInput>
               </IonItem>
+
+              <IonItem>
+                <IonLabel position='stacked'>Data de nascimento</IonLabel>
+                <IonInput 
+                  type='date'
+                  value={inputValues.birth_date}
+                  onIonInput={(e: any) => setInputValues({'birth_date': e.detail.value!})}
+                >
+                </IonInput>
+              </IonItem>
+
               <IonItem>
                 <IonLabel position="stacked"> Biografia</IonLabel>
                 <IonTextarea
