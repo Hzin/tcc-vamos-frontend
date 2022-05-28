@@ -50,6 +50,11 @@ const Perfil: React.FC = () => {
     setShowToast(true);
   }
 
+  const logoff = () => {
+    LocalStorage.clearToken()
+    history.push('/login')
+  }
+
   useEffect(() => {
     const loadUserData = async () => {
       let userId = ''
@@ -159,7 +164,7 @@ const Perfil: React.FC = () => {
             <IonIcon icon={createOutline} slot="start" />
             <IonLabel>Editar perfil</IonLabel>
           </IonItem>
-          <IonItem button>
+          <IonItem>
             <IonIcon icon={shieldCheckmarkOutline} slot="start" />
             <IonLabel>Completar perfil</IonLabel>
           </IonItem>
@@ -167,15 +172,15 @@ const Perfil: React.FC = () => {
             <IonIcon icon={carOutline} slot="start" />
             <IonLabel>Cadastrar Van</IonLabel>
           </IonItem>
-          <IonItem button>
+          <IonItem>
             <IonIcon icon={cardOutline} slot="start" />
             <IonLabel>Pagamentos</IonLabel>
           </IonItem>
-          <IonItem button>
+          <IonItem>
             <IonIcon icon={starOutline} slot="start" />
             <IonLabel>Avaliações</IonLabel>
           </IonItem>
-          <IonItem button>
+          <IonItem button onClick={logoff}>
             <IonIcon icon={exitOutline} slot="start" />
             <IonLabel>Sair da conta</IonLabel>
           </IonItem>
