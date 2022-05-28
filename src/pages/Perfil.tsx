@@ -27,8 +27,18 @@ import sessionsService from '../services/functions/sessionsService'
 import usersService from '../services/functions/usersService'
 import { UserContext } from "../App";
 
-const Perfil: React.FC = () => {
+interface ScanNewProps {
+  match:  {
+    params: {
+      id: string;
+    }
+  }
+}
+
+const Perfil: React.FC<ScanNewProps> = (props) => {
   const user = useContext(UserContext);
+
+  const [isVisitor, setIsVisitor] = useState(true)
 
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState('');
@@ -96,6 +106,10 @@ const Perfil: React.FC = () => {
             'birth_date': userData.birth_date,
             'bio': userData.bio
           });
+
+          if (!props.match.params.id) {
+            setIsVisitor(false)
+          }
         }
       }
     }
@@ -155,39 +169,37 @@ const Perfil: React.FC = () => {
           </IonCardContent>
         </IonCard>
 
-        {/* <IonCard>
-          <IonCardContent>
-            
-          </IonCardContent>
-        </IonCard> */}
+        {/* // TODO, card de informações de contato */}
 
-        <IonList>
-        <IonListHeader>Configurações</IonListHeader>
-          <IonItem button onClick={() => history.push({ pathname: '/perfil/editar', state: { userData: inputValues } })}>
-            <IonIcon icon={createOutline} slot="start" />
-            <IonLabel>Editar perfil</IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonIcon icon={shieldCheckmarkOutline} slot="start" />
-            <IonLabel>Completar perfil</IonLabel>
-          </IonItem>
-          <IonItem button onClick={() => history.push({ pathname: '/cadastro-van'})}>
-            <IonIcon icon={carOutline} slot="start" />
-            <IonLabel>Cadastrar Van</IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonIcon icon={cardOutline} slot="start" />
-            <IonLabel>Pagamentos</IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonIcon icon={starOutline} slot="start" />
-            <IonLabel>Avaliações</IonLabel>
-          </IonItem>
-          <IonItem button onClick={logoff}>
-            <IonIcon icon={exitOutline} slot="start" />
-            <IonLabel>Sair da conta</IonLabel>
-          </IonItem>
-        </IonList>
+        { !isVisitor ?
+          <IonList>
+            <IonListHeader>Configurações</IonListHeader>
+              <IonItem button onClick={() => history.push({ pathname: '/perfil/editar', state: { userData: inputValues } })}>
+                <IonIcon icon={createOutline} slot="start" />
+                <IonLabel>Editar perfil</IonLabel>
+              </IonItem>
+              <IonItem>
+                <IonIcon icon={shieldCheckmarkOutline} slot="start" />
+                <IonLabel>Completar perfil</IonLabel>
+              </IonItem>
+              <IonItem button onClick={() => history.push({ pathname: '/cadastro-van'})}>
+                <IonIcon icon={carOutline} slot="start" />
+                <IonLabel>Cadastrar Van</IonLabel>
+              </IonItem>
+              <IonItem>
+                <IonIcon icon={cardOutline} slot="start" />
+                <IonLabel>Pagamentos</IonLabel>
+              </IonItem>
+              <IonItem>
+                <IonIcon icon={starOutline} slot="start" />
+                <IonLabel>Avaliações</IonLabel>
+              </IonItem>
+              <IonItem button onClick={logoff}>
+                <IonIcon icon={exitOutline} slot="start" />
+                <IonLabel>Sair da conta</IonLabel>
+              </IonItem>
+          </IonList> : <></>
+        }
 
         <IonToast
           color='danger'      
