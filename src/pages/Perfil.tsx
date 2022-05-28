@@ -33,7 +33,7 @@ import { refreshSession } from "../services/refreshSession";
 
 const Perfil: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
-  const [messageToast, setMessageToast ] = useState('');
+  const [messageToast, setMessageToast] = useState('');
 
   const [inputValues, setInputValues] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
@@ -60,33 +60,36 @@ const Perfil: React.FC = () => {
       let userId = ''
 
       // verify if user is authenticated
-      const refreshedSession = await refreshSession()
+      const refreshSessionRes = await refreshSession()
 
-      if (refreshedSession.error) {
+      if (refreshSessionRes.error) {
         redirectUserToLogin()
         return
       }
-  
-      await usersRoutes.getById(userId).then(response => {
-        if (response.status === 'error') {
-          setMessageToast(response.message.data)
-          setShowToast(true);
-  
-          return
-        }
-  
-        const userData = response.data
-  
-        setInputValues({
-          'name': userData.name,
-          'lastname': userData.lastname,
-          'email': userData.email,
-          'birth_date': userData.birth_date,
-          'bio': userData.bio
-        });
-      }).catch(() => {
-        redirectUserToLogin()
-      })
+
+      if (refreshSessionRes.userId) {
+        userId = refreshSessionRes.userId
+      }
+      
+      // get user info by ID
+      const getByIdRes = await usersRoutes.getById(userId)
+
+      if (getByIdRes.error) {
+        setMessageToast(getByIdRes.message.data)
+        setShowToast(true)
+
+        return
+      }
+
+      const userData = getByIdRes.data
+
+      setInputValues({
+        'name': userData.name,
+        'lastname': userData.lastname,
+        'email': userData.email,
+        'birth_date': userData.birth_date,
+        'bio': userData.bio
+      });
     }
 
     const userToken = LocalStorage.getToken()
@@ -94,8 +97,7 @@ const Perfil: React.FC = () => {
     if (!userToken) {
       redirectUserToLogin()
     }
-
-    // const refreshResponse = refreshSession()
+    
     loadUserData()
   }, [history]);
 
