@@ -1,4 +1,4 @@
-import * as sessionRoutes from "../services/api/session";
+import * as sessionRoutes from "../api/session";
 
 interface refreshSessionReturn {
   userId?: string;
@@ -12,7 +12,7 @@ interface refreshSessionResponse {
   userId?: string;
 }
 
-export const refreshSession = async (): Promise<refreshSessionReturn> => {
+const refreshSession = async (): Promise<refreshSessionReturn> => {
   try {
     let res: refreshSessionResponse = await sessionRoutes.refresh()
 
@@ -42,3 +42,5 @@ export const refreshSession = async (): Promise<refreshSessionReturn> => {
   //   }
 // }
 };
+
+export default { refreshSession }

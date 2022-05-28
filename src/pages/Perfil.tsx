@@ -7,7 +7,6 @@ import {
   IonContent,
   IonFab,
   IonFabButton,
-  IonGrid,
   IonHeader,
   IonIcon,
   IonItem,
@@ -24,12 +23,11 @@ import React, { useState, useEffect, useReducer } from "react";
 import { IonRow, IonCol } from "@ionic/react";
 import { createOutline } from "ionicons/icons";
 
-import * as sessionRoutes from '../services/api/session';
-import * as usersRoutes from '../services/api/users';
-
 import './Perfil.css'
 import LocalStorage from "../LocalStorage";
-import { refreshSession } from "../services/refreshSession";
+
+import sessionsService from '../services/functions/sessionsService'
+import usersService from '../services/functions/usersService'
 
 const Perfil: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
@@ -48,50 +46,56 @@ const Perfil: React.FC = () => {
 
   const history = useHistory();
 
+  const redirectUserToLogin = () => {
+    // TODO, não impede o usuário de retornar a página de login
+    history.push({ pathname: '/login' });
+    setMessageToast("Por favor, autentique-se!");
+    setShowToast(true);
+  }
+
   useEffect(() => {
-    const redirectUserToLogin = () => {
-      // TODO, não impede o usuário de retornar a página de login
-      history.push({ pathname: '/login' });
-      setMessageToast("Por favor, autentique-se!");
-      setShowToast(true);
-    }
-  
     const loadUserData = async () => {
       let userId = ''
-
+  
       // verify if user is authenticated
-      const refreshSessionRes = await refreshSession()
-
+      const refreshSessionRes = await sessionsService.refreshSession()
+  
       if (refreshSessionRes.error) {
         redirectUserToLogin()
         return
       }
-
+  
       if (refreshSessionRes.userId) {
         userId = refreshSessionRes.userId
       }
       
       // get user info by ID
-      const getByIdRes = await usersRoutes.getById(userId)
-
+      const getByIdRes = await usersService.getById(userId)
+  
       if (getByIdRes.error) {
-        setMessageToast(getByIdRes.message.data)
+        setMessageToast(getByIdRes.error.errorMessage)
         setShowToast(true)
-
+  
         return
       }
-
-      const userData = getByIdRes.data
-
-      setInputValues({
-        'name': userData.name,
-        'lastname': userData.lastname,
-        'email': userData.email,
-        'birth_date': userData.birth_date,
-        'bio': userData.bio
-      });
+  
+      if (getByIdRes.userData) {
+        const userData = getByIdRes.userData
+  
+        if (isMounted) {
+          setInputValues({
+            'name': userData.name,
+            'lastname': userData.lastname,
+            'email': userData.email,
+            'birth_date': userData.birth_date,
+            'bio': userData.bio
+          });
+        }
+      }
     }
 
+    let isMounted = true;
+    
     const userToken = LocalStorage.getToken()
 
     if (!userToken) {
@@ -99,7 +103,10 @@ const Perfil: React.FC = () => {
     }
     
     loadUserData()
-  }, [history]);
+
+    return () => { isMounted = false };
+  }, []);
+  // }, [history]);
 
   return (
     <IonPage>

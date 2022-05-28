@@ -39,6 +39,8 @@ import { search, home, person } from 'ionicons/icons';
 import { useState, useContext, useEffect } from 'react';
 import React from 'react';
 
+import sessionsService from './services/functions/sessionsService'
+
 setupIonicReact();
 
 const routes = (
@@ -69,8 +71,19 @@ const IonicApp: React.FC = () => {
   user.setIsLoggedIn = setIsLoggedIn;
 
   useEffect(() => {
-    // TODO, verifica se usuário está logado
-    // fazer com serviço externo (evita duplicações)
+    const verifyAuthenticatedUser = async () => {
+      const refreshSessionRes = await sessionsService.refreshSession()
+
+      if (refreshSessionRes.error) {
+        return
+      }
+
+      if (refreshSessionRes.userId) {
+        setIsLoggedIn(true)
+      }
+    }
+
+    verifyAuthenticatedUser()
   })
 
   return(
