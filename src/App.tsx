@@ -10,10 +10,11 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Cadastro from './pages/Cadastro/Cadastro';
 
 // importação das páginas
 import Login from './pages/Login';
+import Cadastro from './pages/Cadastro/Cadastro';
+import CadastroVan from './pages/CadastroVan';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -49,6 +50,7 @@ const routes = (
     <Route exact path="/login" component={Login}></Route>
     <Route exact path="/perfil" component={Perfil}></Route>
     <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
+    <Route exact path="/cadastro-van" component={CadastroVan}></Route>
     <Route exact path="/">
       <Redirect to="/cadastro" />
     </Route>

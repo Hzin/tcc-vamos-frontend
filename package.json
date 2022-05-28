@@ -45,6 +45,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:mock": "json-server --port 8080 --watch ./mock/db.json",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-scripts eject"
