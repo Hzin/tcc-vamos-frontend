@@ -66,31 +66,41 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
   const logoff = () => {
     LocalStorage.clearToken()
     user.setIsLoggedIn(false);
-    history.push('/login')
+    history.push({ pathname: '/login' });
   }
 
   useEffect(() => {
     const loadUserData = async () => {
       let userId = ''
-  
+
       // verify if user is authenticated
-      const refreshSessionRes = await sessionsService.refreshSession()
+      if (props.match.params.id) {
+        userId = props.match.params.id
+      } else {
+        const refreshSessionRes = await sessionsService.refreshSession()
   
-      if (refreshSessionRes.error) {
-        redirectUserToLogin()
-        return
-      }
-  
-      if (refreshSessionRes.userId) {
-        userId = refreshSessionRes.userId
+        if (refreshSessionRes.error) {
+          redirectUserToLogin()
+          return
+        }
+    
+        if (refreshSessionRes.userId) {
+          userId = refreshSessionRes.userId
+        }
       }
       
       // get user info by ID
       const getByIdRes = await usersService.getById(userId)
   
       if (getByIdRes.error) {
-        setMessageToast(getByIdRes.error.errorMessage)
-        setShowToast(true)
+        if (isVisitor && props.match.params.id) {
+          setMessageToast('Usuário não existe!')
+          setShowToast(true)
+          history.push({ pathname: '/home' })
+        } else {
+          setMessageToast(getByIdRes.error.errorMessage)
+          setShowToast(true)
+        }
   
         return
       }

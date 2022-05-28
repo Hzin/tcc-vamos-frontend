@@ -50,7 +50,7 @@ const routes = (
     <Route exact path="/home" component={Home}></Route>
     <Route exact path="/perfil" component={Perfil}></Route>
     <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
-    <Route exact path="/perfil/:id" component={Perfil}></Route>
+    <Route exact path="/usuario/:id" component={Perfil}></Route>
     <Route exact path="/cadastro-van" component={CadastroVan}></Route>
     <Route exact path="/">
       <Redirect to="/login" />
