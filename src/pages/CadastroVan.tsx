@@ -6,17 +6,21 @@ import {
   IonBackButton,
   IonButton,
   IonButtons,
-  IonCardTitle,
   IonContent,
   IonHeader,
   IonPage,
   IonToolbar,
   IonText,
-  IonRadioGroup,
-  IonRadio
+  IonTitle,
+  IonList,
+  IonCheckbox,
+  IonItemDivider,
+  IonListHeader,
 } from "@ionic/react";
 
 import React, { useReducer, useState } from "react";
+
+import * as yup from 'yup';
 
 import { ApiClient } from "../services/api-client.service";
 
@@ -44,12 +48,36 @@ const CadastroVan: React.FC = () => {
     }
   );
 
+  // TODO, yup
+  let schema = yup.object().shape({
+    carPlate: yup.string().required(),
+    carBrand: yup.string().required(),
+    carModel: yup.string().required(),
+    maxPassengers: yup.number().integer().min(1).max(100).required(),
+    isRented: yup.boolean().required(),
+    carRentalName: yup.string(), // .required(),
+    postalCode: yup.string(), // .required(),
+    street: yup.string(), // .required(),
+    number: yup.number().integer(), // .required(),
+    complement: yup.string(), // .required(),
+    city: yup.string(), // .required(),
+    state: yup.string(), // .required(),
+
+    // name: yup.string().required(),
+    // age: yup.number().required().positive().integer(),
+    // email: yup.string().email(),
+    // website: yup.string().url(),
+    // createdOn: yup.date().default(function () {
+    //   return new Date();
+    // }),
+  });
+
   const vanForm = {
     carPlate: inputValues.carPlate,
     carBrand: inputValues.carBrand,
     carModel: inputValues.carModel,
     maxPassengers: inputValues.maxPassengers,
-    isRent: inputValues.isRent,
+    isRented: inputValues.isRented,
     carRentalName: inputValues.carRentalName,
     carRentalAddress: {
       postalCode: inputValues.postalCode,
@@ -107,7 +135,7 @@ const CadastroVan: React.FC = () => {
       return false;
     }
 
-    if (vanForm.isRent) {
+    if (vanForm.isRented) {
       return validateRentalForm();
     } else {
       clearRentalData();
@@ -173,18 +201,20 @@ const CadastroVan: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          <IonTitle>Cadastro de veículo</IonTitle>
           <IonButtons slot='start'>
             <IonBackButton defaultHref='/perfil' />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className='ion-padding'>
-        <form className='ion-padding'>
-          <IonCardTitle>Cadastro do Veículo</IonCardTitle>
-
+      <IonContent>
+        <IonList lines="full" class="ion-no-margin">
+          <IonListHeader lines="full">
+            <IonLabel>Informações do veículo</IonLabel>
+          </IonListHeader>
           <IonItem>
-            <IonLabel position='floating'>Placa *</IonLabel>
+            <IonLabel position='floating'>Placa </IonLabel>
             <IonInput
               type='text'
               clearInput
@@ -194,7 +224,7 @@ const CadastroVan: React.FC = () => {
           </IonItem>
 
           <IonItem>
-            <IonLabel position='floating'>Marca *</IonLabel>
+            <IonLabel position='floating'>Marca </IonLabel>
             <IonInput
               type='text'
               clearInput
@@ -204,7 +234,7 @@ const CadastroVan: React.FC = () => {
           </IonItem>
 
           <IonItem>
-            <IonLabel position='floating'>Modelo *</IonLabel>
+            <IonLabel position='floating'>Modelo </IonLabel>
             <IonInput
               type='text'
               clearInput
@@ -215,7 +245,7 @@ const CadastroVan: React.FC = () => {
 
           <IonItem>
             <IonLabel position='floating'>
-              Número Máximo de Passageiros *
+              Número Máximo de Passageiros 
             </IonLabel>
             <IonInput
               type='text'
@@ -224,107 +254,60 @@ const CadastroVan: React.FC = () => {
               onIonInput={(e: any) => setInputValues({ maxPassengers: e.target.value })}
             />
           </IonItem>
+        </IonList>
+
+        <IonList lines="full" class="ion-no-margin">
+          <IonListHeader lines="full">
+            <IonLabel>Informações do locador</IonLabel>
+          </IonListHeader>
 
           <IonItem>
-            <IonText>
-              <div style={{ padding: 8, paddingLeft: 0, fontWeight: "bold" }}>
-                Veículo alugado?
-              </div>
-              <div>
-                <IonRadioGroup
-                  style={{ display: "flex", width: "100%" }}
-                  onIonChange={(e: any) => setInputValues({ isRent: e.target.value })}
-                >
-                  <IonItem lines='none' style={{ flexGrow: 2 }}>
-                    <IonLabel position='fixed'>Sim</IonLabel>
-                    <IonRadio value={true} />
-                  </IonItem>
-
-                  <IonItem style={{ flexGrow: 2 }} lines='none'>
-                    <IonLabel position='fixed'>Não</IonLabel>
-                    <IonRadio value={false} />
-                  </IonItem>
-                </IonRadioGroup>
-              </div>
-            </IonText>
+            <IonLabel>O veículo é alugado?</IonLabel>
+            <IonCheckbox checked={inputValues.isRented} onIonChange={e => setInputValues({ isRented: e.detail.checked })} />
           </IonItem>
 
-          {inputValues.isRent && (
+          {inputValues.isRented && (
             <div>
-              <IonItem>
-                <IonLabel position='floating'>Nome do Locador *</IonLabel>
-                <IonInput
-                  type='text'
-                  clearInput
-                  placeholder='Digite o nome do locador do veículo'
-                  onIonInput={(e: any) => setInputValues({ carRentalName: e.target.value })}
-                />
-              </IonItem>
-              <IonText>
-                <div
-                  style={{ padding: 8, paddingLeft: 16, fontWeight: "bold" }}
-                >
-                  Endereço do Locador
-                </div>
-                <IonItem>
-                  <IonLabel position='floating'>CEP*</IonLabel>
-                  <IonInput
-                    type='text'
-                    clearInput
-                    placeholder='Digite o endereço completo do locador do veículo'
-                    onIonInput={(e: any) => setInputValues({ postalCode: e.target.value })}
-                  />
-                </IonItem>
-                <IonItem>
-                  <IonLabel position='floating'>Logradouro*</IonLabel>
-                  <IonInput
-                    type='text'
-                    clearInput
-                    placeholder='Digite o nome da rua'
-                    onIonInput={(e: any) => setInputValues({ street: e.target.value })}
-                  />
-                </IonItem>
+            <IonItem>
+              <IonLabel position="stacked" />
+              <IonInput
+                type='text'
+                clearInput
+                placeholder='Nome completo do Locador'
+                onIonInput={(e: any) => setInputValues({ carRentalName: e.target.value })}
+              />
 
-                <IonItem>
-                  <IonLabel position='floating'>Número*</IonLabel>
-                  <IonInput
-                    type='text'
-                    clearInput
-                    placeholder='Digite o número'
-                    onIonInput={(e: any) => setInputValues({ number: e.target.value })}
-                  />
-                </IonItem>
-
-                <IonItem>
-                  <IonLabel position='floating'>Complemento*</IonLabel>
-                  <IonInput
-                    type='text'
-                    clearInput
-                    placeholder='Digite o endereço completo'
-                    onIonInput={(e: any) => setInputValues({ complement: e.target.value })}
-                  />
-                </IonItem>
-
-                <IonItem>
-                  <IonLabel position='floating'>Cidade*</IonLabel>
-                  <IonInput
-                    type='text'
-                    clearInput
-                    placeholder='Digite a cidade'
-                    onIonInput={(e: any) => setInputValues({ city: e.target.value })}
-                  />
-                </IonItem>
-
-                <IonItem>
-                  <IonLabel position='floating'>Estado*</IonLabel>
-                  <IonInput
-                    type='text'
-                    clearInput
-                    placeholder='Digite o estado'
-                    onIonInput={(e: any) => setInputValues({ state: e.target.value })}
-                  />
-                </IonItem>
-              </IonText>
+              <IonInput
+                type='text'
+                clearInput
+                placeholder='Endereço do locador'
+                onIonInput={(e: any) => setInputValues({ postalCode: e.target.value })}
+              />
+              <IonInput
+                type='text'
+                clearInput
+                placeholder='Número'
+                onIonInput={(e: any) => setInputValues({ number: e.target.value })}
+              />
+              <IonInput
+                type='text'
+                clearInput
+                placeholder='Complemento'
+                onIonInput={(e: any) => setInputValues({ complement: e.target.value })}
+              />
+              <IonInput
+                type='text'
+                clearInput
+                placeholder='Cidade'
+                onIonInput={(e: any) => setInputValues({ city: e.target.value })}
+              />
+              <IonInput
+                type='text'
+                clearInput
+                placeholder='Estado'
+                onIonInput={(e: any) => setInputValues({ state: e.target.value })}
+              />
+            </IonItem>
             </div>
           )}
 
@@ -337,7 +320,8 @@ const CadastroVan: React.FC = () => {
               Salvar
             </IonButton>
           </div>
-        </form>
+        </IonList>
+
         <IonToast
           color='danger'
           isOpen={showToast}
