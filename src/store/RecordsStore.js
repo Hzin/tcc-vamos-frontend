@@ -9,7 +9,6 @@ const RecordsStore = new Store({
 export default RecordsStore;
 
 export const setStore = records => {
-
 	RecordsStore.update(state => { state.records = records.allRecords });
 	RecordsStore.update(state => { state.center = records.center });
 }

@@ -50,7 +50,9 @@ export async function getUsersSearching(currentPoint: any) {
 	//	Allow choosing of radius?
 	//	Offset could = amount loaded in an infinite scroll?
 	var latitude = currentPoint.latitude, longitude = currentPoint.longitude, radius = 3000, offset = 0;
-	const response = await fetch(`http://localhost:4000/get-records?latitude=${ latitude }&longitude=${ longitude }&radius=${ radius }&offset=${ offset }`);
-	const data = await response.json();
-	setStore(data);
+	// const response = await fetch(`http://localhost:4000/get-records?latitude=${ latitude }&longitude=${ longitude }&radius=${ radius }&offset=${ offset }`);
+  const response = await instance.post("http://localhost:3333/search/inraio", currentPoint)
+	// const data = await response.json();
+  console.log(response.data)
+	setStore(response.data);
 }

@@ -34,10 +34,10 @@ const BuscarPassageiro: React.FC = () => {
 	// 	getUsersSearching(currentPoint);
 	// });
 
-	const [ currentPoint, setCurrentPoint ] = useState({ latitude: 40.8264691, longitude: -73.9549618 });
+	const [ currentPoint, setCurrentPoint ] = useState({ latitude: -22.907829, longitude: -47.062943 });
 
 	const records = RecordsStore.useState(fetchRecords);
-	const center = { latitude: 40.8264691, longitude: -73.9549618 };
+	const center = { latitude: -22.907829, longitude: -47.062943 };
 
 	const [ results, setResults ] = useState([]);
 	const [ zoom, setZoom ] = useState(14);
@@ -68,7 +68,6 @@ const BuscarPassageiro: React.FC = () => {
 	}
 
   const handleMap = (e:any) => {
-    console.log(e)
     setCurrentPoint({ latitude: e.center[0], longitude: e.center[1] });
 	}
 
@@ -84,21 +83,20 @@ const BuscarPassageiro: React.FC = () => {
 						<Map onBoundsChanged={e => handleMap(e)} defaultCenter={ [center.latitude, center.longitude] } defaultZoom={ zoom } provider={ maptilerProvider } touchEvents={ true }>
 
 							{ results.map((record:{latitude:any, longitude:any}, index) => {
-
-								return <Marker key={ index } color="#3578e5" width={ 50 } anchor={ [ record.latitude, record.longitude ] } />
+								return <Marker key={ index } color="#3578e5" width={ 50 } anchor={ [ parseFloat(record.latitude), parseFloat(record.longitude) ] } />
 							})}
 
-							{ results.map((record:{showInfo:boolean, latitude:any, longitude:any}, index) => {
+							{/* { results.map((record:{showInfo:boolean, latitude:any, longitude:any}, index) => {
 
 								if (record.showInfo) {
 									
 									return (
-										<Overlay key={ index } anchor={ [ record.latitude, record.longitude ] } offset={[95, 304]}>
+										<Overlay key={ index } anchor={ [ record.latitude, record.longitude ] } offset={[95, 304]}> */}
 											{/* <MapOverlay record={ record } /> */}
-										</Overlay>
+										{/* </Overlay>
 									);
 								}
-							})}
+							})} */}
 						</Map>
 
             <IonFab vertical="bottom" horizontal="end" slot="fixed">
