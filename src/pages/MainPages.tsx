@@ -14,6 +14,7 @@ import { search, home, person } from 'ionicons/icons';
 
 import Home from './Home';
 import BuscarPassageiro from './BuscarPassageiro/BuscarPassageiro';
+import BuscarTransporte from './BuscarTransporte/BuscarTransporte';
 
 export const MainPages: React.FC = () => {
 
@@ -23,18 +24,17 @@ export const MainPages: React.FC = () => {
         <Route path="/home" exact={true}>
           <Home />
         </Route>
-        <Route path="/buscar" exact={true}>
+        <Route path="/buscar-passageiro" exact={true}>
           <BuscarPassageiro />
         </Route>
-        <Route path="/buscar" exact={true}>
-          <BuscarPassageiro />
+        <Route path="/buscar-transporte" exact={true}>
+          <BuscarTransporte />
         </Route>
-        <Route path="/mainpages" render={() => <Redirect to="/buscar
-        " />} />
+        <Route path="/mainpages" render={() => <Redirect to="/buscar-transporte" />} exact={true} />
       </IonRouterOutlet>
 
       <IonTabBar slot="bottom">
-        <IonTabButton tab="buscar" href="/buscar">
+        <IonTabButton tab="buscar" href="/buscar-transporte">
           <IonIcon icon={search} />
           <IonLabel>Buscar</IonLabel>
         </IonTabButton>
