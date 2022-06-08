@@ -50,4 +50,40 @@ const getById = async (userId: string): Promise<getByIdReturn> => {
   }
 };
 
-export default { getById }
+interface getByIdReturn {
+  data?: {
+    phone: '',
+    whatsapp: '',
+    facebook: '',
+    telegram: '',
+  },
+  error?: {
+    errorMessage: string;
+  }
+}
+
+const getUserSocialInfo = async (userId: string): Promise<getByIdReturn> => {
+  try {
+    let res: getByIdRes = await usersRoutes.getSocialInfo(userId)
+
+    if (res.status === "error") {
+      return {
+        error: {
+          errorMessage: res.message,
+        }
+      };
+    }
+
+    return {
+      userData: res.data,
+    };
+  } catch(err) {
+    return {
+      error: {
+        errorMessage: "Por favor, autentique-se.",
+      }
+    };
+  }
+};
+
+export default { getById, getUserSocialInfo }

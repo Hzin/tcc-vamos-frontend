@@ -1,6 +1,5 @@
 import {
 IonBackButton,
-IonButton,
 IonButtons,
 IonCard,
 IonCardContent,
@@ -17,9 +16,7 @@ import React, { useEffect, useReducer, useState } from "react";
 
 import './Perfil.css'
 import { useHistory, useLocation } from "react-router";
-import { bookOutline, callOutline, documentTextOutline, homeOutline, logoWhatsapp } from "ionicons/icons";
-
-import isEqual from 'lodash.isequal';
+import { bookOutline, callOutline, documentTextOutline, homeOutline } from "ionicons/icons";
 
 import * as usersRoutes from '../services/api/users';
 

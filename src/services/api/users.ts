@@ -69,3 +69,11 @@ export async function update(userData: UpdateUserRequest) {
   const response = await instance.patch(userRoutes.update.url, userData, { headers: header });
   return response.data;
 }
+
+// TODO, continuar
+export async function getSocialInfo(userId: string) {
+  updateHeader();
+
+  const response = await instance.get(userRoutes.getSocialInfo.url + `/${userId}`, { headers: header });
+  return response.data;
+}

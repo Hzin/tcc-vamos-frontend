@@ -1,14 +1,18 @@
 import { IonToast, IonProgressBar, IonItem, IonLabel, IonInput, IonBackButton, IonButton, IonButtons, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonToolbar } from '@ionic/react';
 import { arrowBack, logoFacebook, mail } from 'ionicons/icons';
 import { Action } from '../../components/Action';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import './Cadastro.css';
 import ModalExample from '../../components/Email';
 import * as UsersService from '../../services/api/users'
+import LocalStorage from '../../LocalStorage';
+import { UserContext } from '../../App';
 
 const Cadastro: React.FC = () => {
   const history = useHistory();
+
+  const user = useContext(UserContext);
   
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast ] = useState('');
@@ -87,6 +91,11 @@ const Cadastro: React.FC = () => {
                 // if(signIn.token) {
                     // await AsyncStorage.setItem('token', signIn.token);
                     // await AsyncStorage.setItem('cpf', retorno.cpf);
+
+                    LocalStorage.setToken(retorno.token.token);
+
+                    user.setIsLoggedIn(true);
+
                     history.push('home');
 
             } else {

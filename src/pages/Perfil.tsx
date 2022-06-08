@@ -1,4 +1,6 @@
 import {
+  IonBackButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -18,7 +20,7 @@ import {
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import React, { useState, useEffect, useReducer, useContext } from "react";
-import { cardOutline, carOutline, createOutline, exitOutline, shieldCheckmarkOutline, starOutline } from "ionicons/icons";
+import { callOutline, cardOutline, carOutline, createOutline, exitOutline, logoFacebook, logoWhatsapp, shieldCheckmarkOutline, starOutline } from "ionicons/icons";
 
 import './Perfil.css'
 import LocalStorage from "../LocalStorage";
@@ -51,6 +53,16 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       email: '',
       birth_date: '',
       bio: '',
+    }
+  );
+
+  const [inputSocialInformationValues, setInputSocialInformationValues] = useReducer(
+    (state: any, newState: any) => ({ ...state, ...newState }),
+    {
+      phone: '',
+      whatsapp: '',
+      facebook: '',
+      telegram: '',
     }
   );
 
@@ -122,6 +134,34 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
           }
         }
       }
+      // get user social info
+      const getUserSocialInfoRes = await usersService.getUserSocialInfo(userId)
+  
+      if (getUserSocialInfoRes.error) {
+        if (isVisitor && props.match.params.id) {
+          setMessageToast('Usuário não existe!')
+          setShowToast(true)
+          history.push({ pathname: '/home' })
+        } else {
+          setMessageToast(getUserSocialInfoRes.error.errorMessage)
+          setShowToast(true)
+        }
+  
+        return
+      }
+  
+      if (getUserSocialInfoRes.data) {
+        const userSocialData = getUserSocialInfoRes.data
+
+        if (isMounted) {
+          setInputSocialInformationValues({
+            'phone': userSocialData.phone,
+            'whatsapp': userSocialData.whatsapp,
+            'facebook': userSocialData.facebook,
+            'telegram': userSocialData.telegram,
+          });
+        }
+      }
     }
 
     let isMounted = true;
@@ -142,6 +182,9 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       <IonHeader>
         <IonToolbar>
           <IonTitle>Seu perfil</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/home" />
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
 
@@ -174,11 +217,58 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             <IonCardTitle>Biografia</IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-          {inputValues.bio ? inputValues.bio : 'Sem biografia.' }
+            {inputValues.bio ? inputValues.bio : 'Sem biografia.' }
           </IonCardContent>
         </IonCard>
 
-        {/* // TODO, card de informações de contato */}
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>Informações de contato</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            { !inputSocialInformationValues.phone && !inputSocialInformationValues.whatsapp && !inputSocialInformationValues.facebook && !inputSocialInformationValues.telegram ?
+                <>Sem informações de contato.</>
+            : <>
+                {
+                  inputSocialInformationValues.phone ?
+                  <>
+                    <IonChip>
+                      <IonIcon icon={callOutline} />
+                      <IonLabel>{inputSocialInformationValues.phone}</IonLabel>
+                    </IonChip>
+                  </> : <></>
+                }
+    
+                { inputSocialInformationValues.whatsapp ?
+                  <>
+                    <IonChip>
+                      <IonIcon icon={logoWhatsapp} />
+                      <IonLabel>{inputSocialInformationValues.whatsapp}</IonLabel>
+                    </IonChip>
+                  </> : <></>
+                }
+    
+                { inputSocialInformationValues.facebook ?
+                  <>
+                    <IonChip>
+                      <IonIcon icon={logoFacebook} />
+                      <IonLabel>{inputSocialInformationValues.facebook}</IonLabel>
+                    </IonChip>
+                  </> : <></>
+                }
+    
+                { inputSocialInformationValues.telegram ?
+                  <>
+                    <IonChip>
+                      <IonIcon icon={callOutline} />
+                      <IonLabel>{inputSocialInformationValues.telegram}</IonLabel>
+                    </IonChip>
+                  </> : <></>
+                }
+              </>
+            }
+          </IonCardContent>
+        </IonCard>
 
         { !isVisitor ?
           <IonList>

@@ -8,6 +8,9 @@ const usersRoutes = {
   },
   update: {
     url: `${usersRoutesDefault}/edit`
+  },
+  getSocialInfo: {
+    url: `${usersRoutesDefault}/social`
   }
 }
 
