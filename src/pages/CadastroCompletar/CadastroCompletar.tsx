@@ -14,13 +14,13 @@ IonToolbar
 } from "@ionic/react";
 import React, { useEffect, useReducer, useState } from "react";
 
-import './Perfil.css'
+import '../Perfil.css'
 import { useHistory, useLocation } from "react-router";
 import { bookOutline, callOutline, documentTextOutline, homeOutline } from "ionicons/icons";
 
-import * as usersRoutes from '../services/api/users';
+import * as usersRoutes from '../../services/api/users';
 
-import './Cadastro/Cadastro.css'
+import '../Cadastro/Cadastro.css'
 
 interface userData {
   name: string;
