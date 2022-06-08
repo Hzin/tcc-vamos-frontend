@@ -17,7 +17,7 @@ import Login from './pages/Login';
 import Home from './pages/Home';
 import Perfil from './pages/Perfil';
 import PerfilEditar from './pages/PerfilEditar';
-import CadastroCompletar from './pages/CadastroCompletar/CadastroCompletar';
+import CadastroCompletar from './pages/CadastroCompletar';
 import CadastroVan from './pages/CadastroVan';
 
 /* Core CSS required for Ionic components to work properly */
