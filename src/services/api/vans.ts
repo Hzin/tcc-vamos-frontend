@@ -42,7 +42,7 @@ interface CreateVanBody {
 export async function create(CreateVanBody: CreateVanBody) {
   updateHeader();
 
-  const response = await instance.post(vansRoutes.create.url, CreateVanBody);
+  const response = await instance.post(vansRoutes.create.url, CreateVanBody, { headers: header });
   return response.data;
 }
 

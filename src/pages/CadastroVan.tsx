@@ -340,22 +340,14 @@ const CadastroVan: React.FC = () => {
         </IonList>
 
         <IonToast
-          color='danger'
+          position="top"
+          color={toastColor}      
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message={toastMessage}
           duration={2500}
-        />
-      </IonContent>
-
-      <IonToast
-        position="top"
-        color={toastColor}      
-        isOpen={showToast}
-        onDidDismiss={() => setShowToast(false)}
-        message={toastMessage}
-        duration={2500}
       />
+      </IonContent>
     </IonPage>
   );
 };
