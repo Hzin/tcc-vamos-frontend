@@ -9,6 +9,9 @@ const usersRoutes = {
   update: {
     url: `${usersRoutesDefault}/edit`
   },
+  checkIfUserIsDriver: {
+    url: `${usersRoutesDefault}/isDriver`
+  },
   getSocialInfo: {
     url: `${usersRoutesDefault}/social`
   }

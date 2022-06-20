@@ -92,4 +92,44 @@ const getUserSocialInfo = async (userId: string): Promise<getByIdReturn> => {
   }
 };
 
-export default { getById, getUserSocialInfo }
+interface checkIfUserIsDriverReturn {
+  result?: boolean;
+  error?: {
+    errorMessage: string;
+  }
+}
+
+interface checkIfUserIsDriverResponse {
+  status: string;
+  message: string;
+  result?: boolean;
+  error?: {
+    errorMessage: string;
+  }
+}
+
+const checkIfUserIsDriver = async (id_user: string): Promise<checkIfUserIsDriverReturn> => {
+  try {
+    let res: checkIfUserIsDriverResponse = await usersRoutes.checkIfUserIsDriver(id_user)
+
+    if (res.status === "error") {
+      return {
+        error: {
+          errorMessage: res.message,
+        }
+      };
+    }
+
+    return {
+      result: res.result,
+    };
+  } catch(err) {
+    return {
+      error: {
+        errorMessage: "Por favor, autentique-se.",
+      }
+    };
+  }
+};
+
+export default { getById, getUserSocialInfo, checkIfUserIsDriver }

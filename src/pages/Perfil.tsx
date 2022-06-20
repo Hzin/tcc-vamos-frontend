@@ -21,7 +21,7 @@ import {
 } from "@ionic/react";
 import { useHistory, useLocation } from "react-router-dom";
 import React, { useState, useEffect, useReducer, useContext } from "react";
-import { callOutline, cardOutline, carOutline, createOutline, exitOutline, logoFacebook, logoWhatsapp, shieldCheckmarkOutline, starOutline } from "ionicons/icons";
+import { callOutline, cardOutline, carOutline, createOutline, exitOutline, logoFacebook, logoWhatsapp, personOutline, shieldCheckmarkOutline, starOutline } from "ionicons/icons";
 
 import './Perfil.css'
 import LocalStorage from "../LocalStorage";
@@ -54,6 +54,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
   const location = useLocation<LocationState>();
 
   const [isVisitor, setIsVisitor] = useState(true)
+  const [isDriver, setIsDriver] = useState(false)
 
   const [incompleteProfile, setIncompleteProfile] = useState(false)
   const [incompleteProfileCounter, setIncompleteProfileCounter] = useState(0)
@@ -134,6 +135,20 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
   
         return
       }
+
+      // check if user is driver (if they have vans)
+      const userIsDriverRes = await usersService.checkIfUserIsDriver(userId)
+  
+      // if (userIsDriverRes.error) {
+      //   setToastColor('warning')
+      //   setToastMessage(userIsDriverRes.error.errorMessage)
+      //   setShowToast(true)
+      //   return
+      // }
+
+      if (!userIsDriverRes.error && userIsDriverRes.result !== undefined) {
+        setIsDriver(userIsDriverRes.result)
+      }
   
       if (getByIdRes.userData) {
         const userData = getByIdRes.userData
@@ -209,8 +224,16 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             </IonCardHeader>
 
             <div id='profile-status'>
+              { isDriver ?
+                <>
+                  <IonChip>
+                    <IonIcon icon={carOutline}></IonIcon>
+                    <IonLabel color="primary">Motorista</IonLabel>
+                  </IonChip>
+                </> : <></>
+              }
               <IonChip>
-                {/* TODO, deve vir do backend */}
+                <IonIcon icon={personOutline}></IonIcon>
                 <IonLabel color="primary">Passageiro</IonLabel>
               </IonChip>
             </div>

@@ -73,6 +73,13 @@ export async function update(userData: UpdateUserRequest) {
   return response.data;
 }
 
+export async function checkIfUserIsDriver(id_user: string) {
+  updateHeader();
+
+  const response = await instance.get(userRoutes.checkIfUserIsDriver.url + `/${id_user}`, { headers: header });
+  return response.data;
+}
+
 // TODO, continuar
 export async function getSocialInfo(userId: string) {
   updateHeader();
