@@ -40,6 +40,10 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import BuscarPassageiro from './pages/BuscarPassageiro/BuscarPassageiro';
+import Transportes from './pages/Transportes/Transportes';
+import BuscarTransporte from './pages/BuscarTransporte/BuscarTransporte';
+// import Tabs from './components/Tabs';
 import { search, home, person } from 'ionicons/icons';
 import { useState, useContext } from 'react';
 import React from 'react';
