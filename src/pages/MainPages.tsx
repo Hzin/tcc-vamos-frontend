@@ -1,15 +1,12 @@
-import React, { useState, useRef } from 'react';
 import {
   IonTabs,
   IonTabBar,
   IonTabButton,
   IonLabel,
-  IonPage,
   IonIcon,
   IonRouterOutlet
 } from '@ionic/react';
 import { Redirect, Route } from 'react-router-dom';
-import { IonReactRouter } from '@ionic/react-router';
 import { search, home, person } from 'ionicons/icons';
 
 import Home from './Home';
@@ -24,9 +21,9 @@ export const MainPages: React.FC = () => {
         <Route path="/home" exact={true}>
           <Home />
         </Route>
-        <Route path="/buscar-passageiro" exact={true}>
+        {/* <Route path="/buscar-passageiro" exact={true}>
           <BuscarPassageiro />
-        </Route>
+        </Route> */}
         <Route path="/buscar-transporte" exact={true}>
           <BuscarTransporte />
         </Route>

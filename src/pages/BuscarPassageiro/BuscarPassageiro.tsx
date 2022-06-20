@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import RecordsStore from '../../store/RecordsStore';
 import { fetchRecords } from '../../store/Selectors';
 import { getUsersSearching } from '../../services/users';
+import { UserSearchInfos } from '../../components/UserSearchInfos/UserSearchInfos';
 
 const maptilerProvider = maptiler('d5JQJPLLuap8TkJJlTdJ', 'streets');
 
@@ -75,6 +76,18 @@ const BuscarPassageiro: React.FC = () => {
     await getUsersSearching(currentPoint);
   }
 
+	const showMarkerInfo = (e:any, index:any) => {
+
+		const tempRecords = JSON.parse(JSON.stringify(results));
+
+		//	Hide all current marker infos
+		!tempRecords[index].showInfo && tempRecords.forEach((tempRecord:any) => tempRecord.showInfo = false);
+		tempRecords[index].showInfo = !tempRecords[index].showInfo;
+
+		console.log(tempRecords)
+		setResults(tempRecords);
+	}
+
   return (
     <IonPage>
 			<IonContent fullscreen>
@@ -82,21 +95,21 @@ const BuscarPassageiro: React.FC = () => {
 					<> */}
 						<Map onBoundsChanged={e => handleMap(e)} defaultCenter={ [center.latitude, center.longitude] } defaultZoom={ zoom } provider={ maptilerProvider } touchEvents={ true }>
 
-							{ results.map((record:{latitude:any, longitude:any}, index) => {
-								return <Marker key={ index } color="#3578e5" width={ 50 } anchor={ [ parseFloat(record.latitude), parseFloat(record.longitude) ] } />
+							{results && results.map((record:{latitude_from:any, longitude_from:any}, index) => {
+								return <Marker onClick={ e => showMarkerInfo(e, index) } key={ index } color="#3578e5" width={ 50 } anchor={ [ parseFloat(record.latitude_from), parseFloat(record.longitude_from) ] } />
 							})}
 
-							{/* { results.map((record:{showInfo:boolean, latitude:any, longitude:any}, index) => {
+							{ results.map((record:any, index) => {
 
 								if (record.showInfo) {
 									
 									return (
-										<Overlay key={ index } anchor={ [ record.latitude, record.longitude ] } offset={[95, 304]}> */}
-											{/* <MapOverlay record={ record } /> */}
-										{/* </Overlay>
-									);
+										<Overlay key={ index } anchor={ [ parseFloat(record.latitude_from), parseFloat(record.longitude_from) ] } offset={[95, 304]}>
+											<UserSearchInfos record={ record } />
+										</Overlay>
+									)
 								}
-							})} */}
+							})}
 						</Map>
 
             <IonFab vertical="bottom" horizontal="end" slot="fixed">

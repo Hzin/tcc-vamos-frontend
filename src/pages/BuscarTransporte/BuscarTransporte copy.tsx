@@ -25,82 +25,47 @@ import { useEffect, useState } from "react";
 import { autoCompleteAddress } from "../../services/utils";
 import { useHistory } from "react-router";
 
-import GooglePlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from "react-google-places-autocomplete";
-
 const BuscarTransporte: React.FC = () => {
-  const history = useHistory();
+	const history = useHistory();
   const [addressFrom, setAddressFrom] = useState<any>("");
-  const [coordinatesFrom, setCoordinatesFrom] = useState<any>("");
+  const [coordinatesFrom, setCoordinatesFrom] = useState<any>("")
   const [addressTo, setAddressTo] = useState<any>("");
-  const [coordinatesTo, setCoordinatesTo] = useState<any>("");
+	const [coordinatesTo, setCoordinatesTo] = useState<any>("")
   const [showModalEnd, setShowModalEnd] = useState(false);
   const [addressResults, setAddressResults] = useState<any>([]);
-  const [inputActive, setInputActive] = useState("");
+	const [inputActive, setInputActive] = useState("");
 
-  // const optionsAddress = async (inputValue: any) => {
-  //   let results = await autoCompleteAddress(inputValue)
-  //     .then((res) => {
-  //       return res.map((item: any) => {
-  //         return {
-  //           value:
-  //             item.geometry.coordinates[0] + "," + item.geometry.coordinates[1],
-  //           label: item.properties.formatted,
-  //         };
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       console.log("Erro ao buscar endereço:", err);
-  //     });
-  //   setAddressResults(results);
-  // };
-
-  // function setInputActiveOpenModal(input: string) {
-  //   setInputActive(input);
-  //   setShowModalEnd(true);
-  // }
-
-  // function setAddress(div: any) {
-  //   if (inputActive === "from") {
-  //     setAddressFrom(div.target.attributes[2].value);
-  //     setCoordinatesFrom(div.target.attributes[1].value);
-  //   } else {
-  //     setAddressTo(div.target.attributes[2].value);
-  //     setCoordinatesTo(div.target.attributes[1].value);
-  //   }
-  //   setShowModalEnd(false);
-  // }
-
-  useEffect(() => {
-    if (addressFrom.label && addressFrom.label.length > 0) {
-      geocodeByAddress(addressFrom.label)
-        .then((results) => getLatLng(results[0]))
-        .then(({ lat, lng }) => setCoordinatesFrom({ lat, lng }));
-    }
-  }, [addressFrom]);
-
-  useEffect(() => {
-    if (addressTo.label && addressTo.label.length > 0) {
-      geocodeByAddress(addressTo.label)
-        .then((results) => getLatLng(results[0]))
-        .then(({ lat, lng }) => setCoordinatesTo({ lat, lng }));
-    }
-  }, [addressTo]);
-
-  function buscaTransporte(){
-    if (coordinatesFrom && coordinatesTo && addressFrom && addressTo) {
-      history.push({
-        pathname: "/transportes",
-        state: {
-          coordinatesFrom,
-          coordinatesTo,
-          addressFrom,
-          addressTo,
-        },
+  const optionsAddress = async (inputValue: any) => {
+    let results = await autoCompleteAddress(inputValue)
+      .then((res) => {
+        return res.map((item: any) => {
+          return {
+            value:
+              item.geometry.coordinates[0] + "," + item.geometry.coordinates[1],
+            label: item.properties.formatted,
+          };
+        });
+      })
+      .catch((err) => {
+        console.log("Erro ao buscar endereço:", err);
       });
-    }
+    setAddressResults(results);
+  };
+
+  function setInputActiveOpenModal(input: string) {
+    setInputActive(input);
+    setShowModalEnd(true);
+  }
+
+  function setAddress(div: any) {
+    if (inputActive === "from") {
+			setAddressFrom(div.target.attributes[2].value);
+			setCoordinatesFrom(div.target.attributes[1].value);
+		}else{
+			setAddressTo(div.target.attributes[2].value)
+    	setCoordinatesTo(div.target.attributes[1].value)
+		}
+		setShowModalEnd(false)
   }
 
   return (
@@ -110,49 +75,24 @@ const BuscarTransporte: React.FC = () => {
           <IonCardContent>
             <div className="inputs-from-to">
               <IonIcon icon={locateOutline}></IonIcon>
-              {/* <IonSearchbar
+              <IonSearchbar
                 showClearButton="never"
                 onClick={() => setInputActiveOpenModal("from")}
                 value={addressFrom}
                 placeholder="R. José Paulino, 1234 - Centro, Campinas - SP, 13013-001"
-              /> */}
-              <GooglePlacesAutocomplete
-                apiKey="AIzaSyAGfCsaNwxwyj4Ajtfy7MTNADE6JwmnZvA"
-                apiOptions={{ language: "pt-br", region: "br" }}
-                selectProps={{
-                  value: addressFrom,
-                  onChange: setAddressFrom,
-                  className: "input-autocomplete",
-                  placeholder: "R. José Paulino, 1234",
-                }}
               />
             </div>
             <div className="inputs-from-to">
               <IonIcon icon={locationOutline}></IonIcon>
-              {/* <IonSearchbar
+              <IonSearchbar
                 showClearButton="never"
                 onClick={() => setInputActiveOpenModal("to")}
                 value={addressTo}
                 placeholder="PUC Campinas"
-              /> */}
-              <GooglePlacesAutocomplete
-                apiKey="AIzaSyAGfCsaNwxwyj4Ajtfy7MTNADE6JwmnZvA"
-                apiOptions={{ language: "pt-br", region: "br" }}
-                selectProps={{
-                  value: addressTo,
-                  onChange: setAddressTo,
-                  className: "input-autocomplete",
-                  placeholder: "PUC Campinas",
-                }}
               />
             </div>
             <div className="button-search">
-              <IonButton
-                color="primary"
-                onClick={() => buscaTransporte()}
-              >
-                Buscar
-              </IonButton>
+              <IonButton color="primary" onClick={() => history.push("/transportes")}>Buscar</IonButton>
             </div>
           </IonCardContent>
         </IonCard>
@@ -194,7 +134,7 @@ const BuscarTransporte: React.FC = () => {
             icon={chevronForwardOutline}
           />
         </IonRow>
-        {/* <IonModal isOpen={showModalEnd}>
+        <IonModal isOpen={showModalEnd}>
           <IonContent>
             <div className="header-search-modal">
               <IonIcon
@@ -233,7 +173,7 @@ const BuscarTransporte: React.FC = () => {
               </>
             )}
           </IonContent>
-        </IonModal> */}
+        </IonModal>
       </IonContent>
     </IonPage>
   );

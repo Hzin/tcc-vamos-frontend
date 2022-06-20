@@ -50,3 +50,8 @@
 .icon-results-modal{
     font-size: 2rem;
 }
+
+.input-autocomplete{
+    margin: 0.5rem 0 0.5rem 0.5rem;
+    width: 100%;
+}

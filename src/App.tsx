@@ -45,7 +45,7 @@ const App: React.FC = () => (
           <Route exact path="/cadastro" component={Cadastro}></Route>
           <Route exact path="/login" component={Login}></Route>
           <Route exact path="/buscar-passageiro" component={BuscarPassageiro}></Route>
-          <Route exact path="/buscar-transporte" component={BuscarTransporte}></Route>
+          {/* <Route exact path="/buscar-transporte" component={BuscarTransporte}></Route> */}
           <Route exact path="/transportes" component={Transportes}></Route>
           <Route exact path="/">
             <Redirect to="/mainpages" />
