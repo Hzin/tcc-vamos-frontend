@@ -14,6 +14,10 @@ const usersRoutes = {
   },
   getSocialInfo: {
     url: `${usersRoutesDefault}/social`
+  },
+  // TODO, depois corrigir
+  getUsersSearching: {
+    url: `/search/inraio`
   }
 }
 

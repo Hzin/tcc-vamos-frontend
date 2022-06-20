@@ -44,6 +44,7 @@ import { search, home, person } from 'ionicons/icons';
 import { useState, useContext } from 'react';
 import React from 'react';
 import MinhasVans from './pages/MinhasVans';
+import BuscarPassageiro from './pages/BuscarPassageiro/BuscarPassageiro';
 
 setupIonicReact();
 
@@ -59,6 +60,8 @@ const routes = (
   <Route exact path="/perfil/completar" component={CadastroCompletar}></Route>
   <Route exact path="/perfil/completar/documento" component={CompletarDocumento}></Route>
   <Route exact path="/perfil/completar/telefone" component={CompletarTelefone}></Route>
+
+  <Route exact path="/buscar-passageiro" component={BuscarPassageiro}></Route>
 
   <Route exact path="/usuario/:id" component={Perfil}></Route>
 

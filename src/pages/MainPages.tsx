@@ -13,6 +13,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import { search, home, person } from 'ionicons/icons';
 
 import Home from './Home';
+import BuscarPassageiro from './BuscarPassageiro/BuscarPassageiro';
 
 export const MainPages: React.FC = () => {
 
@@ -22,7 +23,11 @@ export const MainPages: React.FC = () => {
         <Route path="/home" exact={true}>
           <Home />
         </Route>
-        <Route path="/mainpages" render={() => <Redirect to="/home" />} />
+        <Route path="/buscar" exact={true}>
+          <BuscarPassageiro />
+        </Route>
+        <Route path="/mainpages" render={() => <Redirect to="/buscar
+        " />} />
       </IonRouterOutlet>
 
       <IonTabBar slot="bottom">
