@@ -42,27 +42,23 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
   const [isVisitor, setIsVisitor] = useState(true)
 
+  const [incompleteProfile, setIncompleteProfile] = useState(false)
+
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState('');
 
   const [inputValues, setInputValues] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
     {
+      id: '',
       name: '',
       lastname: '',
       email: '',
+      phone_number: '',
       birth_date: '',
       bio: '',
-    }
-  );
-
-  const [inputSocialInformationValues, setInputSocialInformationValues] = useReducer(
-    (state: any, newState: any) => ({ ...state, ...newState }),
-    {
-      phone: '',
-      whatsapp: '',
-      facebook: '',
-      telegram: '',
+      document_type: '',
+      document: '',
     }
   );
 
@@ -122,44 +118,24 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
   
         if (isMounted) {
           setInputValues({
+            'id': userId,
             'name': userData.name,
             'lastname': userData.lastname,
             'email': userData.email,
+            'phone_number': userData.phone_number,
             'birth_date': userData.birth_date,
-            'bio': userData.bio
+            'bio': userData.bio,
+            'document_type': userData.document_type,
+            'document': userData.document
           });
 
           if (!props.match.params.id) {
             setIsVisitor(false)
           }
-        }
-      }
-      // get user social info
-      const getUserSocialInfoRes = await usersService.getUserSocialInfo(userId)
-  
-      if (getUserSocialInfoRes.error) {
-        if (isVisitor && props.match.params.id) {
-          setMessageToast('Usuário não existe!')
-          setShowToast(true)
-          history.push({ pathname: '/home' })
-        } else {
-          setMessageToast(getUserSocialInfoRes.error.errorMessage)
-          setShowToast(true)
-        }
-  
-        return
-      }
-  
-      if (getUserSocialInfoRes.data) {
-        const userSocialData = getUserSocialInfoRes.data
-
-        if (isMounted) {
-          setInputSocialInformationValues({
-            'phone': userSocialData.phone,
-            'whatsapp': userSocialData.whatsapp,
-            'facebook': userSocialData.facebook,
-            'telegram': userSocialData.telegram,
-          });
+          
+          if (!userData.document || !userData.phone_number) {
+            setIncompleteProfile(true)
+          }
         }
       }
     }
@@ -226,42 +202,15 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             <IonCardTitle>Informações de contato</IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-            { !inputSocialInformationValues.phone && !inputSocialInformationValues.whatsapp && !inputSocialInformationValues.facebook && !inputSocialInformationValues.telegram ?
+            { !inputValues.phone_number ?
                 <>Sem informações de contato.</>
             : <>
                 {
-                  inputSocialInformationValues.phone ?
+                  inputValues.phone_number ?
                   <>
                     <IonChip>
                       <IonIcon icon={callOutline} />
-                      <IonLabel>{inputSocialInformationValues.phone}</IonLabel>
-                    </IonChip>
-                  </> : <></>
-                }
-    
-                { inputSocialInformationValues.whatsapp ?
-                  <>
-                    <IonChip>
-                      <IonIcon icon={logoWhatsapp} />
-                      <IonLabel>{inputSocialInformationValues.whatsapp}</IonLabel>
-                    </IonChip>
-                  </> : <></>
-                }
-    
-                { inputSocialInformationValues.facebook ?
-                  <>
-                    <IonChip>
-                      <IonIcon icon={logoFacebook} />
-                      <IonLabel>{inputSocialInformationValues.facebook}</IonLabel>
-                    </IonChip>
-                  </> : <></>
-                }
-    
-                { inputSocialInformationValues.telegram ?
-                  <>
-                    <IonChip>
-                      <IonIcon icon={callOutline} />
-                      <IonLabel>{inputSocialInformationValues.telegram}</IonLabel>
+                      <IonLabel>{inputValues.phone_number}</IonLabel>
                     </IonChip>
                   </> : <></>
                 }
@@ -277,10 +226,16 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                 <IonIcon icon={createOutline} slot="start" />
                 <IonLabel>Editar perfil</IonLabel>
               </IonItem>
-              <IonItem button onClick={() => history.push({ pathname: '/perfil/completar', state: { userData: inputValues } })}>
-                <IonIcon icon={shieldCheckmarkOutline} slot="start" />
-                <IonLabel>Completar cadastro</IonLabel>
-              </IonItem>
+
+              { incompleteProfile ?
+                <>
+                  <IonItem button onClick={() => history.push({ pathname: '/perfil/completar', state: { userData: inputValues } })}>
+                    <IonIcon icon={shieldCheckmarkOutline} slot="start" />
+                    <IonLabel>Completar cadastro</IonLabel>
+                  </IonItem>
+                </>
+                : <></> }
+
               <IonItem button onClick={() => history.push({ pathname: '/cadastro-van'})}>
                 <IonIcon icon={carOutline} slot="start" />
                 <IonLabel>Cadastrar Van</IonLabel>

@@ -68,6 +68,10 @@ const PerfilEditar: React.FC = () => {
   );
 
   useEffect(() => {
+    if (!location.state) {
+      history.push({ pathname: '/perfil' })
+    }
+
     let userData = location.state.userData
 
     setUserData(location.state.userData)

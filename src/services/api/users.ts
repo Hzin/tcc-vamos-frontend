@@ -40,8 +40,9 @@ export interface UpdateUserRequest {
   name?: string;
   email?: string;
   bio?: string;
-  cpf?: string;
-  cnpj?: string;
+  document_type?: string;
+  document?: string;
+  phone_number?: string;
 }
 
 // export async function get(cpf) {

@@ -231,9 +231,10 @@ const CadastroVan: React.FC = () => {
             />
           </IonItem>
 
+          {/* TODO, problema de setState para valores vindos de um evento sendo triggerado por um ion-select */}
           <IonItem>
             <IonLabel>Marca</IonLabel>
-            <IonSelect value={inputValues.carBrand} onIonChange={(e: any) => setInputValues({ carBrand: e.target.value })}>
+            <IonSelect onIonChange={(e: any) => { setInputValues({ carBrand: e.detail.value }) }}>
               { carModels ? carModels.map((carModel, index) => {
                 return (<IonSelectOption key={index} value={carModel.name}>{carModel.name}</IonSelectOption>)
               }) : <></> }

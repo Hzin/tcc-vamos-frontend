@@ -5,10 +5,11 @@ interface getByIdReturn {
     name: string;
     lastname: string;
     email: string;
+    phone_number: string;
     birth_date: string;
     bio: string;
-    cpf: string;
-    cnpj: string;
+    document_type: string;
+    document: string;
   },
   error?: {
     errorMessage: string;
@@ -23,10 +24,11 @@ interface getByIdRes {
     name: string;
     lastname: string;
     email: string;
+    phone_number: string;
     birth_date: string;
     bio: string;
-    cpf: string;
-    cnpj: string;
+    document_type: string;
+    document: string;
   },
 }
 
