@@ -26,9 +26,6 @@ export const MainPages: React.FC = () => {
         <Route path="/buscar" exact={true}>
           <BuscarPassageiro />
         </Route>
-        <Route path="/buscar" exact={true}>
-          <BuscarPassageiro />
-        </Route>
         <Route path="/mainpages" render={() => <Redirect to="/buscar
         " />} />
       </IonRouterOutlet>

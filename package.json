@@ -9,6 +9,7 @@
     "@capacitor/keyboard": "1.2.2",
     "@capacitor/status-bar": "1.0.8",
     "@hookform/error-message": "^2.0.0",
+    "@ionic-selectable/core": "^5.0.0-alpha.13",
     "@ionic/react": "^6.0.0",
     "@ionic/react-router": "^6.0.0",
     "@testing-library/jest-dom": "^5.11.9",
@@ -24,6 +25,7 @@
     "ionicons": "^5.4.0",
     "pigeon-maps": "^0.21.0",
     "pullstate": "^1.24.0",
+    "lodash.isequal": "^4.5.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-hook-form": "^7.30.0",
@@ -43,10 +45,12 @@
     "workbox-range-requests": "^5.1.4",
     "workbox-routing": "^5.1.4",
     "workbox-strategies": "^5.1.4",
-    "workbox-streams": "^5.1.4"
+    "workbox-streams": "^5.1.4",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:mock": "json-server --port 8080 --watch ./mock/db.json",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-scripts eject"
@@ -72,6 +76,7 @@
   "devDependencies": {
     "@capacitor/cli": "3.4.3",
     "@types/axios": "^0.14.0",
+    "@types/lodash.isequal": "^4.5.6",
     "react-scripts": "5.0.1"
   },
   "description": "An Ionic project"
