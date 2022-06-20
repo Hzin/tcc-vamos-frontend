@@ -8,6 +8,7 @@ import ModalExample from '../../components/Email';
 import * as UsersService from '../../services/api/users'
 import LocalStorage from '../../LocalStorage';
 import { UserContext } from '../../App';
+import { Color } from '@ionic/react/node_modules/@ionic/core';
 
 const Cadastro: React.FC = () => {
   const history = useHistory();
@@ -15,7 +16,8 @@ const Cadastro: React.FC = () => {
   const user = useContext(UserContext);
   
   const [showToast, setShowToast] = useState(false);
-  const [messageToast, setMessageToast ] = useState('');
+  const [messageToast, setMessageToast] = useState('');
+  const [toastColor, setToastColor] = useState<Color>("primary");
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -57,7 +59,7 @@ const Cadastro: React.FC = () => {
       clearResult();
 
       if(!emailValidate()) {
-          lResult.error = 'O EMAIL é inválido!';
+          lResult.error = 'E-mail inválido!';
           lResult.success = false;
           return lResult;
       } else if(password.length < 7 || password.length > 12) { //TODO: validar de acordo com a documentação
@@ -70,50 +72,56 @@ const Cadastro: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-
-    if(name != '' && email != '' && birthDate != '' && password != '' && confirmPassword != '') {
-      if(password === confirmPassword){
-        const signUpForm = {
-          name: firstName,
-          lastname: lastName,
-          email: email,
-          birth_date: birthDate,
-          password: password
-        }
-
-        let result = fieldValidate();
-        if((await result).success) {
-
-            let retorno = await UsersService.create(signUpForm);
-            console.log(retorno);
-            if(retorno.token) {
-                // let signIn = await Api.signIn(email, passwordField); 
-                // if(signIn.token) {
-                    // await AsyncStorage.setItem('token', signIn.token);
-                    // await AsyncStorage.setItem('cpf', retorno.cpf);
-
-                    LocalStorage.setToken(retorno.token.token);
-
-                    user.setIsLoggedIn(true);
-
-                    history.push('home');
-
-            } else {
-              setMessageToast(retorno.message);
-              setShowToast(true);
-            }
-        } else{
-          setMessageToast(lResult.error);
-          setShowToast(true);
-        }
-      } else {
-        setMessageToast('As senhas devem ser iguais!');
-        setShowToast(true);
-      }
-    } else {
-      setMessageToast('Nenhum campo pode ser nulo!');
+    if(name === '' || email === '' || birthDate === '' || password === '' || confirmPassword === '') {
+      setToastColor("warning")
+      setMessageToast('Nenhum campo pode estar vazio!');
       setShowToast(true);
+      return
     }
+    
+    if(password !== confirmPassword) {
+      setToastColor("warning")
+      setMessageToast('As senhas devem ser iguais!');
+      setShowToast(true);
+      return
+    }
+      
+    const signUpForm = {
+      name: firstName,
+      lastname: lastName,
+      email: email,
+      birth_date: birthDate,
+      password: password
+    }
+
+    let result = fieldValidate();
+    if(!(await result).success) {
+      setToastColor("warning")
+      setMessageToast(lResult.error);
+      setShowToast(true);
+      return
+    }
+
+    let retorno = await UsersService.create(signUpForm);
+
+    if(!retorno.token) {
+      setToastColor('danger')
+      setMessageToast(retorno.message);
+      setShowToast(true);
+      return
+    }
+
+    LocalStorage.setToken(retorno.token.token);
+
+    user.setIsLoggedIn(true);
+
+    history.push({ pathname: '/home', state: {
+      redirectData: {
+        showToastMessage: true,
+        toastColor: "success",
+        toastMessage: "Usuário cadastrado com sucesso!",
+      }
+    }})
   };
 
   const { name } = useParams<{ name: string; }>();
@@ -130,19 +138,11 @@ const Cadastro: React.FC = () => {
 			<IonContent fullscreen>
         <IonGrid className="ion-padding">
             <IonRow>
-                <IonCol size="12">
-                    {/* <IonCardTitle>Como você deseja se cadastrar?</IonCardTitle> */}
-                    <IonCardTitle>Cadastro</IonCardTitle>
-                </IonCol>
+              <IonCol size="12">
+                {/* <IonCardTitle>Como você deseja se cadastrar?</IonCardTitle> */}
+                <IonCardTitle>Cadastro</IonCardTitle>
+              </IonCol>
             </IonRow>
-            {/* <IonItem>
-              <IonIcon icon={logoFacebook} />
-              Continuar com Facebook
-            </IonItem>
-            <IonItem>
-              <IonIcon icon={mail} />
-              Continuar com e-mail
-            </IonItem> */}
             <IonRow>
                 <IonCol size="12">
                   <div id='nome-sobrenome'>
@@ -151,7 +151,7 @@ const Cadastro: React.FC = () => {
                       <IonInput 
                         type='text'
                         clearInput
-                        onIonInput={(e: any) => setFirstName(e.target.value)}
+                        onIonChange={(e: any) => setFirstName(e.target.value)}
                       >
                       </IonInput>
                     </IonItem>
@@ -159,7 +159,7 @@ const Cadastro: React.FC = () => {
                       <IonLabel position='floating'>Sobrenome</IonLabel>
                       <IonInput 
                         clearInput
-                        onIonInput={(e: any) => setLastName(e.target.value)}
+                        onIonChange={(e: any) => setLastName(e.target.value)}
                       >
                       </IonInput>
                     </IonItem>
@@ -170,7 +170,7 @@ const Cadastro: React.FC = () => {
                     <IonInput 
                       clearInput 
                       type='email'
-                      onIonInput={(e: any) => setEmail(e.target.value)}
+                      onIonChange={(e: any) => setEmail(e.target.value)}
                     >
                     </IonInput>
                   </IonItem>
@@ -179,7 +179,7 @@ const Cadastro: React.FC = () => {
                     <IonLabel position='stacked'>Data de nascimento</IonLabel>
                     <IonInput 
                       type='date'
-                      onIonInput={(e: any) => setBirthDate(e.target.value)}
+                      onIonChange={(e: any) => setBirthDate(e.target.value)}
                     >
                     </IonInput>
                   </IonItem>
@@ -189,7 +189,7 @@ const Cadastro: React.FC = () => {
                     <IonInput 
                       clearInput 
                       type='password'
-                      onIonInput={(e: any) => setPassword(e.target.value)}
+                      onIonChange={(e: any) => setPassword(e.target.value)}
                     ></IonInput>
                   </IonItem>
                   <IonItem>
@@ -197,7 +197,7 @@ const Cadastro: React.FC = () => {
                     <IonInput 
                       clearInput 
                       type='password'
-                      onIonInput={(e: any) => setConfirmPassword(e.target.value)}
+                      onIonChange={(e: any) => setConfirmPassword(e.target.value)}
                     ></IonInput>
                   </IonItem>
                   
@@ -210,9 +210,9 @@ const Cadastro: React.FC = () => {
             <Action message="Já tem conta?" text="Login" link="/login" />
         </IonGrid>
         {/* <IonProgressBar type="indeterminate"></IonProgressBar><br /> */}
+
         <IonToast
-          // cssClass={"toast-notification"}
-          color='danger'      
+          color={toastColor}
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message={messageToast}

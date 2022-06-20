@@ -19,6 +19,7 @@ import {
 } from "@ionic/react";
 
 import React, { useEffect, useReducer, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 // import * as yup from 'yup';
 
@@ -27,10 +28,14 @@ import carsService from '../services/functions/carsService'
 import * as vansRoutes from '../services/api/vans';
 
 import "./CadastroVan.css";
+import { Color } from "@ionic/react/node_modules/@ionic/core";
 
 const CadastroVan: React.FC = () => {
+  const history = useHistory();
+  
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastColor, setToastColor] = useState<Color>("primary");
 
   const [carModels, setCarModels] = useState([{
     id_model: '',
@@ -174,8 +179,15 @@ const CadastroVan: React.FC = () => {
         return
       }
 
-      console.log(response)
+      history.push({ pathname: '/perfil', state: {
+        redirectData: {
+          showToastMessage: true,
+          toastColor: "success",
+          toastMessage: response.message,
+        },
+      }})
     }).catch((err) => {
+      setToastColor("danger")
       setToastMessage(err);
       setShowToast(true);
     })
@@ -188,7 +200,9 @@ const CadastroVan: React.FC = () => {
       const carModelsRes = await carsService.getAllCarModels()
   
       if (carModelsRes.error) {
-        console.log('Houve um erro')
+        setToastColor("danger")
+        setToastMessage(carModelsRes.error.errorMessage);
+        setShowToast(true);
         return
       }
   
@@ -333,6 +347,15 @@ const CadastroVan: React.FC = () => {
           duration={2500}
         />
       </IonContent>
+
+      <IonToast
+        position="top"
+        color={toastColor}      
+        isOpen={showToast}
+        onDidDismiss={() => setShowToast(false)}
+        message={toastMessage}
+        duration={2500}
+      />
     </IonPage>
   );
 };

@@ -8,13 +8,11 @@ import {
   IonIcon,
   IonList,
   IonPage,
-  IonSelect,
-  IonSelectOption,
   IonTitle,
   IonToast,
   IonToolbar
 } from "@ionic/react";
-import React, {  useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IonGrid, IonRow, IonCol } from "@ionic/react";
 import { useHistory, useLocation } from "react-router-dom";
 import {
@@ -26,28 +24,40 @@ import {
 import { saveOutline } from "ionicons/icons";
 
 import * as usersRoutes from '../../services/api/users';
+import { Color } from "@ionic/react/node_modules/@ionic/core";
 
 interface documentTypesInterface {
   label: string;
   name: string;
 }
-  
+
+interface userData {
+  name: string;
+  lastname: string;
+  email: string;
+  phone_number: string;
+  birth_date: string;
+  bio: string;
+  document_type: string;
+  document: string;
+}
+
+interface LocationState {
+  userData: userData;
+}
+
 const CompletarTelefone: React.FC = () => {
+  const location = useLocation<LocationState>();
+
   const [hasChangedSinceInitialState, setHasChangedSinceInitialState] = useState(false);
 
   const [phone, setPhone] = useState('');
 
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState('');
+  const [toastColor, setToastColor] = useState<Color>("primary");
   
   const history = useHistory();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (!location.state) {
-      history.push({ pathname: '/perfil/completar' })
-    }
-  }, [])
 
   const validateform = () => {
     if (isNaN((Number)(phone))) {
@@ -66,18 +76,39 @@ const CompletarTelefone: React.FC = () => {
 
     usersRoutes.update({ phone_number: phone }).then(response => {
       if (response.status === 'error') {
+        setToastColor("warning")
         setMessageToast(response.message);
         setShowToast(true);
 
         return
       }
 
-      console.log(response)
+      const userDataObj = location.state.userData
+
+      history.push({ pathname: '/perfil', state: {
+        redirectData: {
+          showToastMessage: true,
+          toastColor: "success",
+          toastMessage: response.message,
+        },
+      }})
     }).catch((err) => {
       setMessageToast(err);
       setShowToast(true);
     })
   };
+
+  useEffect(() => {
+    if (!location.state.userData) {
+      history.push({ pathname: '/perfil', state: {
+        redirectData: {
+          showToastMessage: true,
+          toastColor: "warning",
+          toastMessage: "Houve um erro. Por favor, tente novamente.",
+        }
+      }})      
+    }
+  }, [])
 
   return (
     <IonPage>
@@ -122,11 +153,12 @@ const CompletarTelefone: React.FC = () => {
         </IonFab>
 
         <IonToast
-        color='danger'      
-        isOpen={showToast}
-        onDidDismiss={() => setShowToast(false)}
-        message={messageToast}
-        duration={2500}
+          position="top"
+          color={toastColor}     
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={messageToast}
+          duration={2500}
         />
       </IonContent>
     </IonPage>

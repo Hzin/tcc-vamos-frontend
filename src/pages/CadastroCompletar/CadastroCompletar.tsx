@@ -10,15 +10,25 @@ IonItem,
 IonLabel,
 IonPage,
 IonTitle,
+IonToast,
 IonToolbar
 } from "@ionic/react";
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 
 import '../Perfil.css'
 import { useHistory, useLocation } from "react-router";
 import { callOutline, documentTextOutline } from "ionicons/icons";
 
 import '../Cadastro/Cadastro.css'
+import { Color } from "@ionic/react/node_modules/@ionic/core";
+
+interface cardItem {
+  icon: string;
+  label: string;
+  description: string;
+  url: string;
+  required: boolean;
+}
 
 interface userData {
   name: string;
@@ -32,15 +42,13 @@ interface userData {
 }
 
 interface LocationState {
-  userData: userData
-}
-
-interface cardItem {
-  icon: string;
-  label: string;
-  description: string;
-  url: string;
-  required: boolean;
+  userData: userData;
+  
+  redirectData?: {
+    showToastMessage: boolean;
+    toastColor: Color;
+    toastMessage: string;
+  }
 }
 
 let items: cardItem[] = [
@@ -64,15 +72,29 @@ const CadastroCompletar: React.FC = () => {
   const history = useHistory();
   const location = useLocation<LocationState>();
 
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastColor, setToastColor] = useState<Color>("primary");
+
   const handleCardClick = (item: cardItem) => {
     if (!item.required) return
 
-    history.push({ pathname: item.url }); 
+    history.push({ pathname: item.url, state: { userData: location.state.userData } }); 
   }
 
   useEffect(() => {
-    if (!location.state) {
+    if (!location.state || !location.state.userData) {
       history.push({ pathname: '/perfil' })
+    }
+
+    if (location.state && location.state.redirectData) {
+      const redirectData = location.state.redirectData
+
+      if (redirectData.showToastMessage) {
+        setToastColor(redirectData.toastColor)
+        setToastMessage(redirectData.toastMessage)
+        setShowToast(true)
+      }
     }
 
     if (!location.state.userData.document) items[0].required = true
@@ -103,6 +125,15 @@ const CadastroCompletar: React.FC = () => {
             </IonCard>
           )
         })}
+
+        <IonToast
+          position="top"
+          color={toastColor}
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={toastMessage}
+          duration={2500}
+        />
       </IonContent>
     </IonPage>
   );

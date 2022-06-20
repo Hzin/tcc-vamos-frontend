@@ -89,7 +89,11 @@ const Page: React.FC = () => {
 
       user.setIsLoggedIn(true);
 
-      history.push({ pathname: '/home' });
+      history.push({ pathname: '/home', state: { redirectData: {
+        showToastMessage: true,
+        toastColor: "success",
+        toastMessage: "Usuário autenticado com sucesso!",
+      }}})
     }).catch(error => {
       // if (!error.response) return
 
@@ -155,7 +159,7 @@ const Page: React.FC = () => {
         </IonGrid>
 
         <IonToast
-          // cssClass={"toast-notification"}
+          position="top"
           color='danger'      
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}

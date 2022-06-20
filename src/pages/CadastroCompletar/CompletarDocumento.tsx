@@ -14,7 +14,7 @@ import {
   IonToast,
   IonToolbar
 } from "@ionic/react";
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IonGrid, IonRow, IonCol } from "@ionic/react";
 import { useHistory, useLocation } from "react-router-dom";
 import {
@@ -33,8 +33,25 @@ interface documentTypesInterface {
   label: string;
   name: string;
 }
+
+interface userData {
+  name: string;
+  lastname: string;
+  email: string;
+  phone_number: string;
+  birth_date: string;
+  bio: string;
+  document_type: string;
+  document: string;
+}
+
+interface LocationState {
+  userData: userData;
+}
   
 const CompletarDocumento: React.FC = () => {
+  const location = useLocation<LocationState>();
+
   const [hasChangedSinceInitialState, setHasChangedSinceInitialState] = useState(false);
 
   const [documentTypes, setDocumentTypes] = useState<documentTypesInterface[]>([]);
@@ -48,16 +65,8 @@ const CompletarDocumento: React.FC = () => {
   const [messageToast, setMessageToast] = useState('');
   
   const history = useHistory();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (!location.state) {
-      history.push({ pathname: '/perfil/completar' })
-    }
-  }, [])
 
   const validateform = () => {
-    console.log(document)
     if (isNaN((Number)(document))) {
       setMessageToast('Documento pode conter apenas números!')
       setShowToast(true)
@@ -86,7 +95,13 @@ const CompletarDocumento: React.FC = () => {
         return
       }
 
-      console.log(response)
+      history.push({ pathname: '/perfil', state: {
+        redirectData: {
+          showToastMessage: true,
+          toastColor: "success",
+          toastMessage: response.message,
+        }
+      }})
     }).catch((err) => {
       setMessageToast(err);
       setShowToast(true);
@@ -111,6 +126,16 @@ const CompletarDocumento: React.FC = () => {
   }
 
   useEffect(() => {
+    if (!location.state.userData) {
+      history.push({ pathname: '/perfil', state: {
+        redirectData: {
+          showToastMessage: true,
+          toastColor: "warning",
+          toastMessage: "Houve um erro. Por favor, tente novamente.",
+        }, userData: location.state.userData
+      }})      
+    }
+
     setDocumentTypes([
       {
         name: 'cpf',
@@ -178,11 +203,12 @@ const CompletarDocumento: React.FC = () => {
         </IonFab>
 
         <IonToast
-        color='danger'      
-        isOpen={showToast}
-        onDidDismiss={() => setShowToast(false)}
-        message={messageToast}
-        duration={2500}
+          position="top"
+          color='danger'      
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={messageToast}
+          duration={2500}
         />
       </IonContent>
     </IonPage>

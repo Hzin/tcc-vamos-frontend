@@ -1,5 +1,6 @@
 import {
   IonBackButton,
+  IonBadge,
   IonButtons,
   IonCard,
   IonCardContent,
@@ -18,7 +19,7 @@ import {
   IonToast,
   IonToolbar,
 } from "@ionic/react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import React, { useState, useEffect, useReducer, useContext } from "react";
 import { callOutline, cardOutline, carOutline, createOutline, exitOutline, logoFacebook, logoWhatsapp, shieldCheckmarkOutline, starOutline } from "ionicons/icons";
 
@@ -28,6 +29,7 @@ import LocalStorage from "../LocalStorage";
 import sessionsService from '../services/functions/sessionsService'
 import usersService from '../services/functions/usersService'
 import { UserContext } from "../App";
+import { Color } from "@ionic/react/node_modules/@ionic/core";
 
 interface ScanNewProps {
   match:  {
@@ -37,15 +39,28 @@ interface ScanNewProps {
   }
 }
 
+interface LocationState { 
+  redirectData?: {
+    showToastMessage: boolean;
+    toastColor: Color;
+    toastMessage: string;
+  }
+}
+
 const Perfil: React.FC<ScanNewProps> = (props) => {
   const user = useContext(UserContext);
+
+  const history = useHistory();
+  const location = useLocation<LocationState>();
 
   const [isVisitor, setIsVisitor] = useState(true)
 
   const [incompleteProfile, setIncompleteProfile] = useState(false)
+  const [incompleteProfileCounter, setIncompleteProfileCounter] = useState(0)
 
   const [showToast, setShowToast] = useState(false);
-  const [messageToast, setMessageToast] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastColor, setToastColor] = useState<Color>("primary");
 
   const [inputValues, setInputValues] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
@@ -62,12 +77,10 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
     }
   );
 
-  const history = useHistory();
-
   const redirectUserToLogin = () => {
     // TODO, não impede o usuário de retornar a página de login
     history.push({ pathname: '/login' });
-    setMessageToast("Por favor, autentique-se!");
+    setToastMessage("Por favor, autentique-se!");
     setShowToast(true);
   }
 
@@ -78,6 +91,16 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
   }
 
   useEffect(() => {
+    if (location.state && location.state.redirectData) {
+      const redirectData = location.state.redirectData
+
+      if (redirectData.showToastMessage) {
+        setToastColor(redirectData.toastColor)
+        setToastMessage(redirectData.toastMessage)
+        setShowToast(true)
+      }
+    }
+
     const loadUserData = async () => {
       let userId = ''
 
@@ -102,11 +125,11 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
   
       if (getByIdRes.error) {
         if (isVisitor && props.match.params.id) {
-          setMessageToast('Usuário não existe!')
+          setToastMessage('Usuário não existe!')
           setShowToast(true)
           history.push({ pathname: '/home' })
         } else {
-          setMessageToast(getByIdRes.error.errorMessage)
+          setToastMessage(getByIdRes.error.errorMessage)
           setShowToast(true)
         }
   
@@ -135,6 +158,13 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
           
           if (!userData.document || !userData.phone_number) {
             setIncompleteProfile(true)
+
+            let counter = 0
+
+            if (!userData.document) counter++
+            if (!userData.phone_number) counter++
+
+            setIncompleteProfileCounter(counter)
           }
         }
       }
@@ -173,8 +203,8 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
         
         <IonCard>
           <IonCardContent>
-              {/* <img src="https://static.generated.photos/vue-static/home/feed/adult.png" alt="avatar" className='avatar' id='avatar'/> */}
-              <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/faa68f71f3b2a48ca89228c2c2aa72d3" alt="avatar" className='avatar' id='avatar'/>
+              <img src="https://static.generated.photos/vue-static/home/feed/adult.png" alt="avatar" className='avatar' id='avatar'/>
+              {/* <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/faa68f71f3b2a48ca89228c2c2aa72d3" alt="avatar" className='avatar' id='avatar'/> */}
             <IonCardHeader>
               <IonCardTitle class="ion-text-center">{inputValues.name} {inputValues.lastname}</IonCardTitle>
             </IonCardHeader>
@@ -232,6 +262,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                   <IonItem button onClick={() => history.push({ pathname: '/perfil/completar', state: { userData: inputValues } })}>
                     <IonIcon icon={shieldCheckmarkOutline} slot="start" />
                     <IonLabel>Completar cadastro</IonLabel>
+                    <IonBadge color="primary">{incompleteProfileCounter}</IonBadge>
                   </IonItem>
                 </>
                 : <></> }
@@ -256,10 +287,11 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
         }
 
         <IonToast
-          color='danger'      
+          position="top"
+          color={toastColor}      
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
-          message={messageToast}
+          message={toastMessage}
           duration={2500}
         />
       </IonContent>
