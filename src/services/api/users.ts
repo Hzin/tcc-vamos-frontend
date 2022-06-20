@@ -37,9 +37,12 @@ export interface CadastroRequest {
 }
 
 export interface UpdateUserRequest {
-  name: string;
-  email: string;
-  bio: string;
+  name?: string;
+  email?: string;
+  bio?: string;
+  document_type?: string;
+  document?: string;
+  phone_number?: string;
 }
 
 // export async function get(cpf) {
@@ -67,5 +70,13 @@ export async function update(userData: UpdateUserRequest) {
   updateHeader();
 
   const response = await instance.patch(userRoutes.update.url, userData, { headers: header });
+  return response.data;
+}
+
+// TODO, continuar
+export async function getSocialInfo(userId: string) {
+  updateHeader();
+
+  const response = await instance.get(userRoutes.getSocialInfo.url + `/${userId}`, { headers: header });
   return response.data;
 }

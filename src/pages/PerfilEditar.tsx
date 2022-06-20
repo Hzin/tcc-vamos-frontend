@@ -28,6 +28,7 @@ import isEqual from 'lodash.isequal';
 import * as usersRoutes from '../services/api/users';
 
 import './Cadastro/Cadastro.css'
+import { Color } from "@ionic/react/node_modules/@ionic/core";
 
 interface userData {
   name: string;
@@ -47,6 +48,7 @@ const PerfilEditar: React.FC = () => {
 
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState('');
+  const [toastColor, setToastColor] = useState<Color>("primary");
 
   const [userData, setUserData] = useState({
     name: '',
@@ -68,6 +70,10 @@ const PerfilEditar: React.FC = () => {
   );
 
   useEffect(() => {
+    if (!location.state) {
+      history.push({ pathname: '/perfil' })
+    }
+
     let userData = location.state.userData
 
     setUserData(location.state.userData)
@@ -83,14 +89,22 @@ const PerfilEditar: React.FC = () => {
   const handleUpdateUserData = () => {
     usersRoutes.update(inputValues).then(response => {
       if (response.status === 'error') {
+        setToastColor("danger")
         setMessageToast(response.message);
         setShowToast(true);
 
         return
       }
 
-      console.log(response)
+      history.push({ pathname: '/perfil', state: {
+        redirectData: {
+          showToastMessage: true,
+          toastColor: "success",
+          toastMessage: response.message,
+        },
+      }})
     }).catch((err) => {
+      setToastColor("danger")
       setMessageToast(err);
       setShowToast(true);
     })
@@ -172,7 +186,7 @@ const PerfilEditar: React.FC = () => {
         </IonFab>
 
         <IonToast
-          color='danger'      
+          color={toastColor}
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message={messageToast}
