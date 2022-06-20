@@ -46,7 +46,7 @@ import {
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 import { getTransportes } from "../../services/transportes";
-import { createUserSearch } from "../../services/users";
+import { createUserSearch } from "../../services/api/users";
 import "./Transportes.css";
 
 interface InfoBusca {

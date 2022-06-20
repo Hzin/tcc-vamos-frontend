@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 import RecordsStore from '../../store/RecordsStore';
 import { fetchRecords } from '../../store/Selectors';
-import { getUsersSearching } from '../../services/users';
+import { getUsersSearching } from '../../services/api/users';
 import { UserSearchInfos } from '../../components/UserSearchInfos/UserSearchInfos';
 
 const maptilerProvider = maptiler('d5JQJPLLuap8TkJJlTdJ', 'streets');

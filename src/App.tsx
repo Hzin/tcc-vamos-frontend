@@ -21,6 +21,9 @@ import CadastroVan from './pages/CadastroVan';
 import CadastroCompletar from './pages/CadastroCompletar/CadastroCompletar';
 import CompletarDocumento from './pages/CadastroCompletar/CompletarDocumento';
 import CompletarTelefone from './pages/CadastroCompletar/CompletarTelefone';
+import Transportes from './pages/Transportes/Transportes';
+import BuscarPassageiro from './pages/BuscarPassageiro/BuscarPassageiro';
+import BuscarTransporte from './pages/BuscarTransporte/BuscarTransporte';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -40,15 +43,12 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import BuscarPassageiro from './pages/BuscarPassageiro/BuscarPassageiro';
-import Transportes from './pages/Transportes/Transportes';
-import BuscarTransporte from './pages/BuscarTransporte/BuscarTransporte';
+
 // import Tabs from './components/Tabs';
 import { search, home, person } from 'ionicons/icons';
 import { useState, useContext } from 'react';
 import React from 'react';
 import MinhasVans from './pages/MinhasVans';
-import BuscarPassageiro from './pages/BuscarPassageiro/BuscarPassageiro';
 
 setupIonicReact();
 
@@ -65,7 +65,9 @@ const routes = (
   <Route exact path="/perfil/completar/documento" component={CompletarDocumento}></Route>
   <Route exact path="/perfil/completar/telefone" component={CompletarTelefone}></Route>
 
+  <Route exact path="/transportes" component={Transportes}></Route>
   <Route exact path="/buscar-passageiro" component={BuscarPassageiro}></Route>
+  <Route exact path="/buscar-transporte" component={BuscarTransporte}></Route>
 
   <Route exact path="/usuario/:id" component={Perfil}></Route>
 

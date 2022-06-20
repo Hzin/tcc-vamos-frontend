@@ -18,7 +18,10 @@ const usersRoutes = {
   // TODO, depois corrigir
   getUsersSearching: {
     url: `/search/inraio`
-  }
+  },
+  createUserSearch: {
+    url: `${usersRoutesDefault}/search`
+  },
 }
 
 export default usersRoutes;
