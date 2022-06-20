@@ -78,7 +78,6 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
   );
 
   const redirectUserToLogin = () => {
-    // TODO, não impede o usuário de retornar a página de login
     history.push({ pathname: '/login' });
     setToastMessage("Por favor, autentique-se!");
     setShowToast(true);
@@ -270,6 +269,10 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
               <IonItem button onClick={() => history.push({ pathname: '/cadastro-van'})}>
                 <IonIcon icon={carOutline} slot="start" />
                 <IonLabel>Cadastrar Van</IonLabel>
+              </IonItem>
+              <IonItem button onClick={() => history.push({ pathname: '/minhas-vans'})}>
+                <IonIcon icon={carOutline} slot="start" />
+                <IonLabel>Minhas Vans</IonLabel>
               </IonItem>
               <IonItem>
                 <IonIcon icon={cardOutline} slot="start" />

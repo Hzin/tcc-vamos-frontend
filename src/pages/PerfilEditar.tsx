@@ -96,9 +96,13 @@ const PerfilEditar: React.FC = () => {
         return
       }
 
-      setToastColor("success")
-      setMessageToast(response.message);
-      setShowToast(true);
+      history.push({ pathname: '/perfil', state: {
+        redirectData: {
+          showToastMessage: true,
+          toastColor: "success",
+          toastMessage: response.message,
+        },
+      }})
     }).catch((err) => {
       setToastColor("danger")
       setMessageToast(err);

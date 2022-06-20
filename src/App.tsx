@@ -43,6 +43,7 @@ import './theme/variables.css';
 import { search, home, person } from 'ionicons/icons';
 import { useState, useContext } from 'react';
 import React from 'react';
+import MinhasVans from './pages/MinhasVans';
 
 setupIonicReact();
 
@@ -62,6 +63,7 @@ const routes = (
   <Route exact path="/usuario/:id" component={Perfil}></Route>
 
   <Route exact path="/cadastro-van" component={CadastroVan}></Route>
+  <Route exact path="/minhas-vans" component={MinhasVans}></Route>
   <Route exact path="/">
     <Redirect to="/login" />
   </Route>

@@ -3,8 +3,11 @@ const vansRoutes = {
   list: {
     url: `${vansRoutesDefault}/list`
   },
-  getById: {
-    url: `${vansRoutesDefault}/`
+  getByPlate: {
+    url: `${vansRoutesDefault}/plate`
+  },
+  getByUserId: {
+    url: `${vansRoutesDefault}/user`
   },
   create: {
     url: `${vansRoutesDefault}/`

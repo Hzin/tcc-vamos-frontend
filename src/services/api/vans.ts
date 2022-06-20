@@ -17,10 +17,20 @@ function updateHeader() {
   };
 }
 
-export async function getById(vanId: string) {
+export async function getByPlate(vanId: string) {
   updateHeader();
 
-  const response = await instance.get(vansRoutes.getById.url + `/${vanId}`, {
+  const response = await instance.get(vansRoutes.getByPlate.url + `/${vanId}`, {
+    headers: header,
+  });
+
+  return response.data;
+}
+
+export async function getByUserId(userId: string) {
+  updateHeader();
+
+  const response = await instance.get(vansRoutes.getByUserId.url + `/${userId}`, {
     headers: header,
   });
 
