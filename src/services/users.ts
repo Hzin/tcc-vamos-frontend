@@ -56,3 +56,10 @@ export async function getUsersSearching(currentPoint: any) {
   console.log(response.data)
 	setStore(response.data);
 }
+
+export async function createUserSearch(latitude_from: any, longitude_from: any, addres_to: any) {
+  const response = await instance.post("http://localhost:3333/search/", { latitude_from, longitude_from, addres_to });
+
+  console.log(response)
+	setStore(response);
+}

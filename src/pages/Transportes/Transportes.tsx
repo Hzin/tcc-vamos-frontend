@@ -30,6 +30,7 @@ import {
   IonRadio,
   IonCheckbox,
   IonFooter,
+  IonToast,
 } from "@ionic/react";
 import {
   arrowBack,
@@ -45,6 +46,7 @@ import {
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 import { getTransportes } from "../../services/transportes";
+import { createUserSearch } from "../../services/users";
 import "./Transportes.css";
 
 interface InfoBusca {
@@ -60,6 +62,9 @@ const Transportes: React.FC = () => {
   const props = location.state as InfoBusca;
   const [transportes, setTransportes] = useState([]);
   const [showModalFilters, setShowModalFilters] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [messageToast, setMessageToast ] = useState('');
+  const [toastColor, setToastColor] = useState('success');
 
   useEffect(() => {
     if (props) {
@@ -70,6 +75,17 @@ const Transportes: React.FC = () => {
   async function buscaTransportes() {
     let data = (await getTransportes(props)) as any;
     setTransportes(data);
+  }
+
+  function criaAlerta(){
+    createUserSearch(props.coordinatesFrom.lat, props.coordinatesFrom.lng, props.addressTo.label).then(() => {
+      setMessageToast('Alerta criado com sucesso!');
+      setShowToast(true);
+    }).catch((err:any) => {
+      setMessageToast('Não foi possível criar o alerta!');
+      setToastColor('danger');
+      setShowToast(true);
+    })
   }
 
   return (
@@ -91,22 +107,26 @@ const Transportes: React.FC = () => {
         </div>
       </IonHeader>
       <IonContent fullscreen>
-        <div className="header-tabs">
-          <IonSlides>
-            <IonSlide>
-              <h5>Mais barata</h5>
-              <IonCard className="card-transporte">
-                <IonCardContent>Seu João</IonCardContent>
-              </IonCard>
-            </IonSlide>
-            <IonSlide>
-              <h5>Melhor avaliação</h5>
-              <IonCard className="card-transporte">
-                <IonCardContent>Seu Zé</IonCardContent>
-              </IonCard>
-            </IonSlide>
-          </IonSlides>
-        </div>
+        {transportes && transportes.length > 0? (
+          <div className="header-tabs">
+            <IonSlides>
+              <IonSlide>
+                <h5>Mais barata</h5>
+                <IonCard className="card-transporte">
+                  <IonCardContent>Seu João</IonCardContent>
+                </IonCard>
+              </IonSlide>
+              <IonSlide>
+                <h5>Melhor avaliação</h5>
+                <IonCard className="card-transporte">
+                  <IonCardContent>Seu Zé</IonCardContent>
+                </IonCard>
+              </IonSlide>
+            </IonSlides>
+          </div>
+        ) 
+        : 
+        (<h1 className="msg-not-found">Não foi encontrado nenhum transporte que atenda essa rota.</h1>)}
         {transportes &&
           transportes.map((record: any, index: any) => {
             return (
@@ -119,7 +139,11 @@ const Transportes: React.FC = () => {
                 </IonCardContent>
               </IonCard>
             );
-          })}
+        })}
+
+        <div className="button-criar-alerta">
+          <IonButton onClick={() => criaAlerta()}>Criar Alerta</IonButton>
+        </div>
 
         <IonFab
           onClick={() => setShowModalFilters(true)}
@@ -182,6 +206,14 @@ const Transportes: React.FC = () => {
             </IonButton>
           </IonFooter>
         </IonModal>
+        <IonToast
+          // cssClass={"toast-notification"}
+          color={toastColor}      
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={messageToast}
+          duration={2500}
+        />
       </IonContent>
     </IonPage>
   );
