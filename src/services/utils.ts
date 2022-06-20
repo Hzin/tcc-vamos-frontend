@@ -1,4 +1,4 @@
-import instance from '../services/api';
+import instance from '../services/api/api';
 
 export async function autoCompleteAddress(address:string) {
 
