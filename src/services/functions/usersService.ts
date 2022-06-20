@@ -7,6 +7,8 @@ interface getByIdReturn {
     email: string;
     birth_date: string;
     bio: string;
+    cpf: string;
+    cnpj: string;
   },
   error?: {
     errorMessage: string;
@@ -23,6 +25,8 @@ interface getByIdRes {
     email: string;
     birth_date: string;
     bio: string;
+    cpf: string;
+    cnpj: string;
   },
 }
 

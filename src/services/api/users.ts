@@ -37,9 +37,11 @@ export interface CadastroRequest {
 }
 
 export interface UpdateUserRequest {
-  name: string;
-  email: string;
-  bio: string;
+  name?: string;
+  email?: string;
+  bio?: string;
+  cpf?: string;
+  cnpj?: string;
 }
 
 // export async function get(cpf) {

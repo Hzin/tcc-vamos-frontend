@@ -17,8 +17,9 @@ import Login from './pages/Login';
 import Home from './pages/Home';
 import Perfil from './pages/Perfil';
 import PerfilEditar from './pages/PerfilEditar';
-import CadastroCompletar from './pages/CadastroCompletar/CadastroCompletar';
 import CadastroVan from './pages/CadastroVan';
+import CadastroCompletar from './pages/CadastroCompletar/CadastroCompletar';
+import CompletarDocumentos from './pages/CadastroCompletar/CompletarDocumentos';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -48,11 +49,16 @@ const routes = (
 <>
   <Route exact path="/cadastro" component={Cadastro}></Route>
   <Route exact path="/login" component={Login}></Route>
+
   <Route exact path="/home" component={Home}></Route>
+
   <Route exact path="/perfil" component={Perfil}></Route>
   <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
   <Route exact path="/perfil/completar" component={CadastroCompletar}></Route>
+  <Route exact path="/perfil/completar/documentos" component={CompletarDocumentos}></Route>
+
   <Route exact path="/usuario/:id" component={Perfil}></Route>
+
   <Route exact path="/cadastro-van" component={CadastroVan}></Route>
   <Route exact path="/">
     <Redirect to="/login" />
