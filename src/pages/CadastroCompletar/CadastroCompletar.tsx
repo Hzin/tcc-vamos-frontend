@@ -20,7 +20,7 @@ import { useHistory, useLocation } from "react-router";
 import { callOutline, documentTextOutline } from "ionicons/icons";
 
 import '../Cadastro/Cadastro.css'
-import { Color } from "@ionic/react/node_modules/@ionic/core";
+import { Color } from "@ionic/core";
 
 interface cardItem {
   icon: string;

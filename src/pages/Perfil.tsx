@@ -29,7 +29,7 @@ import LocalStorage from "../LocalStorage";
 import sessionsService from '../services/functions/sessionsService'
 import usersService from '../services/functions/usersService'
 import { UserContext } from "../App";
-import { Color } from "@ionic/react/node_modules/@ionic/core";
+import { Color } from "@ionic/core";
 
 interface ScanNewProps {
   match:  {

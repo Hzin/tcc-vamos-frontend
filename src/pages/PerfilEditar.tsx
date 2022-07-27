@@ -28,7 +28,7 @@ import isEqual from 'lodash.isequal';
 import * as usersRoutes from '../services/api/users';
 
 import './Cadastro/Cadastro.css'
-import { Color } from "@ionic/react/node_modules/@ionic/core";
+import { Color } from "@ionic/core";
 
 interface userData {
   name: string;

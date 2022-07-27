@@ -24,7 +24,7 @@ import {
 import { saveOutline } from "ionicons/icons";
 
 import * as usersRoutes from '../../services/api/users';
-import { Color } from "@ionic/react/node_modules/@ionic/core";
+import { Color } from "@ionic/core";
 
 interface documentTypesInterface {
   label: string;

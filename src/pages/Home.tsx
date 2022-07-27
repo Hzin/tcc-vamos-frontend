@@ -1,5 +1,5 @@
 import { IonContent, IonPage, IonToast } from '@ionic/react';
-import { Color } from '@ionic/react/node_modules/@ionic/core';
+import { Color } from '@ionic/core';
 import { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
