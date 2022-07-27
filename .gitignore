@@ -26,3 +26,6 @@ yarn-error.log*
 
 # Optional eslint cache
 .eslintcache
+
+# não commitar url de environment
+src/constants/environment.ts

@@ -1,56 +1,74 @@
-import { IonItem, IonLabel, IonInput, IonButton, IonCardTitle, IonCol, IonContent, IonGrid, IonPage, IonRow } from '@ionic/react';
-import { Action } from '../components/Action';
+import { IonContent, IonPage, IonToast } from '@ionic/react';
+import { Color } from '@ionic/react/node_modules/@ionic/core';
+import { useContext, useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
+
+import { UserContext } from '../App';
+
+import * as sessionRoutes from '../services/api/session';
+
+interface LocationState {
+  redirectData?: {
+    showToastMessage: boolean;
+    toastColor: Color;
+    toastMessage: string;
+  }
+}
 
 const Home: React.FC = () => {
+  const location = useLocation<LocationState>();
+
+  const user = useContext(UserContext);
+
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastColor, setToastColor] = useState<Color>("primary");
+
+  useEffect(() => {
+    if (location.state && location.state.redirectData) {
+      const redirectData = location.state.redirectData
+
+      if (redirectData.showToastMessage) {
+        setToastColor(redirectData.toastColor)
+        setToastMessage(redirectData.toastMessage)
+        setShowToast(true)
+      }
+    }
+
+    const refreshUserToken = async () => {
+      await sessionRoutes.refresh().then(response => {
+        if (response.status === 'error') {
+          // setMessageToast(response.message);
+          // setShowToast(true);
+
+          return
+        }
+
+        user.setIsLoggedIn(true);
+      }).catch(error => {
+        // if (!error.response) return
+
+        // se o backend retornou uma mensagem de erro customizada
+        // if (error.response.data.message) {
+        console.dir('Houve um erro: ', { error })
+        alert('Houve um erro')
+      })
+    }
+
+    refreshUserToken()
+  }, [])
+  
   return (
     <IonPage>
-        <IonContent fullscreen>
-            <IonGrid className="ion-padding">
-                <IonRow>
-                    <IonCol size="12">
-                        <IonCardTitle>Como você deseja se cadastrar?</IonCardTitle>
-                    </IonCol>
-                </IonRow>
-                <IonRow>
-                    <IonCol size="12">
-                        <div id='nome-sobrenome'>
-                        <IonItem>
-                            <IonLabel position='floating'>Nome</IonLabel>
-                            <IonInput clearInput></IonInput>
-                        </IonItem>
-                        <IonItem>
-                            <IonLabel position='floating'>Sobrenome</IonLabel>
-                            <IonInput clearInput></IonInput>
-                        </IonItem>
-                        </div>
-                        
-                        <IonItem>
-                        <IonLabel position='floating'>E-mail</IonLabel>
-                        <IonInput clearInput type='email'></IonInput>
-                        </IonItem>
-
-                        <IonItem>
-                        <IonLabel position='stacked'>Data de nascimento</IonLabel>
-                        <IonInput type='date'></IonInput>
-                        </IonItem>
-                        
-                        <IonItem>
-                        <IonLabel position='floating'>Senha</IonLabel>
-                        <IonInput clearInput type='password'></IonInput>
-                        </IonItem>
-                        <IonItem>
-                        <IonLabel position='floating'>Confirme a senha</IonLabel>
-                        <IonInput clearInput type='password'></IonInput>
-                        </IonItem>
-                        
-                        <IonButton className="ion-margin-top" expand="block">Cadastrar-se</IonButton>
-                    </IonCol>
-                </IonRow>
-                <small className='ion-margin-top'>
-                Ao se cadastrar, você aceita nossos <a href="">Termos e Condições</a> e nossa <a href=""> Política de Privacidade</a>.
-                </small>
-                <Action message="Já tem conta?" text="Login" link="/login" />
-            </IonGrid>
+        <IonContent>
+          <IonToast
+            position="top"
+            color={toastColor}
+            isOpen={showToast}
+            onDidDismiss={() => setShowToast(false)}
+            message={toastMessage}
+            duration={2500}
+          />
         </IonContent>
     </IonPage>
   );
