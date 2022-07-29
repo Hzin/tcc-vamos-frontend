@@ -103,7 +103,7 @@ const IonicApp: React.FC = () => {
             <IonRouterOutlet>{routes}</IonRouterOutlet>
             
             <IonTabBar slot="bottom">
-              <IonTabButton tab="buscar" href="/buscar">
+              <IonTabButton tab="buscar" href="/buscar-transporte">
                 <IonIcon icon={search} />
                 <IonLabel>Buscar</IonLabel>
               </IonTabButton>

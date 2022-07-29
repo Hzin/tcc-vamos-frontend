@@ -293,10 +293,21 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                 <IonIcon icon={carOutline} slot="start" />
                 <IonLabel>Cadastrar Van</IonLabel>
               </IonItem>
-              <IonItem button onClick={() => history.push({ pathname: '/minhas-vans'})}>
-                <IonIcon icon={carOutline} slot="start" />
-                <IonLabel>Minhas Vans</IonLabel>
-              </IonItem>
+
+              { isDriver ?
+                <>
+                  <IonItem button onClick={() => history.push({ pathname: '/minhas-vans'})}>
+                    <IonIcon icon={carOutline} slot="start" />
+                    <IonLabel>Minhas Vans</IonLabel>
+                  </IonItem>
+                  <IonItem button onClick={() => history.push({ pathname: '/buscar-passageiro'})}>
+                    <IonIcon icon={personOutline} slot="start" />
+                    <IonLabel>Buscar passageiros</IonLabel>
+                  </IonItem>
+                </>
+                : <></> 
+              }
+              
               <IonItem>
                 <IonIcon icon={cardOutline} slot="start" />
                 <IonLabel>Pagamentos</IonLabel>
