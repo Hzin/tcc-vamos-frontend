@@ -8,7 +8,7 @@ import ModalExample from '../../components/Email';
 import * as UsersService from '../../services/api/users'
 import LocalStorage from '../../LocalStorage';
 import { UserContext } from '../../App';
-import { Color } from '@ionic/react/node_modules/@ionic/core';
+import { Color } from '@ionic/core';
 
 const Cadastro: React.FC = () => {
   const history = useHistory();

@@ -1,6 +1,6 @@
 export default {
     url: {
       prod: 'https://projeto-integrado-f.herokuapp.com',
-      local: 'http://localhost:3000'
+      local: 'http://localhost:3333'
     },
 }

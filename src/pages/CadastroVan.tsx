@@ -28,7 +28,7 @@ import carsService from '../services/functions/carsService'
 import * as vansRoutes from '../services/api/vans';
 
 import "./CadastroVan.css";
-import { Color } from "@ionic/react/node_modules/@ionic/core";
+import { Color } from "@ionic/core";
 
 const CadastroVan: React.FC = () => {
   const history = useHistory();
