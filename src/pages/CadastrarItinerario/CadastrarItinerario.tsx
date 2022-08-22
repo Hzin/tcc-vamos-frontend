@@ -44,7 +44,7 @@ export default function CadastrarItinerario() {
             <div className="inputs-from-to">
               <IonIcon icon={locateOutline}></IonIcon>
               <GooglePlacesAutocomplete
-                apiKey="AIzaSyAGfCsaNwxwyj4Ajtfy7MTNADE6JwmnZvA"
+                apiKey={process.env.REACT_APP_KEY_API}
                 apiOptions={{ language: "pt-br", region: "br" }}
                 selectProps={{
                   className: "input-autocomplete",
@@ -55,7 +55,7 @@ export default function CadastrarItinerario() {
             <div className="inputs-from-to">
               <IonIcon icon={locationOutline}></IonIcon>
               <GooglePlacesAutocomplete
-                apiKey="AIzaSyAGfCsaNwxwyj4Ajtfy7MTNADE6JwmnZvA"
+                apiKey={process.env.REACT_APP_KEY_API}
                 apiOptions={{ language: "pt-br", region: "br" }}
                 selectProps={{
                   className: "input-autocomplete",
