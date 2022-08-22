@@ -21,30 +21,40 @@ import {
 } from "@ionic/react";
 import { useHistory, useLocation } from "react-router-dom";
 import React, { useState, useEffect, useReducer, useContext } from "react";
-import { callOutline, cardOutline, carOutline, createOutline, exitOutline, logoFacebook, logoWhatsapp, personOutline, shieldCheckmarkOutline, starOutline } from "ionicons/icons";
+import {
+  callOutline,
+  cardOutline,
+  carOutline,
+  createOutline,
+  exitOutline,
+  mapOutline,
+  personOutline,
+  shieldCheckmarkOutline,
+  starOutline,
+} from "ionicons/icons";
 
-import './Perfil.css'
+import "./Perfil.css";
 import LocalStorage from "../LocalStorage";
 
-import sessionsService from '../services/functions/sessionsService'
-import usersService from '../services/functions/usersService'
+import sessionsService from "../services/functions/sessionsService";
+import usersService from "../services/functions/usersService";
 import { UserContext } from "../App";
 import { Color } from "@ionic/core";
 
 interface ScanNewProps {
-  match:  {
+  match: {
     params: {
       id: string;
-    }
-  }
+    };
+  };
 }
 
-interface LocationState { 
+interface LocationState {
   redirectData?: {
     showToastMessage: boolean;
     toastColor: Color;
     toastMessage: string;
-  }
+  };
 }
 
 const Perfil: React.FC<ScanNewProps> = (props) => {
@@ -53,92 +63,92 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
 
-  const [isVisitor, setIsVisitor] = useState(true)
-  const [isDriver, setIsDriver] = useState(false)
+  const [isVisitor, setIsVisitor] = useState(true);
+  const [isDriver, setIsDriver] = useState(false);
 
-  const [incompleteProfile, setIncompleteProfile] = useState(false)
-  const [incompleteProfileCounter, setIncompleteProfileCounter] = useState(0)
+  const [incompleteProfile, setIncompleteProfile] = useState(false);
+  const [incompleteProfileCounter, setIncompleteProfileCounter] = useState(0);
 
   const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
+  const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
   const [inputValues, setInputValues] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
     {
-      id: '',
-      name: '',
-      lastname: '',
-      email: '',
-      phone_number: '',
-      birth_date: '',
-      bio: '',
-      document_type: '',
-      document: '',
+      id: "",
+      name: "",
+      lastname: "",
+      email: "",
+      phone_number: "",
+      birth_date: "",
+      bio: "",
+      document_type: "",
+      document: "",
     }
   );
 
   const redirectUserToLogin = () => {
-    history.push({ pathname: '/login' });
+    history.push({ pathname: "/login" });
     setToastMessage("Por favor, autentique-se!");
     setShowToast(true);
-  }
+  };
 
   const logoff = () => {
-    LocalStorage.clearToken()
+    LocalStorage.clearToken();
     user.setIsLoggedIn(false);
-    history.push({ pathname: '/login' });
-  }
+    history.push({ pathname: "/login" });
+  };
 
   useEffect(() => {
     if (location.state && location.state.redirectData) {
-      const redirectData = location.state.redirectData
+      const redirectData = location.state.redirectData;
 
       if (redirectData.showToastMessage) {
-        setToastColor(redirectData.toastColor)
-        setToastMessage(redirectData.toastMessage)
-        setShowToast(true)
+        setToastColor(redirectData.toastColor);
+        setToastMessage(redirectData.toastMessage);
+        setShowToast(true);
       }
     }
 
     const loadUserData = async () => {
-      let userId = ''
+      let userId = "";
 
       // verify if user is authenticated
       if (props.match.params.id) {
-        userId = props.match.params.id
+        userId = props.match.params.id;
       } else {
-        const refreshSessionRes = await sessionsService.refreshSession()
-  
+        const refreshSessionRes = await sessionsService.refreshSession();
+
         if (refreshSessionRes.error) {
-          redirectUserToLogin()
-          return
+          redirectUserToLogin();
+          return;
         }
-    
+
         if (refreshSessionRes.userId) {
-          userId = refreshSessionRes.userId
+          userId = refreshSessionRes.userId;
         }
       }
-      
+
       // get user info by ID
-      const getByIdRes = await usersService.getById(userId)
-  
+      const getByIdRes = await usersService.getById(userId);
+
       if (getByIdRes.error) {
         if (isVisitor && props.match.params.id) {
-          setToastMessage('Usuário não existe!')
-          setShowToast(true)
-          history.push({ pathname: '/home' })
+          setToastMessage("Usuário não existe!");
+          setShowToast(true);
+          history.push({ pathname: "/home" });
         } else {
-          setToastMessage(getByIdRes.error.errorMessage)
-          setShowToast(true)
+          setToastMessage(getByIdRes.error.errorMessage);
+          setShowToast(true);
         }
-  
-        return
+
+        return;
       }
 
       // check if user is driver (if they have vans)
-      const userIsDriverRes = await usersService.checkIfUserIsDriver(userId)
-  
+      const userIsDriverRes = await usersService.checkIfUserIsDriver(userId);
+
       // if (userIsDriverRes.error) {
       //   setToastColor('warning')
       //   setToastMessage(userIsDriverRes.error.errorMessage)
@@ -147,91 +157,102 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       // }
 
       if (!userIsDriverRes.error && userIsDriverRes.result !== undefined) {
-        setIsDriver(userIsDriverRes.result)
+        setIsDriver(userIsDriverRes.result);
       }
-  
+
       if (getByIdRes.userData) {
-        const userData = getByIdRes.userData
-  
+        const userData = getByIdRes.userData;
+
         if (isMounted) {
           setInputValues({
-            'id': userId,
-            'name': userData.name,
-            'lastname': userData.lastname,
-            'email': userData.email,
-            'phone_number': userData.phone_number,
-            'birth_date': userData.birth_date,
-            'bio': userData.bio,
-            'document_type': userData.document_type,
-            'document': userData.document
+            id: userId,
+            name: userData.name,
+            lastname: userData.lastname,
+            email: userData.email,
+            phone_number: userData.phone_number,
+            birth_date: userData.birth_date,
+            bio: userData.bio,
+            document_type: userData.document_type,
+            document: userData.document,
           });
 
           if (!props.match.params.id) {
-            setIsVisitor(false)
+            setIsVisitor(false);
           }
-          
+
           if (!userData.document || !userData.phone_number) {
-            setIncompleteProfile(true)
+            setIncompleteProfile(true);
 
-            let counter = 0
+            let counter = 0;
 
-            if (!userData.document) counter++
-            if (!userData.phone_number) counter++
+            if (!userData.document) counter++;
+            if (!userData.phone_number) counter++;
 
-            setIncompleteProfileCounter(counter)
+            setIncompleteProfileCounter(counter);
           }
         }
       }
-    }
+    };
 
     let isMounted = true;
-    
-    const userToken = LocalStorage.getToken()
+
+    const userToken = LocalStorage.getToken();
 
     if (!userToken) {
-      redirectUserToLogin()
+      redirectUserToLogin();
     }
-    
-    loadUserData()
 
-    return () => { isMounted = false };
+    loadUserData();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader translucent>
         <IonToolbar>
           <IonTitle>Seu perfil</IonTitle>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/home" />
+            <IonBackButton text="" defaultHref="/home" />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent>
+      <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">Seu perfil</IonTitle>
           </IonToolbar>
         </IonHeader>
-        
+
         <IonCard>
           <IonCardContent>
-              <img src="https://static.generated.photos/vue-static/home/feed/adult.png" alt="avatar" className='avatar' id='avatar'/>
-              {/* <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/faa68f71f3b2a48ca89228c2c2aa72d3" alt="avatar" className='avatar' id='avatar'/> */}
+            <img
+              src="https://static.generated.photos/vue-static/home/feed/adult.png"
+              alt="avatar"
+              className="avatar"
+              id="avatar"
+            />
+            {/* <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/faa68f71f3b2a48ca89228c2c2aa72d3" alt="avatar" className='avatar' id='avatar'/> */}
             <IonCardHeader>
-              <IonCardTitle class="ion-text-center">{inputValues.name} {inputValues.lastname}</IonCardTitle>
+              <IonCardTitle class="ion-text-center">
+                {inputValues.name} {inputValues.lastname}
+              </IonCardTitle>
             </IonCardHeader>
 
-            <div id='profile-status'>
-              { isDriver ?
+            <div id="profile-status">
+              {isDriver ? (
                 <>
                   <IonChip>
                     <IonIcon icon={carOutline}></IonIcon>
                     <IonLabel color="primary">Motorista</IonLabel>
                   </IonChip>
-                </> : <></>
-              }
+                </>
+              ) : (
+                <></>
+              )}
               <IonChip>
                 <IonIcon icon={personOutline}></IonIcon>
                 <IonLabel color="primary">Passageiro</IonLabel>
@@ -245,7 +266,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             <IonCardTitle>Biografia</IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-            {inputValues.bio ? inputValues.bio : 'Sem biografia.' }
+            {inputValues.bio ? inputValues.bio : "Sem biografia."}
           </IonCardContent>
         </IonCard>
 
@@ -254,67 +275,123 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             <IonCardTitle>Informações de contato</IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-            { !inputValues.phone_number ?
-                <>Sem informações de contato.</>
-            : <>
-                {
-                  inputValues.phone_number ?
+            {!inputValues.phone_number ? (
+              <>Sem informações de contato.</>
+            ) : (
+              <>
+                {inputValues.phone_number ? (
                   <>
                     <IonChip>
                       <IonIcon icon={callOutline} />
                       <IonLabel>{inputValues.phone_number}</IonLabel>
                     </IonChip>
-                  </> : <></>
-                }
+                  </>
+                ) : (
+                  <></>
+                )}
               </>
-            }
+            )}
           </IonCardContent>
         </IonCard>
 
-        { !isVisitor ?
+        {!isVisitor ? (
           <IonList>
             <IonListHeader>Configurações</IonListHeader>
-              <IonItem button onClick={() => history.push({ pathname: '/perfil/editar', state: { userData: inputValues } })}>
-                <IonIcon icon={createOutline} slot="start" />
-                <IonLabel>Editar perfil</IonLabel>
-              </IonItem>
+            <IonItem
+              button
+              onClick={() =>
+                history.push({
+                  pathname: "/perfil/editar",
+                  state: { userData: inputValues },
+                })
+              }
+            >
+              <IonIcon icon={createOutline} slot="start" />
+              <IonLabel>Editar perfil</IonLabel>
+            </IonItem>
 
-              { incompleteProfile ?
-                <>
-                  <IonItem button onClick={() => history.push({ pathname: '/perfil/completar', state: { userData: inputValues } })}>
-                    <IonIcon icon={shieldCheckmarkOutline} slot="start" />
-                    <IonLabel>Completar cadastro</IonLabel>
-                    <IonBadge color="primary">{incompleteProfileCounter}</IonBadge>
-                  </IonItem>
-                </>
-                : <></> }
+            {incompleteProfile ? (
+              <>
+                <IonItem
+                  button
+                  onClick={() =>
+                    history.push({
+                      pathname: "/perfil/completar",
+                      state: { userData: inputValues },
+                    })
+                  }
+                >
+                  <IonIcon icon={shieldCheckmarkOutline} slot="start" />
+                  <IonLabel>Completar cadastro</IonLabel>
+                  <IonBadge color="primary">
+                    {incompleteProfileCounter}
+                  </IonBadge>
+                </IonItem>
+              </>
+            ) : (
+              <></>
+            )}
 
-              <IonItem button onClick={() => history.push({ pathname: '/cadastro-van'})}>
-                <IonIcon icon={carOutline} slot="start" />
-                <IonLabel>Cadastrar Van</IonLabel>
-              </IonItem>
-              <IonItem button onClick={() => history.push({ pathname: '/minhas-vans'})}>
-                <IonIcon icon={carOutline} slot="start" />
-                <IonLabel>Minhas Vans</IonLabel>
-              </IonItem>
-              <IonItem>
-                <IonIcon icon={cardOutline} slot="start" />
-                <IonLabel>Pagamentos</IonLabel>
-              </IonItem>
-              <IonItem>
-                <IonIcon icon={starOutline} slot="start" />
-                <IonLabel>Avaliações</IonLabel>
-              </IonItem>
-              <IonItem button onClick={logoff}>
-                <IonIcon icon={exitOutline} slot="start" />
-                <IonLabel>Sair da conta</IonLabel>
-              </IonItem>
-          </IonList> : <></>
-        }
+            <IonItem
+              button
+              onClick={() => history.push({ pathname: "/cadastro-van" })}
+            >
+              <IonIcon icon={carOutline} slot="start" />
+              <IonLabel>Cadastrar van</IonLabel>
+            </IonItem>
+
+            {isDriver ? (
+              <>
+                <IonItem
+                  button
+                  onClick={() => history.push({ pathname: "/minhas-vans" })}
+                >
+                  <IonIcon icon={carOutline} slot="start" />
+                  <IonLabel>Minhas vans</IonLabel>
+                </IonItem>
+                <IonItem
+                  button
+                  onClick={() =>
+                    history.push({ pathname: "/buscar-passageiro" })
+                  }
+                >
+                  <IonIcon icon={personOutline} slot="start" />
+                  <IonLabel>Buscar passageiros</IonLabel>
+                </IonItem>
+                <IonItem
+                  button
+                  onClick={() =>
+                    history.push({ pathname: "/meus-itinerarios" })
+                  }
+                >
+                  <IonIcon icon={mapOutline} slot="start" />
+                  <IonLabel>Meus itinerários</IonLabel>
+                </IonItem>
+              </>
+            ) : (
+              <></>
+            )}
+
+            <IonItem>
+              <IonIcon icon={cardOutline} slot="start" />
+              <IonLabel>Pagamentos</IonLabel>
+            </IonItem>
+            <IonItem>
+              <IonIcon icon={starOutline} slot="start" />
+              <IonLabel>Avaliações</IonLabel>
+            </IonItem>
+            <IonItem button onClick={logoff}>
+              <IonIcon icon={exitOutline} slot="start" />
+              <IonLabel>Sair da conta</IonLabel>
+            </IonItem>
+          </IonList>
+        ) : (
+          <></>
+        )}
 
         <IonToast
           position="top"
-          color={toastColor}      
+          color={toastColor}
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message={toastMessage}

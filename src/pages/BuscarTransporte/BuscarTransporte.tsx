@@ -1,18 +1,13 @@
 import {
-  IonContent,
-  IonPage,
-  IonIcon,
-  IonCard,
-  IonInput,
-  IonRow,
-  IonCardContent,
   IonButton,
-  IonSearchbar,
-  IonModal,
-  IonProgressBar,
+  IonCard,
+  IonCardContent,
+  IonContent,
+  IonIcon,
+  IonPage,
+  IonRow,
 } from "@ionic/react";
 import {
-  arrowBack,
   arrowForwardOutline,
   chevronForwardOutline,
   locateOutline,
@@ -22,7 +17,6 @@ import {
 import "./BuscarTransporte.css";
 
 import { useEffect, useState } from "react";
-import { autoCompleteAddress } from "../../services/utils";
 import { useHistory } from "react-router";
 
 import GooglePlacesAutocomplete, {
@@ -89,7 +83,7 @@ const BuscarTransporte: React.FC = () => {
     }
   }, [addressTo]);
 
-  function buscaTransporte(){
+  function buscaTransporte() {
     if (coordinatesFrom && coordinatesTo && addressFrom && addressTo) {
       history.push({
         pathname: "/transportes",
@@ -117,7 +111,7 @@ const BuscarTransporte: React.FC = () => {
                 placeholder="R. José Paulino, 1234 - Centro, Campinas - SP, 13013-001"
               /> */}
               <GooglePlacesAutocomplete
-                apiKey="AIzaSyAGfCsaNwxwyj4Ajtfy7MTNADE6JwmnZvA"
+                apiKey={process.env.REACT_APP_KEY_API}
                 apiOptions={{ language: "pt-br", region: "br" }}
                 selectProps={{
                   value: addressFrom,
@@ -136,7 +130,7 @@ const BuscarTransporte: React.FC = () => {
                 placeholder="PUC Campinas"
               /> */}
               <GooglePlacesAutocomplete
-                apiKey="AIzaSyAGfCsaNwxwyj4Ajtfy7MTNADE6JwmnZvA"
+                apiKey={process.env.REACT_APP_KEY_API}
                 apiOptions={{ language: "pt-br", region: "br" }}
                 selectProps={{
                   value: addressTo,
@@ -147,10 +141,7 @@ const BuscarTransporte: React.FC = () => {
               />
             </div>
             <div className="button-search">
-              <IonButton
-                color="primary"
-                onClick={() => buscaTransporte()}
-              >
+              <IonButton color="primary" onClick={() => buscaTransporte()}>
                 Buscar
               </IonButton>
             </div>
