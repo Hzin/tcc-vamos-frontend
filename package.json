@@ -23,12 +23,12 @@
     "@types/react-router-dom": "^5.1.7",
     "axios": "^0.26.1",
     "ionicons": "^5.4.0",
+    "lodash.isequal": "^4.5.0",
     "pigeon-maps": "^0.21.0",
     "pullstate": "^1.24.0",
-    "lodash.isequal": "^4.5.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-google-places-autocomplete": "^3.3.4",
+    "react-google-places-autocomplete": "^3.4.0",
     "react-hook-form": "^7.30.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
@@ -51,7 +51,6 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:mock": "json-server --port 8080 --watch ./mock/db.json",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-scripts eject"
@@ -80,5 +79,5 @@
     "@types/lodash.isequal": "^4.5.6",
     "react-scripts": "5.0.1"
   },
-  "description": "An Ionic project"
+  "description": "Projeto de conclusão de curso a fim de resolver a dificuldade de alunos universitários ao buscar vans para suas universidades"
 }

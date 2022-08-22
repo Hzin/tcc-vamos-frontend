@@ -179,7 +179,7 @@ const CadastroVan: React.FC = () => {
         return
       }
 
-      history.push({ pathname: '/perfil', state: {
+      history.push({ pathname: '/minhas-vans', state: {
         redirectData: {
           showToastMessage: true,
           toastColor: "success",
