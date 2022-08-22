@@ -24,6 +24,7 @@ import CompletarTelefone from './pages/CadastroCompletar/CompletarTelefone';
 import Transportes from './pages/Transportes/Transportes';
 import BuscarPassageiro from './pages/BuscarPassageiro/BuscarPassageiro';
 import BuscarTransporte from './pages/BuscarTransporte/BuscarTransporte';
+import Debug from './pages/Debug';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -75,6 +76,7 @@ const routes = (
 
   <Route exact path="/cadastro-van" component={CadastroVan}></Route>
   <Route exact path="/minhas-vans" component={MinhasVans}></Route>
+
   <Route exact path="/cadastrar-itinerario" component={CadastrarItinerario}></Route>
   <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
   <Route exact path="/">
