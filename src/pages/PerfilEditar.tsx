@@ -84,6 +84,8 @@ const PerfilEditar: React.FC = () => {
       'birth_date': userData.birth_date,
       'bio': userData.bio
     });
+
+    console.log(inputValues)
   }, [userData]);
 
   const handleUpdateUserData = () => {
@@ -163,7 +165,7 @@ const PerfilEditar: React.FC = () => {
                 <IonInput 
                   type='date'
                   value={inputValues.birth_date}
-                  onIonInput={(e: any) => setInputValues({'birth_date': e.detail.value!})}
+                  onIonChange={(e) => setInputValues({'birth_date': e.detail.value!}) }
                 >
                 </IonInput>
               </IonItem>
