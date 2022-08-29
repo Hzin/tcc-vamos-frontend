@@ -37,9 +37,14 @@ const CadastroVan: React.FC = () => {
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
+  const [carBrands, setCarBrands] = useState([{
+    codigo: '',
+    nome: ''
+  }]);
+
   const [carModels, setCarModels] = useState([{
-    id_model: '',
-    name: ''
+    codigo: '',
+    nome: ''
   }]);
 
   const [inputValues, setInputValues] = useReducer(
@@ -155,6 +160,21 @@ const CadastroVan: React.FC = () => {
     return true;
   };
 
+  const loadCarModels = async (carBrandId: string) => {
+    const carModelsRes = await carsService.getCarModels(carBrandId)
+  
+    if (carModelsRes.error) {
+      setToastColor("danger")
+      setToastMessage(carModelsRes.error.errorMessage);
+      setInputValues({ carBrand: '' })
+      return
+    }
+
+    if (carModelsRes.data) {
+      setCarModels(carModelsRes.data)
+    }
+  }
+
   const handleSubmit = async () => {
     if (!validateForm()) {
       return
@@ -196,24 +216,24 @@ const CadastroVan: React.FC = () => {
   useEffect(() => {
     let isMounted = true
 
-    const getCarsModels = async () => {
-      const carModelsRes = await carsService.getAllCarModels()
+    const getCarsBrands = async () => {
+      const carBrandsRes = await carsService.getAllCarBrands()
   
-      if (carModelsRes.error) {
+      if (carBrandsRes.error) {
         setToastColor("danger")
-        setToastMessage(carModelsRes.error.errorMessage);
+        setToastMessage(carBrandsRes.error.errorMessage);
         setShowToast(true);
         return
       }
   
-      if (carModelsRes.data) {
+      if (carBrandsRes.data) {
         if (isMounted) {
-          setCarModels(carModelsRes.data)
+          setCarBrands(carBrandsRes.data)
         }
       }
     }
 
-    getCarsModels()
+    getCarsBrands()
 
     return () => { isMounted = false }
   }, [])
@@ -248,22 +268,23 @@ const CadastroVan: React.FC = () => {
           {/* TODO, problema de setState para valores vindos de um evento sendo triggerado por um ion-select */}
           <IonItem>
             <IonLabel>Marca</IonLabel>
-            <IonSelect onIonChange={(e: any) => { setInputValues({ carBrand: e.detail.value }) }}>
-              { carModels ? carModels.map((carModel, index) => {
-                return (<IonSelectOption key={index} value={carModel.name}>{carModel.name}</IonSelectOption>)
+            <IonSelect onIonChange={(e: any) => { setInputValues({ carBrand: e.detail.value }); loadCarModels(e.detail.value) }}>
+              { carBrands ? carBrands.map((carBrand, index) => {
+                return (<IonSelectOption key={index} value={index}>{carBrand.nome}</IonSelectOption>)
               }) : <></> }
             </IonSelect>
           </IonItem>
 
-          <IonItem>
-            <IonLabel position='floating'>Modelo </IonLabel>
-            <IonInput
-              type='text'
-              clearInput
-              placeholder='Digite o Modelo do Veículo'
-              onIonChange={(e: any) => setInputValues({ carModel: e.target.value })}
-            />
-          </IonItem>
+          { inputValues.carBrand ?
+            <IonItem>
+              <IonLabel>Modelo</IonLabel>
+              <IonSelect onIonChange={(e: any) => { setInputValues({ carModel: e.detail.value }) }}>
+                { carModels ? carModels.map((carModel, index) => {
+                  return (<IonSelectOption key={index} value={carModel.nome}>{carModel.nome}</IonSelectOption>)
+                }) : <></> }
+              </IonSelect>
+            </IonItem>
+            : <></>}
 
           <IonItem>
             <IonLabel position='floating'>

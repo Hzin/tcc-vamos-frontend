@@ -1,7 +1,10 @@
 const carsRoutesDefault = '/cars';
 const carsRoutes = {
-  list: {
-    url: `${carsRoutesDefault}/list`
+  listAllBrands: {
+    url: `${carsRoutesDefault}/brands/list`
+  },
+  listCarModels: {
+    url: `${carsRoutesDefault}/models/list`
   }
 }
 
