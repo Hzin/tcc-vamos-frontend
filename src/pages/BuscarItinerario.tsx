@@ -9,6 +9,7 @@ import {
   IonContent,
   IonGrid,
   IonHeader,
+  IonIcon,
   IonItem,
   IonLabel,
   IonList,
@@ -20,6 +21,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+import { cashOutline, personOutline, starOutline } from "ionicons/icons";
 
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
@@ -162,13 +164,13 @@ const BuscarItinerario: React.FC = () => {
                       <IonCard key={index}>
                         <IonCardHeader>
                           <IonCardTitle>
-                            <p>Bairros atendidos: {itinerario.bairros_atendidos[0].lat},{itinerario.bairros_atendidos[0].lgn}</p>
-                            <p>Instituições de ensino atendidas: {itinerario.destinos[0].lat},{itinerario.destinos[0].lgn}</p>
+                            {/* <p>Bairros atendidos: {itinerario.bairros_atendidos[0].lat},{itinerario.bairros_atendidos[0].lgn}</p> */}
+                            {/* <p>Instituições de ensino atendidas: {itinerario.destinos[0].lat},{itinerario.destinos[0].lgn}</p> */}
                           </IonCardTitle>
                           <IonCardSubtitle>
-                            <p>Vagas disponíveis: {itinerario.lugares}</p>
-                            <p>Motorista: {itinerario.motorista}</p>
-                            <p>Valor: {itinerario.valor}</p>
+                            <p><IonIcon icon={personOutline} /> Vagas disponíveis: {itinerario.lugares}</p>
+                            <p><IonIcon icon={starOutline} /> Motorista: {itinerario.motorista}</p>
+                            <p><IonIcon icon={cashOutline} /> Valor: {itinerario.valor}</p>
                           </IonCardSubtitle>
                         </IonCardHeader>
                       </IonCard>

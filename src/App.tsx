@@ -86,7 +86,7 @@ const routes = (
   <Route exact path="/cadastrar-itinerario" component={CadastrarItinerario}></Route>
   <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
   <Route exact path="/">
-    <Redirect to="/login" />
+    <Redirect to="/home" />
   </Route>
 </>)
 
