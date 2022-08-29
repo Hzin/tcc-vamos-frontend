@@ -15,6 +15,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import Cadastro from './pages/Cadastro/Cadastro';
 import Login from './pages/Login';
 import Home from './pages/Home';
+import Buscas from './pages/Buscas';
 import Perfil from './pages/Perfil';
 import PerfilEditar from './pages/PerfilEditar';
 import CadastroVan from './pages/CadastroVan';
@@ -52,6 +53,7 @@ import React from 'react';
 import MinhasVans from './pages/MinhasVans';
 import MeusItinerarios from './pages/MeusItinerarios/MeusItinerarios';
 import CadastrarItinerario from './pages/CadastrarItinerario/CadastrarItinerario';
+import BuscarItinerario from './pages/BuscarItinerario';
 
 setupIonicReact();
 
@@ -62,6 +64,8 @@ const routes = (
 
   <Route exact path="/home" component={Home}></Route>
 
+  <Route exact path="/buscas" component={Buscas}></Route>
+
   <Route exact path="/perfil" component={Perfil}></Route>
   <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
   <Route exact path="/perfil/completar" component={CadastroCompletar}></Route>
@@ -71,6 +75,8 @@ const routes = (
   <Route exact path="/transportes" component={Transportes}></Route>
   <Route exact path="/buscar-passageiro" component={BuscarPassageiro}></Route>
   <Route exact path="/buscar-transporte" component={BuscarTransporte}></Route>
+  <Route exact path="/buscar/passageiro" component={BuscarPassageiro}></Route>
+  <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
 
   <Route exact path="/usuario/:id" component={Perfil}></Route>
 
@@ -109,7 +115,7 @@ const IonicApp: React.FC = () => {
             <IonRouterOutlet>{routes}</IonRouterOutlet>
             
             <IonTabBar slot="bottom">
-              <IonTabButton tab="buscar" href="/buscar-transporte">
+              <IonTabButton tab="buscar" href="/buscas">
                 <IonIcon icon={search} />
                 <IonLabel>Buscar</IonLabel>
               </IonTabButton>
