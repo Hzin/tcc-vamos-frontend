@@ -29,7 +29,7 @@ import sessionsService from "../services/functions/sessionsService";
 import { closeToast } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
 
-interface VanInfo {
+interface VehicleInfo {
   plate: string;
   brand: string;
   model: string;
@@ -42,21 +42,21 @@ interface VanInfo {
   locator_state: string;
 }
 
-const MinhasVans: React.FC = () => {
+const MeusVeiculos: React.FC = () => {
   const history = useHistory();
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
-  const [userVans, setUserVans] = useState<VanInfo[]>();
+  const [vehiclesList, setVehiclesList] = useState<VehicleInfo[]>();
 
   const redirectUserToLogin = () => {
     history.push({ pathname: "/login" });
   };
 
   useEffect(() => {
-    const getUserVans = async () => {
+    const getUserVehiclesList = async () => {
       let userId = "";
 
       const refreshSessionRes = await sessionsService.refreshSession();
@@ -81,7 +81,7 @@ const MinhasVans: React.FC = () => {
             return;
           }
 
-          setUserVans(response.data);
+          setVehiclesList(response.data);
         })
         .catch((err) => {
           setToastColor("danger");
@@ -90,37 +90,37 @@ const MinhasVans: React.FC = () => {
         });
     };
 
-    getUserVans();
+    getUserVehiclesList();
   }, []);
 
   return (
     <IonPage>
       <PageHeader
-        pageName="Minhas vans"
+        pageName="Meus veículos"
         backButtonPageUrl="/perfil"
       ></PageHeader>
 
       <IonContent>
-        {userVans ? (
-          userVans.map((van, index) => {
+        {vehiclesList ? (
+          vehiclesList.map((vehicle, index) => {
             return (
               <IonCard key={index}>
                 <IonCardHeader>
-                  <IonCardTitle>{van.plate}</IonCardTitle>
+                  <IonCardTitle>{vehicle.plate}</IonCardTitle>
                   <IonCardSubtitle>
-                    {van.brand} - {van.model}
+                    {vehicle.brand} - {vehicle.model}
                   </IonCardSubtitle>
                 </IonCardHeader>
-                {van.locator_name ? (
+                {vehicle.locator_name ? (
                   <>
                     <IonCardContent>
-                      {van.seats_number} assentos - Locador: {van.locator_name}
+                      {vehicle.seats_number} assentos - Locador: {vehicle.locator_name}
                     </IonCardContent>
                   </>
                 ) : (
                   <>
                     <IonCardContent>
-                      {van.seats_number} assentos - Não é alugado
+                      {vehicle.seats_number} assentos - Não é alugado
                     </IonCardContent>
                   </>
                 )}
@@ -144,4 +144,4 @@ const MinhasVans: React.FC = () => {
   );
 };
 
-export default MinhasVans;
+export default MeusVeiculos;
