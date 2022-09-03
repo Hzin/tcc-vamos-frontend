@@ -1,7 +1,7 @@
 import instance from './api';
 // import LocalStorage from '../LocalStorage';
 
-import transportsRoutes from '../../constants/routes/transportsRoutes';
+import transportsRoutes from '../../constants/routes/itinerariesRoutes';
 import { AxiosRequestHeaders } from 'axios';
 import LocalStorage from '../../LocalStorage';
 import { setStore } from '../../store/RecordsStore';
@@ -19,7 +19,7 @@ function updateHeader() {
   }
 }
 
-export interface getTransportsRequest {
+export interface GetItinerariesRequest {
   coordinatesFrom: {
     lat: number,
     lng: number
@@ -30,7 +30,14 @@ export interface getTransportsRequest {
   }
 }
 
-export async function get(coordinates: getTransportsRequest) {
+export async function get() {
+  updateHeader();
+
+  const response = await instance.get(transportsRoutes.get.url, { headers: header });
+  return response.data;
+}
+
+export async function search(coordinates: GetItinerariesRequest) {
   updateHeader();
 
   const response = await instance.get(transportsRoutes.get.url + `/${coordinates}`, { headers: header });

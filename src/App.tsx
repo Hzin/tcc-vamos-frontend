@@ -24,7 +24,7 @@ import CompletarDocumento from './pages/CadastroCompletar/CompletarDocumento';
 import CompletarTelefone from './pages/CadastroCompletar/CompletarTelefone';
 import Transportes from './pages/Transportes/Transportes';
 import BuscarPassageiro from './pages/BuscarPassageiro/BuscarPassageiro';
-import BuscarTransporte from './pages/BuscarTransporte/BuscarTransporte';
+import BuscarItinerarioList from './pages/BuscarItinerarioList';
 import Debug from './pages/Debug';
 
 /* Core CSS required for Ionic components to work properly */
@@ -73,8 +73,6 @@ const routes = (
   <Route exact path="/perfil/completar/telefone" component={CompletarTelefone}></Route>
 
   <Route exact path="/transportes" component={Transportes}></Route>
-  <Route exact path="/buscar-passageiro" component={BuscarPassageiro}></Route>
-  <Route exact path="/buscar-transporte" component={BuscarTransporte}></Route>
   <Route exact path="/buscar/passageiro" component={BuscarPassageiro}></Route>
   <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
 

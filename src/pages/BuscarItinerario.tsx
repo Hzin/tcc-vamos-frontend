@@ -1,190 +1,271 @@
 import {
-  IonBackButton,
-  IonButtons,
+  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonGrid,
-  IonHeader,
   IonIcon,
   IonItem,
-  IonLabel,
-  IonList,
-  IonListHeader,
+  IonItemDivider,
   IonPage,
   IonRow,
-  IonSelect,
-  IonSelectOption,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/react";
-import { cashOutline, personOutline, starOutline } from "ionicons/icons";
+import {
+  arrowForwardOutline,
+  cashOutline,
+  chevronForwardOutline,
+  locateOutline,
+  locationOutline,
+  personOutline,
+  starOutline,
+  timeOutline,
+} from "ionicons/icons";
+import "./BuscarItinerario.css";
+
+import itinerariesService from "../services/functions/itinerariesService";
 
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
-interface coordinates {
-  lat: number;
-  lgn: number;
-}
-
-interface Itinerario {
-  motorista: string;
-  valor: string;
-  lugares: string;
-  avaliacao: string;
-  bairros_atendidos: coordinates[];
-  destinos: coordinates[];
-}
+import GooglePlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from "react-google-places-autocomplete";
+import { Itinerary } from "../models/itinerary.model";
 
 const BuscarItinerario: React.FC = () => {
-  const [selectedBairro, setSelectedBairro] = useState("");
-  const [selectedFaculdade, setSelectedFaculdade] = useState("");
+  const history = useHistory();
+  const [addressFrom, setAddressFrom] = useState<any>("");
+  const [coordinatesFrom, setCoordinatesFrom] = useState<any>("");
+  const [addressTo, setAddressTo] = useState<any>("");
+  const [coordinatesTo, setCoordinatesTo] = useState<any>("");
+  const [showModalEnd, setShowModalEnd] = useState(false);
+  const [addressResults, setAddressResults] = useState<any>([]);
+  const [inputActive, setInputActive] = useState("");
 
-  const [itinerarios, setItinerarios] = useState<Itinerario[]>();
+  const [itinerariesList, setItinerariesList] = useState<Itinerary[]>();
+
+  // const optionsAddress = async (inputValue: any) => {
+  //   let results = await autoCompleteAddress(inputValue)
+  //     .then((res) => {
+  //       return res.map((item: any) => {
+  //         return {
+  //           value:
+  //             item.geometry.coordinates[0] + "," + item.geometry.coordinates[1],
+  //           label: item.properties.formatted,
+  //         };
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log("Erro ao buscar endereço:", err);
+  //     });
+  //   setAddressResults(results);
+  // };
+
+  // function setInputActiveOpenModal(input: string) {
+  //   setInputActive(input);
+  //   setShowModalEnd(true);
+  // }
+
+  // function setAddress(div: any) {
+  //   if (inputActive === "from") {
+  //     setAddressFrom(div.target.attributes[2].value);
+  //     setCoordinatesFrom(div.target.attributes[1].value);
+  //   } else {
+  //     setAddressTo(div.target.attributes[2].value);
+  //     setCoordinatesTo(div.target.attributes[1].value);
+  //   }
+  //   setShowModalEnd(false);
+  // }
 
   useEffect(() => {
-    setItinerarios([
-      {
-        motorista: "João",
-        valor: "R$ 150,00",
-        lugares: "2",
-        avaliacao: "4.5",
-        bairros_atendidos: [{ lat: -22.873432, lgn: -47.142274 }],
-        destinos: [{ lat: -22.833645, lgn: -47.048905 }],
-      },
-      {
-        motorista: "Ricardo",
-        valor: "R$ 180,00",
-        lugares: "5",
-        avaliacao: "4.0",
-        bairros_atendidos: [{ lat: -22.873432, lgn: -47.142274 }],
-        destinos: [{ lat: -22.833645, lgn: -47.048905 }],
-      },
-      {
-        motorista: "Luiz",
-        valor: "R$ 200,00",
-        lugares: "1",
-        avaliacao: "4.3",
-        bairros_atendidos: [{ lat: -22.873432, lgn: -47.142274 }],
-        destinos: [{ lat: -22.833645, lgn: -47.048905 }],
-      },
-      {
-        motorista: "Marcos",
-        valor: "R$ 199,00",
-        lugares: "6",
-        avaliacao: "4.9",
-        bairros_atendidos: [{ lat: -22.873432, lgn: -47.142274 }],
-        destinos: [{ lat: -22.833645, lgn: -47.048905 }],
-      },
-      {
-        motorista: "Orandi",
-        valor: "R$ 210,00",
-        lugares: "8",
-        avaliacao: "5.0",
-        bairros_atendidos: [{ lat: -22.873432, lgn: -47.142274 }],
-        destinos: [{ lat: -22.833645, lgn: -47.048905 }],
-      },
-      {
-        motorista: "Pedro",
-        valor: "R$ 189,00",
-        lugares: "4",
-        avaliacao: "4.1",
-        bairros_atendidos: [{ lat: -22.873432, lgn: -47.142274 }],
-        destinos: [{ lat: -22.833645, lgn: -47.048905 }],
-      },
-      {
-        motorista: "Pericles",
-        valor: "R$ 220,00",
-        lugares: "19",
-        avaliacao: "4.5",
-        bairros_atendidos: [{ lat: -23.873432, lgn: -47.142274 }],
-        destinos: [{ lat: -22.833645, lgn: -47.048905 }],
-      },
-    ]);
-  }, []);
+    if (addressFrom.label && addressFrom.label.length > 0) {
+      geocodeByAddress(addressFrom.label)
+        .then((results) => getLatLng(results[0]))
+        .then(({ lat, lng }) => setCoordinatesFrom({ lat, lng }));
+    }
+  }, [addressFrom]);
+
+  useEffect(() => {
+    if (addressTo.label && addressTo.label.length > 0) {
+      geocodeByAddress(addressTo.label)
+        .then((results) => getLatLng(results[0]))
+        .then(({ lat, lng }) => setCoordinatesTo({ lat, lng }));
+    }
+  }, [addressTo]);
+
+  async function buscarItinerarios() {
+    if (!coordinatesFrom || !coordinatesTo || !addressFrom || !addressTo) {
+      return;
+    }
+
+    const itinerariesList = await itinerariesService.getAllItineraries();
+
+    setItinerariesList(itinerariesList);
+  }
 
   return (
     <IonPage>
-      <IonHeader translucent>
-        <IonToolbar>
-          <IonTitle>Buscar itinerários</IonTitle>
-          <IonButtons slot="start">
-            <IonBackButton text="" defaultHref="/buscas" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-
       <IonContent fullscreen>
-        {/* <IonGrid>
-          <IonRow> */}
-            <IonList>
-              <IonListHeader>Filtros de busca</IonListHeader>
-              <IonItem>
-                <IonLabel>Bairro de origem</IonLabel>
-                <IonSelect
-                  // placeholder="Selecione o bairro de origem"
-                  onIonChange={(e) => {
-                    setSelectedBairro(e.detail.value!);
-                  }}
-                >
-                  <IonSelectOption value="1">Vila Marieta</IonSelectOption>
-                  <IonSelectOption value="2">Botafogo</IonSelectOption>
-                  <IonSelectOption value="3">Cambuí</IonSelectOption>
-                </IonSelect>
-              </IonItem>
-
-              <IonItem>
-                <IonLabel>Instituição de ensino de destino</IonLabel>
-                <IonSelect
-                  // placeholder="Selecione a instituição de ensino de destino"
-                  onIonChange={(e) => {
-                    setSelectedFaculdade(e.detail.value!);
-                  }}
-                >
-                  <IonSelectOption value="1">
-                    PUC Campinas (campus 1)
-                  </IonSelectOption>
-                  <IonSelectOption value="2">Unicamp</IonSelectOption>
-                  <IonSelectOption value="3">UNIP</IonSelectOption>
-                </IonSelect>
-              </IonItem>
-            </IonList>
-          {/* </IonRow> */}
-
-          {/* <IonRow> */}
-            {selectedBairro && selectedFaculdade ? (
-              <>
-                {itinerarios ? (
-                  itinerarios.map((itinerario, index) => {
-                    return (
-                      <IonCard key={index}>
-                        <IonCardHeader>
-                          <IonCardTitle>
-                            {/* <p>Bairros atendidos: {itinerario.bairros_atendidos[0].lat},{itinerario.bairros_atendidos[0].lgn}</p> */}
-                            {/* <p>Instituições de ensino atendidas: {itinerario.destinos[0].lat},{itinerario.destinos[0].lgn}</p> */}
-                          </IonCardTitle>
-                          <IonCardSubtitle>
-                            <p><IonIcon icon={personOutline} /> Vagas disponíveis: {itinerario.lugares}</p>
-                            <p><IonIcon icon={starOutline} /> Motorista: {itinerario.motorista}</p>
-                            <p><IonIcon icon={cashOutline} /> Valor: {itinerario.valor}</p>
-                          </IonCardSubtitle>
-                        </IonCardHeader>
-                      </IonCard>
-                    );
-                  })
-                ) : (
-                  <></>
-                )}
-              </>
+        <IonCard>
+          <IonCardContent>
+            <div className="inputs-from-to">
+              <IonIcon icon={locateOutline}></IonIcon>
+              {/* <IonSearchbar
+                showClearButton="never"
+                onClick={() => setInputActiveOpenModal("from")}
+                value={addressFrom}
+                placeholder="R. José Paulino, 1234 - Centro, Campinas - SP, 13013-001"
+              /> */}
+              <GooglePlacesAutocomplete
+                apiKey={process.env.REACT_APP_KEY_API}
+                apiOptions={{ language: "pt-br", region: "br" }}
+                selectProps={{
+                  value: addressFrom,
+                  onChange: setAddressFrom,
+                  className: "input-autocomplete",
+                  placeholder: "R. José Paulino, 1234",
+                }}
+              />
+            </div>
+            <div className="inputs-from-to">
+              <IonIcon icon={locationOutline}></IonIcon>
+              {/* <IonSearchbar
+                showClearButton="never"
+                onClick={() => setInputActiveOpenModal("to")}
+                value={addressTo}
+                placeholder="PUC Campinas"
+              /> */}
+              <GooglePlacesAutocomplete
+                apiKey={process.env.REACT_APP_KEY_API}
+                apiOptions={{ language: "pt-br", region: "br" }}
+                selectProps={{
+                  value: addressTo,
+                  onChange: setAddressTo,
+                  className: "input-autocomplete",
+                  placeholder: "PUC Campinas",
+                }}
+              />
+            </div>
+            <div className="button-search">
+              <IonButton color="primary" onClick={() => buscarItinerarios()}>
+                Buscar
+              </IonButton>
+            </div>
+          </IonCardContent>
+        </IonCard>
+        <IonItemDivider>Pesquisas recentes</IonItemDivider>
+        <IonRow class="latest-searches">
+          <IonIcon
+            className="icon-align-vcenter"
+            size="large"
+            icon={timeOutline}
+          ></IonIcon>
+          <div className="div_from_to">
+            <span>Rua Tal Tal, 154, São Paulo - SP</span>
+            <IonIcon icon={arrowForwardOutline}></IonIcon>
+            <span>USP</span>
+            <br />
+            <small>Há 1 hora</small>
+          </div>
+          <IonIcon
+            className="icon-forward icon-align-vcenter"
+            size="large"
+            icon={chevronForwardOutline}
+          ></IonIcon>
+        </IonRow>
+        <IonRow class="latest-searches">
+          <IonIcon
+            className="icon-align-vcenter"
+            size="large"
+            icon={timeOutline}
+          />
+          <div className="div_from_to">
+            <span>Taquaral</span>
+            <IonIcon icon={arrowForwardOutline}></IonIcon>
+            <span>PUC-Campinas</span>
+            <br />
+            <small>Há 2 hora</small>
+          </div>
+          <IonIcon
+            className="icon-forward icon-align-vcenter"
+            size="large"
+            icon={chevronForwardOutline}
+          />
+        </IonRow>
+        {/* <IonModal isOpen={showModalEnd}>
+          <IonContent>
+            <div className="header-search-modal">
+              <IonIcon
+                className="icon-return-modal"
+                icon={arrowBack}
+                onClick={() => setShowModalEnd(false)}
+              />
+              <IonInput
+                onIonChange={(e) => optionsAddress(e.detail.value)}
+                placeholder="R. José Paulino, 1234 - Centro, Campinas - SP, 13013-001"
+                className="search-modal"
+              />
+            </div>
+            {addressResults.length > 0 ? (
+              addressResults.map((item: any) => {
+                return (
+                  <div
+                    key={item.value}
+                    className="modal-search-results"
+                    data-value={item.value}
+                    data-label={item.label}
+                    onClick={(e) => setAddress(e)}
+                  >
+                    {item.label}
+                    <IonIcon
+                      className="icon-results-modal"
+                      icon={chevronForwardOutline}
+                    />
+                  </div>
+                );
+              })
             ) : (
-              <></>
+              <>
+                <IonProgressBar type="indeterminate" />
+                <br />
+              </>
             )}
-          {/* </IonRow>
-        </IonGrid> */}
+          </IonContent>
+        </IonModal> */}
+
+        {itinerariesList ? (
+          <>
+            <IonItemDivider>Resultados</IonItemDivider>
+            {itinerariesList.map((itinerary, index) => {
+              return (
+                <IonCard button key={index} onClick={() => { history.push(`/itinerary/${itinerary.id_itinerary}`) }}>
+                  <IonCardHeader>
+                    <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
+                    <IonCardSubtitle>
+                      <p>
+                        <IonIcon icon={personOutline} /> Vagas disponíveis:{" "}
+                        {itinerary.available_seats}
+                      </p>
+                      <p>
+                        <IonIcon icon={starOutline} /> Motorista:{" "}
+                        {itinerary.price}
+                      </p>
+                      <p>
+                        <IonIcon icon={cashOutline} /> Valor:{" "}
+                        {itinerary.van_plate}
+                      </p>
+                    </IonCardSubtitle>
+                  </IonCardHeader>
+                </IonCard>
+              );
+            })}
+          </>
+        ) : (
+          <></>
+        )}
       </IonContent>
     </IonPage>
   );
