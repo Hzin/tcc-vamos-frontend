@@ -16,6 +16,7 @@ import {
   IonListHeader,
   IonSelect,
   IonSelectOption,
+  IonItemDivider,
 } from "@ionic/react";
 
 import React, { useEffect, useReducer, useState } from "react";
@@ -23,9 +24,9 @@ import { useHistory } from "react-router-dom";
 
 // import * as yup from 'yup';
 
-import carsService from '../services/functions/carsService'
+import carsService from "../services/functions/carsService";
 
-import * as vansRoutes from '../services/api/vans';
+import * as vansRoutes from "../services/api/vans";
 
 import "./VeiculoCadastro.css";
 import { Color } from "@ionic/core";
@@ -34,44 +35,48 @@ import { PageHeader } from "../components/PageHeader";
 
 const VeiculoCadastro: React.FC = () => {
   const history = useHistory();
-  
+
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
-  const [carBrands, setCarBrands] = useState([{
-    codigo: '',
-    nome: ''
-  }]);
+  const [carBrands, setCarBrands] = useState([
+    {
+      codigo: "",
+      nome: "",
+    },
+  ]);
 
-  const [carModels, setCarModels] = useState([{
-    codigo: '',
-    nome: ''
-  }]);
+  const [carModels, setCarModels] = useState([
+    {
+      codigo: "",
+      nome: "",
+    },
+  ]);
 
   const [inputValues, setInputValues] = useReducer(
     (state: any, newState: any) => ({ ...state, ...newState }),
     {
-      carPlate: '',
-      carBrand: '',
-      carModel: '',
+      carPlate: "",
+      carBrand: "",
+      carModel: "",
       seats_number: 1,
       isRented: false,
-      locator_name: '',
-      locator_address: '',
-      locator_complement: '',
-      locator_city: '',
-      locator_state: '',
+      locator_name: "",
+      locator_address: "",
+      locator_complement: "",
+      locator_city: "",
+      locator_state: "",
     }
   );
 
   const clearRentalData = () => {
     setInputValues({
-      carRentalName: '',
-      complement: '',
-      city: '',
-      state: '',
-    })
+      carRentalName: "",
+      complement: "",
+      city: "",
+      state: "",
+    });
   };
 
   const validateForm = (): boolean => {
@@ -111,7 +116,7 @@ const VeiculoCadastro: React.FC = () => {
       return false;
     }
 
-    if ((Number)(vanForm.seats_number) < 1) {
+    if (Number(vanForm.seats_number) < 1) {
       setToastMessage("Número de passageiros deve ser positivo!");
       setShowToast(true);
       return false;
@@ -133,7 +138,7 @@ const VeiculoCadastro: React.FC = () => {
       locator_complement: inputValues.locator_complement,
       locator_city: inputValues.locator_city,
       locator_state: inputValues.locator_state,
-    }
+    };
 
     if (!locatorForm.locator_name) {
       setToastMessage("Nome do Locador é obrigatório");
@@ -163,82 +168,90 @@ const VeiculoCadastro: React.FC = () => {
   };
 
   const loadCarModels = async (carBrandId: string) => {
-    const carModelsRes = await carsService.getCarModels(carBrandId)
-  
+    const carModelsRes = await carsService.getCarModels(carBrandId);
+
     if (carModelsRes.error) {
-      setToastColor("danger")
+      setToastColor("danger");
       setToastMessage(carModelsRes.error.errorMessage);
-      setInputValues({ carBrand: '' })
-      return
+      setInputValues({ carBrand: "" });
+      return;
     }
 
     if (carModelsRes.data) {
-      setCarModels(carModelsRes.data)
+      setCarModels(carModelsRes.data);
     }
-  }
+  };
 
   const handleSubmit = async () => {
     if (!validateForm()) {
-      return
+      return;
     }
 
     // cria registro da van
-    await vansRoutes.create({
-      plate: inputValues.carPlate,
-      brand: inputValues.carBrand,
-      model: inputValues.carModel,
-      seats_number: inputValues.seats_number,
-      locator_name: inputValues.locator_name,
-      locator_address: inputValues.locator_address,
-      locator_complement: inputValues.locator_complement,
-      locator_city: inputValues.locator_city,
-      locator_state: inputValues.locator_state
-    }).then(response => {
-      if (response.status === 'error') {
-        setToastMessage(response.message);
+    await vansRoutes
+      .create({
+        plate: inputValues.carPlate,
+        brand: inputValues.carBrand,
+        model: inputValues.carModel,
+        seats_number: inputValues.seats_number,
+        locator_name: inputValues.locator_name,
+        locator_address: inputValues.locator_address,
+        locator_complement: inputValues.locator_complement,
+        locator_city: inputValues.locator_city,
+        locator_state: inputValues.locator_state,
+      })
+      .then((response) => {
+        if (response.status === "error") {
+          setToastMessage(response.message);
+          setShowToast(true);
+
+          return;
+        }
+
+        history.push({
+          pathname: "/minhas-vans",
+          state: {
+            redirectData: {
+              showToastMessage: true,
+              toastColor: "success",
+              toastMessage: response.message,
+            },
+          },
+        });
+      })
+      .catch((err) => {
+        setToastColor("danger");
+        setToastMessage(err);
         setShowToast(true);
-
-        return
-      }
-
-      history.push({ pathname: '/minhas-vans', state: {
-        redirectData: {
-          showToastMessage: true,
-          toastColor: "success",
-          toastMessage: response.message,
-        },
-      }})
-    }).catch((err) => {
-      setToastColor("danger")
-      setToastMessage(err);
-      setShowToast(true);
-    })
+      });
   };
 
   useEffect(() => {
-    let isMounted = true
+    let isMounted = true;
 
     const getCarsBrands = async () => {
-      const carBrandsRes = await carsService.getAllCarBrands()
-  
+      const carBrandsRes = await carsService.getAllCarBrands();
+
       if (carBrandsRes.error) {
-        setToastColor("danger")
+        setToastColor("danger");
         setToastMessage(carBrandsRes.error.errorMessage);
         setShowToast(true);
-        return
+        return;
       }
-  
+
       if (carBrandsRes.data) {
         if (isMounted) {
-          setCarBrands(carBrandsRes.data)
+          setCarBrands(carBrandsRes.data);
         }
       }
-    }
+    };
 
-    getCarsBrands()
+    getCarsBrands();
 
-    return () => { isMounted = false }
-  }, [])
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <IonPage>
@@ -249,108 +262,144 @@ const VeiculoCadastro: React.FC = () => {
 
       <IonContent>
         <IonList lines="full" class="ion-no-margin">
-          <IonListHeader lines="full">
-            <IonLabel>Informações do veículo</IonLabel>
-          </IonListHeader>
+        <IonItemDivider color={"primary"}>Informações do veículo</IonItemDivider>
           <IonItem>
-            <IonLabel position='floating'>Placa </IonLabel>
+            <IonLabel position="fixed">Placa </IonLabel>
             <IonInput
-              type='text'
+              type="text"
               clearInput
               maxlength={7}
-              placeholder='Digite a Placa do Veículo'
-              onIonChange={(e: any) => setInputValues({ carPlate: e.target.value })}
+              onIonChange={(e: any) =>
+                setInputValues({ carPlate: e.target.value })
+              }
             />
           </IonItem>
 
           {/* TODO, problema de setState para valores vindos de um evento sendo triggerado por um ion-select */}
           <IonItem>
             <IonLabel>Marca</IonLabel>
-            <IonSelect onIonChange={(e: any) => { setInputValues({ carBrand: e.detail.value }); loadCarModels(e.detail.value) }}>
-              { carBrands ? carBrands.map((carBrand, index) => {
-                return (<IonSelectOption key={index} value={index}>{carBrand.nome}</IonSelectOption>)
-              }) : <></> }
+            <IonSelect
+              onIonChange={(e: any) => {
+                setInputValues({ carBrand: e.detail.value });
+                loadCarModels(e.detail.value);
+              }}
+            >
+              {carBrands ? (
+                carBrands.map((carBrand, index) => {
+                  return (
+                    <IonSelectOption key={index} value={index}>
+                      {carBrand.nome}
+                    </IonSelectOption>
+                  );
+                })
+              ) : (
+                <></>
+              )}
             </IonSelect>
           </IonItem>
 
-          { inputValues.carBrand ?
+          {inputValues.carBrand ? (
             <IonItem>
               <IonLabel>Modelo</IonLabel>
-              <IonSelect onIonChange={(e: any) => { setInputValues({ carModel: e.detail.value }) }}>
-                { carModels ? carModels.map((carModel, index) => {
-                  return (<IonSelectOption key={index} value={carModel.nome}>{carModel.nome}</IonSelectOption>)
-                }) : <></> }
+              <IonSelect
+                onIonChange={(e: any) => {
+                  setInputValues({ carModel: e.detail.value });
+                }}
+              >
+                {carModels ? (
+                  carModels.map((carModel, index) => {
+                    return (
+                      <IonSelectOption key={index} value={carModel.nome}>
+                        {carModel.nome}
+                      </IonSelectOption>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
               </IonSelect>
             </IonItem>
-            : <></>}
+          ) : (
+            <></>
+          )}
 
           <IonItem>
-            <IonLabel position='floating'>
-              Número de assentos
-            </IonLabel>
+            <IonLabel position="fixed">Nº assentos</IonLabel>
             <IonInput
-              type='number'
+              type="number"
               min={1}
               clearInput
-              placeholder='podem ser ocupados por passageiros'
-              onIonChange={(e: any) => setInputValues({ seats_number: e.target.value })}
+              onIonChange={(e: any) =>
+                setInputValues({ seats_number: e.target.value })
+              }
             />
           </IonItem>
         </IonList>
 
-        <IonList lines="full" class="ion-no-margin">
-          <IonListHeader lines="full">
-            <IonLabel>Informações do locador</IonLabel>
-          </IonListHeader>
+        <IonItemDivider color={"medium"}>Informações de locação</IonItemDivider>
 
+        <IonList lines="full" class="ion-no-margin">
           <IonItem>
             <IonLabel>O veículo é alugado?</IonLabel>
-            <IonCheckbox checked={inputValues.isRented} onIonChange={e => setInputValues({ isRented: e.detail.checked })} />
+            <IonCheckbox
+              checked={inputValues.isRented}
+              onIonChange={(e) =>
+                setInputValues({ isRented: e.detail.checked })
+              }
+            />
           </IonItem>
 
           {inputValues.isRented && (
-            <div>
             <IonItem>
               <IonLabel position="stacked" />
               <IonInput
-                type='text'
+                type="text"
                 clearInput
-                placeholder='Nome completo do Locador'
-                onIonChange={(e: any) => setInputValues({ locator_name: e.target.value })}
+                placeholder="Nome completo do Locador"
+                onIonChange={(e: any) =>
+                  setInputValues({ locator_name: e.target.value })
+                }
               />
 
               <IonInput
-                type='text'
+                type="text"
                 clearInput
-                placeholder='Endereço do locador'
-                onIonChange={(e: any) => setInputValues({ locator_address: e.target.value })}
+                placeholder="Endereço do locador"
+                onIonChange={(e: any) =>
+                  setInputValues({ locator_address: e.target.value })
+                }
               />
               <IonInput
-                type='text'
+                type="text"
                 clearInput
-                placeholder='Complemento'
-                onIonChange={(e: any) => setInputValues({ locator_complement: e.target.value })}
+                placeholder="Complemento"
+                onIonChange={(e: any) =>
+                  setInputValues({ locator_complement: e.target.value })
+                }
               />
               <IonInput
-                type='text'
+                type="text"
                 clearInput
-                placeholder='Cidade'
-                onIonChange={(e: any) => setInputValues({ locator_city: e.target.value })}
+                placeholder="Cidade"
+                onIonChange={(e: any) =>
+                  setInputValues({ locator_city: e.target.value })
+                }
               />
               <IonInput
-                type='text'
+                type="text"
                 clearInput
-                placeholder='Estado'
-                onIonChange={(e: any) => setInputValues({ locator_state: e.target.value })}
+                placeholder="Estado"
+                onIonChange={(e: any) =>
+                  setInputValues({ locator_state: e.target.value })
+                }
               />
             </IonItem>
-            </div>
           )}
 
           <div>
             <IonButton
-              className='ion-margin-top'
-              expand='block'
+              className="ion-margin-top"
+              expand="block"
               onClick={handleSubmit}
             >
               Salvar
@@ -360,12 +409,12 @@ const VeiculoCadastro: React.FC = () => {
 
         <IonToast
           position="top"
-          color={toastColor}      
+          color={toastColor}
           isOpen={showToast}
           onDidDismiss={() => closeToast(setShowToast)}
           message={toastMessage}
           duration={2500}
-      />
+        />
       </IonContent>
     </IonPage>
   );
