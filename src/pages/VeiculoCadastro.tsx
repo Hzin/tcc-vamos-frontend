@@ -27,12 +27,12 @@ import carsService from '../services/functions/carsService'
 
 import * as vansRoutes from '../services/api/vans';
 
-import "./CadastroVan.css";
+import "./VeiculoCadastro.css";
 import { Color } from "@ionic/core";
 import { closeToast } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
 
-const CadastroVan: React.FC = () => {
+const VeiculoCadastro: React.FC = () => {
   const history = useHistory();
   
   const [showToast, setShowToast] = useState<boolean>(false);
@@ -371,4 +371,4 @@ const CadastroVan: React.FC = () => {
   );
 };
 
-export default CadastroVan;
+export default VeiculoCadastro;
