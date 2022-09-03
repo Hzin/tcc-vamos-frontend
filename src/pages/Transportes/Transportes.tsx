@@ -48,6 +48,7 @@ import { useHistory, useLocation } from "react-router";
 import itinerariesService from "../../services/functions/itinerariesService";
 import { createUserSearch } from "../../services/api/users";
 import "./Transportes.css";
+import { closeToast } from "../../services/utils";
 
 interface InfoBusca {
   addressFrom: any;
@@ -210,7 +211,7 @@ const Transportes: React.FC = () => {
           // cssClass={"toast-notification"}
           color={toastColor}      
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={messageToast}
           duration={2500}
         />

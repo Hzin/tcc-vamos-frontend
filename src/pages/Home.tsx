@@ -6,6 +6,7 @@ import { useHistory, useLocation } from 'react-router';
 import { UserContext } from '../App';
 
 import * as sessionRoutes from '../services/api/session';
+import { closeToast } from '../services/utils';
 
 interface LocationState {
   redirectData?: {
@@ -59,7 +60,7 @@ const Home: React.FC = () => {
     }
 
     refreshUserToken()
-  }, [])
+  }, [location.state, user, history])
   
   return (
     <IonPage>
@@ -68,7 +69,7 @@ const Home: React.FC = () => {
             position="top"
             color={toastColor}
             isOpen={showToast}
-            onDidDismiss={() => setShowToast(false)}
+            onDidDismiss={() => closeToast(setShowToast)}
             message={toastMessage}
             duration={2500}
           />

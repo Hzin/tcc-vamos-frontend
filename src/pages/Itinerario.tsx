@@ -24,7 +24,7 @@ interface VanInfo {
   locator_state: string;
 }
 
-const MinhasVans: React.FC = () => {
+const Itinerario: React.FC = () => {
   const history = useHistory();
 
   const [showToast, setShowToast] = useState(false);
@@ -116,4 +116,4 @@ const MinhasVans: React.FC = () => {
   );
 };
 
-export default MinhasVans;
+export default Itinerario;

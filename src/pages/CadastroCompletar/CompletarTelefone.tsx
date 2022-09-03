@@ -25,6 +25,7 @@ import { saveOutline } from "ionicons/icons";
 
 import * as usersRoutes from '../../services/api/users';
 import { Color } from "@ionic/core";
+import { closeToast } from "../../services/utils";
 
 interface documentTypesInterface {
   label: string;
@@ -156,7 +157,7 @@ const CompletarTelefone: React.FC = () => {
           position="top"
           color={toastColor}     
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={messageToast}
           duration={2500}
         />

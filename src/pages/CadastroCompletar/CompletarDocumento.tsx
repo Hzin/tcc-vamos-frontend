@@ -28,6 +28,7 @@ import { saveOutline } from "ionicons/icons";
 import * as usersRoutes from '../../services/api/users';
 
 import validateCpf from '../../services/validateCpf'
+import { closeToast } from "../../services/utils";
 
 interface documentTypesInterface {
   label: string;
@@ -206,7 +207,7 @@ const CompletarDocumento: React.FC = () => {
           position="top"
           color='danger'      
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={messageToast}
           duration={2500}
         />

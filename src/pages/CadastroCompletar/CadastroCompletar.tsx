@@ -21,6 +21,7 @@ import { callOutline, documentTextOutline } from "ionicons/icons";
 
 import '../Cadastro/Cadastro.css'
 import { Color } from "@ionic/core";
+import { closeToast } from "../../services/utils";
 
 interface cardItem {
   icon: string;
@@ -130,7 +131,7 @@ const CadastroCompletar: React.FC = () => {
           position="top"
           color={toastColor}
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={toastMessage}
           duration={2500}
         />

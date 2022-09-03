@@ -29,6 +29,7 @@ import * as vansRoutes from '../services/api/vans';
 
 import "./CadastroVan.css";
 import { Color } from "@ionic/core";
+import { closeToast } from "../services/utils";
 
 const CadastroVan: React.FC = () => {
   const history = useHistory();
@@ -364,7 +365,7 @@ const CadastroVan: React.FC = () => {
           position="top"
           color={toastColor}      
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={toastMessage}
           duration={2500}
       />

@@ -40,6 +40,7 @@ import sessionsService from "../services/functions/sessionsService";
 import usersService from "../services/functions/usersService";
 import { UserContext } from "../App";
 import { Color } from "@ionic/core";
+import { closeToast } from "../services/utils";
 
 interface ScanNewProps {
   match: {
@@ -393,7 +394,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
           position="top"
           color={toastColor}
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={toastMessage}
           duration={2500}
         />

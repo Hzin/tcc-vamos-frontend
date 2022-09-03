@@ -29,6 +29,7 @@ import * as usersRoutes from '../services/api/users';
 
 import './Cadastro/Cadastro.css'
 import { Color } from "@ionic/core";
+import { closeToast } from "../services/utils";
 
 interface userData {
   name: string;
@@ -190,7 +191,7 @@ const PerfilEditar: React.FC = () => {
         <IonToast
           color={toastColor}
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={messageToast}
           duration={2500}
         />

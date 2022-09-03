@@ -19,6 +19,7 @@ import * as sessionRoutes from '../services/api/session';
 import LocalStorage from '../LocalStorage';
 import { Action } from "../components/Action";
 import { UserContext } from "../App";
+import { closeToast } from "../services/utils";
 
 const Page: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
@@ -162,7 +163,7 @@ const Page: React.FC = () => {
           position="top"
           color='danger'      
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={messageToast}
           duration={2500}
         />
