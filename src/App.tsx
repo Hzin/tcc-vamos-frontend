@@ -50,7 +50,7 @@ import './theme/variables.css';
 import { search, home, person } from 'ionicons/icons';
 import { useState, useContext } from 'react';
 import React from 'react';
-import MinhasVans from './pages/MinhasVans';
+import MeusVeiculos from './pages/MeusVeiculos';
 import MeusItinerarios from './pages/MeusItinerarios/MeusItinerarios';
 import CadastrarItinerario from './pages/CadastrarItinerario/CadastrarItinerario';
 import BuscarItinerario from './pages/BuscarItinerario';
@@ -79,7 +79,7 @@ const routes = (
   <Route exact path="/usuario/:id" component={Perfil}></Route>
 
   <Route exact path="/cadastro-van" component={CadastroVan}></Route>
-  <Route exact path="/minhas-vans" component={MinhasVans}></Route>
+  <Route exact path="/minhas-vans" component={MeusVeiculos}></Route>
 
   <Route exact path="/cadastrar-itinerario" component={CadastrarItinerario}></Route>
   <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
