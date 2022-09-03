@@ -18,7 +18,7 @@ import Home from './pages/Home';
 import Buscas from './pages/Buscas';
 import Perfil from './pages/Perfil';
 import PerfilEditar from './pages/PerfilEditar';
-import CadastroVan from './pages/CadastroVan';
+import VeiculoCadastro from './pages/VeiculoCadastro';
 import CadastroCompletar from './pages/CadastroCompletar/CadastroCompletar';
 import CompletarDocumento from './pages/CadastroCompletar/CompletarDocumento';
 import CompletarTelefone from './pages/CadastroCompletar/CompletarTelefone';
@@ -78,8 +78,8 @@ const routes = (
 
   <Route exact path="/usuario/:id" component={Perfil}></Route>
 
-  <Route exact path="/cadastro-van" component={CadastroVan}></Route>
-  <Route exact path="/minhas-vans" component={MeusVeiculos}></Route>
+  <Route exact path="/veiculos/cadastrar" component={VeiculoCadastro}></Route>
+  <Route exact path="/veiculos/meus" component={MeusVeiculos}></Route>
 
   <Route exact path="/cadastrar-itinerario" component={CadastrarItinerario}></Route>
   <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
