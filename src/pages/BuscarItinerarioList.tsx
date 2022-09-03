@@ -25,6 +25,7 @@ import { cashOutline, personOutline, starOutline } from "ionicons/icons";
 
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { PageHeader } from "../components/PageHeader";
 
 interface coordinates {
   lat: number;
@@ -109,14 +110,10 @@ const BuscarItinerario: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader translucent>
-        <IonToolbar>
-          <IonTitle>Buscar itinerários</IonTitle>
-          <IonButtons slot="start">
-            <IonBackButton text="" defaultHref="/buscas" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader
+        pageName="Buscar itinerários"
+        backButtonPageUrl="/buscas"
+      ></PageHeader>
 
       <IonContent fullscreen>
         {/* <IonGrid>

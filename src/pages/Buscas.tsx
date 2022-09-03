@@ -2,6 +2,7 @@ import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, 
 
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { PageHeader } from "../components/PageHeader";
 
 const Buscas: React.FC = () => {
   useEffect(() => {}, []);
@@ -9,11 +10,9 @@ const Buscas: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Buscas</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader
+        pageName="Buscas"
+      ></PageHeader>
 
       <IonContent fullscreen>
         <IonCard button class="cardItem" onClick={ () => history.push({ pathname: "/buscar/itinerario"}) }>

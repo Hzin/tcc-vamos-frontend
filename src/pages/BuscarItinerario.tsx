@@ -1,16 +1,21 @@
 import {
+  IonBackButton,
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
+  IonHeader,
   IonIcon,
   IonItem,
   IonItemDivider,
   IonPage,
   IonRow,
+  IonTitle,
+  IonToolbar,
 } from "@ionic/react";
 import {
   arrowForwardOutline,
@@ -34,6 +39,7 @@ import GooglePlacesAutocomplete, {
   getLatLng,
 } from "react-google-places-autocomplete";
 import { Itinerary } from "../models/itinerary.model";
+import { PageHeader } from "../components/PageHeader";
 
 const BuscarItinerario: React.FC = () => {
   const history = useHistory();
@@ -108,6 +114,11 @@ const BuscarItinerario: React.FC = () => {
 
   return (
     <IonPage>
+      <PageHeader
+        pageName="Buscar itinerários"
+        backButtonPageUrl="/buscas"
+      ></PageHeader>
+
       <IonContent fullscreen>
         <IonCard>
           <IonCardContent>
@@ -156,7 +167,7 @@ const BuscarItinerario: React.FC = () => {
             </div>
           </IonCardContent>
         </IonCard>
-        <IonItemDivider>Pesquisas recentes</IonItemDivider>
+        <IonItemDivider color="dark">Pesquisas recentes</IonItemDivider>
         <IonRow class="latest-searches">
           <IonIcon
             className="icon-align-vcenter"
@@ -238,7 +249,7 @@ const BuscarItinerario: React.FC = () => {
 
         {itinerariesList ? (
           <>
-            <IonItemDivider>Resultados</IonItemDivider>
+            <IonItemDivider color="secondary">Resultados</IonItemDivider>
             {itinerariesList.map((itinerary, index) => {
               return (
                 <IonCard button key={index} onClick={() => { history.push(`/itinerary/${itinerary.id_itinerary}`) }}>

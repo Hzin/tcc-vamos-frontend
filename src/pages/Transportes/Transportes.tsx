@@ -91,6 +91,7 @@ const Transportes: React.FC = () => {
 
   return (
     <IonPage>
+      {/* TODO, componentizar Header */}
       <IonHeader>
         <div className="header-page">
           {/* <IonButtons slot="start">

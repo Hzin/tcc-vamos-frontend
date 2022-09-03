@@ -20,25 +20,19 @@ import {
 import { close, locateOutline, locationOutline } from "ionicons/icons";
 import { useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { PageHeader } from "../../components/PageHeader";
 
 export default function CadastrarItinerario() {
   const [selected, setSelected] = useState<any>("");
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton icon={close} text="" defaultHref="/perfil" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader
+        pageName="Cadastrar itinerário"
+        backButtonPageUrl="/perfil"
+      ></PageHeader>
+      
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Cadastrar Itinerário</IonTitle>
-          </IonToolbar>
-        </IonHeader>
         <IonCard>
           <IonCardContent>
             <div className="inputs-from-to">

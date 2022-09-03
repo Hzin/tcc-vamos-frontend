@@ -29,6 +29,7 @@ import * as usersRoutes from '../../services/api/users';
 
 import validateCpf from '../../services/validateCpf'
 import { closeToast } from "../../services/utils";
+import { PageHeader } from "../../components/PageHeader";
 
 interface documentTypesInterface {
   label: string;
@@ -155,22 +156,12 @@ const CompletarDocumento: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Completar cadastro</IonTitle>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/perfil/completar" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader
+        pageName="Completar cadastro"
+        backButtonPageUrl="/perfil/completar"
+      ></PageHeader>
 
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Completar cadastro</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-
         <IonGrid>
           <IonRow>
             <IonCol>

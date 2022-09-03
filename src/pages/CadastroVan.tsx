@@ -30,6 +30,7 @@ import * as vansRoutes from '../services/api/vans';
 import "./CadastroVan.css";
 import { Color } from "@ionic/core";
 import { closeToast } from "../services/utils";
+import { PageHeader } from "../components/PageHeader";
 
 const CadastroVan: React.FC = () => {
   const history = useHistory();
@@ -241,14 +242,10 @@ const CadastroVan: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Cadastro de veículo</IonTitle>
-          <IonButtons slot='start'>
-            <IonBackButton defaultHref='/perfil' />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader
+        pageName="Cadastro de veículo"
+        backButtonPageUrl="/perfil"
+      ></PageHeader>
 
       <IonContent>
         <IonList lines="full" class="ion-no-margin">
