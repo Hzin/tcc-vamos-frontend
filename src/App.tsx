@@ -24,8 +24,6 @@ import CompletarDocumento from './pages/CadastroCompletar/CompletarDocumento';
 import CompletarTelefone from './pages/CadastroCompletar/CompletarTelefone';
 import Transportes from './pages/Transportes/Transportes';
 import BuscarPassageiro from './pages/BuscarPassageiro/BuscarPassageiro';
-import BuscarItinerarioList from './pages/BuscarItinerarioList';
-import Debug from './pages/Debug';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';

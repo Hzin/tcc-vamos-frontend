@@ -57,8 +57,10 @@ const BuscarItinerario: React.FC = () => {
   const [addressTo, setAddressTo] = useState<any>("");
   const [coordinatesTo, setCoordinatesTo] = useState<any>("");
   const [showModalEnd, setShowModalEnd] = useState(false);
-  const [addressResults, setAddressResults] = useState<any>([]);
+  const [addressResults, setAddressResults] = useState<any[]>([]);
   const [inputActive, setInputActive] = useState("");
+
+  const [recentSearches, setRecentSearches] = useState<any[]>([]);
 
   const [itinerariesList, setItinerariesList] = useState<Itinerary[]>();
 
@@ -116,6 +118,21 @@ const BuscarItinerario: React.FC = () => {
       return;
     }
 
+    const maxRecentSearchesLength = 0
+
+    if (recentSearches.length >= maxRecentSearchesLength) {
+      setRecentSearches(recentSearches.slice(recentSearches.length - maxRecentSearchesLength));
+    }
+
+    setRecentSearches((arr) => [
+      ...arr,
+      {
+        addressFrom: addressFrom.label,
+        addressTo: addressTo.label,
+        time: Date.now(),
+      },
+    ]);
+
     await itinerariesService
       .searchItineraries({
         coordinatesFrom,
@@ -137,6 +154,11 @@ const BuscarItinerario: React.FC = () => {
         setMessageToast(err);
         setShowToast(true);
       });
+  }
+
+  function fillSearchBars(addressFrom: string, addressTo: string) {
+    // setAddressFrom(addressFrom);
+    // setAddressTo(addressTo);
   }
 
   return (
@@ -194,27 +216,49 @@ const BuscarItinerario: React.FC = () => {
             </div>
           </IonCardContent>
         </IonCard>
-        <IonItemDivider color="dark">Pesquisas recentes</IonItemDivider>
-        <IonRow class="latest-searches">
-          <IonIcon
-            className="icon-align-vcenter"
-            size="large"
-            icon={timeOutline}
-          ></IonIcon>
-          <div className="div_from_to">
-            <span>Rua Tal Tal, 154, São Paulo - SP</span>
-            <IonIcon icon={arrowForwardOutline}></IonIcon>
-            <span>USP</span>
-            <br />
-            <small>Há 1 hora</small>
-          </div>
-          <IonIcon
-            className="icon-forward icon-align-vcenter"
-            size="large"
-            icon={chevronForwardOutline}
-          ></IonIcon>
-        </IonRow>
-        <IonRow class="latest-searches">
+
+        {recentSearches && recentSearches.length !== 0 ? (
+          <>
+            <IonItemDivider color="dark">Pesquisas recentes</IonItemDivider>
+            <IonRow class="latest-searches">
+              {recentSearches.map((search, index) => {
+                return (
+                  <>
+                    <div key={index}>
+                      <IonRow
+                        class="latest-searches"
+                        onClick={() => {
+                          fillSearchBars(search.addressFrom, search.addressTo);
+                        }}
+                      >
+                        <IonIcon
+                          className="icon-align-vcenter"
+                          size="large"
+                          icon={timeOutline}
+                        ></IonIcon>
+                        <div className="div_from_to">
+                          <span>{search.addressFrom}</span>
+                          <IonIcon icon={arrowForwardOutline}></IonIcon>
+                          <span>{search.addressTo}</span>
+                          <br />
+                          <small>{search.time}</small>
+                        </div>
+                        <IonIcon
+                          className="icon-forward icon-align-vcenter"
+                          size="large"
+                          icon={chevronForwardOutline}
+                        ></IonIcon>
+                      </IonRow>
+                    </div>
+                  </>
+                );
+              })}
+            </IonRow>
+          </>
+        ) : (
+          <></>
+        )}
+        {/* <IonRow class="latest-searches">
           <IonIcon
             className="icon-align-vcenter"
             size="large"
@@ -232,7 +276,7 @@ const BuscarItinerario: React.FC = () => {
             size="large"
             icon={chevronForwardOutline}
           />
-        </IonRow>
+        </IonRow> */}
         {/* <IonModal isOpen={showModalEnd}>
           <IonContent>
             <div className="header-search-modal">
@@ -274,7 +318,7 @@ const BuscarItinerario: React.FC = () => {
           </IonContent>
         </IonModal> */}
 
-        {itinerariesList ? (
+        {itinerariesList && itinerariesList.length !== 0 ? (
           <>
             <IonItemDivider color="secondary">Resultados</IonItemDivider>
             {itinerariesList.map((itinerary, index) => {
