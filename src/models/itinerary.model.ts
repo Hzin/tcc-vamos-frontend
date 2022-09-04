@@ -1,6 +1,6 @@
 export interface Itinerary {
     id_itinerary: number;
-    van_plate: string;
+    vehicle_plate: string;
     price: number;
     days_of_week: number;
     specific_day: Date;

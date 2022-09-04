@@ -26,7 +26,7 @@ import { useHistory } from "react-router-dom";
 
 import carsService from "../services/functions/carsService";
 
-import * as vansRoutes from "../services/api/vans";
+import * as vehiclesRoutes from "../services/api/vehicles";
 
 import "./VeiculoCadastro.css";
 import { Color } from "@ionic/core";
@@ -80,7 +80,7 @@ const VeiculoCadastro: React.FC = () => {
   };
 
   const validateForm = (): boolean => {
-    const vanForm = {
+    const vehicleForm = {
       carPlate: inputValues.carPlate,
       carBrand: inputValues.carBrand,
       carModel: inputValues.carModel,
@@ -89,40 +89,40 @@ const VeiculoCadastro: React.FC = () => {
     };
 
     if (
-      !vanForm.carPlate ||
-      vanForm.carPlate.length !== 7 ||
-      !vanForm.carPlate.match(/([A-z0-9]){7}/g)
+      !vehicleForm.carPlate ||
+      vehicleForm.carPlate.length !== 7 ||
+      !vehicleForm.carPlate.match(/([A-z0-9]){7}/g)
     ) {
       setToastMessage("Placa do veículo inválida!");
       setShowToast(true);
       return false;
     }
 
-    if (!vanForm.carBrand) {
+    if (!vehicleForm.carBrand) {
       setToastMessage("Marca do veículo é obrigatório");
       setShowToast(true);
       return false;
     }
 
-    if (!vanForm.carModel) {
+    if (!vehicleForm.carModel) {
       setToastMessage("Modelo do veículo é obrigatório");
       setShowToast(true);
       return false;
     }
 
-    if (!vanForm.seats_number || !parseInt(`${vanForm.seats_number}`)) {
+    if (!vehicleForm.seats_number || !parseInt(`${vehicleForm.seats_number}`)) {
       setToastMessage("Número de passageiros inválido");
       setShowToast(true);
       return false;
     }
 
-    if (Number(vanForm.seats_number) < 1) {
+    if (Number(vehicleForm.seats_number) < 1) {
       setToastMessage("Número de passageiros deve ser positivo!");
       setShowToast(true);
       return false;
     }
 
-    if (vanForm.isRented) {
+    if (vehicleForm.isRented) {
       return validateRentalForm();
     } else {
       clearRentalData();
@@ -187,8 +187,8 @@ const VeiculoCadastro: React.FC = () => {
       return;
     }
 
-    // cria registro da van
-    await vansRoutes
+    // cria registro da vehicle
+    await vehiclesRoutes
       .create({
         plate: inputValues.carPlate,
         brand: inputValues.carBrand,
@@ -209,7 +209,7 @@ const VeiculoCadastro: React.FC = () => {
         }
 
         history.push({
-          pathname: "/minhas-vans",
+          pathname: "/minhas-vehicles",
           state: {
             redirectData: {
               showToastMessage: true,

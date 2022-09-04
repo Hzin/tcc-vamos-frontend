@@ -21,7 +21,7 @@ import "./MeusItinerarios.css";
 
 interface ItineraryInfo {
   id_itinerary: number;
-  van_plate: string;
+  vehicle_plate: string;
   days_of_week: number;
   specific_day: string;
   estimated_departure_time: string;
@@ -36,7 +36,7 @@ export default function MeusItinerarios() {
     [
     {
       id_itinerary: 1,
-      van_plate: 'FSS1918',
+      vehicle_plate: 'FSS1918',
       days_of_week: 3,
       specific_day: '24/08/2022',
       estimated_departure_time: '10:00',
@@ -47,7 +47,7 @@ export default function MeusItinerarios() {
     },
     {
       id_itinerary: 1,
-      van_plate: 'FSS1918',
+      vehicle_plate: 'FSS1918',
       days_of_week: 3,
       specific_day: '24/08/2022',
       estimated_departure_time: '10:00',
@@ -58,7 +58,7 @@ export default function MeusItinerarios() {
     },
     {
       id_itinerary: 1,
-      van_plate: 'FSS1918',
+      vehicle_plate: 'FSS1918',
       days_of_week: 3,
       specific_day: '24/08/2022',
       estimated_departure_time: '10:00',
@@ -69,7 +69,7 @@ export default function MeusItinerarios() {
     },
     {
       id_itinerary: 1,
-      van_plate: 'FSS1918',
+      vehicle_plate: 'FSS1918',
       days_of_week: 3,
       specific_day: '24/08/2022',
       estimated_departure_time: '10:00',
@@ -80,7 +80,7 @@ export default function MeusItinerarios() {
     },
     {
       id_itinerary: 1,
-      van_plate: 'FSS1918',
+      vehicle_plate: 'FSS1918',
       days_of_week: 3,
       specific_day: '24/08/2022',
       estimated_departure_time: '10:00',

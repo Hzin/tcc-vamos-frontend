@@ -148,7 +148,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
         return;
       }
 
-      // check if user is driver (if they have vans)
+      // check if user is driver (if they have vehicles)
       const userIsDriverRes = await usersService.checkIfUserIsDriver(userId);
 
       // if (userIsDriverRes.error) {

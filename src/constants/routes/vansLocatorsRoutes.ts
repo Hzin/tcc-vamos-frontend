@@ -1,17 +1,17 @@
-const vansRoutesDefault = '/vans/locator';
-const vansRoutes = {
+const vehiclesRoutesDefault = '/vehicles/locator';
+const vehiclesRoutes = {
   list: {
-    url: `${vansRoutesDefault}/list`
+    url: `${vehiclesRoutesDefault}/list`
   },
   getById: {
-    url: `${vansRoutesDefault}/`
+    url: `${vehiclesRoutesDefault}/`
   },
   create: {
-    url: `${vansRoutesDefault}/`
+    url: `${vehiclesRoutesDefault}/`
   },
   update: {
-    url: `${vansRoutesDefault}/edit`
+    url: `${vehiclesRoutesDefault}/edit`
   }
 }
 
-export default vansRoutes;
+export default vehiclesRoutes;

@@ -266,7 +266,7 @@ const BuscarItinerario: React.FC = () => {
                       </p>
                       <p>
                         <IonIcon icon={cashOutline} /> Valor:{" "}
-                        {itinerary.van_plate}
+                        {itinerary.vehicle_plate}
                       </p>
                     </IonCardSubtitle>
                   </IonCardHeader>
