@@ -15,6 +15,7 @@ import {
   IonPage,
   IonRow,
   IonTitle,
+  IonToast,
   IonToolbar,
 } from "@ionic/react";
 import {
@@ -40,9 +41,17 @@ import GooglePlacesAutocomplete, {
 } from "react-google-places-autocomplete";
 import { Itinerary } from "../models/itinerary.model";
 import { PageHeader } from "../components/PageHeader";
+import { closeToast } from "../services/utils";
+
+import { Color } from "@ionic/core";
 
 const BuscarItinerario: React.FC = () => {
   const history = useHistory();
+
+  const [showToast, setShowToast] = useState(false);
+  const [messageToast, setMessageToast] = useState("");
+  const [toastColor, setToastColor] = useState<Color>("primary");
+
   const [addressFrom, setAddressFrom] = useState<any>("");
   const [coordinatesFrom, setCoordinatesFrom] = useState<any>("");
   const [addressTo, setAddressTo] = useState<any>("");
@@ -107,9 +116,27 @@ const BuscarItinerario: React.FC = () => {
       return;
     }
 
-    const itinerariesList = await itinerariesService.getAllItineraries();
+    await itinerariesService
+      .searchItineraries({
+        coordinatesFrom,
+        coordinatesTo,
+      })
+      .then((response) => {
+        // if (response.status === "error") {
+        //   setToastColor("danger");
+        //   setMessageToast(response.message);
+        //   setShowToast(true);
 
-    setItinerariesList(itinerariesList);
+        //   return;
+        // }
+
+        setItinerariesList(response);
+      })
+      .catch((err) => {
+        setToastColor("danger");
+        setMessageToast(err);
+        setShowToast(true);
+      });
   }
 
   return (
@@ -252,7 +279,13 @@ const BuscarItinerario: React.FC = () => {
             <IonItemDivider color="secondary">Resultados</IonItemDivider>
             {itinerariesList.map((itinerary, index) => {
               return (
-                <IonCard button key={index} onClick={() => { history.push(`/itinerary/${itinerary.id_itinerary}`) }}>
+                <IonCard
+                  button
+                  key={index}
+                  onClick={() => {
+                    history.push(`/itinerary/${itinerary.id_itinerary}`);
+                  }}
+                >
                   <IonCardHeader>
                     <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
                     <IonCardSubtitle>
@@ -277,6 +310,14 @@ const BuscarItinerario: React.FC = () => {
         ) : (
           <></>
         )}
+
+        <IonToast
+          color={toastColor}
+          isOpen={showToast}
+          onDidDismiss={() => closeToast(setShowToast)}
+          message={messageToast}
+          duration={2500}
+        />
       </IonContent>
     </IonPage>
   );

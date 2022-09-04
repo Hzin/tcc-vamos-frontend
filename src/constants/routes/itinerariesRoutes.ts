@@ -7,7 +7,7 @@ const transportsRoutes = {
     url: `${transportsRoutesDefault}`
   },
   search: {
-    url: `${transportsRoutesDefault}/search`
+    url: `${transportsRoutesDefault}/search/inradius`
   },
   update: {
     url: `${transportsRoutesDefault}`

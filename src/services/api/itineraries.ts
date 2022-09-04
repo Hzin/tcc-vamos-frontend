@@ -19,15 +19,9 @@ function updateHeader() {
   }
 }
 
-export interface GetItinerariesRequest {
-  coordinatesFrom: {
-    lat: number,
-    lng: number
-  },
-  coordinatesTo: {
-    lat: number,
-    lng: number
-  }
+export interface Coordinates {
+  lat: number,
+  lng: number
 }
 
 export async function get() {
@@ -37,9 +31,9 @@ export async function get() {
   return response.data;
 }
 
-export async function search(coordinates: GetItinerariesRequest) {
+export async function search(coordinatesOrigin: Coordinates, coordinatesDestination: Coordinates) {
   updateHeader();
 
-  const response = await instance.get(transportsRoutes.get.url + `/${coordinates}`, { headers: header });
+  const response = await instance.post(transportsRoutes.search.url, { coordinatesOrigin, coordinatesDestination }, { headers: header });
   return response.data;
 }

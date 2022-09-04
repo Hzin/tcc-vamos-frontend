@@ -86,8 +86,6 @@ const PerfilEditar: React.FC = () => {
       birth_date: userData.birth_date,
       bio: userData.bio,
     });
-
-    console.log(inputValues);
   }, [userData]);
 
   const handleUpdateUserData = () => {
