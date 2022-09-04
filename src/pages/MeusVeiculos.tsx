@@ -17,13 +17,13 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { Color } from "@ionic/core";
-import { carOutline } from "ionicons/icons";
+import { carOutline, informationCircleOutline, peopleOutline } from "ionicons/icons";
 import { useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 
 import { UserContext } from "../App";
 
-import * as vansRoutes from "../services/api/vans";
+import * as vehiclesRoutes from "../services/api/vehicles";
 
 import sessionsService from "../services/functions/sessionsService";
 import { closeToast } from "../services/utils";
@@ -70,7 +70,7 @@ const MeusVeiculos: React.FC = () => {
         userId = refreshSessionRes.userId;
       }
 
-      vansRoutes
+      vehiclesRoutes
         .getByUserId(userId)
         .then((response) => {
           if (response.status === "error") {
@@ -102,31 +102,37 @@ const MeusVeiculos: React.FC = () => {
 
       <IonContent>
         {vehiclesList ? (
-          vehiclesList.map((vehicle, index) => {
-            return (
-              <IonCard key={index}>
-                <IonCardHeader>
-                  <IonCardTitle>{vehicle.plate}</IonCardTitle>
-                  <IonCardSubtitle>
-                    {vehicle.brand} - {vehicle.model}
-                  </IonCardSubtitle>
-                </IonCardHeader>
-                {vehicle.locator_name ? (
+          <>
+            <IonCard color={"primary"}>
+              <IonCardContent>
+              <IonIcon icon={informationCircleOutline} /> Toque em um veículo cadastrado para ver suas viagens e itinerários!
+              </IonCardContent>
+            </IonCard>
+            {vehiclesList.map((vehicle, index) => {
+              return (
+                <IonCard button key={index}>
+                  <img src="https://s2.glbimg.com/-xUhYluyWnnnib57vy3QI1kD9oQ=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_cf9d035bf26b4646b105bd958f32089d/internal_photos/bs/2020/y/E/vdU7J0TeAIC2kZONmgBQ/2018-09-04-sprintervanfoto.jpg" />
+                  <IonCardHeader>
+                    <IonCardTitle>
+                      {vehicle.brand} {vehicle.model}
+                    </IonCardTitle>
+                    <IonCardSubtitle>Placa: {vehicle.plate}</IonCardSubtitle>
+                  </IonCardHeader>
                   <>
                     <IonCardContent>
-                      {vehicle.seats_number} assentos - Locador: {vehicle.locator_name}
+                      <IonIcon icon={peopleOutline} size={"small"} />{" "}
+                      {vehicle.seats_number} assentos -{" "}
+                      {vehicle.locator_name ? (
+                        <>Locador: {vehicle.locator_name}</>
+                      ) : (
+                        <>Não é alugado</>
+                      )}
                     </IonCardContent>
                   </>
-                ) : (
-                  <>
-                    <IonCardContent>
-                      {vehicle.seats_number} assentos - Não é alugado
-                    </IonCardContent>
-                  </>
-                )}
-              </IonCard>
-            );
-          })
+                </IonCard>
+              );
+            })}
+          </>
         ) : (
           <></>
         )}
