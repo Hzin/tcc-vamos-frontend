@@ -224,8 +224,8 @@ const BuscarItinerario: React.FC = () => {
               {recentSearches.map((search, index) => {
                 return (
                   <>
-                    <div key={index}>
-                      <IonRow
+                    <div>
+                      <IonRow key={index}
                         class="latest-searches"
                         onClick={() => {
                           fillSearchBars(search.addressFrom, search.addressTo);
