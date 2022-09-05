@@ -46,7 +46,7 @@ export const UserSearchInfos = (record: any) => {
             fill="solid"
             size="small"
             expand="block"
-            routerLink={`/perfil/${record.record.user.id_user}`}
+            routerLink={`/usuario/${record.record.user.id_user}`}
           >
             Ver mais informações &rarr;
           </IonButton>
