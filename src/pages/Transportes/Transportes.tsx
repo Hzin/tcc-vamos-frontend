@@ -1,52 +1,34 @@
 import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCheckbox,
   IonContent,
-  IonPage,
   IonFab,
   IonFabButton,
-  IonIcon,
-  IonCard,
-  IonInput,
-  IonRow,
-  IonCol,
-  IonCardContent,
-  IonButton,
-  IonHeader,
-  IonToolbar,
-  IonButtons,
-  IonBackButton,
-  IonTabs,
-  IonTabBar,
-  IonTabButton,
-  IonLabel,
-  IonBadge,
-  IonRouterOutlet,
-  IonSlides,
-  IonSlide,
-  IonModal,
-  IonList,
-  IonRadioGroup,
-  IonListHeader,
-  IonItem,
-  IonRadio,
-  IonCheckbox,
   IonFooter,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonModal,
+  IonPage,
+  IonRadio,
+  IonRadioGroup,
+  IonSlide,
+  IonSlides,
   IonToast,
+  IonToolbar,
 } from "@ionic/react";
 import {
-  arrowBack,
-  arrowBackOutline,
   arrowForwardOutline,
   chevronBackOutline,
-  chevronForwardOutline,
   closeOutline,
-  locateOutline,
-  locationOutline,
-  timeOutline,
 } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
-import { getTransportes } from "../../services/functions/transportsService";
 import { createUserSearch } from "../../services/api/users";
+import { getTransportes } from "../../services/functions/transportsService";
 import "./Transportes.css";
 
 interface InfoBusca {
@@ -63,8 +45,8 @@ const Transportes: React.FC = () => {
   const [transportes, setTransportes] = useState([]);
   const [showModalFilters, setShowModalFilters] = useState(false);
   const [showToast, setShowToast] = useState(false);
-  const [messageToast, setMessageToast ] = useState('');
-  const [toastColor, setToastColor] = useState('success');
+  const [messageToast, setMessageToast] = useState("");
+  const [toastColor, setToastColor] = useState("success");
 
   useEffect(() => {
     if (props) {
@@ -77,15 +59,21 @@ const Transportes: React.FC = () => {
     setTransportes(data);
   }
 
-  function criaAlerta(){
-    createUserSearch(props.coordinatesFrom.lat, props.coordinatesFrom.lng, props.addressTo.label).then(() => {
-      setMessageToast('Alerta criado com sucesso!');
-      setShowToast(true);
-    }).catch((err:any) => {
-      setMessageToast('Não foi possível criar o alerta!');
-      setToastColor('danger');
-      setShowToast(true);
-    })
+  function criaAlerta() {
+    createUserSearch(
+      props.coordinatesFrom.lat,
+      props.coordinatesFrom.lng,
+      props.addressTo.label
+    )
+      .then(() => {
+        setMessageToast("Alerta criado com sucesso!");
+        setShowToast(true);
+      })
+      .catch((err: any) => {
+        setMessageToast("Não foi possível criar o alerta!");
+        setToastColor("danger");
+        setShowToast(true);
+      });
   }
 
   return (
@@ -107,7 +95,7 @@ const Transportes: React.FC = () => {
         </div>
       </IonHeader>
       <IonContent fullscreen>
-        {transportes && transportes.length > 0? (
+        {transportes && transportes.length > 0 ? (
           <div className="header-tabs">
             <IonSlides>
               <IonSlide>
@@ -124,9 +112,11 @@ const Transportes: React.FC = () => {
               </IonSlide>
             </IonSlides>
           </div>
-        ) 
-        : 
-        (<h1 className="msg-not-found">Não foi encontrado nenhum transporte que atenda essa rota.</h1>)}
+        ) : (
+          <h1 className="msg-not-found">
+            Não foi encontrado nenhum transporte que atenda essa rota.
+          </h1>
+        )}
         {transportes &&
           transportes.map((record: any, index: any) => {
             return (
@@ -139,7 +129,7 @@ const Transportes: React.FC = () => {
                 </IonCardContent>
               </IonCard>
             );
-        })}
+          })}
 
         <div className="button-criar-alerta">
           <IonButton onClick={() => criaAlerta()}>Criar Alerta</IonButton>
@@ -208,7 +198,7 @@ const Transportes: React.FC = () => {
         </IonModal>
         <IonToast
           // cssClass={"toast-notification"}
-          color={toastColor}      
+          color={toastColor}
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message={messageToast}

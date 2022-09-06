@@ -8,20 +8,18 @@ interface getAllCarModelsReturn {
 
   error?: {
     errorMessage: string;
-  }
+  };
 }
 
 interface getAllCarModelsRes {
   status?: string;
 
-  message: string
+  message: string;
 
   data?: {
     id_model: string;
     name: string;
   }[];
-
-  
 }
 
 const getAllCarModels = async (): Promise<getAllCarModelsReturn> => {
@@ -48,4 +46,8 @@ const getAllCarModels = async (): Promise<getAllCarModelsReturn> => {
   }
 };
 
-export default { getAllCarModels };
+const method = {
+  getAllCarModels,
+};
+
+export default method;

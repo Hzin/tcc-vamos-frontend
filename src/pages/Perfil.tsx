@@ -19,8 +19,6 @@ import {
   IonToast,
   IonToolbar,
 } from "@ionic/react";
-import { useHistory, useLocation } from "react-router-dom";
-import React, { useState, useEffect, useReducer, useContext } from "react";
 import {
   callOutline,
   cardOutline,
@@ -32,14 +30,19 @@ import {
   shieldCheckmarkOutline,
   starOutline,
 } from "ionicons/icons";
+import React, { useContext, useEffect, useReducer, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 
-import "./Perfil.css";
 import LocalStorage from "../LocalStorage";
+import "./Perfil.css";
 
-import sessionsService from "../services/functions/sessionsService";
-import usersService from "../services/functions/usersService";
-import { UserContext } from "../App";
 import { Color } from "@ionic/core";
+import { UserContext } from "../App";
+import sessionsService from "../services/functions/sessionsService";
+import {
+  checkIfUserIsDriver,
+  getById,
+} from "../services/functions/usersService";
 
 interface ScanNewProps {
   match: {
@@ -131,7 +134,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       }
 
       // get user info by ID
-      const getByIdRes = await usersService.getById(userId);
+      const getByIdRes = await getById(userId);
 
       if (getByIdRes.error) {
         if (isVisitor && props.match.params.id) {
@@ -147,7 +150,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       }
 
       // check if user is driver (if they have vans)
-      const userIsDriverRes = await usersService.checkIfUserIsDriver(userId);
+      const userIsDriverRes = await checkIfUserIsDriver(userId);
 
       // if (userIsDriverRes.error) {
       //   setToastColor('warning')
@@ -357,6 +360,15 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                 >
                   <IonIcon icon={personOutline} slot="start" />
                   <IonLabel>Buscar passageiros</IonLabel>
+                </IonItem>
+                <IonItem
+                  button
+                  onClick={() =>
+                    history.push({ pathname: "/cadastrar-itinerario" })
+                  }
+                >
+                  <IonIcon icon={mapOutline} slot="start" />
+                  <IonLabel>Cadastrar itinerário</IonLabel>
                 </IonItem>
                 <IonItem
                   button

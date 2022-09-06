@@ -11,20 +11,6 @@ import {
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route } from "react-router-dom";
 
-// importação das páginas
-import BuscarPassageiro from "./pages/BuscarPassageiro/BuscarPassageiro";
-import BuscarTransporte from "./pages/BuscarTransporte/BuscarTransporte";
-import Cadastro from "./pages/Cadastro/Cadastro";
-import CadastroCompletar from "./pages/CadastroCompletar/CadastroCompletar";
-import CompletarDocumento from "./pages/CadastroCompletar/CompletarDocumento";
-import CompletarTelefone from "./pages/CadastroCompletar/CompletarTelefone";
-import CadastroVan from "./pages/CadastroVan";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Perfil from "./pages/Perfil";
-import PerfilEditar from "./pages/PerfilEditar";
-import Transportes from "./pages/Transportes/Transportes";
-
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -49,9 +35,23 @@ import "./theme/tailwind.css";
 
 import { home, person, search } from "ionicons/icons";
 import React, { useContext, useState } from "react";
+
+/* Importação das páginas */
+import BuscarPassageiro from "./pages/BuscarPassageiro/BuscarPassageiro";
+import BuscarTransporte from "./pages/BuscarTransporte/BuscarTransporte";
 import CadastrarItinerario from "./pages/CadastrarItinerario/CadastrarItinerario";
+import Cadastro from "./pages/Cadastro/Cadastro";
+import CadastroCompletar from "./pages/CadastroCompletar/CadastroCompletar";
+import CompletarDocumento from "./pages/CadastroCompletar/CompletarDocumento";
+import CompletarTelefone from "./pages/CadastroCompletar/CompletarTelefone";
+import CadastroVan from "./pages/CadastroVan";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 import MeusItinerarios from "./pages/MeusItinerarios/MeusItinerarios";
 import MinhasVans from "./pages/MinhasVans";
+import Perfil from "./pages/Perfil";
+import PerfilEditar from "./pages/PerfilEditar";
+import Transportes from "./pages/Transportes/Transportes";
 
 setupIonicReact();
 
