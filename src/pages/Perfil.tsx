@@ -40,6 +40,8 @@ import sessionsService from "../services/functions/sessionsService";
 import usersService from "../services/functions/usersService";
 import { UserContext } from "../App";
 import { Color } from "@ionic/core";
+import { closeToast } from "../services/utils";
+import { PageHeader } from "../components/PageHeader";
 
 interface ScanNewProps {
   match: {
@@ -146,7 +148,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
         return;
       }
 
-      // check if user is driver (if they have vans)
+      // check if user is driver (if they have vehicles)
       const userIsDriverRes = await usersService.checkIfUserIsDriver(userId);
 
       // if (userIsDriverRes.error) {
@@ -211,22 +213,9 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
   return (
     <IonPage>
-      <IonHeader translucent>
-        <IonToolbar>
-          <IonTitle>Seu perfil</IonTitle>
-          <IonButtons slot="start">
-            <IonBackButton text="" defaultHref="/home" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader pageName="Meu perfil"></PageHeader>
 
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Seu perfil</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-
         <IonCard>
           <IonCardContent>
             <img
@@ -334,20 +323,20 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
             <IonItem
               button
-              onClick={() => history.push({ pathname: "/cadastro-van" })}
+              onClick={() => history.push({ pathname: "/veiculos/cadastrar" })}
             >
               <IonIcon icon={carOutline} slot="start" />
-              <IonLabel>Cadastrar van</IonLabel>
+              <IonLabel>Cadastrar veículo</IonLabel>
             </IonItem>
 
             {isDriver ? (
               <>
                 <IonItem
                   button
-                  onClick={() => history.push({ pathname: "/minhas-vans" })}
+                  onClick={() => history.push({ pathname: "/veiculos/meus" })}
                 >
                   <IonIcon icon={carOutline} slot="start" />
-                  <IonLabel>Minhas vans</IonLabel>
+                  <IonLabel>Meus veículos</IonLabel>
                 </IonItem>
                 <IonItem
                   button
@@ -393,7 +382,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
           position="top"
           color={toastColor}
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={toastMessage}
           duration={2500}
         />

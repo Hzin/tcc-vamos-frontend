@@ -1,20 +1,36 @@
 import {
+  IonBackButton,
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
   IonContent,
+  IonHeader,
   IonIcon,
+  IonItem,
+  IonItemDivider,
   IonPage,
   IonRow,
+  IonTitle,
+  IonToast,
+  IonToolbar,
 } from "@ionic/react";
 import {
   arrowForwardOutline,
+  cashOutline,
   chevronForwardOutline,
   locateOutline,
   locationOutline,
+  personOutline,
+  starOutline,
   timeOutline,
 } from "ionicons/icons";
-import "./BuscarTransporte.css";
+import "./BuscarItinerario.css";
+
+import itinerariesService from "../services/functions/itinerariesService";
 
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
@@ -23,16 +39,30 @@ import GooglePlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-google-places-autocomplete";
+import { Itinerary } from "../models/itinerary.model";
+import { PageHeader } from "../components/PageHeader";
+import { closeToast } from "../services/utils";
 
-const BuscarTransporte: React.FC = () => {
+import { Color } from "@ionic/core";
+
+const BuscarItinerario: React.FC = () => {
   const history = useHistory();
+
+  const [showToast, setShowToast] = useState(false);
+  const [messageToast, setMessageToast] = useState("");
+  const [toastColor, setToastColor] = useState<Color>("primary");
+
   const [addressFrom, setAddressFrom] = useState<any>("");
   const [coordinatesFrom, setCoordinatesFrom] = useState<any>("");
   const [addressTo, setAddressTo] = useState<any>("");
   const [coordinatesTo, setCoordinatesTo] = useState<any>("");
   const [showModalEnd, setShowModalEnd] = useState(false);
-  const [addressResults, setAddressResults] = useState<any>([]);
+  const [addressResults, setAddressResults] = useState<any[]>([]);
   const [inputActive, setInputActive] = useState("");
+
+  const [recentSearches, setRecentSearches] = useState<any[]>([]);
+
+  const [itinerariesList, setItinerariesList] = useState<Itinerary[]>();
 
   // const optionsAddress = async (inputValue: any) => {
   //   let results = await autoCompleteAddress(inputValue)
@@ -83,22 +113,61 @@ const BuscarTransporte: React.FC = () => {
     }
   }, [addressTo]);
 
-  function buscaTransporte() {
-    if (coordinatesFrom && coordinatesTo && addressFrom && addressTo) {
-      history.push({
-        pathname: "/transportes",
-        state: {
-          coordinatesFrom,
-          coordinatesTo,
-          addressFrom,
-          addressTo,
-        },
-      });
+  async function buscarItinerarios() {
+    if (!coordinatesFrom || !coordinatesTo || !addressFrom || !addressTo) {
+      return;
     }
+
+    const maxRecentSearchesLength = 0
+
+    if (recentSearches.length >= maxRecentSearchesLength) {
+      setRecentSearches(recentSearches.slice(recentSearches.length - maxRecentSearchesLength));
+    }
+
+    setRecentSearches((arr) => [
+      ...arr,
+      {
+        addressFrom: addressFrom.label,
+        addressTo: addressTo.label,
+        time: Date.now(),
+      },
+    ]);
+
+    await itinerariesService
+      .searchItineraries({
+        coordinatesFrom,
+        coordinatesTo,
+      })
+      .then((response) => {
+        // if (response.status === "error") {
+        //   setToastColor("danger");
+        //   setMessageToast(response.message);
+        //   setShowToast(true);
+
+        //   return;
+        // }
+
+        setItinerariesList(response);
+      })
+      .catch((err) => {
+        setToastColor("danger");
+        setMessageToast(err);
+        setShowToast(true);
+      });
+  }
+
+  function fillSearchBars(addressFrom: string, addressTo: string) {
+    // setAddressFrom(addressFrom);
+    // setAddressTo(addressTo);
   }
 
   return (
     <IonPage>
+      <PageHeader
+        pageName="Buscar itinerários"
+        backButtonPageUrl="/buscas"
+      ></PageHeader>
+
       <IonContent fullscreen>
         <IonCard>
           <IonCardContent>
@@ -141,32 +210,55 @@ const BuscarTransporte: React.FC = () => {
               />
             </div>
             <div className="button-search">
-              <IonButton color="primary" onClick={() => buscaTransporte()}>
+              <IonButton color="primary" onClick={() => buscarItinerarios()}>
                 Buscar
               </IonButton>
             </div>
           </IonCardContent>
         </IonCard>
-        <IonRow class="latest-searches">
-          <IonIcon
-            className="icon-align-vcenter"
-            size="large"
-            icon={timeOutline}
-          ></IonIcon>
-          <div className="div_from_to">
-            <span>Rua Tal Tal, 154, São Paulo - SP</span>
-            <IonIcon icon={arrowForwardOutline}></IonIcon>
-            <span>USP</span>
-            <br />
-            <small>Há 1 hora</small>
-          </div>
-          <IonIcon
-            className="icon-forward icon-align-vcenter"
-            size="large"
-            icon={chevronForwardOutline}
-          ></IonIcon>
-        </IonRow>
-        <IonRow class="latest-searches">
+
+        {recentSearches && recentSearches.length !== 0 ? (
+          <>
+            <IonItemDivider color="dark">Pesquisas recentes</IonItemDivider>
+            <IonRow class="latest-searches">
+              {recentSearches.map((search, index) => {
+                return (
+                  <>
+                    <div>
+                      <IonRow key={index}
+                        class="latest-searches"
+                        onClick={() => {
+                          fillSearchBars(search.addressFrom, search.addressTo);
+                        }}
+                      >
+                        <IonIcon
+                          className="icon-align-vcenter"
+                          size="large"
+                          icon={timeOutline}
+                        ></IonIcon>
+                        <div className="div_from_to">
+                          <span>{search.addressFrom}</span>
+                          <IonIcon icon={arrowForwardOutline}></IonIcon>
+                          <span>{search.addressTo}</span>
+                          <br />
+                          <small>{search.time}</small>
+                        </div>
+                        <IonIcon
+                          className="icon-forward icon-align-vcenter"
+                          size="large"
+                          icon={chevronForwardOutline}
+                        ></IonIcon>
+                      </IonRow>
+                    </div>
+                  </>
+                );
+              })}
+            </IonRow>
+          </>
+        ) : (
+          <></>
+        )}
+        {/* <IonRow class="latest-searches">
           <IonIcon
             className="icon-align-vcenter"
             size="large"
@@ -184,7 +276,7 @@ const BuscarTransporte: React.FC = () => {
             size="large"
             icon={chevronForwardOutline}
           />
-        </IonRow>
+        </IonRow> */}
         {/* <IonModal isOpen={showModalEnd}>
           <IonContent>
             <div className="header-search-modal">
@@ -225,9 +317,54 @@ const BuscarTransporte: React.FC = () => {
             )}
           </IonContent>
         </IonModal> */}
+
+        {itinerariesList && itinerariesList.length !== 0 ? (
+          <>
+            <IonItemDivider color="secondary">Resultados</IonItemDivider>
+            {itinerariesList.map((itinerary, index) => {
+              return (
+                <IonCard
+                  button
+                  key={index}
+                  onClick={() => {
+                    history.push(`/itinerary/${itinerary.id_itinerary}`);
+                  }}
+                >
+                  <IonCardHeader>
+                    <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
+                    <IonCardSubtitle>
+                      <p>
+                        <IonIcon icon={personOutline} /> Vagas disponíveis:{" "}
+                        {itinerary.available_seats}
+                      </p>
+                      <p>
+                        <IonIcon icon={starOutline} /> Motorista:{" "}
+                        {itinerary.price}
+                      </p>
+                      <p>
+                        <IonIcon icon={cashOutline} /> Valor:{" "}
+                        {itinerary.vehicle_plate}
+                      </p>
+                    </IonCardSubtitle>
+                  </IonCardHeader>
+                </IonCard>
+              );
+            })}
+          </>
+        ) : (
+          <></>
+        )}
+
+        <IonToast
+          color={toastColor}
+          isOpen={showToast}
+          onDidDismiss={() => closeToast(setShowToast)}
+          message={messageToast}
+          duration={2500}
+        />
       </IonContent>
     </IonPage>
   );
 };
 
-export default BuscarTransporte;
+export default BuscarItinerario;

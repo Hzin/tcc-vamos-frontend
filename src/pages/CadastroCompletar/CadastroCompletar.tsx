@@ -21,6 +21,8 @@ import { callOutline, documentTextOutline } from "ionicons/icons";
 
 import '../Cadastro/Cadastro.css'
 import { Color } from "@ionic/core";
+import { closeToast } from "../../services/utils";
+import { PageHeader } from "../../components/PageHeader";
 
 interface cardItem {
   icon: string;
@@ -103,14 +105,10 @@ const CadastroCompletar: React.FC = () => {
   
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Completar cadastro</IonTitle>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/perfil" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader
+        pageName="Completar cadastro"
+        backButtonPageUrl="/perfil"
+      ></PageHeader>
 
       <IonContent>
         { items.map((item, index) => {
@@ -130,7 +128,7 @@ const CadastroCompletar: React.FC = () => {
           position="top"
           color={toastColor}
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={toastMessage}
           duration={2500}
         />

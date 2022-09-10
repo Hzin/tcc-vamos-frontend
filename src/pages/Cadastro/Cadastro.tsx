@@ -9,6 +9,8 @@ import * as UsersService from '../../services/api/users'
 import LocalStorage from '../../LocalStorage';
 import { UserContext } from '../../App';
 import { Color } from '@ionic/core';
+import { closeToast } from '../../services/utils';
+import { PageHeader } from '../../components/PageHeader';
 
 const Cadastro: React.FC = () => {
   const history = useHistory();
@@ -128,13 +130,11 @@ const Cadastro: React.FC = () => {
 
   return (
     <IonPage>
-			<IonHeader>
-				<IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton text={''} icon={arrowBack} defaultHref='login' />
-          </IonButtons>
-				</IonToolbar>
-			</IonHeader>
+      <PageHeader
+        pageName="Cadastro"
+        backButtonPageUrl="/login"
+      ></PageHeader>
+
 			<IonContent fullscreen>
         <IonGrid className="ion-padding">
             <IonRow>
@@ -216,7 +216,7 @@ const Cadastro: React.FC = () => {
         <IonToast
           color={toastColor}
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={messageToast}
           duration={2500}
         />

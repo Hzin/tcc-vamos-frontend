@@ -1,11 +1,12 @@
 import { IonContent, IonPage, IonToast } from '@ionic/react';
 import { Color } from '@ionic/core';
 import { useContext, useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 
 import { UserContext } from '../App';
 
 import * as sessionRoutes from '../services/api/session';
+import { closeToast } from '../services/utils';
 
 interface LocationState {
   redirectData?: {
@@ -17,6 +18,7 @@ interface LocationState {
 
 const Home: React.FC = () => {
   const location = useLocation<LocationState>();
+  const history = useHistory();
 
   const user = useContext(UserContext);
 
@@ -41,6 +43,7 @@ const Home: React.FC = () => {
           // setMessageToast(response.message);
           // setShowToast(true);
 
+          history.push(`/login`)
           return
         }
 
@@ -52,11 +55,12 @@ const Home: React.FC = () => {
         // if (error.response.data.message) {
         console.dir('Houve um erro: ', { error })
         alert('Houve um erro')
+        history.push(`/login`)
       })
     }
 
     refreshUserToken()
-  }, [])
+  }, [location.state, user, history])
   
   return (
     <IonPage>
@@ -65,7 +69,7 @@ const Home: React.FC = () => {
             position="top"
             color={toastColor}
             isOpen={showToast}
-            onDidDismiss={() => setShowToast(false)}
+            onDidDismiss={() => closeToast(setShowToast)}
             message={toastMessage}
             duration={2500}
           />
