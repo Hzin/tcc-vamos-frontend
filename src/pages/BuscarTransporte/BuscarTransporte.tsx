@@ -16,13 +16,13 @@ import {
 } from "ionicons/icons";
 import "./BuscarTransporte.css";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router";
 
-import GooglePlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from "react-google-places-autocomplete";
+// import GooglePlacesAutocomplete, {
+//   geocodeByAddress,
+//   getLatLng,
+// } from "react-google-places-autocomplete";
 
 const BuscarTransporte: React.FC = () => {
   const history = useHistory();
@@ -67,21 +67,21 @@ const BuscarTransporte: React.FC = () => {
   //   setShowModalEnd(false);
   // }
 
-  useEffect(() => {
-    if (addressFrom.label && addressFrom.label.length > 0) {
-      geocodeByAddress(addressFrom.label)
-        .then((results) => getLatLng(results[0]))
-        .then(({ lat, lng }) => setCoordinatesFrom({ lat, lng }));
-    }
-  }, [addressFrom]);
+  // useEffect(() => {
+  //   if (addressFrom.label && addressFrom.label.length > 0) {
+  //     geocodeByAddress(addressFrom.label)
+  //       .then((results) => getLatLng(results[0]))
+  //       .then(({ lat, lng }) => setCoordinatesFrom({ lat, lng }));
+  //   }
+  // }, [addressFrom]);
 
-  useEffect(() => {
-    if (addressTo.label && addressTo.label.length > 0) {
-      geocodeByAddress(addressTo.label)
-        .then((results) => getLatLng(results[0]))
-        .then(({ lat, lng }) => setCoordinatesTo({ lat, lng }));
-    }
-  }, [addressTo]);
+  // useEffect(() => {
+  //   if (addressTo.label && addressTo.label.length > 0) {
+  //     geocodeByAddress(addressTo.label)
+  //       .then((results) => getLatLng(results[0]))
+  //       .then(({ lat, lng }) => setCoordinatesTo({ lat, lng }));
+  //   }
+  // }, [addressTo]);
 
   function buscaTransporte() {
     if (coordinatesFrom && coordinatesTo && addressFrom && addressTo) {
@@ -110,7 +110,7 @@ const BuscarTransporte: React.FC = () => {
                 value={addressFrom}
                 placeholder="R. José Paulino, 1234 - Centro, Campinas - SP, 13013-001"
               /> */}
-              <GooglePlacesAutocomplete
+              {/* <GooglePlacesAutocomplete
                 apiKey={process.env.REACT_APP_KEY_API}
                 apiOptions={{ language: "pt-br", region: "br" }}
                 selectProps={{
@@ -119,7 +119,7 @@ const BuscarTransporte: React.FC = () => {
                   className: "input-autocomplete",
                   placeholder: "R. José Paulino, 1234",
                 }}
-              />
+              /> */}
             </div>
             <div className="inputs-from-to">
               <IonIcon icon={locationOutline}></IonIcon>
@@ -129,7 +129,7 @@ const BuscarTransporte: React.FC = () => {
                 value={addressTo}
                 placeholder="PUC Campinas"
               /> */}
-              <GooglePlacesAutocomplete
+              {/* <GooglePlacesAutocomplete
                 apiKey={process.env.REACT_APP_KEY_API}
                 apiOptions={{ language: "pt-br", region: "br" }}
                 selectProps={{
@@ -138,7 +138,7 @@ const BuscarTransporte: React.FC = () => {
                   className: "input-autocomplete",
                   placeholder: "PUC Campinas",
                 }}
-              />
+              /> */}
             </div>
             <div className="button-search">
               <IonButton color="primary" onClick={() => buscaTransporte()}>

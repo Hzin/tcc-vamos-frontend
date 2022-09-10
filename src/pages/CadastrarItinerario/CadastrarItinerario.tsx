@@ -35,11 +35,8 @@ import {
   removeCircleOutline,
 } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
-import GooglePlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from "react-google-places-autocomplete";
 import { useHistory } from "react-router";
+import AutoCompleteInput from "../../components/AutoCompleteInput";
 import * as vansRoutes from "../../services/api/vans";
 import sessionsService from "../../services/functions/sessionsService";
 
@@ -66,6 +63,12 @@ interface Coords {
   lng: number;
 }
 
+interface Address {
+  formatted_address: string;
+  lat: number;
+  lng: number;
+}
+
 export default function CadastrarItinerario() {
   const minDate = new Date();
 
@@ -82,7 +85,7 @@ export default function CadastrarItinerario() {
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastColor, setToastColor] = useState<Color>("primary");
   //Infos
-  const [initialAddress, setInitialAddress] = useState<any>("");
+  const [initialAddress, setInitialAddress] = useState<Address>();
   const [initialCoords, setInitialCoords] = useState<Coords>();
   const [neighborhoods, setNeighborhoods] = useState<Array<string>>([]);
   const [finalAddress, setFinalAddress] = useState<string>("");
@@ -170,11 +173,10 @@ export default function CadastrarItinerario() {
   }, []);
 
   useEffect(() => {
-    console.log(initialAddress);
-    if (initialAddress.label && initialAddress.label.length > 0) {
-      geocodeByAddress(initialAddress.label)
-        .then((results) => getLatLng(results[0]))
-        .then(({ lat, lng }) => setInitialCoords({ lat, lng }));
+    if (initialAddress) {
+      nextButton1.current!.disabled = false;
+    } else {
+      nextButton1.current!.disabled = true;
     }
   }, [initialAddress]);
 
@@ -199,24 +201,14 @@ export default function CadastrarItinerario() {
               </h1>
               <div className="flex items-center mb-3">
                 <IonIcon icon={locateOutline}></IonIcon>
-                {/* <GooglePlacesAutocomplete
-                  apiKey={process.env.REACT_APP_KEY_API}
-                  apiOptions={{ language: "pt-br", region: "br" }}
-                  selectProps={{
-                    value: initialAddress,
-                    onChange: setInitialAddress,
-                    className: "input-autocomplete",
-                    placeholder: "R. José Paulino, 1234",
-                  }}
-                /> */}
-                <GooglePlacesAutocomplete
-                  apiKey={process.env.REACT_APP_KEY_API}
-                  apiOptions={{ language: "pt-br", region: "br" }}
-                  selectProps={{
-                    value: initialAddress,
-                    onChange: setInitialAddress,
-                    className: "input-autocomplete",
-                    placeholder: "R. José Paulino, 1234",
+                <AutoCompleteInput
+                  placeholder="R. José Paulino, 1234"
+                  className="ml-2"
+                  onAddressSelected={(address: Address) =>
+                    setInitialAddress(address)
+                  }
+                  onChange={(e: any) => {
+                    nextButton1.current!.disabled = true;
                   }}
                 />
               </div>
@@ -251,7 +243,7 @@ export default function CadastrarItinerario() {
               </h1>
               <div className="flex items-center mb-3">
                 <IonIcon icon={locationOutline}></IonIcon>
-                <GooglePlacesAutocomplete
+                {/* <GooglePlacesAutocomplete
                   apiKey={process.env.REACT_APP_KEY_API}
                   apiOptions={{ language: "pt-br", region: "br" }}
                   selectProps={{
@@ -261,7 +253,7 @@ export default function CadastrarItinerario() {
                       addNeighborhoodToList();
                     },
                   }}
-                />
+                /> */}
               </div>
               <div className="flex justify-end mb-3">
                 <IonButton>
@@ -308,7 +300,7 @@ export default function CadastrarItinerario() {
               </h1>
               <div className="flex items-center mb-3">
                 <IonIcon icon={locationOutline}></IonIcon>
-                <GooglePlacesAutocomplete
+                {/* <GooglePlacesAutocomplete
                   apiKey={process.env.REACT_APP_KEY_API}
                   apiOptions={{ language: "pt-br", region: "br" }}
                   selectProps={{
@@ -318,7 +310,7 @@ export default function CadastrarItinerario() {
                       nextButton2.current!.disabled = false;
                     },
                   }}
-                />
+                /> */}
               </div>
               <div className="flex justify-between mb-3">
                 <IonButton onClick={() => onBtnClicked("prev")} color="primary">
@@ -353,14 +345,14 @@ export default function CadastrarItinerario() {
               </h1>
               <div className="flex items-center mb-3">
                 <IonIcon icon={locationOutline}></IonIcon>
-                <GooglePlacesAutocomplete
+                {/* <GooglePlacesAutocomplete
                   apiKey={process.env.REACT_APP_KEY_API}
                   apiOptions={{ language: "pt-br", region: "br" }}
                   selectProps={{
                     className: "input-autocomplete",
                     placeholder: "PUC Campinas",
                   }}
-                />
+                /> */}
               </div>
               <div className="flex justify-end mb-3">
                 <IonButton>
