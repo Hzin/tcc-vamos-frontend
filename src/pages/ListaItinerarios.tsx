@@ -5,100 +5,94 @@ import {
   IonFabButton,
   IonIcon,
   IonCard,
-  IonInput,
-  IonRow,
-  IonCol,
-  IonCardContent,
   IonButton,
   IonHeader,
   IonToolbar,
-  IonButtons,
-  IonBackButton,
-  IonTabs,
-  IonTabBar,
-  IonTabButton,
   IonLabel,
-  IonBadge,
-  IonRouterOutlet,
-  IonSlides,
-  IonSlide,
   IonModal,
-  IonList,
   IonRadioGroup,
-  IonListHeader,
   IonItem,
   IonRadio,
   IonCheckbox,
   IonFooter,
   IonToast,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonItemDivider,
 } from "@ionic/react";
 import {
-  arrowBack,
-  arrowBackOutline,
   arrowForwardOutline,
-  chevronBackOutline,
-  chevronForwardOutline,
+  cashOutline,
   closeOutline,
-  locateOutline,
-  locationOutline,
-  timeOutline,
+  personOutline,
+  starOutline,
 } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
-import itinerariesService from "../../services/functions/itinerariesService";
-import { createUserSearch } from "../../services/api/users";
-import "./Transportes.css";
-import { closeToast } from "../../services/utils";
+import { createUserSearch } from "../services/api/users";
+import "./ListaItinerarios.css";
+import { closeToast } from "../services/utils";
+import { Itinerary } from "../models/itinerary.model";
+import { PageHeader } from "../components/PageHeader";
 
 interface InfoBusca {
   addressFrom: any;
   addressTo: any;
   coordinatesFrom: any;
   coordinatesTo: any;
+
+  itineraries: Itinerary[];
 }
 
-const Transportes: React.FC = () => {
+const ListaItinerarios: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
   const props = location.state as InfoBusca;
-  const [itinerarios, setItinerarios] = useState([]);
+  const [itinerariesList, setItinerariesList] = useState<Itinerary[]>([]);
   const [showModalFilters, setShowModalFilters] = useState(false);
   const [showToast, setShowToast] = useState(false);
-  const [messageToast, setMessageToast ] = useState('');
-  const [toastColor, setToastColor] = useState('success');
+  const [messageToast, setMessageToast] = useState("");
+  const [toastColor, setToastColor] = useState("success");
 
   useEffect(() => {
-    if (props) {
-      buscaItinerarios();
+    if (props.itineraries) {
+      setItinerariesList(props.itineraries);
     }
   }, [props]);
 
-  async function buscaItinerarios() {
-    let data = (await itinerariesService.searchItineraries(props)) as any;
-    setItinerarios(data);
-  }
+  useEffect(() => {
+    if (props.itineraries) {
+      setItinerariesList(props.itineraries);
+    }
+  }, [props]);
 
-  function criaAlerta(){
-    createUserSearch(props.coordinatesFrom.lat, props.coordinatesFrom.lng, props.addressTo.label).then(() => {
-      setMessageToast('Alerta criado com sucesso!');
-      setShowToast(true);
-    }).catch((err:any) => {
-      setMessageToast('Não foi possível criar o alerta!');
-      setToastColor('danger');
-      setShowToast(true);
-    })
+  function criaAlerta() {
+    createUserSearch(
+      props.coordinatesFrom.lat,
+      props.coordinatesFrom.lng,
+      props.addressTo.label
+    )
+      .then(() => {
+        setMessageToast("Alerta criado com sucesso!");
+        setShowToast(true);
+      })
+      .catch((err: any) => {
+        setMessageToast("Não foi possível criar o alerta!");
+        setToastColor("danger");
+        setShowToast(true);
+      });
   }
 
   return (
     <IonPage>
-      {/* TODO, componentizar Header */}
+      <PageHeader pageName="Itinerários" backButtonPageUrl="" />
       <IonHeader>
         <div className="header-page">
           {/* <IonButtons slot="start">
             <IonBackButton text={'aaaa'} icon={arrowBack} defaultHref='buscar-transporte' />
           </IonButtons> */}
-          <span className="span-info-back" onClick={history.goBack}>
-            <IonIcon className="icon-return" icon={chevronBackOutline} />
+          <span className="span-info-back">
             <div className="address-from-to">
               <span>{props.addressFrom.label}</span>
               <IonIcon icon={arrowForwardOutline} />
@@ -109,39 +103,44 @@ const Transportes: React.FC = () => {
         </div>
       </IonHeader>
       <IonContent fullscreen>
-        {itinerarios && itinerarios.length > 0? (
-          <div className="header-tabs">
-            <IonSlides>
-              <IonSlide>
-                <h5>Mais barata</h5>
-                <IonCard className="card-transporte">
-                  <IonCardContent>Seu João</IonCardContent>
+        {itinerariesList && itinerariesList.length !== 0 ? (
+          <>
+            <IonItemDivider color="secondary">Resultados</IonItemDivider>
+            {itinerariesList.map((itinerary, index) => {
+              return (
+                <IonCard
+                  button
+                  key={index}
+                  onClick={() => {
+                    history.push(`/itinerary/${itinerary.id_itinerary}`);
+                  }}
+                >
+                  <IonCardHeader>
+                    <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
+                    <IonCardSubtitle>
+                      <p>
+                        <IonIcon icon={personOutline} /> Vagas disponíveis:{" "}
+                        {itinerary.available_seats}
+                      </p>
+                      <p>
+                        <IonIcon icon={starOutline} /> Motorista:{" "}
+                        {itinerary.price}
+                      </p>
+                      <p>
+                        <IonIcon icon={cashOutline} /> Valor:{" "}
+                        {itinerary.vehicle_plate}
+                      </p>
+                    </IonCardSubtitle>
+                  </IonCardHeader>
                 </IonCard>
-              </IonSlide>
-              <IonSlide>
-                <h5>Melhor avaliação</h5>
-                <IonCard className="card-transporte">
-                  <IonCardContent>Seu Zé</IonCardContent>
-                </IonCard>
-              </IonSlide>
-            </IonSlides>
-          </div>
-        ) 
-        : 
-        (<h1 className="msg-not-found">Não foi encontrado nenhum transporte que atenda essa rota.</h1>)}
-        {itinerarios &&
-          itinerarios.map((record: any, index: any) => {
-            return (
-              <IonCard className="card-transporte" key={index}>
-                <IonCardContent>
-                  <h1>Motorista: {record.motorista}</h1>
-                  <div>Avaliação: {record.avaliacao}</div>
-                  <div>Valor: {record.valor}</div>
-                  <div>Lugares disponíveis: {record.lugares}</div>
-                </IonCardContent>
-              </IonCard>
-            );
-        })}
+              );
+            })}
+          </>
+        ) : (
+          <h1 className="msg-not-found">
+            Não foi encontrado nenhum itinerário que atenda essa rota.
+          </h1>
+        )}
 
         <div className="button-criar-alerta">
           <IonButton onClick={() => criaAlerta()}>Criar Alerta</IonButton>
@@ -210,7 +209,7 @@ const Transportes: React.FC = () => {
         </IonModal>
         <IonToast
           // cssClass={"toast-notification"}
-          color={toastColor}      
+          color={toastColor}
           isOpen={showToast}
           onDidDismiss={() => closeToast(setShowToast)}
           message={messageToast}
@@ -221,4 +220,4 @@ const Transportes: React.FC = () => {
   );
 };
 
-export default Transportes;
+export default ListaItinerarios;

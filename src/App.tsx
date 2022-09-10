@@ -33,7 +33,7 @@ import MeusItinerarios from "./pages/MeusItinerarios/MeusItinerarios";
 import Buscas from "./pages/Buscas";
 import BuscarItinerario from "./pages/BuscarItinerario";
 import BuscarPassageiro from "./pages/BuscarPassageiro/BuscarPassageiro";
-import Transportes from "./pages/Transportes/Transportes";
+import ListaItinerarios from "./pages/ListaItinerarios";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -93,7 +93,7 @@ const routes = (
     <Route exact path="/buscas" component={Buscas}></Route>
     <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
     <Route exact path="/buscar/passageiro" component={BuscarPassageiro}></Route>
-    <Route exact path="/transportes" component={Transportes}></Route>
+    <Route exact path="/buscar/itinerario/lista" component={ListaItinerarios}></Route>
 
     <Route exact path="/">
       <Redirect to="/home" />
