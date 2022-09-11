@@ -1,21 +1,9 @@
+import { Loader } from "@googlemaps/js-api-loader";
 import { InputHTMLAttributes, useEffect, useRef } from "react";
 
-const apiKey = process.env.REACT_APP_KEY_API;
-const mapApiJs = "https://maps.googleapis.com/maps/api/js";
-
-// load google map api js
-function loadAsyncScript(src: string) {
-  return new Promise((resolve) => {
-    const script = document.createElement("script");
-    Object.assign(script, {
-      type: "text/javascript",
-      async: true,
-      src,
-    });
-    script.addEventListener("load", () => resolve(script));
-    document.head.appendChild(script);
-  });
-}
+const apiKey = process.env.REACT_APP_KEY_API
+  ? process.env.REACT_APP_KEY_API
+  : "";
 
 const extractAddress = (place: any) => {
   const address = {
@@ -48,16 +36,7 @@ interface AutoCompleteInputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 function AutoCompleteInput(props: AutoCompleteInputProps) {
   const searchInput = useRef(null);
-
-  // init gmap script
-  const initMapScript = () => {
-    // if script already loaded
-    if (window.google) {
-      return Promise.resolve();
-    }
-    const src = `${mapApiJs}?key=${apiKey}&libraries=places&language=pt-BR&v=weekly`;
-    return loadAsyncScript(src);
-  };
+  const { onAddressSelected, ...othersProps } = props;
 
   // do something on address change
   const onChangeAddress = (autocomplete: any) => {
@@ -82,14 +61,34 @@ function AutoCompleteInput(props: AutoCompleteInputProps) {
 
   // load map script after mounted
   useEffect(() => {
-    initMapScript().then(() => initAutocomplete());
+    const init = async () => {
+      try {
+        if (
+          !window.google ||
+          !window.google.maps ||
+          !window.google.maps.places
+        ) {
+          await new Loader({
+            apiKey,
+            version: "weekly",
+            libraries: ["places"],
+            language: "pt-BR",
+          }).load();
+        }
+        initAutocomplete();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (apiKey) init();
   }, []);
 
   return (
     <input
       ref={searchInput}
       type="text"
-      {...props}
+      {...othersProps}
       style={{
         textIndent: "0.5rem",
         width: "100%",
