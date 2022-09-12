@@ -9,7 +9,31 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
+import React, { useContext, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
+
+import { home, person, search } from "ionicons/icons";
+
+// importação das páginas
+import Cadastro from "./pages/Cadastro/Cadastro";
+import CadastroCompletar from "./pages/CadastroCompletar/CadastroCompletar";
+import CompletarDocumento from "./pages/CadastroCompletar/CompletarDocumento";
+import CompletarTelefone from "./pages/CadastroCompletar/CompletarTelefone";
+
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Perfil from "./pages/Perfil";
+import PerfilEditar from "./pages/PerfilEditar";
+
+import CadastrarItinerario from "./pages/CadastrarItinerario/CadastrarItinerario";
+import MeusItinerarios from "./pages/MeusItinerarios/MeusItinerarios";
+import MeusVeiculos from "./pages/MeusVeiculos";
+import VeiculoCadastro from "./pages/VeiculoCadastro";
+
+import BuscarItinerario from "./pages/BuscarItinerario";
+import BuscarPassageiro from "./pages/BuscarPassageiro/BuscarPassageiro";
+import Buscas from "./pages/Buscas";
+import Transportes from "./pages/Transportes/Transportes";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -33,37 +57,11 @@ import "./theme/variables.css";
 /* Tailwind styles */
 import "./theme/tailwind.css";
 
-import { home, person, search } from "ionicons/icons";
-import React, { useContext, useState } from "react";
-
-/* Importação das páginas */
-import BuscarPassageiro from "./pages/BuscarPassageiro/BuscarPassageiro";
-import BuscarTransporte from "./pages/BuscarTransporte/BuscarTransporte";
-import CadastrarItinerario from "./pages/CadastrarItinerario/CadastrarItinerario";
-import Cadastro from "./pages/Cadastro/Cadastro";
-import CadastroCompletar from "./pages/CadastroCompletar/CadastroCompletar";
-import CompletarDocumento from "./pages/CadastroCompletar/CompletarDocumento";
-import CompletarTelefone from "./pages/CadastroCompletar/CompletarTelefone";
-import CadastroVan from "./pages/CadastroVan";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import MeusItinerarios from "./pages/MeusItinerarios/MeusItinerarios";
-import MinhasVans from "./pages/MinhasVans";
-import Perfil from "./pages/Perfil";
-import PerfilEditar from "./pages/PerfilEditar";
-import Transportes from "./pages/Transportes/Transportes";
-
 setupIonicReact();
 
 const routes = (
   <>
     <Route exact path="/cadastro" component={Cadastro}></Route>
-    <Route exact path="/login" component={Login}></Route>
-
-    <Route exact path="/home" component={Home}></Route>
-
-    <Route exact path="/perfil" component={Perfil}></Route>
-    <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
     <Route exact path="/perfil/completar" component={CadastroCompletar}></Route>
     <Route
       exact
@@ -76,22 +74,29 @@ const routes = (
       component={CompletarTelefone}
     ></Route>
 
-    <Route exact path="/transportes" component={Transportes}></Route>
-    <Route exact path="/buscar-passageiro" component={BuscarPassageiro}></Route>
-    <Route exact path="/buscar-transporte" component={BuscarTransporte}></Route>
-
+    <Route exact path="/home" component={Home}></Route>
+    <Route exact path="/login" component={Login}></Route>
+    <Route exact path="/perfil" component={Perfil}></Route>
     <Route exact path="/usuario/:id" component={Perfil}></Route>
 
-    <Route exact path="/cadastro-van" component={CadastroVan}></Route>
-    <Route exact path="/minhas-vans" component={MinhasVans}></Route>
+    <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
+
+    <Route exact path="/veiculos/cadastrar" component={VeiculoCadastro}></Route>
+    <Route exact path="/veiculos/meus" component={MeusVeiculos}></Route>
     <Route
       exact
       path="/cadastrar-itinerario"
       component={CadastrarItinerario}
     ></Route>
     <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
+
+    <Route exact path="/buscas" component={Buscas}></Route>
+    <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
+    <Route exact path="/buscar/passageiro" component={BuscarPassageiro}></Route>
+    <Route exact path="/transportes" component={Transportes}></Route>
+
     <Route exact path="/">
-      <Redirect to="/login" />
+      <Redirect to="/home" />
     </Route>
   </>
 );
@@ -120,7 +125,7 @@ const IonicApp: React.FC = () => {
             <IonRouterOutlet>{routes}</IonRouterOutlet>
 
             <IonTabBar slot="bottom">
-              <IonTabButton tab="buscar" href="/buscar-transporte">
+              <IonTabButton tab="buscar" href="/buscas">
                 <IonIcon icon={search} />
                 <IonLabel>Buscar</IonLabel>
               </IonTabButton>

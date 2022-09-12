@@ -1,12 +1,9 @@
 import { Color } from "@ionic/core";
 import {
-  IonBackButton,
   IonButton,
-  IonButtons,
   IonCheckbox,
   IonContent,
   IonDatetime,
-  IonHeader,
   IonIcon,
   IonInput,
   IonItem,
@@ -18,9 +15,7 @@ import {
   IonSelectOption,
   IonSlide,
   IonSlides,
-  IonTitle,
   IonToast,
-  IonToolbar,
 } from "@ionic/react";
 import {
   add,
@@ -28,7 +23,6 @@ import {
   arrowBack,
   arrowForward,
   checkmark,
-  close,
   informationCircle,
   locateOutline,
   locationOutline,
@@ -184,14 +178,11 @@ export default function CadastrarItinerario() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Cadastrar Itinerário</IonTitle>
-          <IonButtons slot="start">
-            <IonBackButton icon={close} text="" defaultHref="/perfil" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader
+        pageName="Cadastrar itinerário"
+        backButtonPageUrl="/perfil"
+      ></PageHeader>
+
       <IonContent fullscreen>
         <IonSlides ref={mySlides} options={slideOpts}>
           <IonSlide>

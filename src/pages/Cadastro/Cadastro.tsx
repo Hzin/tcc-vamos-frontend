@@ -1,28 +1,25 @@
 import { Color } from "@ionic/core";
 import {
-  IonBackButton,
   IonButton,
-  IonButtons,
   IonCardTitle,
   IonCol,
   IonContent,
   IonGrid,
-  IonHeader,
   IonInput,
   IonItem,
   IonLabel,
   IonPage,
   IonRow,
   IonToast,
-  IonToolbar,
 } from "@ionic/react";
-import { arrowBack } from "ionicons/icons";
 import { useContext, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { UserContext } from "../../App";
 import { Action } from "../../components/Action";
+import { PageHeader } from "../../components/PageHeader";
 import LocalStorage from "../../LocalStorage";
 import * as UsersService from "../../services/api/users";
+import { closeToast } from "../../services/utils";
 import "./Cadastro.css";
 
 const Cadastro: React.FC = () => {
@@ -154,13 +151,8 @@ const Cadastro: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton text={""} icon={arrowBack} defaultHref="login" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader pageName="Cadastro" backButtonPageUrl="/login"></PageHeader>
+
       <IonContent fullscreen>
         <IonGrid className="ion-padding">
           <IonRow>
@@ -246,7 +238,7 @@ const Cadastro: React.FC = () => {
         <IonToast
           color={toastColor}
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={messageToast}
           duration={2500}
         />

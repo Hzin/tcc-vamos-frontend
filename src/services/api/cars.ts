@@ -16,10 +16,19 @@ function updateHeader() {
     "Authorization": 'Bearer ' + token
   }
 }
-export async function list() {
+
+export async function listAllBrands() {
   updateHeader();
 
-  const response = await instance.get(carsRoutes.list.url, { headers: header });
+  const response = await instance.get(carsRoutes.listAllBrands.url, { headers: header });
+
+  return response.data;
+}
+
+export async function listCarModels(carBrandId: string) {
+  updateHeader();
+
+  const response = await instance.get(carsRoutes.listCarModels.url + `/${carBrandId}`, { headers: header });
 
   return response.data;
 }

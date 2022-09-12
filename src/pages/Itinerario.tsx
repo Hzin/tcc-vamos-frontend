@@ -1,4 +1,3 @@
-import { Color } from "@ionic/core";
 import {
   IonBackButton,
   IonButtons,
@@ -9,19 +8,28 @@ import {
   IonCardTitle,
   IonContent,
   IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
   IonPage,
   IonTitle,
   IonToast,
   IonToolbar,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { Color } from "@ionic/core";
+import { carOutline } from "ionicons/icons";
+import { useContext, useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router";
 
-import * as vansRoutes from "../services/api/vans";
+import { UserContext } from "../App";
+
+import * as vehiclesRoutes from "../services/api/vehicles";
 
 import sessionsService from "../services/functions/sessionsService";
+import { closeToast } from "../services/utils";
+import { PageHeader } from "../components/PageHeader";
 
-interface VanInfo {
+interface VehicleInfo {
   plate: string;
   brand: string;
   model: string;
@@ -34,21 +42,21 @@ interface VanInfo {
   locator_state: string;
 }
 
-const MinhasVans: React.FC = () => {
+const Itinerario: React.FC = () => {
   const history = useHistory();
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
-  const [userVans, setUserVans] = useState<VanInfo[]>();
+  const [userVehicles, setUserVehicles] = useState<VehicleInfo[]>();
 
   const redirectUserToLogin = () => {
     history.push({ pathname: "/login" });
   };
 
   useEffect(() => {
-    const getUserVans = async () => {
+    const getUserVehicles = async () => {
       let userId = "";
 
       const refreshSessionRes = await sessionsService.refreshSession();
@@ -62,7 +70,7 @@ const MinhasVans: React.FC = () => {
         userId = refreshSessionRes.userId;
       }
 
-      vansRoutes
+      vehiclesRoutes
         .getByUserId(userId)
         .then((response) => {
           if (response.status === "error") {
@@ -73,7 +81,7 @@ const MinhasVans: React.FC = () => {
             return;
           }
 
-          setUserVans(response.data);
+          setUserVehicles(response.data);
         })
         .catch((err) => {
           setToastColor("danger");
@@ -82,41 +90,37 @@ const MinhasVans: React.FC = () => {
         });
     };
 
-    getUserVans();
+    getUserVehicles();
   }, []);
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Minhas vans</IonTitle>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/perfil" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader
+        pageName="Minhas vehicles"
+        backButtonPageUrl="/perfil"
+      ></PageHeader>
 
       <IonContent>
-        {userVans ? (
-          userVans.map((van, index) => {
+        {userVehicles ? (
+          userVehicles.map((vehicle, index) => {
             return (
               <IonCard key={index}>
                 <IonCardHeader>
-                  <IonCardTitle>{van.plate}</IonCardTitle>
+                  <IonCardTitle>{vehicle.plate}</IonCardTitle>
                   <IonCardSubtitle>
-                    {van.brand} - {van.model}
+                    {vehicle.brand} - {vehicle.model}
                   </IonCardSubtitle>
                 </IonCardHeader>
-                {van.locator_name ? (
+                {vehicle.locator_name ? (
                   <>
                     <IonCardContent>
-                      {van.seats_number} assentos - Locador: {van.locator_name}
+                      {vehicle.seats_number} assentos - Locador: {vehicle.locator_name}
                     </IonCardContent>
                   </>
                 ) : (
                   <>
                     <IonCardContent>
-                      {van.seats_number} assentos - Não é alugado
+                      {vehicle.seats_number} assentos - Não é alugado
                     </IonCardContent>
                   </>
                 )}
@@ -131,7 +135,7 @@ const MinhasVans: React.FC = () => {
           position="top"
           color={toastColor}
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={toastMessage}
           duration={2500}
         />
@@ -140,4 +144,4 @@ const MinhasVans: React.FC = () => {
   );
 };
 
-export default MinhasVans;
+export default Itinerario;

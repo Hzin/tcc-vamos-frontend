@@ -1,17 +1,12 @@
 import {
-  IonBackButton,
-  IonButtons,
   IonCard,
   IonCardContent,
   IonContent,
-  IonHeader,
   IonIcon,
   IonItem,
   IonLabel,
   IonPage,
-  IonTitle,
   IonToast,
-  IonToolbar,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 
@@ -20,7 +15,8 @@ import { useHistory, useLocation } from "react-router";
 import "../Perfil.css";
 
 import { Color } from "@ionic/core";
-import "../Cadastro/Cadastro.css";
+import { PageHeader } from "../../components/PageHeader";
+import { closeToast } from "../../services/utils";
 
 interface cardItem {
   icon: string;
@@ -108,14 +104,10 @@ const CadastroCompletar: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Completar cadastro</IonTitle>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/perfil" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader
+        pageName="Completar cadastro"
+        backButtonPageUrl="/perfil"
+      ></PageHeader>
 
       <IonContent>
         {items.map((item, index) => {
@@ -141,7 +133,7 @@ const CadastroCompletar: React.FC = () => {
           position="top"
           color={toastColor}
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={toastMessage}
           duration={2500}
         />

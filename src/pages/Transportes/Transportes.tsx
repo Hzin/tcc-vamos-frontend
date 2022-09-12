@@ -28,7 +28,8 @@ import {
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 import { createUserSearch } from "../../services/api/users";
-import { getTransportes } from "../../services/functions/transportsService";
+import itinerariesService from "../../services/functions/itinerariesService";
+import { closeToast } from "../../services/utils";
 import "./Transportes.css";
 
 interface InfoBusca {
@@ -42,7 +43,7 @@ const Transportes: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
   const props = location.state as InfoBusca;
-  const [transportes, setTransportes] = useState([]);
+  const [itinerarios, setItinerarios] = useState([]);
   const [showModalFilters, setShowModalFilters] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState("");
@@ -50,13 +51,13 @@ const Transportes: React.FC = () => {
 
   useEffect(() => {
     if (props) {
-      buscaTransportes();
+      buscaItinerarios();
     }
   }, [props]);
 
-  async function buscaTransportes() {
-    let data = (await getTransportes(props)) as any;
-    setTransportes(data);
+  async function buscaItinerarios() {
+    let data = (await itinerariesService.searchItineraries(props)) as any;
+    setItinerarios(data);
   }
 
   function criaAlerta() {
@@ -78,6 +79,7 @@ const Transportes: React.FC = () => {
 
   return (
     <IonPage>
+      {/* TODO, componentizar Header */}
       <IonHeader>
         <div className="header-page">
           {/* <IonButtons slot="start">
@@ -95,7 +97,7 @@ const Transportes: React.FC = () => {
         </div>
       </IonHeader>
       <IonContent fullscreen>
-        {transportes && transportes.length > 0 ? (
+        {itinerarios && itinerarios.length > 0 ? (
           <div className="header-tabs">
             <IonSlides>
               <IonSlide>
@@ -117,8 +119,8 @@ const Transportes: React.FC = () => {
             Não foi encontrado nenhum transporte que atenda essa rota.
           </h1>
         )}
-        {transportes &&
-          transportes.map((record: any, index: any) => {
+        {itinerarios &&
+          itinerarios.map((record: any, index: any) => {
             return (
               <IonCard className="card-transporte" key={index}>
                 <IonCardContent>
@@ -200,7 +202,7 @@ const Transportes: React.FC = () => {
           // cssClass={"toast-notification"}
           color={toastColor}
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={messageToast}
           duration={2500}
         />

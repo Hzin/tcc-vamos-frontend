@@ -3,30 +3,27 @@ import {
   IonHeader,
   IonPage,
   IonTitle,
-  IonToolbar
+  IonToolbar,
 } from "@ionic/react";
 import React, { useContext, useState } from "react";
 import { IonGrid, IonRow, IonCol, IonToast } from "@ionic/react";
 import { useHistory } from "react-router-dom";
-import {
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonButton,
-} from "@ionic/react";
+import { IonItem, IonLabel, IonInput, IonButton } from "@ionic/react";
 
-import * as sessionRoutes from '../services/api/session';
-import LocalStorage from '../LocalStorage';
+import * as sessionRoutes from "../services/api/session";
+import LocalStorage from "../LocalStorage";
 import { Action } from "../components/Action";
 import { UserContext } from "../App";
+import { closeToast } from "../services/utils";
+import { PageHeader } from "../components/PageHeader";
 
 const Page: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
-  const [messageToast, setMessageToast ] = useState('');
-  
+  const [messageToast, setMessageToast] = useState("");
+
   const history = useHistory();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const user = useContext(UserContext);
 
@@ -56,18 +53,18 @@ const Page: React.FC = () => {
       return false;
     }
 
-    if(password.length < 7 || password.length > 12) {
+    if (password.length < 7 || password.length > 12) {
       setMessageToast("A senha deve conter entre 7 e 12 dígitos");
       setShowToast(true);
       return false;
     }
 
     return true;
-  }
+  };
 
   const handleLogin = async () => {
     if (!validateForm()) {
-      return
+      return;
     }
 
     const singinForm = {
@@ -75,50 +72,48 @@ const Page: React.FC = () => {
       password: password,
     };
 
-    await sessionRoutes.create(singinForm).then(response => {
-      if (response.status === 'error') {
-        setMessageToast(response.message);
-        setShowToast(true);
+    await sessionRoutes
+      .create(singinForm)
+      .then((response) => {
+        if (response.status === "error") {
+          setMessageToast(response.message);
+          setShowToast(true);
 
-        return
-      }
+          return;
+        }
 
-      const { token } = response.token
+        const { token } = response.token;
 
-      LocalStorage.setToken(token);
+        LocalStorage.setToken(token);
 
-      user.setIsLoggedIn(true);
+        user.setIsLoggedIn(true);
 
-      history.push({ pathname: '/home', state: { redirectData: {
-        showToastMessage: true,
-        toastColor: "success",
-        toastMessage: "Usuário autenticado com sucesso!",
-      }}})
-    }).catch(error => {
-      // if (!error.response) return
+        history.push({
+          pathname: "/home",
+          state: {
+            redirectData: {
+              showToastMessage: true,
+              toastColor: "success",
+              toastMessage: "Usuário autenticado com sucesso!",
+            },
+          },
+        });
+      })
+      .catch((error) => {
+        // if (!error.response) return
 
-      // se o backend retornou uma mensagem de erro customizada
-      // if (error.response.data.message) {
-      console.dir('Houve um erro: ', { error })
-      alert('Houve um erro')
-    })
+        // se o backend retornou uma mensagem de erro customizada
+        // if (error.response.data.message) {
+        console.dir("Houve um erro: ", { error });
+        alert("Houve um erro");
+      });
   };
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Login</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader pageName="Login"></PageHeader>
 
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Login</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-
         <IonGrid>
           <IonRow>
             <IonCol>
@@ -152,7 +147,11 @@ const Page: React.FC = () => {
                 Login
               </IonButton>
               <p style={{ fontSize: "medium" }}>
-                <Action message="Ainda não possui uma conta?" text="Cadastre-se aqui!" link="/cadastro" />
+                <Action
+                  message="Ainda não possui uma conta?"
+                  text="Cadastre-se aqui!"
+                  link="/cadastro"
+                />
               </p>
             </IonCol>
           </IonRow>
@@ -160,9 +159,9 @@ const Page: React.FC = () => {
 
         <IonToast
           position="top"
-          color='danger'      
+          color="danger"
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={messageToast}
           duration={2500}
         />

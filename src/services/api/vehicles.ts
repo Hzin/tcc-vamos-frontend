@@ -1,6 +1,6 @@
 import instance from "./api";
 
-import vansRoutes from "../../constants/routes/vansRoutes";
+import vehiclesRoutes from "../../constants/routes/vehiclesRoutes";
 import { AxiosRequestHeaders } from "axios";
 import LocalStorage from "../../LocalStorage";
 
@@ -17,10 +17,10 @@ function updateHeader() {
   };
 }
 
-export async function getByPlate(vanId: string) {
+export async function getByPlate(vehicleId: string) {
   updateHeader();
 
-  const response = await instance.get(vansRoutes.getByPlate.url + `/${vanId}`, {
+  const response = await instance.get(vehiclesRoutes.getByPlate.url + `/${vehicleId}`, {
     headers: header,
   });
 
@@ -30,14 +30,14 @@ export async function getByPlate(vanId: string) {
 export async function getByUserId(userId: string) {
   updateHeader();
 
-  const response = await instance.get(vansRoutes.getByUserId.url + `/${userId}`, {
+  const response = await instance.get(vehiclesRoutes.getByUserId.url + `/${userId}`, {
     headers: header,
   });
 
   return response.data;
 }
 
-interface CreateVanBody {
+interface CreateVehicleBody {
   plate: string;
   brand: string;
   model: string;
@@ -49,23 +49,23 @@ interface CreateVanBody {
   locator_state: string;
 }
 
-export async function create(CreateVanBody: CreateVanBody) {
+export async function create(CreateVehicleBody: CreateVehicleBody) {
   updateHeader();
 
-  const response = await instance.post(vansRoutes.create.url, CreateVanBody, { headers: header });
+  const response = await instance.post(vehiclesRoutes.create.url, CreateVehicleBody, { headers: header });
   return response.data;
 }
 
-interface UpdateVanBody {
+interface UpdateVehicleBody {
   brand?: string;
   model?: string;
   seats_number?: string;
 }
 
-export async function update(vanData: UpdateVanBody) {
+export async function update(vehicleData: UpdateVehicleBody) {
   updateHeader();
 
-  const response = await instance.patch(vansRoutes.update.url, vanData, {
+  const response = await instance.patch(vehiclesRoutes.update.url, vehicleData, {
     headers: header,
   });
 

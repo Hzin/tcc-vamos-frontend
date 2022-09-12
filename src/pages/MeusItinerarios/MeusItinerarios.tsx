@@ -16,11 +16,12 @@ import {
 } from "@ionic/react";
 import { add, locateOutline, locationOutline } from "ionicons/icons";
 import { useState } from "react";
+import { PageHeader } from "../../components/PageHeader";
 import "./MeusItinerarios.css";
 
 interface ItineraryInfo {
   id_itinerary: number;
-  van_plate: string;
+  vehicle_plate: string;
   days_of_week: number;
   specific_day: string;
   estimated_departure_time: string;
@@ -35,7 +36,7 @@ export default function MeusItinerarios() {
     [
     {
       id_itinerary: 1,
-      van_plate: 'FSS1918',
+      vehicle_plate: 'FSS1918',
       days_of_week: 3,
       specific_day: '24/08/2022',
       estimated_departure_time: '10:00',
@@ -46,7 +47,7 @@ export default function MeusItinerarios() {
     },
     {
       id_itinerary: 1,
-      van_plate: 'FSS1918',
+      vehicle_plate: 'FSS1918',
       days_of_week: 3,
       specific_day: '24/08/2022',
       estimated_departure_time: '10:00',
@@ -57,7 +58,7 @@ export default function MeusItinerarios() {
     },
     {
       id_itinerary: 1,
-      van_plate: 'FSS1918',
+      vehicle_plate: 'FSS1918',
       days_of_week: 3,
       specific_day: '24/08/2022',
       estimated_departure_time: '10:00',
@@ -68,7 +69,7 @@ export default function MeusItinerarios() {
     },
     {
       id_itinerary: 1,
-      van_plate: 'FSS1918',
+      vehicle_plate: 'FSS1918',
       days_of_week: 3,
       specific_day: '24/08/2022',
       estimated_departure_time: '10:00',
@@ -79,7 +80,7 @@ export default function MeusItinerarios() {
     },
     {
       id_itinerary: 1,
-      van_plate: 'FSS1918',
+      vehicle_plate: 'FSS1918',
       days_of_week: 3,
       specific_day: '24/08/2022',
       estimated_departure_time: '10:00',
@@ -93,20 +94,12 @@ export default function MeusItinerarios() {
 
   return (
     <IonPage>
-      <IonHeader translucent>
-        <IonToolbar>
-          <IonTitle>Meus Itinerários</IonTitle>
-          <IonButtons slot="start">
-            <IonBackButton text={""} defaultHref="/perfil" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader
+        pageName="Meus Itinerários"
+        backButtonPageUrl="/perfil"
+      ></PageHeader>
+
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Meus Itinerários</IonTitle>
-          </IonToolbar>
-        </IonHeader>
         {routes ? (
           routes.map((itinerary, index) => {
             return (

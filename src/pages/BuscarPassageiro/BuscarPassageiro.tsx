@@ -12,6 +12,7 @@ import { Map, Marker, Overlay } from "pigeon-maps";
 import { maptiler } from "pigeon-maps/providers";
 import { useEffect, useState } from "react";
 
+import { PageHeader } from "../../components/PageHeader";
 import { UserSearchInfos } from "../../components/UserSearchInfos/UserSearchInfos";
 import { getUsersSearching } from "../../services/api/users";
 import RecordsStore from "../../store/RecordsStore";
@@ -97,6 +98,10 @@ const BuscarPassageiro: React.FC = () => {
 
   return (
     <IonPage>
+      <PageHeader
+        pageName="Buscar passageiros"
+        backButtonPageUrl="/buscas"
+      ></PageHeader>
       <IonContent fullscreen>
         {/* { results &&
 					<> */}
