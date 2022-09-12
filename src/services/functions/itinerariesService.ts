@@ -1,14 +1,16 @@
-import * as itinerariesRoutes from '../api/itineraries';
+import * as itinerariesRoutes from "../api/itineraries";
 
 interface CoordinatesRequest {
   coordinatesFrom: {
-    lat: number,
-    lng: number
-  },
+    formatted_address: string;
+    lat: number;
+    lng: number;
+  };
   coordinatesTo: {
-    lat: number,
-    lng: number
-  }
+    formatted_address: string;
+    lat: number;
+    lng: number;
+  };
 }
 
 export async function getAllItineraries(): Promise<any> {
@@ -20,19 +22,21 @@ export async function getAllItineraries(): Promise<any> {
     // TODO
   }
 
-  return res.data
+  return res.data;
 }
 
-
-export async function searchItineraries({ coordinatesFrom, coordinatesTo }: CoordinatesRequest): Promise<any> {
-  let res: any
+export async function searchItineraries({
+  coordinatesFrom,
+  coordinatesTo,
+}: CoordinatesRequest): Promise<any> {
+  let res: any;
   try {
     res = await itinerariesRoutes.search(coordinatesFrom, coordinatesTo);
   } catch (error) {
     // TODO
   }
 
-  return res.data
+  return res.data;
 }
 
-export default { getAllItineraries, searchItineraries }
+export default { getAllItineraries, searchItineraries };

@@ -1,9 +1,12 @@
 import { Color } from "@ionic/core";
 import {
+  IonBackButton,
   IonButton,
+  IonButtons,
   IonCheckbox,
   IonContent,
   IonDatetime,
+  IonHeader,
   IonIcon,
   IonInput,
   IonItem,
@@ -15,7 +18,9 @@ import {
   IonSelectOption,
   IonSlide,
   IonSlides,
+  IonTitle,
   IonToast,
+  IonToolbar,
 } from "@ionic/react";
 import {
   add,
@@ -23,6 +28,7 @@ import {
   arrowBack,
   arrowForward,
   checkmark,
+  close,
   informationCircle,
   locateOutline,
   locationOutline,
@@ -31,7 +37,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import AutoCompleteInput from "../../components/AutoCompleteInput";
-import * as vansRoutes from "../../services/api/vans";
+import * as vehiclesRoutes from "../../services/api/vehicles";
 import sessionsService from "../../services/functions/sessionsService";
 
 const slideOpts = {
@@ -143,9 +149,9 @@ export default function CadastrarItinerario() {
         userId = refreshSessionRes.userId;
       }
 
-      vansRoutes
+      vehiclesRoutes
         .getByUserId(userId)
-        .then((response) => {
+        .then((response: any) => {
           if (response.status === "error") {
             setToastColor("danger");
             setToastMessage(response.message);
@@ -156,7 +162,7 @@ export default function CadastrarItinerario() {
 
           setVans(response.data);
         })
-        .catch((err) => {
+        .catch((err: any) => {
           setToastColor("danger");
           setToastMessage(err);
           setShowToast(true);
@@ -178,10 +184,14 @@ export default function CadastrarItinerario() {
 
   return (
     <IonPage>
-      <PageHeader
-        pageName="Cadastrar itinerário"
-        backButtonPageUrl="/perfil"
-      ></PageHeader>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Cadastrar Itinerário</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton icon={close} text="" defaultHref="/perfil" />
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
 
       <IonContent fullscreen>
         <IonSlides ref={mySlides} options={slideOpts}>

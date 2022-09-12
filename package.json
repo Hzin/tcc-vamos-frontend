@@ -25,6 +25,7 @@
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
     "axios": "^0.26.1",
+    "caniuse-lite": "1.0.30001393",
     "cross-env": "^7.0.3",
     "ionicons": "^5.4.0",
     "lodash.isequal": "^4.5.0",

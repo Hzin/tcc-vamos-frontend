@@ -26,15 +26,21 @@ import "./BuscarItinerario.css";
 
 import itinerariesService from "../services/functions/itinerariesService";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router";
 
-import { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
 import { PageHeader } from "../components/PageHeader";
 import { Itinerary } from "../models/itinerary.model";
 import { closeToast } from "../services/utils";
 
 import { Color } from "@ionic/core";
+import AutoCompleteInput from "../components/AutoCompleteInput";
+
+interface Address {
+  formatted_address: string;
+  lat: number;
+  lng: number;
+}
 
 const BuscarItinerario: React.FC = () => {
   const history = useHistory();
@@ -43,9 +49,9 @@ const BuscarItinerario: React.FC = () => {
   const [messageToast, setMessageToast] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
-  const [addressFrom, setAddressFrom] = useState<any>("");
+  const [addressFrom, setAddressFrom] = useState<Address>();
   const [coordinatesFrom, setCoordinatesFrom] = useState<any>("");
-  const [addressTo, setAddressTo] = useState<any>("");
+  const [addressTo, setAddressTo] = useState<Address>();
   const [coordinatesTo, setCoordinatesTo] = useState<any>("");
   const [showModalEnd, setShowModalEnd] = useState(false);
   const [addressResults, setAddressResults] = useState<any[]>([]);
@@ -88,24 +94,8 @@ const BuscarItinerario: React.FC = () => {
   //   setShowModalEnd(false);
   // }
 
-  useEffect(() => {
-    if (addressFrom.label && addressFrom.label.length > 0) {
-      geocodeByAddress(addressFrom.label)
-        .then((results) => getLatLng(results[0]))
-        .then(({ lat, lng }) => setCoordinatesFrom({ lat, lng }));
-    }
-  }, [addressFrom]);
-
-  useEffect(() => {
-    if (addressTo.label && addressTo.label.length > 0) {
-      geocodeByAddress(addressTo.label)
-        .then((results) => getLatLng(results[0]))
-        .then(({ lat, lng }) => setCoordinatesTo({ lat, lng }));
-    }
-  }, [addressTo]);
-
   async function buscarItinerarios() {
-    if (!coordinatesFrom || !coordinatesTo || !addressFrom || !addressTo) {
+    if (!addressFrom || !addressTo) {
       return;
     }
 
@@ -120,16 +110,16 @@ const BuscarItinerario: React.FC = () => {
     setRecentSearches((arr) => [
       ...arr,
       {
-        addressFrom: addressFrom.label,
-        addressTo: addressTo.label,
+        addressFrom: addressFrom.formatted_address,
+        addressTo: addressTo.formatted_address,
         time: Date.now(),
       },
     ]);
 
     await itinerariesService
       .searchItineraries({
-        coordinatesFrom,
-        coordinatesTo,
+        coordinatesFrom: addressFrom,
+        coordinatesTo: addressTo,
       })
       .then((response) => {
         // if (response.status === "error") {
@@ -166,41 +156,21 @@ const BuscarItinerario: React.FC = () => {
           <IonCardContent>
             <div className="inputs-from-to">
               <IonIcon icon={locateOutline}></IonIcon>
-              {/* <IonSearchbar
-                showClearButton="never"
-                onClick={() => setInputActiveOpenModal("from")}
-                value={addressFrom}
-                placeholder="R. José Paulino, 1234 - Centro, Campinas - SP, 13013-001"
-              /> */}
-              {/* <GooglePlacesAutocomplete
-                apiKey={process.env.REACT_APP_KEY_API}
-                apiOptions={{ language: "pt-br", region: "br" }}
-                selectProps={{
-                  value: addressFrom,
-                  onChange: setAddressFrom,
-                  className: "input-autocomplete",
-                  placeholder: "R. José Paulino, 1234",
-                }}
-              /> */}
+              <AutoCompleteInput
+                placeholder="R. José Paulino, 1234"
+                className="ml-2"
+                onAddressSelected={(address: Address) =>
+                  setAddressFrom(address)
+                }
+              />
             </div>
             <div className="inputs-from-to">
               <IonIcon icon={locationOutline}></IonIcon>
-              {/* <IonSearchbar
-                showClearButton="never"
-                onClick={() => setInputActiveOpenModal("to")}
-                value={addressTo}
+              <AutoCompleteInput
                 placeholder="PUC Campinas"
-              /> */}
-              {/* <GooglePlacesAutocomplete
-                apiKey={process.env.REACT_APP_KEY_API}
-                apiOptions={{ language: "pt-br", region: "br" }}
-                selectProps={{
-                  value: addressTo,
-                  onChange: setAddressTo,
-                  className: "input-autocomplete",
-                  placeholder: "PUC Campinas",
-                }}
-              /> */}
+                className="ml-2"
+                onAddressSelected={(address: Address) => setAddressTo(address)}
+              />
             </div>
             <div className="button-search">
               <IonButton color="primary" onClick={() => buscarItinerarios()}>
@@ -216,35 +186,32 @@ const BuscarItinerario: React.FC = () => {
             <IonRow class="latest-searches">
               {recentSearches.map((search, index) => {
                 return (
-                  <>
-                    <div>
-                      <IonRow
-                        key={index}
-                        class="latest-searches"
-                        onClick={() => {
-                          fillSearchBars(search.addressFrom, search.addressTo);
-                        }}
-                      >
-                        <IonIcon
-                          className="icon-align-vcenter"
-                          size="large"
-                          icon={timeOutline}
-                        ></IonIcon>
-                        <div className="div_from_to">
-                          <span>{search.addressFrom}</span>
-                          <IonIcon icon={arrowForwardOutline}></IonIcon>
-                          <span>{search.addressTo}</span>
-                          <br />
-                          <small>{search.time}</small>
-                        </div>
-                        <IonIcon
-                          className="icon-forward icon-align-vcenter"
-                          size="large"
-                          icon={chevronForwardOutline}
-                        ></IonIcon>
-                      </IonRow>
-                    </div>
-                  </>
+                  <div key={index}>
+                    <IonRow
+                      class="latest-searches"
+                      onClick={() => {
+                        fillSearchBars(search.addressFrom, search.addressTo);
+                      }}
+                    >
+                      <IonIcon
+                        className="icon-align-vcenter"
+                        size="large"
+                        icon={timeOutline}
+                      ></IonIcon>
+                      <div className="div_from_to">
+                        <span>{search.addressFrom}</span>
+                        <IonIcon icon={arrowForwardOutline}></IonIcon>
+                        <span>{search.addressTo}</span>
+                        <br />
+                        <small>{search.time}</small>
+                      </div>
+                      <IonIcon
+                        className="icon-forward icon-align-vcenter"
+                        size="large"
+                        icon={chevronForwardOutline}
+                      ></IonIcon>
+                    </IonRow>
+                  </div>
                 );
               })}
             </IonRow>
