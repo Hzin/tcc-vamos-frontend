@@ -20,6 +20,16 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonItemDivider,
+  IonCardContent,
+  IonChip,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonList,
+  IonListHeader,
+  IonTitle,
+  IonBackButton,
+  IonButtons,
 } from "@ionic/react";
 import {
   arrowForwardOutline,
@@ -32,7 +42,7 @@ import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 import { createUserSearch } from "../services/api/users";
 import "./ListaItinerarios.css";
-import { closeToast } from "../services/utils";
+import { closeToast, convertNumberToPrice } from "../services/utils";
 import { Itinerary } from "../models/itinerary.model";
 import { PageHeader } from "../components/PageHeader";
 
@@ -50,16 +60,10 @@ const ListaItinerarios: React.FC = () => {
   const location = useLocation();
   const props = location.state as InfoBusca;
   const [itinerariesList, setItinerariesList] = useState<Itinerary[]>([]);
-  const [showModalFilters, setShowModalFilters] = useState(false);
+  const [showModalFilters, setShowModalFilters] = useState(true);
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState("");
   const [toastColor, setToastColor] = useState("success");
-
-  useEffect(() => {
-    if (props.itineraries) {
-      setItinerariesList(props.itineraries);
-    }
-  }, [props]);
 
   useEffect(() => {
     if (props.itineraries) {
@@ -86,23 +90,22 @@ const ListaItinerarios: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader pageName="Itinerários" backButtonPageUrl="" />
-      <IonHeader>
-        <div className="header-page">
-          {/* <IonButtons slot="start">
-            <IonBackButton text={'aaaa'} icon={arrowBack} defaultHref='buscar-transporte' />
-          </IonButtons> */}
-          <span className="span-info-back">
-            <div className="address-from-to">
-              <span>{props.addressFrom.label}</span>
-              <IonIcon icon={arrowForwardOutline} />
-              <span>{props.addressTo.label}</span>
-              <small>Hoje</small>
-            </div>
-          </span>
-        </div>
-      </IonHeader>
+      <PageHeader
+        pageName="Resultados da busca"
+        backButtonPageUrl="/buscar/itinerario"
+      />
       <IonContent fullscreen>
+        <IonCard color="light">
+          <IonCardHeader>
+            <IonCardSubtitle>Origem: {props.addressFrom.label}</IonCardSubtitle>
+          </IonCardHeader>
+        </IonCard>
+        <IonCard color="light">
+          <IonCardHeader>
+            <IonCardSubtitle>Destino: {props.addressTo.label}</IonCardSubtitle>
+          </IonCardHeader>
+        </IonCard>
+
         {itinerariesList && itinerariesList.length !== 0 ? (
           <>
             <IonItemDivider color="secondary">Resultados</IonItemDivider>
@@ -117,7 +120,7 @@ const ListaItinerarios: React.FC = () => {
                 >
                   <IonCardHeader>
                     <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
-                    <IonCardSubtitle>
+                    <IonCardContent>
                       <p>
                         <IonIcon icon={personOutline} /> Vagas disponíveis:{" "}
                         {itinerary.available_seats}
@@ -128,23 +131,40 @@ const ListaItinerarios: React.FC = () => {
                       </p>
                       <p>
                         <IonIcon icon={cashOutline} /> Valor:{" "}
-                        {itinerary.vehicle_plate}
+                        {convertNumberToPrice(itinerary.price)}
                       </p>
-                    </IonCardSubtitle>
+                    </IonCardContent>
                   </IonCardHeader>
                 </IonCard>
               );
             })}
           </>
         ) : (
-          <h1 className="msg-not-found">
-            Não foi encontrado nenhum itinerário que atenda essa rota.
-          </h1>
+          <>
+            <div className="msg-not-found">
+              <IonCard>
+                <IonCardContent>
+                  <span>
+                    Não foi encontrado nenhum itinerário que atenda essa rota.
+                  </span>
+                </IonCardContent>
+              </IonCard>
+              <IonCard>
+                <IonCardContent>
+                  <span>
+                    Deseja criar um alerta para ser notificado caso haja
+                    itinerário para essa origem e destino?
+                  </span>
+                  <div className="button-criar-alerta">
+                    <IonButton onClick={() => criaAlerta()}>
+                      Criar Alerta
+                    </IonButton>
+                  </div>
+                </IonCardContent>
+              </IonCard>
+            </div>
+          </>
         )}
-
-        <div className="button-criar-alerta">
-          <IonButton onClick={() => criaAlerta()}>Criar Alerta</IonButton>
-        </div>
 
         <IonFab
           onClick={() => setShowModalFilters(true)}
@@ -155,23 +175,28 @@ const ListaItinerarios: React.FC = () => {
           <IonFabButton>Filtros</IonFabButton>
         </IonFab>
         <IonModal isOpen={showModalFilters}>
-          <IonToolbar>
-            <div className="header-filter-modal">
-              <IonIcon
-                size="large"
-                icon={closeOutline}
-                onClick={() => setShowModalFilters(false)}
-              />
-              <h4>
-                <b>Limpar</b>
-              </h4>
-            </div>
-          </IonToolbar>
+          <IonHeader translucent>
+            <IonToolbar>
+              <IonTitle>Filtros</IonTitle>
+              <IonButtons slot="start">
+                <IonIcon
+                  size="large"
+                  icon={closeOutline}
+                  onClick={() => setShowModalFilters(false)}
+                />
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+
           <IonContent>
-            <div className="content-filter-modal">
-              <h1>Filtrar</h1>
-              <h3>Ordernar por</h3>
+            <IonList>
+              <IonListHeader>Ordenar por</IonListHeader>
               <IonRadioGroup>
+                <IonItem>
+                  <IonLabel>Sem filtro</IonLabel>
+                  <IonRadio value="sem_filtro" />
+                </IonItem>
+
                 <IonItem>
                   <IonLabel>Menor preço</IonLabel>
                   <IonRadio value="menor_preco" />
@@ -187,7 +212,12 @@ const ListaItinerarios: React.FC = () => {
                   <IonRadio value="lugares_disponiveis" />
                 </IonItem>
               </IonRadioGroup>
-              <h3>Preferências</h3>
+            </IonList>
+
+            <IonItemDivider />
+
+            <IonList>
+              <IonListHeader>Preferências</IonListHeader>
               <IonItem>
                 <IonLabel>Vaga avulsa</IonLabel>
                 <IonCheckbox value="vaga_avulsa" />
@@ -196,8 +226,13 @@ const ListaItinerarios: React.FC = () => {
                 <IonLabel>Ar condicionado</IonLabel>
                 <IonCheckbox value="ar_condicionado" />
               </IonItem>
-            </div>
+              <IonItem>
+                <IonLabel>Assento preferencial</IonLabel>
+                <IonCheckbox value="assento_preferencial" />
+              </IonItem>
+            </IonList>
           </IonContent>
+
           <IonFooter>
             <IonButton
               expand="block"
@@ -207,6 +242,7 @@ const ListaItinerarios: React.FC = () => {
             </IonButton>
           </IonFooter>
         </IonModal>
+
         <IonToast
           // cssClass={"toast-notification"}
           color={toastColor}

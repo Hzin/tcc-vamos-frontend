@@ -70,9 +70,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 1rem 0 5.5rem 0;
+  /* margin: 1rem 0 5.5rem 0; */
+  margin-top: 20px;
 }
 
 .msg-not-found{
   margin: 1.5rem;
+}
+
+.msg-not-found span {
+  font-size: 120%;
 }
