@@ -11,33 +11,29 @@ import {
   IonInput,
   IonItem,
   IonLabel,
-  IonList,
   IonPage,
-  IonRange,
   IonSelect,
   IonSelectOption,
   IonSlide,
   IonSlides,
   IonTitle,
   IonToast,
-  IonToolbar,
+  IonToolbar
 } from "@ionic/react";
 import {
-  add,
   addCircleOutline,
   arrowBack,
   arrowForward,
   checkmark,
   close,
   informationCircle,
-  locateOutline,
-  locationOutline,
-  removeCircleOutline,
+  removeCircleOutline
 } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
-import AutoCompleteInput from "../../components/AutoCompleteInput";
+import { CreateItineraryRequest } from "../../services/api/itineraries";
 import * as vehiclesRoutes from "../../services/api/vehicles";
+import { createItinerary } from "../../services/functions/itinerariesService";
 import sessionsService from "../../services/functions/sessionsService";
 
 const slideOpts = {
@@ -58,11 +54,6 @@ interface VanInfo {
   locator_state: string;
 }
 
-interface Coords {
-  lat: number;
-  lng: number;
-}
-
 interface Address {
   formatted_address: string;
   lat: number;
@@ -74,28 +65,33 @@ export default function CadastrarItinerario() {
 
   const history = useHistory();
 
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastColor, setToastColor] = useState<Color>("primary");
+
   const mySlides = useRef<any>(null);
   const nextButton1 = useRef<HTMLIonButtonElement>(null);
   const nextButton2 = useRef<HTMLIonButtonElement>(null);
+  const nextButton3 = useRef<HTMLIonButtonElement>(null);
+  const nextButton4 = useRef<HTMLIonButtonElement>(null);
+  const nextButton5 = useRef<HTMLIonButtonElement>(null);
+  const nextButton6 = useRef<HTMLIonButtonElement>(null);
 
   const [specificDate, setSpecificDate] = useState<boolean>(false);
   const [singleVacancy, setSingleVacancy] = useState<boolean>(false);
   const [vans, setVans] = useState<VanInfo[]>();
-  const [showToast, setShowToast] = useState<boolean>(false);
-  const [toastMessage, setToastMessage] = useState<string>("");
-  const [toastColor, setToastColor] = useState<Color>("primary");
+
   //Infos
   const [initialAddress, setInitialAddress] = useState<Address>();
-  const [initialCoords, setInitialCoords] = useState<Coords>();
-  const [neighborhoods, setNeighborhoods] = useState<Array<string>>([]);
-  const [finalAddress, setFinalAddress] = useState<string>("");
-  const [destinations, setDestinations] = useState<Array<string>>([]);
-  const [daysOfWeek, setDaysOfWeek] = useState<number>();
-  const [specificDay, setSpecificDay] = useState<Date>();
-  const [departureTime, setDepartureTime] = useState<Date>();
-  const [arrivalTime, setArrivalTime] = useState<Date>();
-  const [monthlyPrice, setMonthlyPrice] = useState<number>(0);
-  const [dailyPrice, setDailyPrice] = useState<number>(0);
+  const [neighborhoods, setNeighborhoods] = useState<Array<Address>>([]);
+  const [finalAddress, setFinalAddress] = useState<Address>();
+  const [destinations, setDestinations] = useState<Array<Address>>([]);
+  const [daysOfWeek, setDaysOfWeek] = useState<string>("0000000");
+  const [specificDay, setSpecificDay] = useState<string>("");
+  const [departureTime, setDepartureTime] = useState<string>("00:00");
+  const [arrivalTime, setArrivalTime] = useState<string>("00:00");
+  const [monthlyPrice, setMonthlyPrice] = useState<number>(100);
+  const [dailyPrice, setDailyPrice] = useState<number>(40);
   const [van, setVan] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
 
@@ -149,7 +145,7 @@ export default function CadastrarItinerario() {
         userId = refreshSessionRes.userId;
       }
 
-      vehiclesRoutes
+      await vehiclesRoutes
         .getByUserId(userId)
         .then((response: any) => {
           if (response.status === "error") {
@@ -172,15 +168,90 @@ export default function CadastrarItinerario() {
     getUserVans();
   }, []);
 
-  useEffect(() => {
-    if (initialAddress) {
-      nextButton1.current!.disabled = false;
-    } else {
-      nextButton1.current!.disabled = true;
-    }
-  }, [initialAddress]);
+  // useEffect(() => {
+  //   if (initialAddress) {
+  //     nextButton1.current!.disabled = false;
+  //   } else {
+  //     nextButton1.current!.disabled = true;
+  //   }
+  // }, [initialAddress]);
 
-  function addNeighborhoodToList() {}
+  // useEffect(() => {
+  //   if (finalAddress) {
+  //     nextButton3.current!.disabled = false;
+  //   } else {
+  //     nextButton3.current!.disabled = true;
+  //   }
+  // }, [finalAddress]);
+
+  function addNeighborhood(address: Address) {
+    setNeighborhoods((arr) => [...arr, address]);
+    nextButton2.current!.disabled = false;
+  }
+
+  function removeNeighborhood(index: number) {
+    const newNeighborhoods = [...neighborhoods];
+    newNeighborhoods.splice(index, 1);
+    setNeighborhoods(newNeighborhoods);
+    if (newNeighborhoods.length === 0) {
+      nextButton2.current!.disabled = true;
+    } else {
+      nextButton2.current!.disabled = false;
+    }
+  }
+
+  function removeDestionation(index: number) {
+    const newDestionations = [...destinations];
+    newDestionations.splice(index, 1);
+    setDestinations(newDestionations);
+  }
+
+  function (params:type) {
+    
+  }
+
+  async function cadastrar() {
+    let itinerary: CreateItineraryRequest = {
+      vehicle_plate: van,
+      days_of_week: daysOfWeek,
+      specific_day: specificDay,
+      estimate_departure_time: departureTime,
+      estimate_arrival_time: arrivalTime,
+      monthly_price: monthlyPrice,
+      daily_price: dailyPrice,
+      itinerary_nickname: nickname,
+      estimated_departure_address: initialAddress!.formatted_address,
+      departure_latitude: initialAddress!.lat,
+      departure_longitude: initialAddress!.lng,
+      neighboorhoods_served: neighborhoods,
+      destinations: destinations,
+    };
+
+    await createItinerary(itinerary)
+      .then((response: any) => {
+        if (response.status === "error") {
+          setToastColor("danger");
+          setToastMessage(response.message);
+          setShowToast(true);
+        }
+
+        history.push({
+          pathname: "/meus-itinerarios",
+          state: {
+            redirectData: {
+              showToastMessage: true,
+              toastColor: "success",
+              toastMessage: "Itinerário cadastrado com sucesso!",
+            },
+          },
+        });
+      })
+      .catch((err: any) => {
+        setToastColor("danger");
+        setToastMessage(err);
+        setShowToast(true);
+      });
+  }
 
   return (
     <IonPage>
@@ -195,7 +266,7 @@ export default function CadastrarItinerario() {
 
       <IonContent fullscreen>
         <IonSlides ref={mySlides} options={slideOpts}>
-          <IonSlide>
+          {/* <IonSlide>
             <div className="m-3">
               <h1 className="mb-3 text-xl">
                 Digite o endereço de onde você iniciará a rota do itinerário
@@ -247,31 +318,37 @@ export default function CadastrarItinerario() {
                 <AutoCompleteInput
                   placeholder="R. José Paulino, 1234"
                   className="ml-2"
-                  onAddressSelected={(address: Address) => console.log(address)}
+                  onAddressSelected={(address: Address) =>
+                    addNeighborhood(address)
+                  }
                 />
               </div>
-              <div className="flex justify-end mb-3">
-                <IonButton>
-                  <IonIcon icon={add} />
-                </IonButton>
-              </div>
               <div className="mb-3">
-                <IonList>
-                  <IonItem>
-                    <IonCheckbox slot="end"></IonCheckbox>
-                    <IonLabel>Taquaral</IonLabel>
-                  </IonItem>
-                  <IonItem>
-                    <IonCheckbox slot="end"></IonCheckbox>
-                    <IonLabel>Barão Geraldo</IonLabel>
-                  </IonItem>
+                <IonList class="w-screen">
+                  {neighborhoods.map((neighborhood, index) => (
+                    <IonItem key={index}>
+                      <IonButton
+                        slot="end"
+                        color={"light"}
+                        onClick={() => removeNeighborhood(index)}
+                      >
+                        <IonIcon icon={trash} />
+                      </IonButton>
+                      <IonLabel>{neighborhood.formatted_address}</IonLabel>
+                    </IonItem>
+                  ))}
                 </IonList>
               </div>
               <div className="flex justify-between mb-3">
                 <IonButton onClick={() => onBtnClicked("prev")} color="primary">
                   <IonIcon icon={arrowBack} />
                 </IonButton>
-                <IonButton onClick={() => onBtnClicked("next")} color="primary">
+                <IonButton
+                  ref={nextButton2}
+                  disabled
+                  onClick={() => onBtnClicked("next")}
+                  color="primary"
+                >
                   <IonIcon icon={arrowForward} />
                 </IonButton>
               </div>
@@ -298,7 +375,9 @@ export default function CadastrarItinerario() {
                 <AutoCompleteInput
                   placeholder="R. José Paulino, 1234"
                   className="ml-2"
-                  onAddressSelected={(address: Address) => console.log(address)}
+                  onAddressSelected={(address: Address) =>
+                    setFinalAddress(address)
+                  }
                 />
               </div>
               <div className="flex justify-between mb-3">
@@ -306,8 +385,8 @@ export default function CadastrarItinerario() {
                   <IonIcon icon={arrowBack} />
                 </IonButton>
                 <IonButton
-                  ref={nextButton2}
-                  // disabled
+                  ref={nextButton3}
+                  disabled
                   onClick={() => onBtnClicked("next")}
                   color="primary"
                 >
@@ -337,24 +416,25 @@ export default function CadastrarItinerario() {
                 <AutoCompleteInput
                   placeholder="R. José Paulino, 1234"
                   className="ml-2"
-                  onAddressSelected={(address: Address) => console.log(address)}
+                  onAddressSelected={(address: Address) =>
+                    setDestinations((arr) => [...arr, address])
+                  }
                 />
               </div>
-              <div className="flex justify-end mb-3">
-                <IonButton>
-                  <IonIcon icon={add} />
-                </IonButton>
-              </div>
               <div className="mb-3">
-                <IonList>
-                  <IonItem>
-                    <IonCheckbox slot="end"></IonCheckbox>
-                    <IonLabel>Unicamp</IonLabel>
-                  </IonItem>
-                  <IonItem>
-                    <IonCheckbox slot="end"></IonCheckbox>
-                    <IonLabel>CPFL</IonLabel>
-                  </IonItem>
+                <IonList class="w-screen">
+                  {destinations.map((destination, index) => (
+                    <IonItem key={index}>
+                      <IonButton
+                        slot="end"
+                        color={"light"}
+                        onClick={() => removeDestionation(index)}
+                      >
+                        <IonIcon icon={trash} />
+                      </IonButton>
+                      <IonLabel>{destination.formatted_address}</IonLabel>
+                    </IonItem>
+                  ))}
                 </IonList>
               </div>
               <div className="flex justify-between mb-3">
@@ -377,26 +457,60 @@ export default function CadastrarItinerario() {
                 </small>
               </div>
             </div>
-          </IonSlide>
+          </IonSlide> */}
           <IonSlide>
             <div className="m-3">
               <h1 className="mb-3 text-xl">
                 Escolha o(s) dia(s) da semana ou um dia específico que o
                 itinerário será realizado
               </h1>
-              <div hidden={specificDate} className="flex items-center mb-3">
-                <IonRange
-                  dualKnobs
-                  pin
-                  pinFormatter={(value: number) => formatRange(value)}
-                  ticks
-                  snaps
-                  min={1}
-                  max={7}
-                >
-                  <IonLabel slot="start">Seg</IonLabel>
-                  <IonLabel slot="end">Dom</IonLabel>
-                </IonRange>
+              <div hidden={specificDate} className="mb-3">
+                <div className="grid grid-cols-7 gap-4">
+                  <div>
+                    <IonLabel>D</IonLabel>
+                  </div>
+                  <div>
+                    <IonLabel>S</IonLabel>
+                  </div>
+                  <div>
+                    <IonLabel>T</IonLabel>
+                  </div>
+                  <div>
+                    <IonLabel>Q</IonLabel>
+                  </div>
+                  <div>
+                    <IonLabel>Q</IonLabel>
+                  </div>
+                  <div>
+                    <IonLabel>S</IonLabel>
+                  </div>
+                  <div>
+                    <IonLabel>S</IonLabel>
+                  </div>
+                </div>
+                <div className="grid grid-cols-7 gap-4">
+                  <div>
+                    <IonCheckbox onClick={() => setDaysOfWeek(daysOfWeek[0] = "1")}></IonCheckbox>
+                  </div>
+                  <div>
+                    <IonCheckbox value="segunda"></IonCheckbox>
+                  </div>
+                  <div>
+                    <IonCheckbox value="terca"></IonCheckbox>
+                  </div>
+                  <div>
+                    <IonCheckbox value="quarta"></IonCheckbox>
+                  </div>
+                  <div>
+                    <IonCheckbox value="quinta"></IonCheckbox>
+                  </div>
+                  <div>
+                    <IonCheckbox value="sexta"></IonCheckbox>
+                  </div>
+                  <div>
+                    <IonCheckbox value="sabado"></IonCheckbox>
+                  </div>
+                </div>
               </div>
               <div className="mb-3">
                 <IonItem className="mb-3">
@@ -413,6 +527,11 @@ export default function CadastrarItinerario() {
                   min={minDate.toISOString()}
                   presentation="date"
                   hidden={!specificDate}
+                  onIonChange={(e) =>
+                    setSpecificDay(
+                      typeof e.detail.value === "string" ? e.detail.value : ""
+                    )
+                  }
                 ></IonDatetime>
               </div>
               <div className="flex justify-between mb-3">
@@ -431,18 +550,23 @@ export default function CadastrarItinerario() {
                 Qual o horário estimado de ínicio do itinerário ?
               </h1>
               <div className="mb-3">
-                <IonDatetime presentation="time"></IonDatetime>
+                <IonDatetime
+                  presentation="time"
+                  value="00:00"
+                  onIonChange={(event) =>
+                    setDepartureTime(
+                      typeof event.detail.value === "string"
+                        ? event.detail.value
+                        : "00:00"
+                    )
+                  }
+                ></IonDatetime>
               </div>
               <div className="flex justify-between mb-3">
                 <IonButton onClick={() => onBtnClicked("prev")} color="primary">
                   <IonIcon icon={arrowBack} />
                 </IonButton>
-                <IonButton
-                  ref={nextButton2}
-                  // disabled
-                  onClick={() => onBtnClicked("next")}
-                  color="primary"
-                >
+                <IonButton onClick={() => onBtnClicked("next")} color="primary">
                   <IonIcon icon={arrowForward} />
                 </IonButton>
               </div>
@@ -465,18 +589,23 @@ export default function CadastrarItinerario() {
                 itinerário ?
               </h1>
               <div className="mb-3">
-                <IonDatetime presentation="time"></IonDatetime>
+                <IonDatetime
+                  presentation="time"
+                  value="00:00"
+                  onIonChange={(event) =>
+                    setArrivalTime(
+                      typeof event.detail.value === "string"
+                        ? event.detail.value
+                        : "00:00"
+                    )
+                  }
+                ></IonDatetime>
               </div>
               <div className="flex justify-between mb-3">
                 <IonButton onClick={() => onBtnClicked("prev")} color="primary">
                   <IonIcon icon={arrowBack} />
                 </IonButton>
-                <IonButton
-                  ref={nextButton2}
-                  // disabled
-                  onClick={() => onBtnClicked("next")}
-                  color="primary"
-                >
+                <IonButton onClick={() => onBtnClicked("next")} color="primary">
                   <IonIcon icon={arrowForward} />
                 </IonButton>
               </div>
@@ -544,8 +673,7 @@ export default function CadastrarItinerario() {
                   <IonIcon icon={arrowBack} />
                 </IonButton>
                 <IonButton
-                  ref={nextButton2}
-                  // disabled
+                  disabled
                   onClick={() => onBtnClicked("next")}
                   color="primary"
                 >
@@ -579,6 +707,7 @@ export default function CadastrarItinerario() {
                 <IonSelect
                   interface="action-sheet"
                   placeholder="Selecione o veículo"
+                  onIonChange={(event) => console.log(event.detail.value)}
                 >
                   {vans ? (
                     vans.map((van, index) => {
@@ -602,8 +731,8 @@ export default function CadastrarItinerario() {
                   <IonIcon icon={arrowBack} />
                 </IonButton>
                 <IonButton
-                  ref={nextButton2}
-                  // disabled
+                  ref={nextButton6}
+                  disabled
                   onClick={() => onBtnClicked("next")}
                   color="primary"
                 >
@@ -628,12 +757,7 @@ export default function CadastrarItinerario() {
                 <IonButton onClick={() => onBtnClicked("prev")} color="primary">
                   <IonIcon icon={arrowBack} />
                 </IonButton>
-                <IonButton
-                  ref={nextButton2}
-                  // disabled
-                  onClick={() => onBtnClicked("next")}
-                  color="primary"
-                >
+                <IonButton onClick={() => cadastrar()} color="primary">
                   <IonIcon icon={checkmark} />
                   Cadastrar
                 </IonButton>

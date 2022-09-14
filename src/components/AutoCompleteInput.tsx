@@ -32,11 +32,12 @@ interface AddressSelected {
 
 interface AutoCompleteInputProps extends InputHTMLAttributes<HTMLInputElement> {
   onAddressSelected: (address: AddressSelected) => void;
+  clearAfterSelect?: boolean;
 }
 
 function AutoCompleteInput(props: AutoCompleteInputProps) {
   const searchInput = useRef(null);
-  const { onAddressSelected, ...othersProps } = props;
+  const { onAddressSelected, clearAfterSelect, ...othersProps } = props;
 
   // do something on address change
   const onChangeAddress = (autocomplete: any) => {

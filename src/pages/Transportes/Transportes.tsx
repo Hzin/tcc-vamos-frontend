@@ -28,7 +28,7 @@ import {
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 import { createUserSearch } from "../../services/api/users";
-import itinerariesService from "../../services/functions/itinerariesService";
+import { searchItineraries } from "../../services/functions/itinerariesService";
 import { closeToast } from "../../services/utils";
 import "./Transportes.css";
 
@@ -56,7 +56,7 @@ const Transportes: React.FC = () => {
   }, [props]);
 
   async function buscaItinerarios() {
-    let data = (await itinerariesService.searchItineraries(props)) as any;
+    let data = (await searchItineraries(props)) as any;
     setItinerarios(data);
   }
 

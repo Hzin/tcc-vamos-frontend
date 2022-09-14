@@ -24,8 +24,6 @@ import {
 } from "ionicons/icons";
 import "./BuscarItinerario.css";
 
-import itinerariesService from "../services/functions/itinerariesService";
-
 import { useState } from "react";
 import { useHistory } from "react-router";
 
@@ -35,6 +33,7 @@ import { closeToast } from "../services/utils";
 
 import { Color } from "@ionic/core";
 import AutoCompleteInput from "../components/AutoCompleteInput";
+import { searchItineraries } from "../services/functions/itinerariesService";
 
 interface Address {
   formatted_address: string;
@@ -116,11 +115,10 @@ const BuscarItinerario: React.FC = () => {
       },
     ]);
 
-    await itinerariesService
-      .searchItineraries({
-        coordinatesFrom: addressFrom,
-        coordinatesTo: addressTo,
-      })
+    await searchItineraries({
+      coordinatesFrom: addressFrom,
+      coordinatesTo: addressTo,
+    })
       .then((response) => {
         // if (response.status === "error") {
         //   setToastColor("danger");

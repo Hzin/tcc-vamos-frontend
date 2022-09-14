@@ -39,4 +39,12 @@ export async function searchItineraries({
   return res.data;
 }
 
-export default { getAllItineraries, searchItineraries };
+export async function createItinerary(
+  itinerary: itinerariesRoutes.CreateItineraryRequest
+): Promise<any> {
+  let res: any;
+
+  res = await itinerariesRoutes.create(itinerary);
+
+  return res;
+}
