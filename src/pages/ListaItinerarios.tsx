@@ -30,11 +30,16 @@ import {
   IonTitle,
   IonBackButton,
   IonButtons,
+  IonSegment,
+  IonSegmentButton,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/react";
 import {
   arrowForwardOutline,
   cashOutline,
   closeOutline,
+  filterOutline,
   personOutline,
   starOutline,
 } from "ionicons/icons";
@@ -46,11 +51,14 @@ import { closeToast, convertNumberToPrice } from "../services/utils";
 import { Itinerary } from "../models/itinerary.model";
 import { PageHeader } from "../components/PageHeader";
 
-interface InfoBusca {
+import itinerariesService from "../services/functions/itinerariesService";
+import { Coordinates } from "../models/coordinates.model";
+
+interface InfoBusca extends Coordinates {
   addressFrom: any;
   addressTo: any;
-  coordinatesFrom: any;
-  coordinatesTo: any;
+  coordinatesOrigin: Coordinates;
+  coordinatesDestination: Coordinates;
 
   itineraries: Itinerary[];
 }
@@ -59,11 +67,28 @@ const ListaItinerarios: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
   const props = location.state as InfoBusca;
+
   const [itinerariesList, setItinerariesList] = useState<Itinerary[]>([]);
-  const [showModalFilters, setShowModalFilters] = useState(true);
+
+  const [showModalFilters, setShowModalFilters] = useState(false);
+
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState("");
   const [toastColor, setToastColor] = useState("success");
+
+  // filtros
+  const [orderBy, setOrderBy] = useState<
+    "ascending" | "descending" | undefined
+  >("ascending");
+  const [orderOption, setOrderOption] = useState<
+    "" | "lower_price" | "ratings" | "available_seats"
+  >("");
+
+  const [preference_AvulseSeat, setPreference_AvulseSeat] =
+    useState<boolean>(false);
+  const [preference_A_C, setPreference_A_C] = useState<boolean>(false);
+  const [preference_PrioritySeat, setPreference_PrioritySeat] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (props.itineraries) {
@@ -73,8 +98,8 @@ const ListaItinerarios: React.FC = () => {
 
   function criaAlerta() {
     createUserSearch(
-      props.coordinatesFrom.lat,
-      props.coordinatesFrom.lng,
+      props.coordinatesOrigin.lat,
+      props.coordinatesDestination.lng,
       props.addressTo.label
     )
       .then(() => {
@@ -88,6 +113,31 @@ const ListaItinerarios: React.FC = () => {
       });
   }
 
+  async function applyFilters() {
+    const body = {
+      coordinatesOrigin: props.coordinatesOrigin,
+      coordinatesDestination: props.coordinatesDestination,
+      orderBy,
+      orderOption,
+      preference_AvulseSeat,
+      preference_A_C,
+      preference_PrioritySeat,
+    };
+
+    await itinerariesService
+      // .getAllItineraries()
+      .searchItineraries(body)
+      .then((response) => {
+        setItinerariesList(response);
+      })
+      .catch((err) => {
+        setToastColor("danger");
+        setMessageToast(err);
+        setShowToast(true);
+      });
+    setShowModalFilters(false);
+  }
+
   return (
     <IonPage>
       <PageHeader
@@ -97,21 +147,34 @@ const ListaItinerarios: React.FC = () => {
       <IonContent fullscreen>
         <IonCard color="light">
           <IonCardHeader>
-            <IonCardSubtitle>Origem: {props.addressFrom.label}</IonCardSubtitle>
+            <IonCardSubtitle>
+              <b>Origem</b>: {props.addressFrom.label}
+            </IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
         <IonCard color="light">
           <IonCardHeader>
-            <IonCardSubtitle>Destino: {props.addressTo.label}</IonCardSubtitle>
+            <IonCardSubtitle>
+              <b>Destino</b>: {props.addressTo.label}
+            </IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
 
         {itinerariesList && itinerariesList.length !== 0 ? (
           <>
-            <IonItemDivider color="secondary">Resultados</IonItemDivider>
+            <IonToolbar color={"primary"}>
+              <IonTitle>Resultados</IonTitle>
+              <IonButtons slot={"end"}>
+                <IonButton onClick={() => setShowModalFilters(true)}>
+                  <IonLabel>Filtros</IonLabel>
+                  <IonIcon icon={filterOutline} />
+                </IonButton>
+              </IonButtons>
+            </IonToolbar>
             {itinerariesList.map((itinerary, index) => {
               return (
                 <IonCard
+                  color={"primary"}
                   button
                   key={index}
                   onClick={() => {
@@ -166,14 +229,6 @@ const ListaItinerarios: React.FC = () => {
           </>
         )}
 
-        <IonFab
-          onClick={() => setShowModalFilters(true)}
-          vertical="bottom"
-          horizontal="center"
-          slot="fixed"
-        >
-          <IonFabButton>Filtros</IonFabButton>
-        </IonFab>
         <IonModal isOpen={showModalFilters}>
           <IonHeader translucent>
             <IonToolbar>
@@ -190,54 +245,81 @@ const ListaItinerarios: React.FC = () => {
 
           <IonContent>
             <IonList>
-              <IonListHeader>Ordenar por</IonListHeader>
-              <IonRadioGroup>
+              <IonToolbar color={"tertiary"}>
+                <IonTitle>Ordernar por</IonTitle>
+                <IonSelect
+                  slot={"end"}
+                  interface={'action-sheet'}
+                  value={orderBy}
+                  onIonChange={(e) => setOrderBy(e.detail.value)}
+                >
+                  <IonSelectOption value="ascending">Crescente</IonSelectOption>
+                  <IonSelectOption value="descending">
+                    Decrescente
+                  </IonSelectOption>
+                </IonSelect>
+              </IonToolbar>
+
+              <IonRadioGroup
+                value={orderOption}
+                onIonChange={(e: any) => setOrderOption(e.detail.value)}
+              >
                 <IonItem>
-                  <IonLabel>Sem filtro</IonLabel>
-                  <IonRadio value="sem_filtro" />
+                  <IonLabel>Sem ordenação</IonLabel>
+                  <IonRadio value="" />
                 </IonItem>
 
                 <IonItem>
                   <IonLabel>Menor preço</IonLabel>
-                  <IonRadio value="menor_preco" />
+                  <IonRadio value="lower_price" />
                 </IonItem>
 
-                <IonItem>
+                {/* <IonItem>
                   <IonLabel>Avaliação</IonLabel>
-                  <IonRadio value="avaliacao" />
-                </IonItem>
+                  <IonRadio value="ratings" />
+                </IonItem> */}
 
                 <IonItem>
                   <IonLabel>Lugares disponíveis</IonLabel>
-                  <IonRadio value="lugares_disponiveis" />
+                  <IonRadio value="available_seats" />
                 </IonItem>
               </IonRadioGroup>
             </IonList>
-
             <IonItemDivider />
-
             <IonList>
-              <IonListHeader>Preferências</IonListHeader>
+              <IonToolbar color={"tertiary"}>
+                <IonTitle>Preferências</IonTitle>
+              </IonToolbar>
               <IonItem>
                 <IonLabel>Vaga avulsa</IonLabel>
-                <IonCheckbox value="vaga_avulsa" />
+                <IonCheckbox
+                  checked={preference_AvulseSeat}
+                  onIonChange={(e: any) =>
+                    setPreference_AvulseSeat(e.detail.checked)
+                  }
+                />
               </IonItem>
-              <IonItem>
+              {/* <IonItem>
                 <IonLabel>Ar condicionado</IonLabel>
-                <IonCheckbox value="ar_condicionado" />
+                <IonCheckbox
+                  checked={preference_A_C}
+                  onIonChange={(e: any) => setPreference_A_C(e.detail.checked)}
+                />
               </IonItem>
               <IonItem>
                 <IonLabel>Assento preferencial</IonLabel>
-                <IonCheckbox value="assento_preferencial" />
-              </IonItem>
+                <IonCheckbox
+                  checked={preference_PrioritySeat}
+                  onIonChange={(e: any) =>
+                    setPreference_PrioritySeat(e.detail.checked)
+                  }
+                />
+              </IonItem> */}
             </IonList>
           </IonContent>
 
           <IonFooter>
-            <IonButton
-              expand="block"
-              onClick={() => setShowModalFilters(false)}
-            >
+            <IonButton expand="block" onClick={() => applyFilters()}>
               Aplicar Filtros
             </IonButton>
           </IonFooter>

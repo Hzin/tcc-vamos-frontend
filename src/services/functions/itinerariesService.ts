@@ -1,15 +1,5 @@
+import { searchItinerariesBody } from '../../models/searchItinerariesBody.model';
 import * as itinerariesRoutes from '../api/itineraries';
-
-interface CoordinatesRequest {
-  coordinatesFrom: {
-    lat: number,
-    lng: number
-  },
-  coordinatesTo: {
-    lat: number,
-    lng: number
-  }
-}
 
 export async function getAllItineraries(): Promise<any> {
   let res: any;
@@ -24,10 +14,10 @@ export async function getAllItineraries(): Promise<any> {
 }
 
 
-export async function searchItineraries({ coordinatesFrom, coordinatesTo }: CoordinatesRequest): Promise<any> {
+export async function searchItineraries(body: searchItinerariesBody): Promise<any> {
   let res: any
   try {
-    res = await itinerariesRoutes.search(coordinatesFrom, coordinatesTo);
+    res = await itinerariesRoutes.search(body);
   } catch (error) {
     // TODO
   }

@@ -40,9 +40,9 @@ const BuscarItinerario: React.FC = () => {
   const [toastColor, setToastColor] = useState<Color>("primary");
 
   const [addressFrom, setAddressFrom] = useState<any>("");
-  const [coordinatesFrom, setCoordinatesFrom] = useState<any>("");
+  const [coordinatesOrigin, setCoordinatesOrigin] = useState<any>("");
   const [addressTo, setAddressTo] = useState<any>("");
-  const [coordinatesTo, setCoordinatesTo] = useState<any>("");
+  const [coordinatesDestination, setCoordinatesDestination] = useState<any>("");
 
   const [recentSearches, setRecentSearches] = useState<any[]>([]);
 
@@ -50,7 +50,7 @@ const BuscarItinerario: React.FC = () => {
     if (addressFrom.label && addressFrom.label.length > 0) {
       geocodeByAddress(addressFrom.label)
         .then((results) => getLatLng(results[0]))
-        .then(({ lat, lng }) => setCoordinatesFrom({ lat, lng }));
+        .then(({ lat, lng }) => setCoordinatesOrigin({ lat, lng }));
     }
   }, [addressFrom]);
 
@@ -58,12 +58,12 @@ const BuscarItinerario: React.FC = () => {
     if (addressTo.label && addressTo.label.length > 0) {
       geocodeByAddress(addressTo.label)
         .then((results) => getLatLng(results[0]))
-        .then(({ lat, lng }) => setCoordinatesTo({ lat, lng }));
+        .then(({ lat, lng }) => setCoordinatesDestination({ lat, lng }));
     }
   }, [addressTo]);
 
   async function buscarItinerarios() {
-    if (!coordinatesFrom || !coordinatesTo || !addressFrom || !addressTo) {
+    if (!coordinatesOrigin || !coordinatesDestination || !addressFrom || !addressTo) {
       return;
     }
 
@@ -85,10 +85,10 @@ const BuscarItinerario: React.FC = () => {
     ]);
 
     await itinerariesService
-    // TODO, desfazer
+      // TODO, desfazer
       // .searchItineraries({
-      //   coordinatesFrom,
-      //   coordinatesTo,
+      //   coordinatesOrigin,
+      //   coordinatesDestination,
       // })
       .getAllItineraries()
       .then((response) => {
@@ -103,8 +103,8 @@ const BuscarItinerario: React.FC = () => {
         history.push({
           pathname: "/buscar/itinerario/lista",
           state: {
-            coordinatesFrom,
-            coordinatesTo,
+            coordinatesOrigin,
+            coordinatesDestination,
             addressFrom,
             addressTo,
             itineraries: response,
@@ -188,9 +188,8 @@ const BuscarItinerario: React.FC = () => {
               {recentSearches.map((search, index) => {
                 return (
                   <>
-                    <div>
+                    <div key={index}>
                       <IonRow
-                        key={index}
                         class="latest-searches"
                         onClick={() => {
                           fillSearchBars(search.addressFrom, search.addressTo);

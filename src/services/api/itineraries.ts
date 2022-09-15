@@ -5,6 +5,7 @@ import transportsRoutes from '../../constants/routes/itinerariesRoutes';
 import { AxiosRequestHeaders } from 'axios';
 import LocalStorage from '../../LocalStorage';
 import { setStore } from '../../store/RecordsStore';
+import { searchItinerariesBody } from '../../models/searchItinerariesBody.model';
 
 let token: string;
 let header: AxiosRequestHeaders;
@@ -31,9 +32,9 @@ export async function get() {
   return response.data;
 }
 
-export async function search(coordinatesOrigin: Coordinates, coordinatesDestination: Coordinates) {
+export async function search(body: searchItinerariesBody) {
   updateHeader();
 
-  const response = await instance.post(transportsRoutes.search.url, { coordinatesOrigin, coordinatesDestination }, { headers: header });
+  const response = await instance.post(transportsRoutes.search.url, body, { headers: header });
   return response.data;
 }
