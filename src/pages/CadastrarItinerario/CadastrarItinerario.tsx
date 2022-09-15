@@ -206,8 +206,30 @@ export default function CadastrarItinerario() {
     setDestinations(newDestionations);
   }
 
-  function (params:type) {
-    
+  function setDayOfWeekSeleted(day:string) {
+    switch (day) {
+      case "Segunda":
+        
+        break;
+      case "Terça":
+        
+        break;
+      case "Quarta":
+        
+        break;
+      case "Quinta":
+        
+        break;
+      case "Sexta":
+        
+        break;
+      case "Sábado":
+        
+        break;
+      case "Domingo":
+        
+        break;
+    }
   }
 
   async function cadastrar() {
@@ -490,7 +512,7 @@ export default function CadastrarItinerario() {
                 </div>
                 <div className="grid grid-cols-7 gap-4">
                   <div>
-                    <IonCheckbox onClick={() => setDaysOfWeek(daysOfWeek[0] = "1")}></IonCheckbox>
+                    <IonCheckbox ></IonCheckbox>
                   </div>
                   <div>
                     <IonCheckbox value="segunda"></IonCheckbox>
