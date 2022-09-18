@@ -1,16 +1,22 @@
 import {
-  IonButton,
-  IonCheckbox,
-  IonContent,
-  IonInput,
+  IonToast,
   IonItem,
-  IonItemDivider,
   IonLabel,
-  IonList,
+  IonInput,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
   IonPage,
+  IonToolbar,
+  IonTitle,
+  IonList,
+  IonCheckbox,
+  IonListHeader,
   IonSelect,
   IonSelectOption,
-  IonToast,
+  IonItemDivider,
 } from "@ionic/react";
 
 import React, { useEffect, useReducer, useState } from "react";
@@ -22,10 +28,10 @@ import carsService from "../services/functions/carsService";
 
 import * as vehiclesRoutes from "../services/api/vehicles";
 
-import { Color } from "@ionic/core";
-import { PageHeader } from "../components/PageHeader";
-import { closeToast } from "../services/utils";
 import "./VeiculoCadastro.css";
+import { Color } from "@ionic/core";
+import { closeToast } from "../services/utils";
+import { PageHeader } from "../components/PageHeader";
 
 const VeiculoCadastro: React.FC = () => {
   const history = useHistory();
@@ -203,7 +209,7 @@ const VeiculoCadastro: React.FC = () => {
         }
 
         history.push({
-          pathname: "/veiculos/meus",
+          pathname: "/minhas-vehicles",
           state: {
             redirectData: {
               showToastMessage: true,
@@ -256,9 +262,7 @@ const VeiculoCadastro: React.FC = () => {
 
       <IonContent>
         <IonList lines="full" class="ion-no-margin">
-          <IonItemDivider color={"primary"}>
-            Informações do veículo
-          </IonItemDivider>
+        <IonItemDivider color={"primary"}>Informações do veículo</IonItemDivider>
           <IonItem>
             <IonLabel position="fixed">Placa </IonLabel>
             <IonInput

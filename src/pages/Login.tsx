@@ -105,7 +105,7 @@ const Page: React.FC = () => {
         // se o backend retornou uma mensagem de erro customizada
         // if (error.response.data.message) {
         console.dir("Houve um erro: ", { error });
-        // alert("Houve um erro");
+        alert("Houve um erro");
       });
   };
 

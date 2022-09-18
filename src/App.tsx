@@ -1,3 +1,4 @@
+import React, { useContext, useState } from "react";
 import {
   IonApp,
   IonIcon,
@@ -9,7 +10,6 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import React, { useContext, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 
 import { home, person, search } from "ionicons/icons";
@@ -25,14 +25,15 @@ import Login from "./pages/Login";
 import Perfil from "./pages/Perfil";
 import PerfilEditar from "./pages/PerfilEditar";
 
+import VeiculoCadastro from "./pages/VeiculoCadastro";
+import MeusVeiculos from "./pages/MeusVeiculos";
 import CadastrarItinerario from "./pages/CadastrarItinerario/CadastrarItinerario";
 import MeusItinerarios from "./pages/MeusItinerarios/MeusItinerarios";
-import MeusVeiculos from "./pages/MeusVeiculos";
-import VeiculoCadastro from "./pages/VeiculoCadastro";
 
+import Buscas from "./pages/Buscas";
 import BuscarItinerario from "./pages/BuscarItinerario";
 import BuscarPassageiro from "./pages/BuscarPassageiro/BuscarPassageiro";
-import ListaItinerarios from "./pages/ListaItinerarios";
+import Transportes from "./pages/Transportes/Transportes";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -55,7 +56,6 @@ import "./theme/variables.css";
 
 /* Tailwind styles */
 import "./theme/tailwind.css";
-import Buscas from "./pages/Buscas";
 
 setupIonicReact();
 
@@ -93,7 +93,7 @@ const routes = (
     <Route exact path="/buscas" component={Buscas}></Route>
     <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
     <Route exact path="/buscar/passageiro" component={BuscarPassageiro}></Route>
-    <Route exact path="/buscar/itinerario/lista" component={ListaItinerarios}></Route>
+    <Route exact path="/transportes" component={Transportes}></Route>
 
     <Route exact path="/">
       <Redirect to="/home" />
