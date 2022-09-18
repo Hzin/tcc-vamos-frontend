@@ -17,7 +17,7 @@ export async function getAllItineraries(): Promise<any> {
   let res: any;
 
   try {
-    res = await itinerariesRoutes.get();
+    res = await itinerariesRoutes.getItineraries();
   } catch (error) {
     // TODO
   }

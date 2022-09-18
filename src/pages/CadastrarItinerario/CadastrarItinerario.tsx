@@ -11,6 +11,7 @@ import {
   IonInput,
   IonItem,
   IonLabel,
+  IonList,
   IonPage,
   IonSelect,
   IonSelectOption,
@@ -18,7 +19,7 @@ import {
   IonSlides,
   IonTitle,
   IonToast,
-  IonToolbar
+  IonToolbar,
 } from "@ionic/react";
 import {
   addCircleOutline,
@@ -27,10 +28,14 @@ import {
   checkmark,
   close,
   informationCircle,
-  removeCircleOutline
+  locateOutline,
+  locationOutline,
+  removeCircleOutline,
+  trash,
 } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
+import AutoCompleteInput from "../../components/AutoCompleteInput";
 import { CreateItineraryRequest } from "../../services/api/itineraries";
 import * as vehiclesRoutes from "../../services/api/vehicles";
 import { createItinerary } from "../../services/functions/itinerariesService";
@@ -60,6 +65,10 @@ interface Address {
   lng: number;
 }
 
+interface Destinations extends Address {
+  is_final?: boolean;
+}
+
 export default function CadastrarItinerario() {
   const minDate = new Date();
 
@@ -83,9 +92,9 @@ export default function CadastrarItinerario() {
 
   //Infos
   const [initialAddress, setInitialAddress] = useState<Address>();
-  const [neighborhoods, setNeighborhoods] = useState<Array<Address>>([]);
+  const [neighborhoods, setNeighborhoods] = useState<Address[]>([]);
   const [finalAddress, setFinalAddress] = useState<Address>();
-  const [destinations, setDestinations] = useState<Array<Address>>([]);
+  const [destinations, setDestinations] = useState<Destinations[]>([]);
   const [daysOfWeek, setDaysOfWeek] = useState<string>("0000000");
   const [specificDay, setSpecificDay] = useState<string>("");
   const [departureTime, setDepartureTime] = useState<string>("00:00");
@@ -168,21 +177,33 @@ export default function CadastrarItinerario() {
     getUserVans();
   }, []);
 
-  // useEffect(() => {
-  //   if (initialAddress) {
-  //     nextButton1.current!.disabled = false;
-  //   } else {
-  //     nextButton1.current!.disabled = true;
-  //   }
-  // }, [initialAddress]);
+  useEffect(() => {
+    if (initialAddress) {
+      nextButton1.current!.disabled = false;
+    } else {
+      nextButton1.current!.disabled = true;
+    }
+  }, [initialAddress]);
 
-  // useEffect(() => {
-  //   if (finalAddress) {
-  //     nextButton3.current!.disabled = false;
-  //   } else {
-  //     nextButton3.current!.disabled = true;
-  //   }
-  // }, [finalAddress]);
+  useEffect(() => {
+    if (finalAddress) {
+      nextButton3.current!.disabled = false;
+    } else {
+      nextButton3.current!.disabled = true;
+    }
+  }, [finalAddress]);
+
+  useEffect(() => {
+    if (van) {
+      nextButton6.current!.disabled = false;
+    } else {
+      nextButton6.current!.disabled = true;
+    }
+  }, [van]);
+
+  useEffect(() => {
+
+  }, [destinations]);
 
   function addNeighborhood(address: Address) {
     setNeighborhoods((arr) => [...arr, address]);
@@ -206,47 +227,137 @@ export default function CadastrarItinerario() {
     setDestinations(newDestionations);
   }
 
-  function setDayOfWeekSeleted(day:string) {
+  function setDayOfWeekSeleted(day: string, checked: boolean) {
     switch (day) {
+      case "Domingo":
+        setDaysOfWeek((value) => {
+          if (checked) {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[0] = "1";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          } else {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[0] = "0";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          }
+        });
+        break;
       case "Segunda":
-        
+        setDaysOfWeek((value) => {
+          if (checked) {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[1] = "1";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          } else {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[1] = "0";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          }
+        });
         break;
       case "Terça":
-        
+        setDaysOfWeek((value) => {
+          if (checked) {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[2] = "1";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          } else {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[2] = "0";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          }
+        });
         break;
       case "Quarta":
-        
+        setDaysOfWeek((value) => {
+          if (checked) {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[3] = "1";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          } else {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[3] = "0";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          }
+        });
         break;
       case "Quinta":
-        
+        setDaysOfWeek((value) => {
+          if (checked) {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[4] = "1";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          } else {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[4] = "0";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          }
+        });
         break;
       case "Sexta":
-        
+        setDaysOfWeek((value) => {
+          if (checked) {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[5] = "1";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          } else {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[5] = "0";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          }
+        });
         break;
       case "Sábado":
-        
-        break;
-      case "Domingo":
-        
+        setDaysOfWeek((value) => {
+          if (checked) {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[6] = "1";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          } else {
+            let newDaysOfWeek = value.split("");
+            newDaysOfWeek[6] = "0";
+            let finalString = newDaysOfWeek.join("");
+            return finalString;
+          }
+        });
         break;
     }
   }
 
+  useEffect(() => {}, [daysOfWeek]);
+
   async function cadastrar() {
+    let newDestinations: Destinations[] = [{...finalAddress!, is_final: true}]; 
+    newDestinations = newDestinations.concat(destinations);
+
     let itinerary: CreateItineraryRequest = {
       vehicle_plate: van,
       days_of_week: daysOfWeek,
-      specific_day: specificDay,
-      estimate_departure_time: departureTime,
-      estimate_arrival_time: arrivalTime,
+      specific_day: specificDate ? specificDay : undefined,
+      estimated_departure_time: departureTime,
+      estimated_arrival_time: arrivalTime,
       monthly_price: monthlyPrice,
       daily_price: dailyPrice,
+      accept_daily: singleVacancy,
       itinerary_nickname: nickname,
       estimated_departure_address: initialAddress!.formatted_address,
       departure_latitude: initialAddress!.lat,
       departure_longitude: initialAddress!.lng,
-      neighboorhoods_served: neighborhoods,
-      destinations: destinations,
+      neighborhoods_served: neighborhoods,
+      destinations: newDestinations,
     };
 
     await createItinerary(itinerary)
@@ -257,15 +368,19 @@ export default function CadastrarItinerario() {
           setShowToast(true);
         }
 
+        setToastColor("success");
+        setToastMessage(response.message);
+        setShowToast(true);
+
         history.push({
           pathname: "/meus-itinerarios",
-          state: {
-            redirectData: {
-              showToastMessage: true,
-              toastColor: "success",
-              toastMessage: "Itinerário cadastrado com sucesso!",
-            },
-          },
+          // state: {
+          //   redirectData: {
+          //     showToastMessage: true,
+          //     toastColor: "success",
+          //     toastMessage: "Itinerário cadastrado com sucesso!",
+          //   },
+          // },
         });
       })
       .catch((err: any) => {
@@ -288,7 +403,7 @@ export default function CadastrarItinerario() {
 
       <IonContent fullscreen>
         <IonSlides ref={mySlides} options={slideOpts}>
-          {/* <IonSlide>
+          <IonSlide>
             <div className="m-3">
               <h1 className="mb-3 text-xl">
                 Digite o endereço de onde você iniciará a rota do itinerário
@@ -479,7 +594,7 @@ export default function CadastrarItinerario() {
                 </small>
               </div>
             </div>
-          </IonSlide> */}
+          </IonSlide>
           <IonSlide>
             <div className="m-3">
               <h1 className="mb-3 text-xl">
@@ -512,25 +627,53 @@ export default function CadastrarItinerario() {
                 </div>
                 <div className="grid grid-cols-7 gap-4">
                   <div>
-                    <IonCheckbox ></IonCheckbox>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Domingo", e.target.checked)
+                      }
+                    ></IonCheckbox>
                   </div>
                   <div>
-                    <IonCheckbox value="segunda"></IonCheckbox>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Segunda", e.target.checked)
+                      }
+                    ></IonCheckbox>
                   </div>
                   <div>
-                    <IonCheckbox value="terca"></IonCheckbox>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Terça", e.target.checked)
+                      }
+                    ></IonCheckbox>
                   </div>
                   <div>
-                    <IonCheckbox value="quarta"></IonCheckbox>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Quarta", e.target.checked)
+                      }
+                    ></IonCheckbox>
                   </div>
                   <div>
-                    <IonCheckbox value="quinta"></IonCheckbox>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Quinta", e.target.checked)
+                      }
+                    ></IonCheckbox>
                   </div>
                   <div>
-                    <IonCheckbox value="sexta"></IonCheckbox>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Sexta", e.target.checked)
+                      }
+                    ></IonCheckbox>
                   </div>
                   <div>
-                    <IonCheckbox value="sabado"></IonCheckbox>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Sábado", e.target.checked)
+                      }
+                    ></IonCheckbox>
                   </div>
                 </div>
               </div>
@@ -549,6 +692,7 @@ export default function CadastrarItinerario() {
                   min={minDate.toISOString()}
                   presentation="date"
                   hidden={!specificDate}
+                  value={specificDay}
                   onIonChange={(e) =>
                     setSpecificDay(
                       typeof e.detail.value === "string" ? e.detail.value : ""
@@ -574,7 +718,7 @@ export default function CadastrarItinerario() {
               <div className="mb-3">
                 <IonDatetime
                   presentation="time"
-                  value="00:00"
+                  value={departureTime}
                   onIonChange={(event) =>
                     setDepartureTime(
                       typeof event.detail.value === "string"
@@ -613,7 +757,7 @@ export default function CadastrarItinerario() {
               <div className="mb-3">
                 <IonDatetime
                   presentation="time"
-                  value="00:00"
+                  value={arrivalTime}
                   onIonChange={(event) =>
                     setArrivalTime(
                       typeof event.detail.value === "string"
@@ -694,11 +838,7 @@ export default function CadastrarItinerario() {
                 <IonButton onClick={() => onBtnClicked("prev")} color="primary">
                   <IonIcon icon={arrowBack} />
                 </IonButton>
-                <IonButton
-                  disabled
-                  onClick={() => onBtnClicked("next")}
-                  color="primary"
-                >
+                <IonButton onClick={() => onBtnClicked("next")} color="primary">
                   <IonIcon icon={arrowForward} />
                 </IonButton>
               </div>
@@ -729,7 +869,8 @@ export default function CadastrarItinerario() {
                 <IonSelect
                   interface="action-sheet"
                   placeholder="Selecione o veículo"
-                  onIonChange={(event) => console.log(event.detail.value)}
+                  onIonChange={(event) => setVan(event.detail.value)}
+                  className="w-screen"
                 >
                   {vans ? (
                     vans.map((van, index) => {

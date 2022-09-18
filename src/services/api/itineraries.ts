@@ -31,21 +31,22 @@ interface Address {
 
 export interface CreateItineraryRequest {
   vehicle_plate: string;
-  days_of_week: string;
-  specific_day: string;
-  estimate_departure_time: string;
-  estimate_arrival_time: string;
+  days_of_week?: string;
+  specific_day?: string;
+  estimated_departure_time: string;
+  estimated_arrival_time: string;
   monthly_price: number;
-  daily_price: number;
+  daily_price?: number;
+  accept_daily: boolean;
   itinerary_nickname: string;
   estimated_departure_address: string;
   departure_latitude: number;
   departure_longitude: number;
-  neighboorhoods_served: Array<Address>;
+  neighborhoods_served: Array<Address>;
   destinations: Array<Address>;
 }
 
-export async function get() {
+export async function getItineraries() {
   updateHeader();
 
   const response = await instance.get(transportsRoutes.get.url, {
