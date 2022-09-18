@@ -1,4 +1,3 @@
-import React, { useContext, useState } from "react";
 import {
   IonApp,
   IonIcon,
@@ -10,6 +9,7 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
+import React, { useContext, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 
 import { home, person, search } from "ionicons/icons";
@@ -25,12 +25,11 @@ import Login from "./pages/Login";
 import Perfil from "./pages/Perfil";
 import PerfilEditar from "./pages/PerfilEditar";
 
-import VeiculoCadastro from "./pages/VeiculoCadastro";
-import MeusVeiculos from "./pages/MeusVeiculos";
 import CadastrarItinerario from "./pages/CadastrarItinerario/CadastrarItinerario";
 import MeusItinerarios from "./pages/MeusItinerarios/MeusItinerarios";
+import MeusVeiculos from "./pages/MeusVeiculos";
+import VeiculoCadastro from "./pages/VeiculoCadastro";
 
-import Buscas from "./pages/Buscas";
 import BuscarItinerario from "./pages/BuscarItinerario";
 import BuscarPassageiro from "./pages/BuscarPassageiro/BuscarPassageiro";
 import ListaItinerarios from "./pages/ListaItinerarios";
@@ -56,6 +55,7 @@ import "./theme/variables.css";
 
 /* Tailwind styles */
 import "./theme/tailwind.css";
+import Buscas from "./pages/Buscas";
 
 setupIonicReact();
 

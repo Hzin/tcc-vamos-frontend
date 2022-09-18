@@ -10,13 +10,13 @@ interface getAllCarBrandsReturn {
 
   error?: {
     errorMessage: string;
-  }
+  };
 }
 
 interface getAllCarBrandsRes {
   status?: string;
 
-  message: string
+  message: string;
 
   data?: CarObject[];
 }
@@ -45,7 +45,9 @@ const getAllCarBrands = async (): Promise<getAllCarBrandsReturn> => {
   }
 };
 
-const getCarModels = async (carBrandId: string): Promise<getAllCarBrandsReturn> => {
+const getCarModels = async (
+  carBrandId: string
+): Promise<getAllCarBrandsReturn> => {
   try {
     let res: getAllCarBrandsRes = await carsRoutes.listCarModels(carBrandId);
 

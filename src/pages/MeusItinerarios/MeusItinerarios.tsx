@@ -15,82 +15,46 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { add, locateOutline, locationOutline } from "ionicons/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getItineraries } from "../../services/api/itineraries";
 import { PageHeader } from "../../components/PageHeader";
 import "./MeusItinerarios.css";
 
+interface Address {
+  formatted_address: string;
+  lat: number;
+  lng: number;
+}
+
+interface Destination extends Address {
+  is_final?: boolean;
+}
 interface ItineraryInfo {
   id_itinerary: number;
   vehicle_plate: string;
-  days_of_week: number;
-  specific_day: string;
+  days_of_week?: string;
+  specific_day?: string;
   estimated_departure_time: string;
   estimated_arrival_time: string;
-  available_seats: number;
-  price: number;
+  monthly_price: number;
+  daily_price?: number;
+  accept_daily: boolean;
   itinerary_nickname: string;
+  estimated_departure_address: string;
+  departure_latitude: number;
+  departure_longitude: number;
+  neighborhoods_served: Address[];
+  destinations: Destination[];
 }
 
 export default function MeusItinerarios() {
-  const [routes, setRoutes] = useState<ItineraryInfo[]>(
-    [
-    {
-      id_itinerary: 1,
-      vehicle_plate: 'FSS1918',
-      days_of_week: 3,
-      specific_day: '24/08/2022',
-      estimated_departure_time: '10:00',
-      estimated_arrival_time: '12:00',
-      available_seats: 20,
-      price: 108.20,
-      itinerary_nickname: 'Itinerário teste',
-    },
-    {
-      id_itinerary: 1,
-      vehicle_plate: 'FSS1918',
-      days_of_week: 3,
-      specific_day: '24/08/2022',
-      estimated_departure_time: '10:00',
-      estimated_arrival_time: '12:00',
-      available_seats: 20,
-      price: 108.20,
-      itinerary_nickname: 'Itinerário teste 2',
-    },
-    {
-      id_itinerary: 1,
-      vehicle_plate: 'FSS1918',
-      days_of_week: 3,
-      specific_day: '24/08/2022',
-      estimated_departure_time: '10:00',
-      estimated_arrival_time: '12:00',
-      available_seats: 20,
-      price: 108.20,
-      itinerary_nickname: 'Itinerário teste',
-    },
-    {
-      id_itinerary: 1,
-      vehicle_plate: 'FSS1918',
-      days_of_week: 3,
-      specific_day: '24/08/2022',
-      estimated_departure_time: '10:00',
-      estimated_arrival_time: '12:00',
-      available_seats: 20,
-      price: 108.20,
-      itinerary_nickname: 'Itinerário teste',
-    },
-    {
-      id_itinerary: 1,
-      vehicle_plate: 'FSS1918',
-      days_of_week: 3,
-      specific_day: '24/08/2022',
-      estimated_departure_time: '10:00',
-      estimated_arrival_time: '12:00',
-      available_seats: 20,
-      price: 108.20,
-      itinerary_nickname: 'Itinerário teste',
-    },
-  ]
-  );
+  const [routes, setRoutes] = useState<ItineraryInfo[]>([]);
+
+  useEffect(() => {
+    getItineraries().then((response) => {
+      setRoutes(response.data);
+    });
+  }, [])
 
   return (
     <IonPage>
@@ -109,15 +73,23 @@ export default function MeusItinerarios() {
                 </IonCardHeader>
                 <IonCardContent>
                   <div className="addresses-itinerary">
-                    <IonIcon icon={locateOutline}></IonIcon>
-                    Rua Francisco Glicerio, nº 100, Vila Novam aaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    <IonIcon icon={locateOutline} className="mr-1"></IonIcon>
+                    {itinerary.estimated_departure_address}
                   </div>
                   <div className="icons-location-divider">
                     | 
                   </div>
                   <div className="addresses-itinerary">
-                    <IonIcon icon={locationOutline}></IonIcon>
-                    PUC Campinas H15 Campus 1 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                    <IonIcon icon={locationOutline} className="mr-1"></IonIcon>
+                    {itinerary.destinations.map((destination) => {
+                      if (destination.is_final) {
+                        return ( 
+                          <>
+                            {destination.formatted_address}
+                          </>
+                        )
+                      }
+                    })}
                   </div>
                 </IonCardContent>
               </IonCard>
