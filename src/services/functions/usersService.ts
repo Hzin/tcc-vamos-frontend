@@ -10,10 +10,10 @@ interface getByIdReturn {
     bio: string;
     document_type: string;
     document: string;
-  };
+  },
   error?: {
     errorMessage: string;
-  };
+  }
 }
 
 interface getByIdRes {
@@ -29,67 +29,65 @@ interface getByIdRes {
     bio: string;
     document_type: string;
     document: string;
-  };
+  },
 }
 
-export const getById = async (userId: string): Promise<getByIdReturn> => {
+const getById = async (userId: string): Promise<getByIdReturn> => {
   try {
-    let res: getByIdRes = await usersRoutes.getById(userId);
+    let res: getByIdRes = await usersRoutes.getById(userId)
 
     if (res.status === "error") {
       return {
         error: {
           errorMessage: res.message,
-        },
+        }
       };
     }
 
     return {
       userData: res.data,
     };
-  } catch (err) {
+  } catch(err) {
     return {
       error: {
         errorMessage: "Por favor, autentique-se.",
-      },
+      }
     };
   }
 };
 
 interface getByIdReturn {
   data?: {
-    phone: "";
-    whatsapp: "";
-    facebook: "";
-    telegram: "";
-  };
+    phone: '',
+    whatsapp: '',
+    facebook: '',
+    telegram: '',
+  },
   error?: {
     errorMessage: string;
-  };
+  }
 }
 
-export const getUserSocialInfo = async (
-  userId: string
-): Promise<getByIdReturn> => {
+const getUserSocialInfo = async (userId: string): Promise<getByIdReturn> => {
   try {
-    let res: getByIdRes = await usersRoutes.getSocialInfo(userId);
+    let res: getByIdRes = await usersRoutes.getSocialInfo(userId)
 
     if (res.status === "error") {
       return {
         error: {
           errorMessage: res.message,
-        },
+        }
       };
     }
 
     return {
       userData: res.data,
     };
-  } catch (err) {
+  } catch(err) {
     return {
       error: {
         errorMessage: "Por favor, autentique-se.",
-      },
+      }
     };
   }
 };
@@ -98,7 +96,7 @@ interface checkIfUserIsDriverReturn {
   result?: boolean;
   error?: {
     errorMessage: string;
-  };
+  }
 }
 
 interface checkIfUserIsDriverResponse {
@@ -107,32 +105,31 @@ interface checkIfUserIsDriverResponse {
   result?: boolean;
   error?: {
     errorMessage: string;
-  };
+  }
 }
 
-export const checkIfUserIsDriver = async (
-  id_user: string
-): Promise<checkIfUserIsDriverReturn> => {
+const checkIfUserIsDriver = async (id_user: string): Promise<checkIfUserIsDriverReturn> => {
   try {
-    let res: checkIfUserIsDriverResponse =
-      await usersRoutes.checkIfUserIsDriver(id_user);
+    let res: checkIfUserIsDriverResponse = await usersRoutes.checkIfUserIsDriver(id_user)
 
     if (res.status === "error") {
       return {
         error: {
           errorMessage: res.message,
-        },
+        }
       };
     }
 
     return {
       result: res.result,
     };
-  } catch (err) {
+  } catch(err) {
     return {
       error: {
         errorMessage: "Por favor, autentique-se.",
-      },
+      }
     };
   }
 };
+
+export default { getById, getUserSocialInfo, checkIfUserIsDriver }

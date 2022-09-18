@@ -14,7 +14,7 @@ interface refreshSessionResponse {
 
 const refreshSession = async (): Promise<refreshSessionReturn> => {
   try {
-    let res: refreshSessionResponse = await sessionRoutes.refresh();
+    let res: refreshSessionResponse = await sessionRoutes.refresh()
 
     if (res.status === "error") {
       return {
@@ -26,7 +26,7 @@ const refreshSession = async (): Promise<refreshSessionReturn> => {
     return {
       userId: res.userId,
     };
-  } catch (err) {
+  } catch(err) {
     return {
       error: true,
       errorMessage: "Por favor, autentique-se.",
@@ -40,11 +40,7 @@ const refreshSession = async (): Promise<refreshSessionReturn> => {
   //   } else {
   //       // Anything else
   //   }
-  // }
+// }
 };
 
-const method = {
-  refreshSession,
-};
-
-export default method;
+export default { refreshSession }

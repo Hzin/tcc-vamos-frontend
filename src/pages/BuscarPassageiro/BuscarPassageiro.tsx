@@ -1,9 +1,9 @@
 import {
   IonContent,
+  IonPage,
   IonFab,
   IonFabButton,
   IonIcon,
-  IonPage,
 } from "@ionic/react";
 import { search } from "ionicons/icons";
 import "./BuscarPassageiro.css";
@@ -12,11 +12,11 @@ import { Map, Marker, Overlay } from "pigeon-maps";
 import { maptiler } from "pigeon-maps/providers";
 import { useEffect, useState } from "react";
 
-import { PageHeader } from "../../components/PageHeader";
-import { UserSearchInfos } from "../../components/UserSearchInfos/UserSearchInfos";
-import { getUsersSearching } from "../../services/api/users";
 import RecordsStore from "../../store/RecordsStore";
 import { fetchRecords } from "../../store/Selectors";
+import { getUsersSearching } from "../../services/api/users";
+import { UserSearchInfos } from "../../components/UserSearchInfos/UserSearchInfos";
+import { PageHeader } from "../../components/PageHeader";
 
 const maptilerProvider = maptiler("d5JQJPLLuap8TkJJlTdJ", "streets");
 
@@ -52,7 +52,7 @@ const BuscarPassageiro: React.FC = () => {
   const [results, setResults] = useState([]);
   const [zoom, setZoom] = useState(14);
 
-  // const [ moveMode, setMoveMode ] = useState(false);
+  const [moveMode, setMoveMode] = useState(false);
 
   // useEffect(() => {
 

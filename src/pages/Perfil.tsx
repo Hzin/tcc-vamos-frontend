@@ -1,19 +1,26 @@
 import {
+  IonBackButton,
   IonBadge,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
   IonChip,
   IonContent,
+  IonHeader,
   IonIcon,
   IonItem,
   IonLabel,
   IonList,
   IonListHeader,
   IonPage,
+  IonTitle,
   IonToast,
+  IonToolbar,
 } from "@ionic/react";
+import { useHistory, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 import {
   callOutline,
   cardOutline,
@@ -25,21 +32,16 @@ import {
   shieldCheckmarkOutline,
   starOutline,
 } from "ionicons/icons";
-import React, { useContext, useEffect, useReducer, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
 
-import LocalStorage from "../LocalStorage";
 import "./Perfil.css";
+import LocalStorage from "../LocalStorage";
 
-import { Color } from "@ionic/core";
-import { UserContext } from "../App";
-import { PageHeader } from "../components/PageHeader";
 import sessionsService from "../services/functions/sessionsService";
-import {
-  checkIfUserIsDriver,
-  getById,
-} from "../services/functions/usersService";
+import usersService from "../services/functions/usersService";
+import { UserContext } from "../App";
+import { Color } from "@ionic/core";
 import { closeToast } from "../services/utils";
+import { PageHeader } from "../components/PageHeader";
 
 interface ScanNewProps {
   match: {
@@ -131,7 +133,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       }
 
       // get user info by ID
-      const getByIdRes = await getById(userId);
+      const getByIdRes = await usersService.getById(userId);
 
       if (getByIdRes.error) {
         if (isVisitor && props.match.params.id) {
@@ -146,8 +148,8 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
         return;
       }
 
-      // check if user is driver (if they have vans)
-      const userIsDriverRes = await checkIfUserIsDriver(userId);
+      // check if user is driver (if they have vehicles)
+      const userIsDriverRes = await usersService.checkIfUserIsDriver(userId);
 
       // if (userIsDriverRes.error) {
       //   setToastColor('warning')
@@ -344,15 +346,6 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                 >
                   <IonIcon icon={personOutline} slot="start" />
                   <IonLabel>Buscar passageiros</IonLabel>
-                </IonItem>
-                <IonItem
-                  button
-                  onClick={() =>
-                    history.push({ pathname: "/cadastrar-itinerario" })
-                  }
-                >
-                  <IonIcon icon={mapOutline} slot="start" />
-                  <IonLabel>Cadastrar itinerário</IonLabel>
                 </IonItem>
                 <IonItem
                   button
