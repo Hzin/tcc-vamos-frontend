@@ -1,5 +1,10 @@
-import { IonBackButton, IonButtons, IonHeader, IonTitle, IonToolbar } from "@ionic/react";
-import { close } from "ionicons/icons";
+import {
+  IonBackButton,
+  IonButtons,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
 // import { InputHTMLAttributes } from "react";
 
 // interface ComponentProps extends InputHTMLAttributes<HTMLIonHeaderElement> {
@@ -10,7 +15,7 @@ interface ComponentProps {
 }
 
 export const PageHeader = (props: ComponentProps) => (
-    <IonHeader translucent>
+  <IonHeader translucent>
     <IonToolbar>
       {props.pageName ? (
         <>
@@ -19,10 +24,15 @@ export const PageHeader = (props: ComponentProps) => (
       ) : (
         <></>
       )}
-      
+
       <IonButtons slot="start">
-        <IonBackButton text="" defaultHref={ props.backButtonPageUrl ? props.backButtonPageUrl : undefined } />
-          icon={ props.backButtonIcon ? props.backButtonIcon : undefined }
+        <IonBackButton
+          text=""
+          defaultHref={
+            props.backButtonPageUrl ? props.backButtonPageUrl : undefined
+          }
+          icon={props.backButtonIcon ? props.backButtonIcon : undefined}
+        />
       </IonButtons>
     </IonToolbar>
   </IonHeader>
