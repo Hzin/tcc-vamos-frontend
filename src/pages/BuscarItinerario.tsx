@@ -96,21 +96,21 @@ const BuscarItinerario: React.FC = () => {
   async function buscarItinerarios() {
     if (!addressFrom) {
       setMessageToast("Por favor, escolha um endereço de origem!");
-      setToastColor("warning")
+      setToastColor("warning");
       setShowToast(true);
       return;
     }
 
     if (!addressTo) {
       setMessageToast("Por favor, escolha um endereço de destino!");
-      setToastColor("warning")
+      setToastColor("warning");
       setShowToast(true);
       return;
     }
 
     if (isScholar && !period) {
       setMessageToast("Por favor, escolha um período para a busca!");
-      setToastColor("warning")
+      setToastColor("warning");
       setShowToast(true);
       return;
     }
@@ -132,10 +132,11 @@ const BuscarItinerario: React.FC = () => {
       },
     ]);
 
-    await itinerariesService.searchItineraries({
-      coordinatesFrom: addressFrom,
-      coordinatesTo: addressTo,
-    })
+    await itinerariesService
+      .searchItineraries({
+        coordinatesFrom: addressFrom,
+        coordinatesTo: addressTo,
+      })
       .then((response) => {
         // if (response.status === "error") {
         //   setToastColor("danger");
@@ -148,8 +149,8 @@ const BuscarItinerario: React.FC = () => {
         let searchState = {
           coordinatesFrom,
           coordinatesTo,
-          addressFrom,
-          addressTo,
+          addressFrom: addressFrom.formatted_address,
+          addressTo: addressTo.formatted_address,
           period: "",
           itineraries: response,
         };

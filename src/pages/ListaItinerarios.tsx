@@ -1,8 +1,6 @@
 import {
   IonContent,
   IonPage,
-  IonFab,
-  IonFabButton,
   IonIcon,
   IonCard,
   IonButton,
@@ -21,22 +19,13 @@ import {
   IonCardTitle,
   IonItemDivider,
   IonCardContent,
-  IonChip,
-  IonGrid,
-  IonRow,
-  IonCol,
   IonList,
-  IonListHeader,
   IonTitle,
-  IonBackButton,
   IonButtons,
-  IonSegment,
-  IonSegmentButton,
   IonSelect,
   IonSelectOption,
 } from "@ionic/react";
 import {
-  arrowForwardOutline,
   cashOutline,
   closeOutline,
   filterOutline,
@@ -46,7 +35,6 @@ import {
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 import { createUserSearch } from "../services/api/users";
-import "./ListaItinerarios.css";
 import { closeToast, convertNumberToPrice } from "../services/utils";
 import { Itinerary } from "../models/itinerary.model";
 import { PageHeader } from "../components/PageHeader";
@@ -55,10 +43,12 @@ import itinerariesService from "../services/functions/itinerariesService";
 import { Coordinates } from "../models/coordinates.model";
 
 interface InfoBusca extends Coordinates {
-  addressFrom: any;
-  addressTo: any;
   coordinatesFrom: Coordinates;
   coordinatesTo: Coordinates;
+  addressFrom: string;
+  addressTo: string;
+
+  period: string;
 
   itineraries: Itinerary[];
 }
@@ -100,7 +90,8 @@ const ListaItinerarios: React.FC = () => {
     createUserSearch(
       props.coordinatesFrom.lat,
       props.coordinatesTo.lng,
-      props.addressTo.label
+      props.addressTo,
+      props.period
     )
       .then(() => {
         setMessageToast("Alerta criado com sucesso!");
@@ -117,6 +108,7 @@ const ListaItinerarios: React.FC = () => {
     const body = {
       coordinatesFrom: props.coordinatesFrom,
       coordinatesTo: props.coordinatesTo,
+      period: props.period,
       orderBy,
       orderOption,
       preference_AvulseSeat,
@@ -148,29 +140,32 @@ const ListaItinerarios: React.FC = () => {
         <IonCard color="light">
           <IonCardHeader>
             <IonCardSubtitle>
-              <b>Origem</b>: {props.addressFrom.label}
+              <b>Origem</b>: {props.addressFrom}
             </IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
         <IonCard color="light">
           <IonCardHeader>
             <IonCardSubtitle>
-              <b>Destino</b>: {props.addressTo.label}
+              <b>Destino</b>: {props.addressTo}
             </IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
 
+        <IonToolbar color={"primary"}>
+          <IonTitle>Resultados</IonTitle>
+          <IonButtons slot={"end"}>
+            {itinerariesList && itinerariesList.length !== 0 && (
+              <IonButton onClick={() => setShowModalFilters(true)}>
+                <IonLabel>Filtros</IonLabel>
+                <IonIcon icon={filterOutline} />
+              </IonButton>
+            )}
+          </IonButtons>
+        </IonToolbar>
+
         {itinerariesList && itinerariesList.length !== 0 ? (
           <>
-            <IonToolbar color={"primary"}>
-              <IonTitle>Resultados</IonTitle>
-              <IonButtons slot={"end"}>
-                <IonButton onClick={() => setShowModalFilters(true)}>
-                  <IonLabel>Filtros</IonLabel>
-                  <IonIcon icon={filterOutline} />
-                </IonButton>
-              </IonButtons>
-            </IonToolbar>
             {itinerariesList.map((itinerary, index) => {
               return (
                 <IonCard
@@ -190,11 +185,11 @@ const ListaItinerarios: React.FC = () => {
                       </p>
                       <p>
                         <IonIcon icon={starOutline} /> Motorista:{" "}
-                        {itinerary.price}
+                        {itinerary.vehicle.user.id_user}
                       </p>
                       <p>
                         <IonIcon icon={cashOutline} /> Valor:{" "}
-                        {convertNumberToPrice(itinerary.price)}
+                        {convertNumberToPrice(itinerary.monthly_price)}
                       </p>
                     </IonCardContent>
                   </IonCardHeader>
@@ -204,7 +199,7 @@ const ListaItinerarios: React.FC = () => {
           </>
         ) : (
           <>
-            <div className="msg-not-found">
+            {/* <div className="msg-not-found">
               <IonCard>
                 <IonCardContent>
                   <span>
@@ -225,6 +220,19 @@ const ListaItinerarios: React.FC = () => {
                   </div>
                 </IonCardContent>
               </IonCard>
+            </div> */}
+
+            <div className="m-3">
+              <h1 className="mb-3 text-xl">
+                Não foi encontrado nenhum itinerário que atenda essa rota.
+              </h1>
+              <h2 className="mb-3 text-l">
+                Deseja criar um alerta para ser notificado caso haja itinerário
+                para essa origem e destino?
+              </h2>
+              <div className="button-criar-alerta">
+                <IonButton onClick={() => criaAlerta()}>Criar Alerta</IonButton>
+              </div>
             </div>
           </>
         )}
@@ -249,7 +257,7 @@ const ListaItinerarios: React.FC = () => {
                 <IonTitle>Ordernar por</IonTitle>
                 <IonSelect
                   slot={"end"}
-                  interface={'action-sheet'}
+                  interface={"action-sheet"}
                   value={orderBy}
                   onIonChange={(e) => setOrderBy(e.detail.value)}
                 >

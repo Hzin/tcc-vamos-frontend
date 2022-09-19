@@ -101,8 +101,8 @@ export async function getUsersSearching(currentPoint: any) {
 	setStore(response.data);
 }
 
-export async function createUserSearch(latitude_from: any, longitude_from: any, addres_to: any) {
-  const response = await instance.post(`${userRoutes.createUserSearch.url}`, { latitude_from, longitude_from, addres_to });
+export async function createUserSearch(latitude_from: any, longitude_from: any, address_to: any, period: any) {
+  const response = await instance.post(`${userRoutes.createUserSearch.url}`, { latitude_from, longitude_from, address_to, period });
 
   console.log(response)
 	setStore(response);
