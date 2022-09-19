@@ -106,8 +106,8 @@ const ListaItinerarios: React.FC = () => {
 
   async function applyFilters() {
     const body = {
-      coordinatesFrom: props.coordinatesFrom,
-      coordinatesTo: props.coordinatesTo,
+      coordinatesOrigin: props.coordinatesFrom,
+      coordinatesDestination: props.coordinatesTo,
       period: props.period,
       orderBy,
       orderOption,
@@ -185,11 +185,11 @@ const ListaItinerarios: React.FC = () => {
                       </p>
                       <p>
                         <IonIcon icon={starOutline} /> Motorista:{" "}
-                        {itinerary.vehicle.user.id_user}
+                        {itinerary.is_active}
                       </p>
                       <p>
                         <IonIcon icon={cashOutline} /> Valor:{" "}
-                        {convertNumberToPrice(itinerary.monthly_price)}
+                        {convertNumberToPrice(itinerary.price)}
                       </p>
                     </IonCardContent>
                   </IonCardHeader>

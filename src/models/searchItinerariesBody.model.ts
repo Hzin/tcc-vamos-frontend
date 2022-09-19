@@ -1,8 +1,8 @@
 import { Coordinates } from "./coordinates.model";
 
 export interface searchItinerariesBody {
-    coordinatesFrom: Coordinates,
-    coordinatesTo: Coordinates,
+    coordinatesOrigin: Coordinates,
+    coordinatesDestination: Coordinates,
 
     orderBy?: string,
     orderOption?: string,

@@ -132,10 +132,13 @@ const BuscarItinerario: React.FC = () => {
       },
     ]);
 
+    console.log(addressFrom)
+    console.log(addressTo)
+
     await itinerariesService
       .searchItineraries({
-        coordinatesFrom: addressFrom,
-        coordinatesTo: addressTo,
+        coordinatesOrigin: addressFrom,
+        coordinatesDestination: addressTo,
       })
       .then((response) => {
         // if (response.status === "error") {
@@ -147,13 +150,21 @@ const BuscarItinerario: React.FC = () => {
         // }
 
         let searchState = {
-          coordinatesFrom,
-          coordinatesTo,
+          coordinatesFrom: {
+            lat: addressFrom.lat,
+            lng: addressFrom.lng
+          },
+          coordinatesTo: {
+            lat: addressTo.lat,
+            lng: addressTo.lng
+          },
           addressFrom: addressFrom.formatted_address,
           addressTo: addressTo.formatted_address,
           period: "",
           itineraries: response,
         };
+
+        console.log(searchState)
 
         if (isScholar) {
           searchState.period = period;

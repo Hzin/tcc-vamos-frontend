@@ -28,6 +28,7 @@ export interface Itinerary {
     available_seats: number;
     monthly_price: number;
     daily_price: number;
+    price: number;
     accept_daily: boolean;
     itinerary_nickname: string;
     estimated_departure_address: string;
