@@ -57,8 +57,8 @@ import { Coordinates } from "../models/coordinates.model";
 interface InfoBusca extends Coordinates {
   addressFrom: any;
   addressTo: any;
-  coordinatesOrigin: Coordinates;
-  coordinatesDestination: Coordinates;
+  coordinatesFrom: Coordinates;
+  coordinatesTo: Coordinates;
 
   itineraries: Itinerary[];
 }
@@ -98,8 +98,8 @@ const ListaItinerarios: React.FC = () => {
 
   function criaAlerta() {
     createUserSearch(
-      props.coordinatesOrigin.lat,
-      props.coordinatesDestination.lng,
+      props.coordinatesFrom.lat,
+      props.coordinatesTo.lng,
       props.addressTo.label
     )
       .then(() => {
@@ -115,8 +115,8 @@ const ListaItinerarios: React.FC = () => {
 
   async function applyFilters() {
     const body = {
-      coordinatesOrigin: props.coordinatesOrigin,
-      coordinatesDestination: props.coordinatesDestination,
+      coordinatesFrom: props.coordinatesFrom,
+      coordinatesTo: props.coordinatesTo,
       orderBy,
       orderOption,
       preference_AvulseSeat,

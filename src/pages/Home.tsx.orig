@@ -47,16 +47,26 @@ const Home: React.FC = () => {
         .catch((error) => {
           // if (!error.response) return
 
+<<<<<<< Updated upstream
+        // se o backend retornou uma mensagem de erro customizada
+        // if (error.response.data.message) {
+        console.dir('Houve um erro: ', { error })
+        alert('Houve um erro')
+        history.push(`/login`)
+      })
+    }
+=======
           // se o backend retornou uma mensagem de erro customizada
           // if (error.response.data.message) {
           console.dir("Houve um erro: ", { error });
-        alert('Houve um erro')
+          alert("Houve um erro");
           history.push(`/login`);
         });
     };
 
     refreshUserToken();
   }, [location.state, user, history]);
+>>>>>>> Stashed changes
 
   return (
     <IonPage>
