@@ -200,11 +200,11 @@ const ListaItinerarios: React.FC = () => {
                       </p>
                       <p>
                         <IonIcon icon={starOutline} /> Motorista:{" "}
-                        {itinerary.price}
+                        {itinerary.monthly_price}
                       </p>
                       <p>
                         <IonIcon icon={cashOutline} /> Valor:{" "}
-                        {convertNumberToPrice(itinerary.price)}
+                        {convertNumberToPrice(itinerary.monthly_price)}
                       </p>
                     </IonCardContent>
                   </IonCardHeader>
