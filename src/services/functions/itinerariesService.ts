@@ -2,12 +2,12 @@ import * as itinerariesRoutes from "../api/itineraries";
 
 interface CoordinatesRequest {
   coordinatesFrom: {
-    formatted_address: string;
+    formatted_address?: string;
     lat: number;
     lng: number;
   };
   coordinatesTo: {
-    formatted_address: string;
+    formatted_address?: string;
     lat: number;
     lng: number;
   };

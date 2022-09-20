@@ -7,8 +7,9 @@ import {
 } from "@ionic/react";
 
 interface ComponentProps {
-  pageName: string;
+  pageName?: string;
   backButtonPageUrl?: string;
+  backButtonIcon?: string;
 }
 
 export const PageHeader = (props: ComponentProps) => (
@@ -21,6 +22,7 @@ export const PageHeader = (props: ComponentProps) => (
           defaultHref={
             props.backButtonPageUrl ? props.backButtonPageUrl : undefined
           }
+          icon={props.backButtonIcon ? props.backButtonIcon : undefined}
         />
       </IonButtons>
     </IonToolbar>
