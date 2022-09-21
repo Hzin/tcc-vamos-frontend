@@ -38,4 +38,5 @@ export interface Itinerary {
     trips?: Trip[];
     // created_at: Date;
     // updated_at: Date;
+    driverName?: string
 }

@@ -92,12 +92,13 @@ const BuscarItinerario: React.FC = () => {
       },
     ]);
 
-    console.log(addressFrom)
+    console.log(addressFrom);
 
     await searchItineraries
       .searchItineraries({
         coordinatesFrom: addressFrom,
         coordinatesTo: addressTo,
+        period,
       })
       .then((response) => {
         history.push({
@@ -129,7 +130,7 @@ const BuscarItinerario: React.FC = () => {
             <IonList lines="inset">
               <IonItem>
                 <div className="inputs-from-to">
-                  <IonIcon icon={locateOutline}></IonIcon>
+                  <IonIcon icon={locateOutline} />
                   <AutoCompleteInput
                     placeholder="R. José Paulino, 1234"
                     className="ml-2"
@@ -142,7 +143,7 @@ const BuscarItinerario: React.FC = () => {
 
               <IonItem>
                 <div className="inputs-from-to">
-                  <IonIcon icon={locationOutline}></IonIcon>
+                  <IonIcon icon={locationOutline} />
                   <AutoCompleteInput
                     placeholder="PUC Campinas"
                     className="ml-2"
@@ -157,6 +158,7 @@ const BuscarItinerario: React.FC = () => {
                 <IonLabel>Período</IonLabel>
                 <IonSelect
                   value={period}
+                  placeholder="Período"
                   onIonChange={(e: any) => {
                     setPeriod(e.detail.value);
                   }}

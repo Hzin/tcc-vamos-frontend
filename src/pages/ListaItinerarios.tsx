@@ -1,8 +1,6 @@
 import {
   IonContent,
   IonPage,
-  IonFab,
-  IonFabButton,
   IonIcon,
   IonCard,
   IonButton,
@@ -20,26 +18,17 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonItemDivider,
-  IonCardContent,
-  IonChip,
-  IonGrid,
-  IonRow,
-  IonCol,
   IonList,
-  IonListHeader,
   IonTitle,
-  IonBackButton,
   IonButtons,
   IonSelect,
   IonSelectOption,
 } from "@ionic/react";
 import {
-  arrowForwardOutline,
   cashOutline,
   closeOutline,
   filterOutline,
   personOutline,
-  starOutline,
 } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
@@ -80,7 +69,7 @@ const ListaItinerarios: React.FC = () => {
     "ascending" | "descending" | undefined
   >("ascending");
   const [orderOption, setOrderOption] = useState<
-    "" | "lower_price" | "ratings" | "available_seats"
+    "" | "monthly_price" | "daily_price" | "rating" | "available_seats"
   >("");
 
   const [preference_AvulseSeat, setPreference_AvulseSeat] =
@@ -131,7 +120,6 @@ const ListaItinerarios: React.FC = () => {
     };
 
     await itinerariesService
-      // .getAllItineraries()
       .searchItineraries(body)
       .then((response) => {
         setItinerariesList(response);
@@ -151,14 +139,14 @@ const ListaItinerarios: React.FC = () => {
         backButtonPageUrl="/buscar/itinerario"
       />
       <IonContent fullscreen>
-        <IonCard color="light">
+        <IonCard button color="light">
           <IonCardHeader>
             <IonCardSubtitle>
               Origem: {props.addressFrom.formatted_address}
             </IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
-        <IonCard color="light">
+        <IonCard button color="light">
           <IonCardHeader>
             <IonCardSubtitle>
               Destino: {props.addressTo.formatted_address}
@@ -171,14 +159,11 @@ const ListaItinerarios: React.FC = () => {
           <IonButtons slot={"end"}>
             {itinerariesList && itinerariesList.length !== 0 && (
               <IonButton onClick={() => setShowModalFilters(true)}>
-                <IonLabel>Filtros</IonLabel>
                 <IonIcon icon={filterOutline} />
               </IonButton>
             )}
           </IonButtons>
         </IonToolbar>
-
-        <IonItemDivider color="secondary">Resultados</IonItemDivider>
 
         {itinerariesList && itinerariesList.length !== 0 ? (
           <>
@@ -193,20 +178,26 @@ const ListaItinerarios: React.FC = () => {
                 >
                   <IonCardHeader>
                     <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
-                    <IonCardContent>
-                      <p>
-                        <IonIcon icon={personOutline} /> Vagas disponíveis:{" "}
-                        {itinerary.available_seats}
-                      </p>
-                      <p>
-                        <IonIcon icon={starOutline} /> Motorista:{" "}
-                        {itinerary.monthly_price}
-                      </p>
-                      <p>
-                        <IonIcon icon={cashOutline} /> Valor:{" "}
-                        {convertNumberToPrice(itinerary.monthly_price)}
-                      </p>
-                    </IonCardContent>
+                    {/* <IonCardContent> */}
+                    {/* <IonList> */}
+                    <IonItem>
+                      <IonIcon slot={"start"} icon={personOutline} />
+                      <IonLabel>Motorista: {itinerary.driverName}</IonLabel>
+                    </IonItem>
+                    <IonItem>
+                      <IonIcon slot={"start"} icon={cashOutline} />
+                      <IonLabel>
+                        Valor: {convertNumberToPrice(itinerary.monthly_price)}
+                      </IonLabel>
+                    </IonItem>
+                    <IonItem>
+                      <IonIcon slot={"start"} src="https://cdn-icons-png.flaticon.com/512/6165/6165835.png"/>
+                      <IonLabel>
+                        Vagas disponíveis: {itinerary.available_seats}
+                      </IonLabel>
+                    </IonItem>
+                    {/* </IonList> */}
+                    {/* </IonCardContent> */}
                   </IonCardHeader>
                 </IonCard>
               );
@@ -270,8 +261,13 @@ const ListaItinerarios: React.FC = () => {
                 </IonItem>
 
                 <IonItem>
-                  <IonLabel>Preço</IonLabel>
-                  <IonRadio value="price" />
+                  <IonLabel>Preço mensal</IonLabel>
+                  <IonRadio value="monthly_price" />
+                </IonItem>
+
+                <IonItem>
+                  <IonLabel>Preço diário</IonLabel>
+                  <IonRadio value="daily_price" />
                 </IonItem>
 
                 <IonItem>
