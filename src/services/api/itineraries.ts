@@ -1,6 +1,7 @@
 import instance from "./api";
 
 import transportsRoutes from "../../constants/routes/itinerariesRoutes";
+import { SearchItinerariesRequest } from "../functions/itinerariesService";
 
 export interface Coordinates {
   lat: number;
@@ -42,14 +43,12 @@ export async function create(itinerary: CreateItineraryRequest) {
   return response.data;
 }
 
-export async function search(
-  coordinatesOrigin: Coordinates,
-  coordinatesDestination: Coordinates
+export async function search(body: SearchItinerariesRequest
 ) {
 
   const response = await instance.post(
     transportsRoutes.search.url,
-    { coordinatesOrigin, coordinatesDestination },
+    body,
   );
   return response.data;
 }

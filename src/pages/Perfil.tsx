@@ -35,10 +35,7 @@ import { Color } from "@ionic/core";
 import { UserContext } from "../App";
 import { PageHeader } from "../components/PageHeader";
 import sessionsService from "../services/functions/sessionsService";
-import {
-  checkIfUserIsDriver,
-  getById,
-} from "../services/functions/usersService";
+import * as usersService from "../services/functions/usersService";
 import { closeToast } from "../services/utils";
 
 interface ScanNewProps {
@@ -131,7 +128,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       }
 
       // get user info by ID
-      const getByIdRes = await getById(userId);
+      const getByIdRes = await usersService.getById(userId);
 
       if (getByIdRes.error) {
         if (isVisitor && props.match.params.id) {
@@ -147,7 +144,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       }
 
       // check if user is driver (if they have vans)
-      const userIsDriverRes = await checkIfUserIsDriver(userId);
+      const userIsDriverRes = await usersService.checkIfUserIsDriver(userId);
 
       // if (userIsDriverRes.error) {
       //   setToastColor('warning')
