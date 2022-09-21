@@ -35,11 +35,11 @@ import {
 } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
-import AutoCompleteInput from "../../components/AutoCompleteInput";
-import { CreateItineraryRequest } from "../../services/api/itineraries";
-import * as vehiclesRoutes from "../../services/api/vehicles";
-import { createItinerary } from "../../services/functions/itinerariesService";
-import sessionsService from "../../services/functions/sessionsService";
+import AutoCompleteInput from "../components/AutoCompleteInput";
+import { CreateItineraryRequest } from "../services/api/itineraries";
+import * as vehiclesRoutes from "../services/api/vehicles";
+import { createItinerary } from "../services/functions/itinerariesService";
+import sessionsService from "../services/functions/sessionsService";
 
 const slideOpts = {
   initialSlide: 0,

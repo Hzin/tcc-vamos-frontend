@@ -219,17 +219,16 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             <img
               src="https://static.generated.photos/vue-static/home/feed/adult.png"
               alt="avatar"
-              className="avatar"
-              id="avatar"
+              className="rounded w-28 h-28 block mx-auto"
             />
-            {/* <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/faa68f71f3b2a48ca89228c2c2aa72d3" alt="avatar" className='avatar' id='avatar'/> */}
+            {/* <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/faa68f71f3b2a48ca89228c2c2aa72d3" alt="avatar" className="rounded w-28 h-28 block mx-auto"/> */}
             <IonCardHeader>
               <IonCardTitle class="ion-text-center">
                 {inputValues.name} {inputValues.lastname}
               </IonCardTitle>
             </IonCardHeader>
 
-            <div id="profile-status">
+            <div className="text-center">
               {isDriver ? (
                 <>
                   <IonChip>

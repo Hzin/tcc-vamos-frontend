@@ -1,6 +1,4 @@
 import {
-  IonBackButton,
-  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -8,17 +6,13 @@ import {
   IonContent,
   IonFab,
   IonFabButton,
-  IonHeader,
   IonIcon,
   IonPage,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/react";
 import { add, locateOutline, locationOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
-import { getItineraries } from "../../services/api/itineraries";
-import { PageHeader } from "../../components/PageHeader";
-import "./MeusItinerarios.css";
+import { getItineraries } from "../services/api/itineraries";
+import { PageHeader } from "../components/PageHeader";
 
 interface Address {
   formatted_address: string;
@@ -72,14 +66,14 @@ export default function MeusItinerarios() {
                   <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
-                  <div className="addresses-itinerary">
+                  <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
                     <IonIcon icon={locateOutline} className="mr-1"></IonIcon>
                     {itinerary.estimated_departure_address}
                   </div>
-                  <div className="icons-location-divider">
+                  <div className="ml-[0.33rem] mb-[0.4rem]">
                     | 
                   </div>
-                  <div className="addresses-itinerary">
+                  <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
                     <IonIcon icon={locationOutline} className="mr-1"></IonIcon>
                     {itinerary.destinations.map((destination) => {
                       if (destination.is_final) {
@@ -96,7 +90,7 @@ export default function MeusItinerarios() {
             );
           })
         ) : (
-          <h1 className="msg-not-found">
+          <h1 className="m-6">
             Você ainda não possui nenhum itinerário cadastrado!
           </h1>
         )}

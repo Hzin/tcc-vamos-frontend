@@ -21,18 +21,12 @@ import {
   IonCardTitle,
   IonItemDivider,
   IonCardContent,
-  IonChip,
-  IonGrid,
-  IonRow,
-  IonCol,
   IonList,
   IonListHeader,
   IonTitle,
-  IonBackButton,
   IonButtons,
 } from "@ionic/react";
 import {
-  arrowForwardOutline,
   cashOutline,
   closeOutline,
   personOutline,
@@ -41,7 +35,6 @@ import {
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 import { createUserSearch } from "../services/api/users";
-import "./ListaItinerarios.css";
 import { closeToast, convertNumberToPrice } from "../services/utils";
 import { Itinerary } from "../models/itinerary.model";
 import { PageHeader } from "../components/PageHeader";
@@ -141,7 +134,7 @@ const ListaItinerarios: React.FC = () => {
           </>
         ) : (
           <>
-            <div className="msg-not-found">
+            <div className="m-6">
               <IonCard>
                 <IonCardContent>
                   <span>
@@ -155,7 +148,7 @@ const ListaItinerarios: React.FC = () => {
                     Deseja criar um alerta para ser notificado caso haja
                     itinerário para essa origem e destino?
                   </span>
-                  <div className="button-criar-alerta">
+                  <div className="flex justify-center items-center mt-5">
                     <IonButton onClick={() => criaAlerta()}>
                       Criar Alerta
                     </IonButton>
@@ -244,7 +237,6 @@ const ListaItinerarios: React.FC = () => {
         </IonModal>
 
         <IonToast
-          // cssClass={"toast-notification"}
           color={toastColor}
           isOpen={showToast}
           onDidDismiss={() => closeToast(setShowToast)}

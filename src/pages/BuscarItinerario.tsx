@@ -16,7 +16,6 @@ import {
   locationOutline,
   timeOutline,
 } from "ionicons/icons";
-import "./BuscarItinerario.css";
 
 import { useState } from "react";
 import { useHistory } from "react-router";
@@ -156,7 +155,7 @@ const BuscarItinerario: React.FC = () => {
       <IonContent fullscreen>
         <IonCard>
           <IonCardContent>
-            <div className="inputs-from-to">
+            <div className="flex items-center">
               <IonIcon icon={locateOutline}></IonIcon>
               <AutoCompleteInput
                 placeholder="R. José Paulino, 1234"
@@ -166,7 +165,7 @@ const BuscarItinerario: React.FC = () => {
                 }
               />
             </div>
-            <div className="inputs-from-to">
+            <div className="flex items-center">
               <IonIcon icon={locationOutline}></IonIcon>
               <AutoCompleteInput
                 placeholder="PUC Campinas"
@@ -174,7 +173,7 @@ const BuscarItinerario: React.FC = () => {
                 onAddressSelected={(address: Address) => setAddressTo(address)}
               />
             </div>
-            <div className="button-search">
+            <div className="flex justify-center mt-[50%]">
               <IonButton color="primary" onClick={() => buscarItinerarios()}>
                 Buscar
               </IonButton>
@@ -185,23 +184,23 @@ const BuscarItinerario: React.FC = () => {
         {recentSearches && recentSearches.length !== 0 ? (
           <>
             <IonItemDivider color="dark">Pesquisas recentes</IonItemDivider>
-            <IonRow class="latest-searches">
+            <IonRow class="m-[1rem]">
               {recentSearches.map((search, index) => {
                 return (
                   <div key={index}>
                     <IonRow
                        
-                      class="latest-searches"
+                      class="m-[1rem]"
                       onClick={() => {
                         fillSearchBars(search.addressFrom, search.addressTo);
                       }}
                     >
                       <IonIcon
-                        className="icon-align-vcenter"
+                        className="self-center"
                         size="large"
                         icon={timeOutline}
                       ></IonIcon>
-                      <div className="div_from_to">
+                      <div className="max-w-[70%]">
                         <span>{search.addressFrom}</span>
                         <IonIcon icon={arrowForwardOutline}></IonIcon>
                         <span>{search.addressTo}</span>
@@ -209,7 +208,7 @@ const BuscarItinerario: React.FC = () => {
                         <small>{search.time}</small>
                       </div>
                       <IonIcon
-                        className="icon-forward icon-align-vcenter"
+                        className="ml-auto mr-0 self-center"
                         size="large"
                         icon={chevronForwardOutline}
                       ></IonIcon>

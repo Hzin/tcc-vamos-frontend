@@ -6,17 +6,16 @@ import {
   IonPage,
 } from "@ionic/react";
 import { search } from "ionicons/icons";
-import "./BuscarPassageiro.css";
 
 import { Map, Marker, Overlay } from "pigeon-maps";
 import { maptiler } from "pigeon-maps/providers";
 import { useEffect, useState } from "react";
 
-import { PageHeader } from "../../components/PageHeader";
-import { UserSearchInfos } from "../../components/UserSearchInfos/UserSearchInfos";
-import { getUsersSearching } from "../../services/api/users";
-import RecordsStore from "../../store/RecordsStore";
-import { fetchRecords } from "../../store/Selectors";
+import { PageHeader } from "../components/PageHeader";
+import { UserSearchInfos } from "../components/UserSearchInfos/UserSearchInfos";
+import { getUsersSearching } from "../services/api/users";
+import RecordsStore from "../store/RecordsStore";
+import { fetchRecords } from "../store/Selectors";
 
 const maptilerProvider = maptiler("d5JQJPLLuap8TkJJlTdJ", "streets");
 
