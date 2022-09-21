@@ -65,14 +65,14 @@ export async function create(itinerary: CreateItineraryRequest) {
 }
 
 export async function search(
-  coordinatesOrigin: Coordinates,
-  coordinatesDestination: Coordinates
+  coordinatesFrom: Coordinates,
+  coordinatesTo: Coordinates
 ) {
   updateHeader();
 
   const response = await instance.post(
     transportsRoutes.search.url,
-    { coordinatesOrigin, coordinatesDestination },
+    { coordinatesFrom, coordinatesTo },
     { headers: header }
   );
   return response.data;

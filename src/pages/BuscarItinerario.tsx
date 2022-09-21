@@ -2,7 +2,6 @@ import {
   IonButton,
   IonCard,
   IonCardContent,
-  IonCheckbox,
   IonContent,
   IonIcon,
   IonItem,
@@ -28,7 +27,6 @@ import { useState } from "react";
 import { useHistory } from "react-router";
 
 import { PageHeader } from "../components/PageHeader";
-import { Itinerary } from "../models/itinerary.model";
 import { closeToast } from "../services/utils";
 
 import { Color } from "@ionic/core";
@@ -49,46 +47,11 @@ const BuscarItinerario: React.FC = () => {
   const [toastColor, setToastColor] = useState<Color>("primary");
 
   const [addressFrom, setAddressFrom] = useState<Address>();
-  const [coordinatesFrom, setCoordinatesFrom] = useState<any>("");
   const [addressTo, setAddressTo] = useState<Address>();
-  const [coordinatesTo, setCoordinatesTo] = useState<any>("");
 
   const [period, setPeriod] = useState();
 
   const [recentSearches, setRecentSearches] = useState<any[]>([]);
-
-  // const optionsAddress = async (inputValue: any) => {
-  //   let results = await autoCompleteAddress(inputValue)
-  //     .then((res) => {
-  //       return res.map((item: any) => {
-  //         return {
-  //           value:
-  //             item.geometry.coordinates[0] + "," + item.geometry.coordinates[1],
-  //           label: item.properties.formatted,
-  //         };
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       console.log("Erro ao buscar endereço:", err);
-  //     });
-  //   setAddressResults(results);
-  // };
-
-  // function setInputActiveOpenModal(input: string) {
-  //   setInputActive(input);
-  //   setShowModalEnd(true);
-  // }
-
-  // function setAddress(div: any) {
-  //   if (inputActive === "from") {
-  //     setAddressFrom(div.target.attributes[2].value);
-  //     setCoordinatesFrom(div.target.attributes[1].value);
-  //   } else {
-  //     setAddressTo(div.target.attributes[2].value);
-  //     setCoordinatesTo(div.target.attributes[1].value);
-  //   }
-  //   setShowModalEnd(false);
-  // }
 
   async function buscarItinerarios() {
     if (!addressFrom) {
@@ -128,6 +91,8 @@ const BuscarItinerario: React.FC = () => {
         time: Date.now(),
       },
     ]);
+
+    console.log(addressFrom)
 
     await searchItineraries
       .searchItineraries({
