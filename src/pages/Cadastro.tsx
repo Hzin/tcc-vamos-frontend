@@ -14,13 +14,12 @@ import {
 } from "@ionic/react";
 import { useContext, useState } from "react";
 import { useHistory, useParams } from "react-router";
-import { UserContext } from "../../App";
-import { Action } from "../../components/Action";
-import { PageHeader } from "../../components/PageHeader";
-import LocalStorage from "../../LocalStorage";
-import * as UsersService from "../../services/api/users";
-import { closeToast } from "../../services/utils";
-import "./Cadastro.css";
+import { UserContext } from "../App";
+import { Action } from "../components/Action";
+import { PageHeader } from "../components/PageHeader";
+import LocalStorage from "../LocalStorage";
+import * as UsersService from "../services/api/users";
+import { closeToast } from "../services/utils";
 
 const Cadastro: React.FC = () => {
   const history = useHistory();
@@ -163,7 +162,7 @@ const Cadastro: React.FC = () => {
           </IonRow>
           <IonRow>
             <IonCol size="12">
-              <div id="nome-sobrenome">
+              <div className="flex">
                 <IonItem>
                   <IonLabel position="floating">Nome</IonLabel>
                   <IonInput

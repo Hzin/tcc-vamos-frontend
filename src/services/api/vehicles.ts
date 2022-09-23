@@ -1,38 +1,17 @@
 import instance from "./api";
 
 import vehiclesRoutes from "../../constants/routes/vehiclesRoutes";
-import { AxiosRequestHeaders } from "axios";
-import LocalStorage from "../../LocalStorage";
-
-let token: string;
-let header: AxiosRequestHeaders;
-
-function updateHeader() {
-  token = LocalStorage.getToken();
-
-  header = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + token,
-  };
-}
 
 export async function getByPlate(vehicleId: string) {
-  updateHeader();
 
-  const response = await instance.get(vehiclesRoutes.getByPlate.url + `/${vehicleId}`, {
-    headers: header,
-  });
+  const response = await instance.get(vehiclesRoutes.getByPlate.url + `/${vehicleId}`);
 
   return response.data;
 }
 
 export async function getByUserId(userId: string) {
-  updateHeader();
 
-  const response = await instance.get(vehiclesRoutes.getByUserId.url + `/${userId}`, {
-    headers: header,
-  });
+  const response = await instance.get(vehiclesRoutes.getByUserId.url + `/${userId}`);
 
   return response.data;
 }
@@ -50,9 +29,8 @@ interface CreateVehicleBody {
 }
 
 export async function create(CreateVehicleBody: CreateVehicleBody) {
-  updateHeader();
 
-  const response = await instance.post(vehiclesRoutes.create.url, CreateVehicleBody, { headers: header });
+  const response = await instance.post(vehiclesRoutes.create.url, CreateVehicleBody);
   return response.data;
 }
 
@@ -63,11 +41,8 @@ interface UpdateVehicleBody {
 }
 
 export async function update(vehicleData: UpdateVehicleBody) {
-  updateHeader();
 
-  const response = await instance.patch(vehiclesRoutes.update.url, vehicleData, {
-    headers: header,
-  });
+  const response = await instance.patch(vehiclesRoutes.update.url, vehicleData);
 
   return response.data;
 }

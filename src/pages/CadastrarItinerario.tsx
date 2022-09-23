@@ -35,11 +35,11 @@ import {
 } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
-import AutoCompleteInput from "../../components/AutoCompleteInput";
-import { CreateItineraryRequest } from "../../services/api/itineraries";
-import * as vehiclesRoutes from "../../services/api/vehicles";
-import { createItinerary } from "../../services/functions/itinerariesService";
-import sessionsService from "../../services/functions/sessionsService";
+import AutoCompleteInput from "../components/AutoCompleteInput";
+import { CreateItineraryRequest } from "../services/api/itineraries";
+import * as vehiclesRoutes from "../services/api/vehicles";
+import { createItinerary } from "../services/functions/itinerariesService";
+import sessionsService from "../services/functions/sessionsService";
 
 const slideOpts = {
   initialSlide: 0,
@@ -104,6 +104,10 @@ export default function CadastrarItinerario() {
   const [van, setVan] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
 
+  //Estados para limpar o valor dos campos após selecionar uma opção
+  const [valueControl1, setValueControl1] = useState<string>("");
+  const [valueControl2, setValueControl2] = useState<string>("");
+
   const redirectUserToLogin = () => {
     history.push({ pathname: "/login" });
   };
@@ -116,28 +120,6 @@ export default function CadastrarItinerario() {
       swiper.slidePrev();
     }
   };
-
-  function formatRange(rangeValue: number) {
-    switch (rangeValue) {
-      case 1:
-        return "Segunda";
-      case 2:
-        return "Terça";
-      case 3:
-        return "Quarta";
-      case 4:
-        return "Quinta";
-      case 5:
-        return "Sexta";
-      case 6:
-        return "Sabádo";
-      case 7:
-        return "Domingo";
-
-      default:
-        return "";
-    }
-  }
 
   useEffect(() => {
     const getUserVans = async () => {
@@ -207,6 +189,7 @@ export default function CadastrarItinerario() {
 
   function addNeighborhood(address: Address) {
     setNeighborhoods((arr) => [...arr, address]);
+    setValueControl1("");
     nextButton2.current!.disabled = false;
   }
 
@@ -219,6 +202,12 @@ export default function CadastrarItinerario() {
     } else {
       nextButton2.current!.disabled = false;
     }
+  }
+
+  function addDestination(address: Address) {
+    setDestinations((arr) => [...arr, address]);
+    setValueControl2("");
+    nextButton2.current!.disabled = false;
   }
 
   function removeDestionation(index: number) {
@@ -368,19 +357,15 @@ export default function CadastrarItinerario() {
           setShowToast(true);
         }
 
-        setToastColor("success");
-        setToastMessage(response.message);
-        setShowToast(true);
-
         history.push({
           pathname: "/meus-itinerarios",
-          // state: {
-          //   redirectData: {
-          //     showToastMessage: true,
-          //     toastColor: "success",
-          //     toastMessage: "Itinerário cadastrado com sucesso!",
-          //   },
-          // },
+          state: {
+            redirectData: {
+              showToastMessage: true,
+              toastColor: "success",
+              toastMessage: "Itinerário cadastrado com sucesso!",
+            },
+          },
         });
       })
       .catch((err: any) => {
@@ -455,9 +440,13 @@ export default function CadastrarItinerario() {
                 <AutoCompleteInput
                   placeholder="R. José Paulino, 1234"
                   className="ml-2"
+                  value={valueControl1}
                   onAddressSelected={(address: Address) =>
                     addNeighborhood(address)
                   }
+                  onChange={(e: any) => {
+                    setValueControl1(e.target.value);
+                  }}
                 />
               </div>
               <div className="mb-3">
@@ -553,9 +542,13 @@ export default function CadastrarItinerario() {
                 <AutoCompleteInput
                   placeholder="R. José Paulino, 1234"
                   className="ml-2"
+                  value={valueControl2}
                   onAddressSelected={(address: Address) =>
-                    setDestinations((arr) => [...arr, address])
+                    addDestination(address)
                   }
+                  onChange={(e: any) => {
+                    setValueControl2(e.target.value);
+                  }}
                 />
               </div>
               <div className="mb-3">
@@ -799,7 +792,11 @@ export default function CadastrarItinerario() {
                   onClick={() => setMonthlyPrice(monthlyPrice - 1)}
                   icon={removeCircleOutline}
                 />
-                <h1 className="text-xl">R$ {monthlyPrice}</h1>
+                <IonInput
+                  type="number"
+                  className="text-2xl"
+                  value={monthlyPrice}
+                />
                 <IonIcon
                   className="text-4xl"
                   size="large"
@@ -824,7 +821,11 @@ export default function CadastrarItinerario() {
                       onClick={() => setDailyPrice(dailyPrice - 1)}
                       icon={removeCircleOutline}
                     />
-                    <h1 className="text-xl">R$ {dailyPrice}</h1>
+                    <IonInput
+                      type="number"
+                      className="text-2xl"
+                      value={dailyPrice}
+                    />
                     <IonIcon
                       className="text-4xl"
                       size="large"

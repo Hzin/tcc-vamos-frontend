@@ -25,7 +25,6 @@ import * as vehiclesRoutes from "../services/api/vehicles";
 import { Color } from "@ionic/core";
 import { PageHeader } from "../components/PageHeader";
 import { closeToast } from "../services/utils";
-import "./VeiculoCadastro.css";
 
 const VeiculoCadastro: React.FC = () => {
   const history = useHistory();
