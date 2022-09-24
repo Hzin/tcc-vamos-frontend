@@ -28,7 +28,7 @@ const IonChipTripStatus = (props: IonChipTripStatusProps) => {
   switch (props.status) {
     case tripStatus.pending:
       ionChipColor = "warning";
-      ionChipLabel = "Pendente";
+      ionChipLabel = "Pendente confirmação";
       break;
     case tripStatus.confirmed:
       ionChipColor = "secondary";

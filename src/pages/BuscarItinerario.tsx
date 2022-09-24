@@ -31,7 +31,7 @@ import { closeToast } from "../services/utils";
 
 import { Color } from "@ionic/core";
 import AutoCompleteInput from "../components/AutoCompleteInput";
-import * as searchItineraries from "../services/functions/itinerariesService";
+import * as itinerariesService from "../services/functions/itinerariesService";
 
 interface Address {
   formatted_address: string;
@@ -94,7 +94,7 @@ const BuscarItinerario: React.FC = () => {
 
     console.log(addressFrom);
 
-    await searchItineraries
+    await itinerariesService
       .searchItineraries({
         coordinatesFrom: addressFrom,
         coordinatesTo: addressTo,
