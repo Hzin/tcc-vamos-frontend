@@ -1,4 +1,13 @@
-import { IonContent, IonPage, IonToast } from "@ionic/react";
+import {
+  IonAccordion,
+  IonAccordionGroup,
+  IonContent,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonPage,
+  IonToast,
+} from "@ionic/react";
 import { Color } from "@ionic/core";
 import { useContext, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
@@ -7,6 +16,10 @@ import { UserContext } from "../App";
 
 import * as sessionRoutes from "../services/api/session";
 import { closeToast } from "../services/utils";
+
+import * as tripsService from "../services/functions/tripsService";
+import { PageHeader } from "../components/PageHeader";
+import { TripCard } from "../components/TripCard";
 
 interface LocationState {
   redirectData?: {
@@ -65,12 +78,80 @@ const Home: React.FC = () => {
     refreshUserToken();
   }, [location.state, user, history]);
 
+  useEffect(() => {
+    getUserTodaysTrips();
+  }, []);
+
+  const [todaysTrips, setTodaysTrips] =
+    useState<tripsService.GetTripsFeedResponse[]>();
+  const [notTodaysTrips, setNotTodaysTrips] =
+    useState<tripsService.GetTripsFeedResponse[]>();
+
+  const getUserTodaysTrips = async () => {
+    await tripsService.getTodaysTrips().then((response) => {
+      setTodaysTrips(response);
+    });
+
+    await tripsService.getNotTodaysTrips().then((response) => {
+      setNotTodaysTrips(response);
+    });
+  };
+
   return (
     <IonPage>
+      <PageHeader pageName="Página inicial" />
+
       <IonContent>
-        <div className="m-3">
-          <h1 className="mb-3 text-xl">Suas viagens</h1>
-        </div>
+        <IonList>
+          <IonAccordionGroup value="today">
+            <IonAccordion value="today">
+              <IonItem slot="header" color="primary">
+                <IonLabel>Viagens de hoje</IonLabel>
+              </IonItem>
+
+              {todaysTrips ? (
+                todaysTrips.map((tripInfo, index) => {
+                  return (
+                    <TripCard
+                      key={index}
+                      slot="content"
+                      itinerary={tripInfo.itinerary}
+                      tripStatus={tripInfo.tripStatus}
+                    ></TripCard>
+                  );
+                })
+              ) : (
+                <div className="ion-padding" slot="content">
+                  Sem viagens para hoje!
+                </div>
+              )}
+            </IonAccordion>
+          </IonAccordionGroup>
+
+          <IonAccordionGroup value="nottoday">
+            <IonAccordion>
+              <IonItem slot="header" color="primary">
+                <IonLabel>Próximas viagens</IonLabel>
+              </IonItem>
+
+              {notTodaysTrips ? (
+                notTodaysTrips.map((tripInfo, index) => {
+                  return (
+                    <TripCard
+                      key={index}
+                      slot="content"
+                      itinerary={tripInfo.itinerary}
+                    ></TripCard>
+                  );
+                })
+              ) : (
+                <div className="ion-padding" slot="content">
+                  Sem próximas viagens!
+                </div>
+              )}
+            </IonAccordion>
+          </IonAccordionGroup>
+        </IonList>
 
         <IonToast
           position="top"
