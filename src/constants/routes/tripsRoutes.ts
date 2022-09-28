@@ -1,6 +1,3 @@
-import { HeadersDefaults } from "axios";
-import { get } from "http";
-
 const tripsRoutesDefault = '/trips';
 const tripsRoutes = {
   getTodaysTrips: {
@@ -11,6 +8,9 @@ const tripsRoutes = {
   },
   getTrip: {
     url: `${tripsRoutesDefault}`
+  },
+  getTripByItineraryId: {
+    url: `${tripsRoutesDefault}/itinerary`
   },
   getTodaysTripStatusByItineraryId: {
     url: `${tripsRoutesDefault}/today/status/itinerary`

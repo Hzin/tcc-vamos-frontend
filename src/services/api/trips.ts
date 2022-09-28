@@ -3,8 +3,9 @@ import instance from "./api";
 import { AxiosRequestHeaders } from "axios";
 import tripsRoutes from "../../constants/routes/tripsRoutes";
 import LocalStorage from "../../LocalStorage";
-import { ChangeTripStatusResponse, GetTripResponse, GetTripsFeedResponse } from "../functions/tripsService";
+import { ChangeTripStatusResponse, GetTripsFeedResponse } from "../functions/tripsService";
 import { tripStatus } from "../../constants/tripStatus";
+import { Trip } from "../../models/trip.model";
 
 let token: string;
 let header: AxiosRequestHeaders;
@@ -37,7 +38,7 @@ export async function getNotTodaysTrips(): Promise<GetTripsFeedResponse[]> {
   return response.data;
 }
 
-export async function getTrip(tripId: string): Promise<GetTripResponse[]> {
+export async function getTrip(tripId: string): Promise<Trip> {
   updateHeader();
 
   const response = await instance.get(tripsRoutes.getTrip.url + `/${tripId}`, {

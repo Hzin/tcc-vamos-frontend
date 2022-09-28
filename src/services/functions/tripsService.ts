@@ -1,4 +1,3 @@
-import { AppErrorResponse } from "../../constants/AppErrorResponse";
 import { tripStatus } from "../../constants/tripStatus";
 import { Itinerary } from "../../models/itinerary.model";
 import { Trip } from "../../models/trip.model";
@@ -7,10 +6,7 @@ import * as tripsRoutes from "../api/trips";
 export interface GetTripsFeedResponse {
   itinerary: Itinerary;
   tripStatus: tripStatus;
-}
-
-export interface GetTripResponse {
-  trip: Trip
+  tripId?: string // vai ser trazido caso a viagem existir
 }
 
 export interface ChangeTripStatusResponse {
@@ -41,7 +37,7 @@ export async function getNotTodaysTrips(): Promise<GetTripsFeedResponse[]> {
   return res.data;
 }
 
-export async function getTrip(tripId: string): Promise<GetTripResponse> {
+export async function getTrip(tripId: string): Promise<Trip> {
   let res: any;
 
   try {

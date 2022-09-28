@@ -24,3 +24,15 @@ export function convertNumberToPrice(price: number) {
 export function reloadPage() {
   window.location.reload();
 }
+
+export function startTime() {
+  // setInterval(() => {
+  const today = new Date();
+  let dd = String(today.getDate()).padStart(2, "0");
+  let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+  let yyyy = today.getFullYear();
+
+  const todayDate = dd + "/" + mm + "/" + yyyy;
+  return todayDate;
+  // }, 1000);
+}

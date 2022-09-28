@@ -15,7 +15,7 @@ import { useHistory, useLocation } from "react-router";
 import { UserContext } from "../App";
 
 import * as sessionRoutes from "../services/api/session";
-import { closeToast } from "../services/utils";
+import { closeToast, startTime } from "../services/utils";
 
 import * as tripsService from "../services/functions/tripsService";
 import { PageHeader } from "../components/PageHeader";
@@ -35,11 +35,15 @@ const Home: React.FC = () => {
 
   const user = useContext(UserContext);
 
+  const [clock, setClock] = useState<any>();
+
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
   useEffect(() => {
+    setClock(startTime());
+
     if (location.state && location.state.redirectData) {
       const redirectData = location.state.redirectData;
 
@@ -106,7 +110,7 @@ const Home: React.FC = () => {
           <IonAccordionGroup value="today">
             <IonAccordion value="today">
               <IonItem slot="header" color="primary">
-                <IonLabel>Viagens de hoje</IonLabel>
+                <IonLabel>Viagens de hoje - {clock}</IonLabel>
               </IonItem>
 
               {todaysTrips ? (
@@ -117,6 +121,8 @@ const Home: React.FC = () => {
                       slot="content"
                       itinerary={tripInfo.itinerary}
                       tripStatus={tripInfo.tripStatus}
+                      clickable={true}
+                      tripId={tripInfo.tripId}
                     ></TripCard>
                   );
                 })
@@ -141,6 +147,7 @@ const Home: React.FC = () => {
                       key={index}
                       slot="content"
                       itinerary={tripInfo.itinerary}
+                      clickable={false}
                     ></TripCard>
                   );
                 })

@@ -16,21 +16,24 @@ import { Itinerary } from "../models/itinerary.model";
 
 import * as tripsService from "../services/api/trips";
 
-import { reloadPage } from '../services/utils'
+import { reloadPage } from "../services/utils";
 
 import { useHistory } from "react-router";
+import { useState } from "react";
 
 interface ComponentProps {
   itinerary: Itinerary;
   tripStatus?: string;
   slot?: string;
+  clickable: boolean;
+  tripId?: string;
 }
 
 interface IonChipTripStatusProps {
   status: string;
 }
 
-const IonChipTripStatus = (props: IonChipTripStatusProps) => {
+export const IonChipTripStatus = (props: IonChipTripStatusProps) => {
   let ionChipColor = "",
     ionChipLabel = "";
 
@@ -100,7 +103,8 @@ export const TripCard = (props: ComponentProps) => {
   const handleConfirmTrip = async (itineraryId: string) => {
     await tripsService.confirmTrip(itineraryId).then((response) => {
       if (!response.data) {
-        refreshPage("Houve um erro ao cancelar a viagem!", "warning");
+        refreshPage("Houve um erro ao confirmar a viagem!", "warning");
+        console.log(response);
         return;
       }
 
@@ -175,7 +179,9 @@ export const TripCard = (props: ComponentProps) => {
   };
 
   const redirectToTripPage = (itineraryId: string) => {
-    // TODO
+    history.push({
+      pathname: `/viagem/${itineraryId}`,
+    });
   };
 
   const handleLoadTrip = async (
@@ -187,7 +193,7 @@ export const TripCard = (props: ComponentProps) => {
       .then((response) => {
         switch (response) {
           case tripStatus.confirmed:
-            redirectToTripPage(itineraryId);
+            if (props.tripId) redirectToTripPage(props.tripId);
             break;
           case tripStatus.pending:
             handleChooseActionTripAlert(itineraryId, itineraryNickname);
@@ -200,9 +206,10 @@ export const TripCard = (props: ComponentProps) => {
 
   return (
     <IonCard
-      button
+      button={props.clickable}
       slot={props.slot}
       onClick={() => {
+        if (!props.clickable) return;
         handleLoadTrip(
           "" + props.itinerary.id_itinerary,
           props.itinerary.itinerary_nickname

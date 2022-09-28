@@ -34,6 +34,9 @@ import BuscarItinerario from "./pages/BuscarItinerario";
 import BuscarPassageiro from "./pages/BuscarPassageiro/BuscarPassageiro";
 import ListaItinerarios from "./pages/ListaItinerarios";
 
+import Buscas from "./pages/Buscas";
+import Viagem from "./pages/Viagem";
+
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -55,7 +58,6 @@ import "./theme/variables.css";
 
 /* Tailwind styles */
 import "./theme/tailwind.css";
-import Buscas from "./pages/Buscas";
 
 setupIonicReact();
 
@@ -94,6 +96,9 @@ const routes = (
     <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
     <Route exact path="/buscar/passageiro" component={BuscarPassageiro}></Route>
     <Route exact path="/buscar/itinerario/lista" component={ListaItinerarios}></Route>
+
+    <Route exact path="/viagem" component={Home}></Route>
+    <Route exact path="/viagem/:id" component={Viagem}></Route>
 
     <Route exact path="/">
       <Redirect to="/home" />
