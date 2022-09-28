@@ -16,15 +16,15 @@ export const PageHeader = (props: ComponentProps) => (
   <IonHeader translucent>
     <IonToolbar>
       <IonTitle>{props.pageName}</IonTitle>
-      <IonButtons slot="start">
-        <IonBackButton
-          text=""
-          defaultHref={
-            props.backButtonPageUrl ? props.backButtonPageUrl : undefined
-          }
-          icon={props.backButtonIcon ? props.backButtonIcon : undefined}
-        />
-      </IonButtons>
+      {props.backButtonPageUrl && (
+        <IonButtons slot="start">
+          <IonBackButton
+            text=""
+            defaultHref={props.backButtonPageUrl}
+            icon={props.backButtonIcon}
+          />
+        </IonButtons>
+      )}
     </IonToolbar>
   </IonHeader>
 );
