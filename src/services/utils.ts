@@ -20,3 +20,7 @@ export function convertNumberToPrice(price: number) {
 
   return formatter.format(price);
 }
+
+export function reloadPage() {
+  window.location.reload();
+}
