@@ -37,6 +37,8 @@ import ListaItinerarios from "./pages/ListaItinerarios";
 import Buscas from "./pages/Buscas";
 import Viagem from "./pages/Viagem";
 
+import ModerarDocumentos from "./pages/ModerarDocumentos";
+
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -99,6 +101,8 @@ const routes = (
 
     <Route exact path="/viagem" component={Home}></Route>
     <Route exact path="/viagem/:id" component={Viagem}></Route>
+
+    <Route exact path="/documentos/moderar" component={ModerarDocumentos}></Route>
 
     <Route exact path="/">
       <Redirect to="/home" />
