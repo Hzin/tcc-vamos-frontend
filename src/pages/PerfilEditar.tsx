@@ -1,25 +1,19 @@
 import {
-  IonBackButton,
-  IonButtons,
   IonContent,
   IonFab,
   IonFabButton,
   IonGrid,
-  IonHeader,
   IonIcon,
   IonInput,
   IonItem,
   IonLabel,
   IonPage,
   IonTextarea,
-  IonTitle,
   IonToast,
-  IonToolbar,
 } from "@ionic/react";
 import React, { useEffect, useReducer, useState } from "react";
 import { IonRow, IonCol } from "@ionic/react";
 
-import "./Perfil.css";
 import { useHistory, useLocation } from "react-router";
 import { saveOutline } from "ionicons/icons";
 
@@ -27,7 +21,6 @@ import isEqual from "lodash.isequal";
 
 import * as usersRoutes from "../services/api/users";
 
-import "./Cadastro/Cadastro.css";
 import { Color } from "@ionic/core";
 import { closeToast } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
@@ -133,7 +126,7 @@ const PerfilEditar: React.FC = () => {
         <IonGrid>
           <IonRow>
             <IonCol size="12">
-              <div id="nome-sobrenome">
+              <div className="flex">
                 <IonItem>
                   <IonLabel position="stacked"> Nome</IonLabel>
                   <IonInput

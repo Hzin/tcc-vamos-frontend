@@ -1,23 +1,7 @@
 import instance from "./api";
-// import LocalStorage from '../LocalStorage';
 
-import { AxiosRequestHeaders } from "axios";
 import transportsRoutes from "../../constants/routes/itinerariesRoutes";
-import LocalStorage from "../../LocalStorage";
 import { SearchItinerariesRequest } from "../functions/itinerariesService";
-
-let token: string;
-let header: AxiosRequestHeaders;
-
-function updateHeader() {
-  token = LocalStorage.getToken();
-
-  header = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + token,
-  };
-}
 
 export interface Coordinates {
   lat: number;
@@ -48,31 +32,23 @@ export interface CreateItineraryRequest {
 }
 
 export async function getItineraries() {
-  updateHeader();
 
-  const response = await instance.get(transportsRoutes.get.url, {
-    headers: header,
-  });
+  const response = await instance.get(transportsRoutes.get.url);
   return response.data;
 }
 
 export async function create(itinerary: CreateItineraryRequest) {
-  updateHeader();
 
-  const response = await instance.post(transportsRoutes.create.url, itinerary, {
-    headers: header,
-  });
+  const response = await instance.post(transportsRoutes.create.url, itinerary);
   return response.data;
 }
 
 export async function search(body: SearchItinerariesRequest
 ) {
-  updateHeader();
 
   const response = await instance.post(
     transportsRoutes.search.url,
     body,
-    { headers: header }
   );
   return response.data;
 }

@@ -15,7 +15,7 @@ import { Redirect, Route } from "react-router-dom";
 import { home, person, search } from "ionicons/icons";
 
 // importação das páginas
-import Cadastro from "./pages/Cadastro/Cadastro";
+import Cadastro from "./pages/Cadastro";
 import CadastroCompletar from "./pages/CadastroCompletar/CadastroCompletar";
 import CompletarDocumento from "./pages/CadastroCompletar/CompletarDocumento";
 import CompletarTelefone from "./pages/CadastroCompletar/CompletarTelefone";
@@ -25,13 +25,13 @@ import Login from "./pages/Login";
 import Perfil from "./pages/Perfil";
 import PerfilEditar from "./pages/PerfilEditar";
 
-import CadastrarItinerario from "./pages/CadastrarItinerario/CadastrarItinerario";
-import MeusItinerarios from "./pages/MeusItinerarios/MeusItinerarios";
+import CadastrarItinerario from "./pages/CadastrarItinerario";
+import MeusItinerarios from "./pages/MeusItinerarios";
 import MeusVeiculos from "./pages/MeusVeiculos";
 import VeiculoCadastro from "./pages/VeiculoCadastro";
 
 import BuscarItinerario from "./pages/BuscarItinerario";
-import BuscarPassageiro from "./pages/BuscarPassageiro/BuscarPassageiro";
+import BuscarPassageiro from "./pages/BuscarPassageiro";
 import ListaItinerarios from "./pages/ListaItinerarios";
 
 import Buscas from "./pages/Buscas";

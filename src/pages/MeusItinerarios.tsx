@@ -1,6 +1,4 @@
 import {
-  IonBackButton,
-  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -8,17 +6,17 @@ import {
   IonContent,
   IonFab,
   IonFabButton,
-  IonHeader,
   IonIcon,
   IonPage,
-  IonTitle,
-  IonToolbar,
+  IonToast,
 } from "@ionic/react";
 import { add, locateOutline, locationOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
-import { getItineraries } from "../../services/api/itineraries";
-import { PageHeader } from "../../components/PageHeader";
-import "./MeusItinerarios.css";
+import { getItineraries } from "../services/api/itineraries";
+import { PageHeader } from "../components/PageHeader";
+import { useHistory, useLocation } from "react-router";
+import { Color } from "@ionic/core";
+import { closeToast } from "../services/utils";
 
 interface Address {
   formatted_address: string;
@@ -47,8 +45,35 @@ interface ItineraryInfo {
   destinations: Destination[];
 }
 
+interface LocationState {
+  redirectData?: {
+    showToastMessage: boolean;
+    toastColor: Color;
+    toastMessage: string;
+  };
+}
+
 export default function MeusItinerarios() {
   const [routes, setRoutes] = useState<ItineraryInfo[]>([]);
+  
+  const location = useLocation<LocationState>();
+  const history = useHistory();
+
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastColor, setToastColor] = useState<Color>("primary");
+
+  useEffect(() => {
+    if (location.state && location.state.redirectData) {
+      const redirectData = location.state.redirectData;
+
+      if (redirectData.showToastMessage) {
+        setToastColor(redirectData.toastColor);
+        setToastMessage(redirectData.toastMessage);
+        setShowToast(true);
+      }
+    }
+  }, [location.state, history]);
 
   useEffect(() => {
     getItineraries().then((response) => {
@@ -72,21 +97,21 @@ export default function MeusItinerarios() {
                   <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
-                  <div className="addresses-itinerary">
+                  <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
                     <IonIcon icon={locateOutline} className="mr-1"></IonIcon>
                     {itinerary.estimated_departure_address}
                   </div>
-                  <div className="icons-location-divider">
+                  <div className="ml-[0.33rem] mb-[0.4rem]">
                     | 
                   </div>
-                  <div className="addresses-itinerary">
+                  <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
                     <IonIcon icon={locationOutline} className="mr-1"></IonIcon>
-                    {itinerary.destinations.map((destination) => {
+                    {itinerary.destinations.map((destination, index) => {
                       if (destination.is_final) {
                         return ( 
-                          <>
+                          <div key={index}>
                             {destination.formatted_address}
-                          </>
+                          </div>
                         )
                       }
                     })}
@@ -96,7 +121,7 @@ export default function MeusItinerarios() {
             );
           })
         ) : (
-          <h1 className="msg-not-found">
+          <h1 className="m-6">
             Você ainda não possui nenhum itinerário cadastrado!
           </h1>
         )}
@@ -105,6 +130,15 @@ export default function MeusItinerarios() {
             <IonIcon icon={add}></IonIcon>
           </IonFabButton>
         </IonFab>
+
+        <IonToast
+          position="top"
+          color={toastColor}
+          isOpen={showToast}
+          onDidDismiss={() => closeToast(setShowToast)}
+          message={toastMessage}
+          duration={2500}
+        />
       </IonContent>
     </IonPage>
   );

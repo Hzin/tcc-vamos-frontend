@@ -33,7 +33,6 @@ import {
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 import { createUserSearch } from "../services/api/users";
-import "./ListaItinerarios.css";
 import { closeToast, convertNumberToPrice } from "../services/utils";
 import { Itinerary } from "../models/itinerary.model";
 import { PageHeader } from "../components/PageHeader";
@@ -325,7 +324,6 @@ const ListaItinerarios: React.FC = () => {
         </IonModal>
 
         <IonToast
-          // cssClass={"toast-notification"}
           color={toastColor}
           isOpen={showToast}
           onDidDismiss={() => closeToast(setShowToast)}

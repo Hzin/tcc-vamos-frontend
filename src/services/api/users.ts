@@ -1,23 +1,7 @@
 import instance from "./api";
-// import LocalStorage from '../LocalStorage';
 
-import { AxiosRequestHeaders } from "axios";
 import userRoutes from "../../constants/routes/usersRoutes";
-import LocalStorage from "../../LocalStorage";
 import { setStore } from "../../store/RecordsStore";
-
-let token: string;
-let header: AxiosRequestHeaders;
-
-function updateHeader() {
-  token = LocalStorage.getToken();
-
-  header = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + token,
-  };
-}
 
 export interface CadastroResponse {
   message?: string;
@@ -47,54 +31,42 @@ export interface UpdateUserRequest {
 }
 
 // export async function get(cpf) {
-//   updateHeader();
 
 //   const response = await instance.get(userRoutes.get.url + `/${cpf}`, { headers: header });
 //   return response.data;
 // }
 
 export async function create(CadastroRequest: any) {
-  updateHeader();
 
   const response = await instance.post(userRoutes.create.url, CadastroRequest);
   return response.data;
 }
 
 export async function getById(userId: string) {
-  updateHeader();
 
-  const response = await instance.get(userRoutes.get.url + `/${userId}`, {
-    headers: header,
-  });
+  const response = await instance.get(userRoutes.get.url + `/${userId}`);
   return response.data;
 }
 
 export async function update(userData: UpdateUserRequest) {
-  updateHeader();
 
-  const response = await instance.patch(userRoutes.update.url, userData, {
-    headers: header,
-  });
+  const response = await instance.patch(userRoutes.update.url, userData);
   return response.data;
 }
 
 export async function checkIfUserIsDriver(id_user: string) {
-  updateHeader();
 
   const response = await instance.get(
-    userRoutes.checkIfUserIsDriver.url + `/${id_user}`,
-    { headers: header }
+    userRoutes.checkIfUserIsDriver.url + `/${id_user}`
   );
   return response.data;
 }
 
 // TODO, continuar
 export async function getSocialInfo(userId: string) {
-  updateHeader();
 
   const response = await instance.get(
-    userRoutes.getSocialInfo.url + `/${userId}`,
-    { headers: header }
+    userRoutes.getSocialInfo.url + `/${userId}`
   );
   return response.data;
 }
