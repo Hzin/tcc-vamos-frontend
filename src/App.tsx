@@ -29,6 +29,7 @@ import VinculoVan from './pages/VinculoVan';
 import VinculoVanEditar from './pages/VinculoVanEditar';
 import Contratos from './pages/Contratos';
 import SolicitaEntradaVan from './pages/SolicitaEntradaVan';
+import ListaDePresenca from './pages/ListaDePresenca'; 
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -63,46 +64,6 @@ setupIonicReact();
 const routes = (
   <>
     <Route exact path="/cadastro" component={Cadastro}></Route>
-    <Route exact path="/login" component={Login}></Route>
-
-    <Route exact path="/home" component={Home}></Route>
-
-    <Route exact path="/perfil" component={Perfil}></Route>
-    <Route exact path="/perfil/editar" component={PerfilEditar}></Route>
-    <Route exact path="/perfil/completar" component={CadastroCompletar}></Route>
-    <Route
-      exact
-      path="/perfil/completar/documento"
-      component={CompletarDocumento}
-    ></Route>
-    <Route
-      exact
-      path="/perfil/completar/telefone"
-      component={CompletarTelefone}
-    ></Route>
-
-    <Route exact path="/transportes" component={Transportes}></Route>
-    <Route exact path="/buscar-passageiro" component={BuscarPassageiro}></Route>
-    <Route exact path="/buscar-transporte" component={BuscarTransporte}></Route>
-
-    <Route exact path="/usuario/:id" component={Perfil}></Route>
-
-    <Route exact path="/cadastro-van" component={CadastroVan}></Route>
-    <Route exact path="/minhas-vans" component={MinhasVans}></Route>
-    <Route
-      exact
-      path="/cadastrar-itinerario"
-      component={CadastrarItinerario}
-    ></Route>
-    <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
-    <Route exact path="/">
-      <Redirect to="/login" />
-    </Route>
-  </>
-);
-
-<>
-  <Route exact path="/cadastro" component={Cadastro}></Route>
   <Route exact path="/login" component={Login}></Route>
 
   <Route exact path="/home" component={Home}></Route>
@@ -126,9 +87,16 @@ const routes = (
   <Route exact path="/vinculo-van-editar" component={VinculoVanEditar}></Route>
   <Route exact path="/contratos" component={Contratos}></Route>
   <Route exact path="/solicita-entrada-van" component={SolicitaEntradaVan}></Route>
+  <Route exact path="/lista-de-presenca" component={ListaDePresenca}></Route>
+
   <Route exact path="/">
     <Redirect to="/login" />
   </Route>
+  </>
+);
+
+<>
+  
 </>
 
 interface IUserManager {
