@@ -1,26 +1,19 @@
 import {
-  IonBackButton,
   IonBadge,
-  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
   IonChip,
   IonContent,
-  IonHeader,
   IonIcon,
   IonItem,
   IonLabel,
   IonList,
   IonListHeader,
   IonPage,
-  IonTitle,
   IonToast,
-  IonToolbar,
 } from "@ionic/react";
-import { useHistory, useLocation } from "react-router-dom";
-import React, { useState, useEffect, useReducer, useContext } from "react";
 import {
   callOutline,
   cardOutline,
@@ -32,14 +25,18 @@ import {
   shieldCheckmarkOutline,
   starOutline,
 } from "ionicons/icons";
+import React, { useContext, useEffect, useReducer, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 
-import "./Perfil.css";
 import LocalStorage from "../LocalStorage";
+import "./Perfil.css";
 
-import sessionsService from "../services/functions/sessionsService";
-import usersService from "../services/functions/usersService";
-import { UserContext } from "../App";
 import { Color } from "@ionic/core";
+import { UserContext } from "../App";
+import { PageHeader } from "../components/PageHeader";
+import sessionsService from "../services/functions/sessionsService";
+import * as usersService from "../services/functions/usersService";
+import { closeToast } from "../services/utils";
 
 interface ScanNewProps {
   match: {
@@ -211,38 +208,24 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
   return (
     <IonPage>
-      <IonHeader translucent>
-        <IonToolbar>
-          <IonTitle>Seu perfil</IonTitle>
-          <IonButtons slot="start">
-            <IonBackButton text="" defaultHref="/home" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader pageName="Meu perfil"></PageHeader>
 
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Seu perfil</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-
         <IonCard>
           <IonCardContent>
             <img
               src="https://static.generated.photos/vue-static/home/feed/adult.png"
               alt="avatar"
-              className="avatar"
-              id="avatar"
+              className="rounded w-28 h-28 block mx-auto"
             />
-            {/* <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/faa68f71f3b2a48ca89228c2c2aa72d3" alt="avatar" className='avatar' id='avatar'/> */}
+            {/* <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/faa68f71f3b2a48ca89228c2c2aa72d3" alt="avatar" className="rounded w-28 h-28 block mx-auto"/> */}
             <IonCardHeader>
               <IonCardTitle class="ion-text-center">
                 {inputValues.name} {inputValues.lastname}
               </IonCardTitle>
             </IonCardHeader>
 
-            <div id="profile-status">
+            <div className="text-center">
               {isDriver ? (
                 <>
                   <IonChip>
@@ -334,20 +317,20 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
             <IonItem
               button
-              onClick={() => history.push({ pathname: "/cadastro-van" })}
+              onClick={() => history.push({ pathname: "/veiculos/cadastrar" })}
             >
               <IonIcon icon={carOutline} slot="start" />
-              <IonLabel>Cadastrar van</IonLabel>
+              <IonLabel>Cadastrar veículo</IonLabel>
             </IonItem>
 
             {isDriver ? (
               <>
                 <IonItem
                   button
-                  onClick={() => history.push({ pathname: "/minhas-vans" })}
+                  onClick={() => history.push({ pathname: "/veiculos/meus" })}
                 >
                   <IonIcon icon={carOutline} slot="start" />
-                  <IonLabel>Minhas vans</IonLabel>
+                  <IonLabel>Meus veículos</IonLabel>
                 </IonItem>
                 <IonItem
                   button
@@ -357,6 +340,15 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                 >
                   <IonIcon icon={personOutline} slot="start" />
                   <IonLabel>Buscar passageiros</IonLabel>
+                </IonItem>
+                <IonItem
+                  button
+                  onClick={() =>
+                    history.push({ pathname: "/cadastrar-itinerario" })
+                  }
+                >
+                  <IonIcon icon={mapOutline} slot="start" />
+                  <IonLabel>Cadastrar itinerário</IonLabel>
                 </IonItem>
                 <IonItem
                   button
@@ -393,7 +385,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
           position="top"
           color={toastColor}
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
+          onDidDismiss={() => closeToast(setShowToast)}
           message={toastMessage}
           duration={2500}
         />

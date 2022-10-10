@@ -4,15 +4,9 @@ import {
   IonCardSubtitle,
   IonCol,
   IonIcon,
-  IonNote,
   IonRow,
 } from "@ionic/react";
-import {
-  arrowForward,
-  call,
-  callOutline,
-  navigateOutline,
-} from "ionicons/icons";
+import { call, callOutline, navigateOutline } from "ionicons/icons";
 import "./UserSearchInfos.css";
 
 export const UserSearchInfos = (record: any) => {
@@ -28,7 +22,7 @@ export const UserSearchInfos = (record: any) => {
       </IonBadge>
 
       <p>
-        <IonIcon icon={navigateOutline} size='large' />
+        <IonIcon icon={navigateOutline} size="large" />
         &nbsp;{record.record.address_to}
       </p>
 
