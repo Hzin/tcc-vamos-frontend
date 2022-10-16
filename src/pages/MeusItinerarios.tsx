@@ -91,8 +91,9 @@ export default function MeusItinerarios() {
   }, [])
 
   function editItinerary(itinerary: ItineraryInfo) {
-    setSelectedItinerary(itinerary);
-    setShowModalEditItinerary(true);
+    // setSelectedItinerary(itinerary);
+    // setShowModalEditItinerary(true);
+    history.push("/editar-itinerario", { itinerary });
   }
 
   return (
