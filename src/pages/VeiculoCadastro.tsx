@@ -282,7 +282,7 @@ const VeiculoCadastro: React.FC = () => {
               {carBrands ? (
                 carBrands.map((carBrand, index) => {
                   return (
-                    <IonSelectOption key={index} value={index}>
+                    <IonSelectOption key={index} value={carBrand.codigo}>
                       {carBrand.nome}
                     </IonSelectOption>
                   );
