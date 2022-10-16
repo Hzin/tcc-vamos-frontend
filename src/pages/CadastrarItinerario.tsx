@@ -83,8 +83,6 @@ export default function CadastrarItinerario() {
   const nextButton2 = useRef<HTMLIonButtonElement>(null);
   const nextButton3 = useRef<HTMLIonButtonElement>(null);
   const nextButton4 = useRef<HTMLIonButtonElement>(null);
-  const nextButton5 = useRef<HTMLIonButtonElement>(null);
-  const nextButton6 = useRef<HTMLIonButtonElement>(null);
 
   const [specificDate, setSpecificDate] = useState<boolean>(false);
   const [singleVacancy, setSingleVacancy] = useState<boolean>(false);
@@ -177,9 +175,9 @@ export default function CadastrarItinerario() {
 
   useEffect(() => {
     if (van) {
-      nextButton6.current!.disabled = false;
+      nextButton4.current!.disabled = false;
     } else {
-      nextButton6.current!.disabled = true;
+      nextButton4.current!.disabled = true;
     }
   }, [van]);
 
@@ -895,7 +893,7 @@ export default function CadastrarItinerario() {
                   <IonIcon icon={arrowBack} />
                 </IonButton>
                 <IonButton
-                  ref={nextButton6}
+                  ref={nextButton4}
                   disabled
                   onClick={() => onBtnClicked("next")}
                   color="primary"
