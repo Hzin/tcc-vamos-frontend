@@ -15,4 +15,19 @@ const getBaseUrl = (): string => {
   return apiUrl;
 }
 
-export default { getBaseUrl };
+const getStaticUrl = (): string => {
+  // const { hostname } = window.location;
+  const { url } = environment;
+
+  let apiUrl = null;
+  
+  // if (hostname === '') {
+  //   apiUrl = url.prod;
+  // } else {
+    apiUrl = url.local + '/static';
+  // }
+
+  return apiUrl;
+}
+
+export default { getBaseUrl, getStaticUrl };

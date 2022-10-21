@@ -28,6 +28,7 @@ import PerfilEditar from "./pages/PerfilEditar";
 import CadastrarItinerario from "./pages/CadastrarItinerario";
 import MeusItinerarios from "./pages/MeusItinerarios";
 import MeusVeiculos from "./pages/MeusVeiculos";
+import Veiculo from "./pages/Veiculo";
 import VeiculoCadastro from "./pages/VeiculoCadastro";
 
 import BuscarItinerario from "./pages/BuscarItinerario";
@@ -92,6 +93,10 @@ const routes = (
       path="/cadastrar-itinerario"
       component={CadastrarItinerario}
     ></Route>
+    <Route exact path="/veiculo" component={Home}></Route>
+    <Route exact path="/veiculo/placa" component={Home}></Route>
+    <Route exact path="/veiculo/placa/:id" component={Veiculo}></Route>
+
     <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
 
     <Route exact path="/buscas" component={Buscas}></Route>

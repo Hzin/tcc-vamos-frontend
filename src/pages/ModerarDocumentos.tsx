@@ -20,7 +20,6 @@ const ModerarDocumentos: React.FC = () => {
       ></PageHeader>
 
       <IonContent fullscreen>
-        
         <IonToast
           position="top"
           color="danger"

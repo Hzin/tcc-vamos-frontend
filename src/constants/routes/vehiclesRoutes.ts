@@ -14,6 +14,18 @@ const vehiclesRoutes = {
   },
   update: {
     url: `${vehiclesRoutesDefault}/`
+  },
+  searchFile: {
+    url: `${vehiclesRoutesDefault}/document/search`
+  },
+  uploadFile: {
+    url: `${vehiclesRoutesDefault}/document/upload`
+  },
+  deleteFile: {
+    url: `${vehiclesRoutesDefault}/document/delete`
+  },
+  updateDocumentStatus: {
+    url: `${vehiclesRoutesDefault}/document/status`
   }
 }
 
