@@ -14,11 +14,11 @@ export async function getByPlate(vehicle_plate: string): Promise<Vehicle> {
   return res.data;
 }
 
-export async function searchFile(vehicle_plate: string, document_type: string): Promise<Vehicle> {
+export async function searchDocumentFile(vehicle_plate: string, document_type: string): Promise<Vehicle> {
   let res: any;
 
   try {
-    res = await vehiclesRoutes.searchFile({ vehicle_plate, document_type });
+    res = await vehiclesRoutes.searchDocumentFile({ vehicle_plate, document_type });
   } catch (error) {
     // TODO
   }
@@ -30,7 +30,7 @@ interface UploadFileResponse {
   message?: string
 }
 
-export async function uploadFile(file: File, vehicle_plate: string, document_type: string): Promise<UploadFileResponse> {
+export async function uploadDocumentFile(file: File, vehicle_plate: string, document_type: string): Promise<UploadFileResponse> {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('vehicle_plate', vehicle_plate)
@@ -39,7 +39,7 @@ export async function uploadFile(file: File, vehicle_plate: string, document_typ
   let res: any;
 
   try {
-    res = await vehiclesRoutes.uploadFile(formData);
+    res = await vehiclesRoutes.uploadDocumentFile(formData);
   } catch (error) {
     // TODO
   }
@@ -47,11 +47,39 @@ export async function uploadFile(file: File, vehicle_plate: string, document_typ
   return res;
 }
 
-export async function deleteFile(vehicle_plate: string, document_type: string): Promise<Vehicle> {
+export async function uploadPictureFile(file: File, vehicle_plate: string): Promise<UploadFileResponse> {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('vehicle_plate', vehicle_plate)
+
   let res: any;
 
   try {
-    res = await vehiclesRoutes.deleteFile({ vehicle_plate, document_type });
+    res = await vehiclesRoutes.uploadPictureFile(formData);
+  } catch (error) {
+    // TODO
+  }
+
+  return res;
+}
+
+export async function deleteDocumentFile(vehicle_plate: string, document_type: string): Promise<Vehicle> {
+  let res: any;
+
+  try {
+    res = await vehiclesRoutes.deleteDocumentFile({ vehicle_plate, document_type });
+  } catch (error) {
+    // TODO
+  }
+
+  return res.data;
+}
+
+export async function deletePictureFile(vehicle_plate: string): Promise<Vehicle> {
+  let res: any;
+
+  try {
+    res = await vehiclesRoutes.deletePictureFile({ vehicle_plate });
   } catch (error) {
     // TODO
   }

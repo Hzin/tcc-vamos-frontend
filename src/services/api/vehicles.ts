@@ -1,7 +1,6 @@
 import instance from "./api";
 
 import vehiclesRoutes from "../../constants/routes/vehiclesRoutes";
-import { Vehicle } from "../../models/van.model";
 import { vehicleDocumentStatus } from "../../constants/vehicleDocumentStatus";
 
 export async function getByPlate(vehicleId: string): Promise<VehicleInfo> {
@@ -43,9 +42,8 @@ interface CreateVehicleBody {
   locator_state: string;
 }
 
-export async function create(CreateVehicleBody: CreateVehicleBody): Promise<any> {
-
-  const response = await instance.post(vehiclesRoutes.create.url, CreateVehicleBody);
+export async function create(createVehicleBody: CreateVehicleBody): Promise<any> {
+  const response = await instance.post(vehiclesRoutes.create.url, createVehicleBody);
   return response.data;
 }
 
@@ -56,37 +54,35 @@ interface UpdateVehicleBody {
 }
 
 export async function update(vehicleData: UpdateVehicleBody): Promise<any> {
-
   const response = await instance.patch(vehiclesRoutes.update.url, vehicleData);
-
   return response.data;
 }
 
+// interface
 interface SearchFileBody {
   vehicle_plate: string,
   document_type: string
 }
 
-export async function searchFile(SearchFileBody: SearchFileBody): Promise<any> {
-  const response = await instance.post(vehiclesRoutes.searchFile.url, SearchFileBody);
+// rotas de document
 
+export async function searchDocumentFile(SearchFileBody: SearchFileBody): Promise<any> {
+  const response = await instance.post(vehiclesRoutes.searchDocumentFile.url, SearchFileBody);
   return response.data;
 }
 
-export async function uploadFile(uploadData: FormData): Promise<any> {
-  const response = await instance.post(vehiclesRoutes.uploadFile.url, uploadData);
-
+export async function uploadDocumentFile(uploadData: FormData): Promise<any> {
+  const response = await instance.post(vehiclesRoutes.uploadDocumentFile.url, uploadData);
   return response.data;
 }
 
-interface DeleteVehicleFileBody {
+interface DeleteVehicleDocumentFileBody {
   vehicle_plate: string,
   document_type: string,
 }
 
-export async function deleteFile(deleteData: DeleteVehicleFileBody): Promise<any> {
-  const response = await instance.post(vehiclesRoutes.deleteFile.url, deleteData);
-
+export async function deleteDocumentFile(deleteData: DeleteVehicleDocumentFileBody): Promise<any> {
+  const response = await instance.patch(vehiclesRoutes.deleteDocumentFile.url, deleteData);
   return response.data;
 }
 
@@ -97,7 +93,27 @@ interface UpdateDocumentStatusBody {
 }
 
 export async function updateDocumentStatus(body: UpdateDocumentStatusBody): Promise<any> {
-  const response = await instance.patch(vehiclesRoutes.deleteFile.url, body);
+  const response = await instance.patch(vehiclesRoutes.updateDocumentStatus.url, body);
+  return response.data;
+}
 
+// rotas de picture
+
+export async function searchPictureFile(SearchFileBody: SearchFileBody): Promise<any> {
+  const response = await instance.post(vehiclesRoutes.searchPictureFile.url, SearchFileBody);
+  return response.data;
+}
+
+export async function uploadPictureFile(uploadData: FormData): Promise<any> {
+  const response = await instance.post(vehiclesRoutes.uploadPictureFile.url, uploadData);
+  return response.data;
+}
+
+interface DeleteVehiclePictureFileBody {
+  vehicle_plate: string
+}
+
+export async function deletePictureFile(deleteData: DeleteVehiclePictureFileBody): Promise<any> {
+  const response = await instance.patch(vehiclesRoutes.deletePictureFile.url, deleteData);
   return response.data;
 }
