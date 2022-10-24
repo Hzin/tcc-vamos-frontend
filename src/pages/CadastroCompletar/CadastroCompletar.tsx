@@ -50,7 +50,7 @@ interface LocationState {
 let items: cardItem[] = [
   {
     icon: documentTextOutline,
-    label: "Documento",
+    label: "Documentos pessoais",
     description:
       "Cadastre seu documento para que seu perfil possa ser verificado",
     url: "/perfil/completar/documento",

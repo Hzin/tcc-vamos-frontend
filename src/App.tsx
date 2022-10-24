@@ -28,6 +28,7 @@ import PerfilEditar from "./pages/PerfilEditar";
 import CadastrarItinerario from "./pages/CadastrarItinerario";
 import MeusItinerarios from "./pages/MeusItinerarios";
 import MeusVeiculos from "./pages/MeusVeiculos";
+import Veiculo from "./pages/Veiculo";
 import VeiculoCadastro from "./pages/VeiculoCadastro";
 
 import BuscarItinerario from "./pages/BuscarItinerario";
@@ -36,6 +37,8 @@ import ListaItinerarios from "./pages/ListaItinerarios";
 
 import Buscas from "./pages/Buscas";
 import Viagem from "./pages/Viagem";
+
+import ModerarDocumentos from "./pages/ModerarDocumentos";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -93,6 +96,10 @@ const routes = (
       path="/cadastrar-itinerario"
       component={CadastrarItinerario}
     ></Route>
+    <Route exact path="/veiculo" component={Home}></Route>
+    <Route exact path="/veiculo/placa" component={Home}></Route>
+    <Route exact path="/veiculo/placa/:id" component={Veiculo}></Route>
+
     <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
     <Route exact path="/editar-itinerario" component={EditarItinerario}></Route>
 
@@ -103,6 +110,8 @@ const routes = (
 
     <Route exact path="/viagem" component={Home}></Route>
     <Route exact path="/viagem/:id" component={Viagem}></Route>
+
+    <Route exact path="/documentos/moderar" component={ModerarDocumentos}></Route>
 
     <Route exact path="/">
       <Redirect to="/home" />
