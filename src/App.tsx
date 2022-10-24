@@ -58,6 +58,7 @@ import "./theme/variables.css";
 import "./theme/tailwind.css";
 import Buscas from "./pages/Buscas";
 import EditarItinerario from "./pages/EditarItinerario";
+import Passageiros from "./pages/Passageiros";
 
 setupIonicReact();
 
@@ -92,11 +93,13 @@ const routes = (
     ></Route>
     <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
     <Route exact path="/editar-itinerario" component={EditarItinerario}></Route>
+    <Route exact path="/itinerario/passageiros" component={Passageiros}></Route>
 
     <Route exact path="/buscas" component={Buscas}></Route>
     <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
     <Route exact path="/buscar/passageiro" component={BuscarPassageiro}></Route>
     <Route exact path="/buscar/itinerario/lista" component={ListaItinerarios}></Route>
+    
 
     <Route exact path="/">
       <Redirect to="/home" />

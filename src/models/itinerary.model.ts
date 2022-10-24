@@ -21,7 +21,7 @@ export interface Itinerary {
     id_itinerary: number;
     vehicle: Vehicle;
     days_of_week?: string;
-    specific_day?: Date;
+    specific_day?: string;
     estimated_departure_time: string;
     is_active: boolean;
     estimated_arrival_time: string;

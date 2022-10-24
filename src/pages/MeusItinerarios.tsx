@@ -17,13 +17,14 @@ import {
   IonToast,
   IonToolbar,
 } from "@ionic/react";
-import { add, closeOutline, locateOutline, locationOutline } from "ionicons/icons";
+import { add, closeOutline, locateOutline, locationOutline, pencil } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { getItineraries } from "../services/api/itineraries";
 import { PageHeader } from "../components/PageHeader";
 import { useHistory, useLocation } from "react-router";
 import { Color } from "@ionic/core";
 import { closeToast } from "../services/utils";
+import { Passenger } from "../models/passenger.model";
 
 interface Address {
   formatted_address: string;
@@ -50,6 +51,7 @@ interface ItineraryInfo {
   departure_longitude: number;
   neighborhoods_served: Address[];
   destinations: Destination[];
+  passengers: Passenger;
 }
 
 interface LocationState {
@@ -91,9 +93,11 @@ export default function MeusItinerarios() {
   }, [])
 
   function editItinerary(itinerary: ItineraryInfo) {
-    // setSelectedItinerary(itinerary);
-    // setShowModalEditItinerary(true);
     history.push("/editar-itinerario", { itinerary });
+  }
+  
+  function seeAttendanceList(itinerary: ItineraryInfo) {
+    history.push("/itinerario/passageiros", { itinerary });
   }
 
   return (
@@ -107,9 +111,9 @@ export default function MeusItinerarios() {
         {itineraries ? (
           itineraries.map((itinerary, index) => {
             return (
-              <IonCard key={index} onClick={() => editItinerary(itinerary)}>
-                <IonCardHeader>
-                  <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
+              <IonCard key={index} >
+                <IonCardHeader onClick={() => editItinerary(itinerary)}>
+                  <IonCardTitle>{itinerary.itinerary_nickname} <IonIcon size="small" icon={pencil} /></IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
                   <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
@@ -130,6 +134,16 @@ export default function MeusItinerarios() {
                         )
                       }
                     })}
+                  </div>
+                  <div className="mt-2">
+                    <IonButton
+                      color="primary"
+                      fill="outline"
+                      size="small"
+                      onClick={() => seeAttendanceList(itinerary)}
+                    >
+                      Passageiros
+                    </IonButton>
                   </div>
                 </IonCardContent>
               </IonCard>

@@ -52,3 +52,9 @@ export async function search(body: SearchItinerariesRequest
   );
   return response.data;
 }
+
+export async function getItineraryPassengers(id_itinerary: number) {
+
+  const response = await instance.get(transportsRoutes.get.url + "/" + id_itinerary + "/passengers");
+  return response.data;
+}
