@@ -54,10 +54,13 @@ import "@ionic/react/css/text-alignment.css";
 import "@ionic/react/css/text-transformation.css";
 
 /* Theme variables */
+import './theme/custom-tab-bar.css';
 import "./theme/variables.css";
 
 /* Tailwind styles */
 import "./theme/tailwind.css";
+
+import EditarItinerario from "./pages/EditarItinerario";
 
 setupIonicReact();
 
@@ -91,6 +94,7 @@ const routes = (
       component={CadastrarItinerario}
     ></Route>
     <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
+    <Route exact path="/editar-itinerario" component={EditarItinerario}></Route>
 
     <Route exact path="/buscas" component={Buscas}></Route>
     <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
