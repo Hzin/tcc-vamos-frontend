@@ -72,7 +72,7 @@ export async function deleteDocumentFile(vehicle_plate: string, document_type: s
     // TODO
   }
 
-  return res.data;
+  return res;
 }
 
 export async function deletePictureFile(vehicle_plate: string): Promise<Vehicle> {
@@ -84,7 +84,7 @@ export async function deletePictureFile(vehicle_plate: string): Promise<Vehicle>
     // TODO
   }
 
-  return res.data;
+  return res;
 }
 
 export async function updateDocumentStatus(vehicle_plate: string, document_type: string, status: vehicleDocumentStatus): Promise<Vehicle> {

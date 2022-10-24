@@ -210,7 +210,7 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
 
   const handleDeleteDocumentFile = async () => {
     if (!vehicleInfo) return;
-    if (!selectedFileVehiclePicture) return;
+    if (!selectedDocumentType) return;
 
     await vehiclesService
       .deleteDocumentFile(vehicleInfo.plate, selectedDocumentType)
@@ -370,7 +370,7 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
 
         if (e.detail.role === "reset") {
           if (action === "picture") {
-            await handleConfirmFileDelete(handleDeleteDocumentFile);
+            await handleConfirmFileDelete(handleDeletePictureFile);
             return;
           }
         }
