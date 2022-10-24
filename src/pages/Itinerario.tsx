@@ -29,19 +29,6 @@ import sessionsService from "../services/functions/sessionsService";
 import { closeToast } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
 
-interface VehicleInfo {
-  plate: string;
-  brand: string;
-  model: string;
-  seats_number: string;
-  document_status: boolean;
-  locator_name: string;
-  locator_address: string;
-  locator_complement: string;
-  locator_city: string;
-  locator_state: string;
-}
-
 const Itinerario: React.FC = () => {
   const history = useHistory();
 
@@ -49,7 +36,7 @@ const Itinerario: React.FC = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
-  const [userVehicles, setUserVehicles] = useState<VehicleInfo[]>();
+  const [userVehicles, setUserVehicles] = useState<vehiclesRoutes.VehicleInfo[]>();
 
   const redirectUserToLogin = () => {
     history.push({ pathname: "/login" });
@@ -73,15 +60,7 @@ const Itinerario: React.FC = () => {
       vehiclesRoutes
         .getByUserId(userId)
         .then((response) => {
-          if (response.status === "error") {
-            setToastColor("danger");
-            setToastMessage(response.message);
-            setShowToast(true);
-
-            return;
-          }
-
-          setUserVehicles(response.data);
+          setUserVehicles(response);
         })
         .catch((err) => {
           setToastColor("danger");
@@ -114,7 +93,8 @@ const Itinerario: React.FC = () => {
                 {vehicle.locator_name ? (
                   <>
                     <IonCardContent>
-                      {vehicle.seats_number} assentos - Locador: {vehicle.locator_name}
+                      {vehicle.seats_number} assentos - Locador:{" "}
+                      {vehicle.locator_name}
                     </IonCardContent>
                   </>
                 ) : (

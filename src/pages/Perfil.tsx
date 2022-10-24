@@ -8,6 +8,7 @@ import {
   IonContent,
   IonIcon,
   IonItem,
+  IonItemDivider,
   IonLabel,
   IonList,
   IonListHeader,
@@ -20,6 +21,7 @@ import {
   carOutline,
   createOutline,
   exitOutline,
+  hammerOutline,
   mapOutline,
   personOutline,
   shieldCheckmarkOutline,
@@ -279,7 +281,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
         {!isVisitor ? (
           <IonList>
-            <IonListHeader>Configurações</IonListHeader>
+            <IonListHeader class="text-lg">Configurações de perfil</IonListHeader>
             <IonItem
               button
               onClick={() =>
@@ -315,6 +317,9 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
               <></>
             )}
 
+            <IonItemDivider />
+            <IonListHeader class="text-lg">Configurações de veículo</IonListHeader>
+
             <IonItem
               button
               onClick={() => history.push({ pathname: "/veiculos/cadastrar" })}
@@ -332,15 +337,10 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                   <IonIcon icon={carOutline} slot="start" />
                   <IonLabel>Meus veículos</IonLabel>
                 </IonItem>
-                <IonItem
-                  button
-                  onClick={() =>
-                    history.push({ pathname: "/buscar-passageiro" })
-                  }
-                >
-                  <IonIcon icon={personOutline} slot="start" />
-                  <IonLabel>Buscar passageiros</IonLabel>
-                </IonItem>
+
+                <IonItemDivider />
+                <IonListHeader class="text-lg">Configurações de itinerário</IonListHeader>
+
                 <IonItem
                   button
                   onClick={() =>
@@ -364,6 +364,8 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
               <></>
             )}
 
+            <IonItemDivider />
+            <IonListHeader class="text-lg">Configurações de motorista</IonListHeader>
             <IonItem>
               <IonIcon icon={cardOutline} slot="start" />
               <IonLabel>Pagamentos</IonLabel>
@@ -372,6 +374,29 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
               <IonIcon icon={starOutline} slot="start" />
               <IonLabel>Avaliações</IonLabel>
             </IonItem>
+
+            <IonItem
+              button
+              onClick={() => history.push({ pathname: "/buscar-passageiro" })}
+            >
+              <IonIcon icon={personOutline} slot="start" />
+              <IonLabel>Buscar passageiros</IonLabel>
+            </IonItem>
+
+            <IonItemDivider />
+            <IonListHeader class="text-lg">Configurações de administrador</IonListHeader>
+
+            <IonItem
+              button
+              onClick={() => history.push({ pathname: "/documentos/moderar" })}
+            >
+              <IonIcon icon={hammerOutline} slot="start" />
+              <IonLabel>Moderar documentos de vans</IonLabel>
+            </IonItem>
+
+            <IonItemDivider />
+            <IonListHeader class="text-lg">Outros</IonListHeader>
+
             <IonItem button onClick={logoff}>
               <IonIcon icon={exitOutline} slot="start" />
               <IonLabel>Sair da conta</IonLabel>
