@@ -1,9 +1,6 @@
 import {
   IonContent,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/react";
 import React, { useContext, useState } from "react";
 import { IonGrid, IonRow, IonCol, IonToast } from "@ionic/react";
