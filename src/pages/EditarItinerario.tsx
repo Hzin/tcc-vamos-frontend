@@ -65,6 +65,10 @@ interface Address {
   lng: number;
 }
 
+interface OldItineraryInfo {
+  itinerary: CreateItineraryRequest;
+}
+
 interface Destinations extends Address {
   is_final?: boolean;
 }
@@ -102,7 +106,6 @@ export default function EditarItinerario() {
   const [dailyPrice, setDailyPrice] = useState<number>(40);
   const [van, setVan] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
-  const [teste, setTeste] = useState<string>("");
 
   //Estados para limpar o valor dos campos após selecionar uma opção
   const [valueControl1, setValueControl1] = useState<string>("");
@@ -125,9 +128,9 @@ export default function EditarItinerario() {
     if (history.location.state === undefined) {
       history.push({ pathname: "/itinerarios" });
     } else {
-      const itinerary = history.location.state as CreateItineraryRequest;
-      setItinerary(itinerary);
-      // setTeste(itinerary.estimated_departure_address);
+      const infos = history.location.state as OldItineraryInfo;
+      setItinerary(infos.itinerary);
+      setNeighborhoods(infos.itinerary.neighborhoods_served);
     }
 
     const getUserVans = async () => {
@@ -168,18 +171,12 @@ export default function EditarItinerario() {
   }, []);
 
   useEffect(() => {
-    if (itinerary) {
-      setTeste(itinerary.estimated_departure_address);
-    }
-  }, [itinerary]);
-
-  useEffect(() => {
-    if (initialAddress) {
+    if (itinerary?.estimated_departure_address) {
       nextButton1.current!.disabled = false;
     } else {
       nextButton1.current!.disabled = true;
     }
-  }, [initialAddress]);
+  }, [itinerary]);
 
   useEffect(() => {
     if (finalAddress) {
@@ -409,11 +406,9 @@ export default function EditarItinerario() {
               </h1>
               <div className="flex items-center mb-3">
                 <IonIcon icon={locateOutline}></IonIcon>
-                <IonLabel>{teste}</IonLabel>
                 <AutoCompleteInput
-                  placeholder="R. José Paulino, 1234"
+                  placeholder={itinerary?.estimated_departure_address}
                   className="ml-2"
-                  value={teste}
                   onAddressSelected={(address: Address) =>
                     setInitialAddress(address)
                   }
@@ -425,7 +420,6 @@ export default function EditarItinerario() {
               <div className="flex justify-end mb-3">
                 <IonButton
                   ref={nextButton1}
-                  disabled
                   onClick={() => onBtnClicked("next")}
                   color="primary"
                 >
@@ -487,7 +481,6 @@ export default function EditarItinerario() {
                 </IonButton>
                 <IonButton
                   ref={nextButton2}
-                  disabled
                   onClick={() => onBtnClicked("next")}
                   color="primary"
                 >
