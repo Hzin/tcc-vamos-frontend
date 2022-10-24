@@ -62,13 +62,11 @@ interface LocationState {
 
 export default function MeusItinerarios() {
   const [itineraries, setItineraries] = useState<ItineraryInfo[]>([]);
-  const [selectedItinerary, setSelectedItinerary] = useState<ItineraryInfo>();
   
   const location = useLocation<LocationState>();
   const history = useHistory();
 
   const [showToast, setShowToast] = useState(false);
-  const [showModalEditItinerary, setShowModalEditItinerary] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
@@ -91,8 +89,6 @@ export default function MeusItinerarios() {
   }, [])
 
   function editItinerary(itinerary: ItineraryInfo) {
-    // setSelectedItinerary(itinerary);
-    // setShowModalEditItinerary(true);
     history.push("/editar-itinerario", { itinerary });
   }
 
@@ -145,39 +141,6 @@ export default function MeusItinerarios() {
             <IonIcon icon={add}></IonIcon>
           </IonFabButton>
         </IonFab>
-
-        <IonModal isOpen={showModalEditItinerary}>
-          <IonHeader translucent>
-            <IonToolbar>
-              <IonTitle>{selectedItinerary ? selectedItinerary.itinerary_nickname : ''}</IonTitle>
-              <IonButtons slot="start">
-                <IonIcon
-                  size="large"
-                  icon={closeOutline}
-                  onClick={() => setShowModalEditItinerary(false)}
-                />
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
-
-          <IonContent>
-            {selectedItinerary ? (
-              <div>
-                <h1>{selectedItinerary.itinerary_nickname}</h1>
-                <h1>{selectedItinerary.estimated_departure_address}</h1>
-                <h1>{selectedItinerary.estimated_arrival_time}</h1>
-              </div>
-            ) : (
-              <h1>Carregando...</h1>
-            )}
-          </IonContent>
-
-          <IonFooter>
-            <IonButton expand="block">
-              Salvar alterações
-            </IonButton>
-          </IonFooter>
-        </IonModal>
 
         <IonToast
           position="top"
