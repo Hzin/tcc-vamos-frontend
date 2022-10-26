@@ -1,3 +1,4 @@
+import { getStaticUrl } from '../config/api.config';
 import instance from '../services/api/api';
 
 export async function autoCompleteAddress(address: string) {
@@ -35,4 +36,8 @@ export function startTime() {
   const todayDate = dd + "/" + mm + "/" + yyyy;
   return todayDate;
   // }, 1000);
+}
+
+export const convertFilePathToStaticUrl = (filepath: string) => {
+  return `${getStaticUrl()}/${filepath}`
 }

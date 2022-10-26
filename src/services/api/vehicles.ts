@@ -4,13 +4,13 @@ import vehiclesRoutes from "../../constants/routes/vehiclesRoutes";
 import { vehicleDocumentStatus } from "../../constants/vehicleDocumentStatus";
 
 export async function getByPlate(vehicleId: string): Promise<VehicleInfo> {
-
-  const response = await instance.get(vehiclesRoutes.getByPlate.url + `/${vehicleId}`);
+  let response = await instance.get(vehiclesRoutes.getByPlate.url + `/${vehicleId}`);
 
   return response.data;
 }
 
 export interface VehicleInfo {
+  picture: string | undefined;
   plate: string;
   brand: string;
   model: string;
@@ -105,7 +105,7 @@ export async function searchPictureFile(SearchFileBody: SearchFileBody): Promise
 }
 
 export async function uploadPictureFile(uploadData: FormData): Promise<any> {
-  const response = await instance.post(vehiclesRoutes.uploadPictureFile.url, uploadData);
+  const response = await instance.patch(vehiclesRoutes.uploadPictureFile.url, uploadData);
   return response.data;
 }
 

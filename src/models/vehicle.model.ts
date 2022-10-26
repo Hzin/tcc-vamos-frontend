@@ -12,6 +12,7 @@ export interface Vehicle {
   locator_complement: string;
   locator_city: string;
   locator_state: string;
+  picture: string;
   user: User;
   itineraries?: Itinerary[];
   // created_at: Date;

@@ -9,11 +9,8 @@ import {
   IonFabButton,
   IonGrid,
   IonIcon,
-  IonInput,
   IonItem,
-  IonItemDivider,
   IonLabel,
-  IonList,
   IonPage,
   IonRow,
   IonSelect,
@@ -23,21 +20,20 @@ import {
   useIonAlert,
 } from "@ionic/react";
 import { Color } from "@ionic/core";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
 import { PhotoViewer } from "@awesome-cordova-plugins/photo-viewer";
 
-import { closeToast } from "../services/utils";
+import { closeToast, reloadPage } from "../services/utils";
 
 import * as vehiclesService from "../services/functions/vehiclesService";
 import { PageHeader } from "../components/PageHeader";
-import { Vehicle } from "../models/van.model";
 import { VehicleInfo } from "../services/api/vehicles";
 
-import apiConfig from "../config/api.config";
 import { vehicleDocumentStatus } from "../constants/vehicleDocumentStatus";
-import { add, cameraOutline, createOutline } from "ionicons/icons";
+import { cameraOutline } from "ionicons/icons";
+import { Vehicle } from "../models/van.model";
 
 interface ScanNewProps {
   match: {
@@ -122,8 +118,6 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
   const [documentFileUrl, setDocumentFileUrl] = useState("");
   const [documentStatus, setDocumentStatus] = useState<vehicleDocumentStatus>();
 
-  const [picturetFileUrl, setPicturetFileUrl] = useState("");
-
   useEffect(() => {
     let vehicle_plate = "";
 
@@ -142,24 +136,22 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
 
     vehicle_plate = props.match.params.id;
     getVehicle(vehicle_plate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getVehicle = async (vehicle_plate: string) => {
     await vehiclesService.getByPlate(vehicle_plate).then((response) => {
       setVehicleInfo(response);
-
-      if (!vehicleInfo) return;
     });
   };
 
-  const handleChangeFileVehicleDocument = async (e: any) => {
+  const handleChangeFileVehicleDocument = (e: any) => {
     setSelectedFileVehicleDocument(e.target.files[0]);
     setIsFilePickedVehicleDocument(true);
   };
 
   const handleChangeFileVehiclePicture = async (e: any) => {
-    setSelectedFileVehiclePicture(e.target.files[0]);
-    handleConfirmFileUpload("picture", handleUploadVehiclePicture);
+    await handleConfirmFileUpload("picture", e.target.files[0]);
   };
 
   const clearDocumentFormItems = () => {
@@ -167,7 +159,7 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
     setDocumentStatus(undefined);
     setDocumentFileUrl("");
 
-    setSelectedFileVehiclePicture(undefined);
+    setSelectedFileVehicleDocument(undefined);
   };
 
   const handleUploadVehicleDocument = async () => {
@@ -191,14 +183,18 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
       });
   };
 
-  const handleUploadVehiclePicture = async () => {
+  const handleUploadVehiclePicture = async (file: any) => {
     if (!vehicleInfo) return;
-    if (!selectedFileVehiclePicture) return;
+    if (!file) return;
 
     await vehiclesService
-      .uploadPictureFile(selectedFileVehiclePicture, vehicleInfo.plate)
+      .uploadPictureFile(file, vehicleInfo.plate)
       .then((response: any) => {
         if (!response.message) return;
+
+        let newVehicleInfo: VehicleInfo = vehicleInfo;
+        newVehicleInfo.picture = response.data;
+        setVehicleInfo(newVehicleInfo);
 
         handleChangeDocumentType(selectedDocumentType);
 
@@ -227,14 +223,15 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
 
   const handleDeletePictureFile = async () => {
     if (!vehicleInfo) return;
-    if (!selectedFileVehiclePicture) return;
 
     await vehiclesService
       .deletePictureFile(vehicleInfo.plate)
       .then((response: any) => {
         if (!response.message) return;
 
-        setPicturetFileUrl(response.data);
+        let newVehicleInfo: VehicleInfo = vehicleInfo;
+        newVehicleInfo.picture = response.data;
+        setVehicleInfo(newVehicleInfo);
 
         setToastColor("success");
         setToastMessage(response.message);
@@ -242,11 +239,9 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
       });
   };
 
-  const handleUploadVehiclePictureClick = async () => {
+  const handleUploadVehiclePictureClick = () => {
     const button = document.getElementById("btn_vehicle_pic");
-
     if (!button) return;
-
     button.click();
   };
 
@@ -264,7 +259,7 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
           return;
         }
 
-        setDocumentFileUrl(`${apiConfig.getStaticUrl()}/${response.path}`);
+        setDocumentFileUrl(response);
         setDocumentStatus(response.status);
       });
   };
@@ -273,13 +268,20 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
     PhotoViewer.show(documentFileUrl);
   };
 
+  const clearInputElementValue = (id: string) => {
+    const element = document.getElementById(id) as HTMLInputElement;
+    element.value = "";
+
+    if (id === "btn_vehicle_pic") setSelectedFileVehiclePicture(undefined);
+  };
+
   const [presentAlertConfirmation] = useIonAlert();
 
   const handleConfirmFileUpload = async (
     action: "document" | "picture",
-    fn: Function
+    file?: any
   ) => {
-    presentAlertConfirmation({
+    await presentAlertConfirmation({
       header: "Confirma envio do arquivo?",
       buttons: [
         {
@@ -295,23 +297,45 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
       onDidDismiss: async (e: CustomEvent) => {
         if (e.detail.role === "cancel" || e.detail.role === "backdrop") {
           if (action === "picture") {
-            const element = document.getElementById(
-              "btn_vehicle_pic"
-            ) as HTMLInputElement;
-            element.value = "";
+            clearInputElementValue("btn_vehicle_pic");
           }
 
           return;
         }
 
-        await fn();
+        switch (action) {
+          case "document":
+            await handleUploadVehicleDocument();
+            break;
+          case "picture":
+            if (!file) return;
+            await handleUploadVehiclePicture(file);
+            break;
+          default:
+            break;
+        }
+
+        if (action === "picture") clearInputElementValue("btn_vehicle_pic");
       },
     });
   };
 
-  const handleConfirmFileDelete = async (fn: Function) => {
+  const handleConfirmFileDelete = async (action: "document" | "picture") => {
+    let message = "";
+
+    switch (action) {
+      case "document":
+        message = "Deseja deletar o documento selecionado?";
+        break;
+      case "picture":
+        message = "Deseja redefinir a foto do veículo?";
+        break;
+      default:
+        break;
+    }
+
     presentAlertConfirmation({
-      header: "Confirma deleção do arquivo?",
+      header: message,
       buttons: [
         {
           text: "Cancelar",
@@ -324,9 +348,29 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
       ],
 
       onDidDismiss: async (e: CustomEvent) => {
-        if (e.detail.role === "cancel" || e.detail.role === "backdrop") return;
+        // chamo a função setSelectedFileVehiclePicture porque o element <input>
+        // precisa ter a seleção redefinida para eu poder escolher
+        if (e.detail.role === "cancel" || e.detail.role === "backdrop") {
+          if (action === "picture") {
+            clearInputElementValue("btn_vehicle_pic");
+          }
+          return;
+        }
 
-        await fn();
+        switch (action) {
+          case "document":
+            await handleDeleteDocumentFile();
+            break;
+          case "picture":
+            await handleDeletePictureFile();
+            break;
+          default:
+            break;
+        }
+
+        if (e.detail.role === "confirmAction" && action === "picture") {
+          clearInputElementValue("btn_vehicle_pic");
+        }
       },
     });
   };
@@ -355,7 +399,14 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
         },
       ],
       onDidDismiss: async (e: CustomEvent) => {
-        if (e.detail.role === "cancel" || e.detail.role === "backdrop") return;
+        if (e.detail.role === "cancel" || e.detail.role === "backdrop") {
+          if (action === "picture") {
+            clearInputElementValue("btn_vehicle_pic");
+            setSelectedFileVehiclePicture(undefined);
+          }
+
+          return;
+        }
 
         if (e.detail.role === "choose") {
           if (action === "document") {
@@ -363,14 +414,14 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
             return;
           }
           if (action === "picture") {
-            await handleUploadVehiclePictureClick();
+            handleUploadVehiclePictureClick();
             return;
           }
         }
 
         if (e.detail.role === "reset") {
           if (action === "picture") {
-            await handleConfirmFileDelete(handleDeletePictureFile);
+            await handleConfirmFileDelete("picture");
             return;
           }
         }
@@ -387,11 +438,13 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
           <></>
         ) : (
           <>
-            <img
-              className="max-h-72"
-              alt="vehicle_picture"
-              src="https://s2.glbimg.com/-xUhYluyWnnnib57vy3QI1kD9oQ=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_cf9d035bf26b4646b105bd958f32089d/internal_photos/bs/2020/y/E/vdU7J0TeAIC2kZONmgBQ/2018-09-04-sprintervanfoto.jpg"
-            ></img>
+            <div className="block ml-auto mr-auto max-w-max">
+              <img
+                className="max-h-72"
+                alt="vehicle_picture"
+                src={vehicleInfo.picture}
+              />
+            </div>
 
             <IonFab vertical="top" horizontal="end" slot="fixed">
               <IonFabButton>
@@ -457,7 +510,7 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
                     <IonLabel>Deletar documento</IonLabel>
                     <IonButton
                       onClick={() => {
-                        handleConfirmFileDelete(handleDeleteDocumentFile);
+                        handleConfirmFileDelete("document");
                       }}
                       color="danger"
                     >
@@ -497,10 +550,7 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
                           </IonItem>
                           <IonButton
                             onClick={() => {
-                              handleConfirmFileUpload(
-                                "document",
-                                handleUploadVehicleDocument
-                              );
+                              handleConfirmFileUpload("document");
                             }}
                             disabled={!isFilePickedVehicleDocument}
                             className="ion-margin-top"
@@ -525,7 +575,9 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
               id="btn_vehicle_pic"
               accept=".png,.jpg,.pdf"
               className="invisible"
-              onChange={handleChangeFileVehiclePicture}
+              onChange={async (e: any) => {
+                handleChangeFileVehiclePicture(e);
+              }}
             />
 
             <IonToast

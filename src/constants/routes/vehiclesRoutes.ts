@@ -36,7 +36,7 @@ const vehiclesRoutes = {
     url: `${vehiclesRoutesDefault}/picture/search`
   },
   uploadPictureFile: {
-    url: `${vehiclesRoutesDefault}/picture/upload`
+    url: `${vehiclesRoutesDefault}/picture/update`
   },
   deletePictureFile: {
     url: `${vehiclesRoutesDefault}/picture/delete`

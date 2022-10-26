@@ -1,6 +1,9 @@
+import { getStaticUrl } from "../../config/api.config";
 import { vehicleDocumentStatus } from "../../constants/vehicleDocumentStatus";
 import { Vehicle } from "../../models/vehicle.model";
 import * as vehiclesRoutes from "../api/vehicles";
+import { convertFilePathToStaticUrl } from "../utils";
+
 
 export async function getByPlate(vehicle_plate: string): Promise<Vehicle> {
   let res: any;
@@ -10,6 +13,8 @@ export async function getByPlate(vehicle_plate: string): Promise<Vehicle> {
   } catch (error) {
     // TODO
   }
+
+  if (res.data.picture) res.data.picture = `${getStaticUrl()}/${res.data.picture}`
 
   return res.data;
 }
@@ -22,6 +27,8 @@ export async function searchDocumentFile(vehicle_plate: string, document_type: s
   } catch (error) {
     // TODO
   }
+
+  if (res.path) res.path = convertFilePathToStaticUrl(res.path)
 
   return res;
 }
@@ -60,6 +67,8 @@ export async function uploadPictureFile(file: File, vehicle_plate: string): Prom
     // TODO
   }
 
+  if (res.data) res.data = convertFilePathToStaticUrl(res.data)
+
   return res;
 }
 
@@ -83,6 +92,8 @@ export async function deletePictureFile(vehicle_plate: string): Promise<Vehicle>
   } catch (error) {
     // TODO
   }
+
+  if (res.data) res.data = convertFilePathToStaticUrl(res.data)
 
   return res;
 }
