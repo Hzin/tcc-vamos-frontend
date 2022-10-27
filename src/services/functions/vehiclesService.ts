@@ -1,6 +1,7 @@
 import { getStaticUrl } from "../../config/api.config";
 import { vehicleDocumentStatus } from "../../constants/vehicleDocumentStatus";
 import { Vehicle } from "../../models/vehicle.model";
+import { VehicleDocument } from "../../models/vehicleDocument.model";
 import * as vehiclesRoutes from "../api/vehicles";
 import { convertFilePathToStaticUrl } from "../utils";
 
@@ -103,6 +104,18 @@ export async function updateDocumentStatus(vehicle_plate: string, document_type:
 
   try {
     res = await vehiclesRoutes.updateDocumentStatus({ vehicle_plate, document_type, status });
+  } catch (error) {
+    // TODO
+  }
+
+  return res.data;
+}
+
+export async function getPendingDocuments(): Promise<Vehicle[]> {
+  let res: any;
+
+  try {
+    res = await vehiclesRoutes.getPendingDocuments();
   } catch (error) {
     // TODO
   }

@@ -30,6 +30,9 @@ const vehiclesRoutes = {
   updateDocumentStatus: {
     url: `${vehiclesRoutesDefault}/document/status`
   },
+  getPendingDocuments: {
+    url: `${vehiclesRoutesDefault}/documents/pending`
+  },
 
   // urls de picture
   searchPictureFile: {

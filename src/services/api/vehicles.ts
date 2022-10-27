@@ -117,3 +117,8 @@ export async function deletePictureFile(deleteData: DeleteVehiclePictureFileBody
   const response = await instance.patch(vehiclesRoutes.deletePictureFile.url, deleteData);
   return response.data;
 }
+
+export async function getPendingDocuments(): Promise<any> {
+  const response = await instance.get(vehiclesRoutes.getPendingDocuments.url);
+  return response.data;
+}

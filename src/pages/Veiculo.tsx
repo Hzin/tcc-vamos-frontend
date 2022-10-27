@@ -108,7 +108,7 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
   const [isFilePickedVehicleDocument, setIsFilePickedVehicleDocument] =
     useState(false);
 
-  const [selectedFileVehiclePicture, setSelectedFileVehiclePicture] =
+  const [, setSelectedFileVehiclePicture] =
     useState();
 
   const [selectedDocumentType, setSelectedDocumentType] = useState("");
