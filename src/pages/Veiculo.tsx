@@ -25,7 +25,7 @@ import { useHistory } from "react-router";
 
 import { PhotoViewer } from "@awesome-cordova-plugins/photo-viewer";
 
-import { closeToast, reloadPage } from "../services/utils";
+import { closeToast } from "../services/utils";
 
 import * as vehiclesService from "../services/functions/vehiclesService";
 import { PageHeader } from "../components/PageHeader";
@@ -33,7 +33,6 @@ import { VehicleInfo } from "../services/api/vehicles";
 
 import { vehicleDocumentStatus } from "../constants/vehicleDocumentStatus";
 import { cameraOutline } from "ionicons/icons";
-import { Vehicle } from "../models/van.model";
 
 interface ScanNewProps {
   match: {

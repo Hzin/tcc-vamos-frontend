@@ -6,7 +6,7 @@ import * as vehiclesRoutes from "../api/vehicles";
 import { convertFilePathToStaticUrl } from "../utils";
 
 
-export async function getByPlate(vehicle_plate: string): Promise<Vehicle> {
+export async function getByPlate(vehicle_plate: string): Promise<vehiclesRoutes.VehicleInfo> {
   let res: any;
 
   try {

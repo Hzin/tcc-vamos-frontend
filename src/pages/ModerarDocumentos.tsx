@@ -31,16 +31,12 @@ const ModerarDocumentos: React.FC = () => {
       <PageHeader
         pageName="Moderar documentos"
         backButtonPageUrl="/perfil"
-      ></PageHeader>
+      />
 
+      <IonContent fullscreen>  
       {vehicles && vehicles.length === 0 ? (
-        vehicles.filter((vehicle) => { 
-          if (!vehicle.documents) return false
-          return true 
-        }
-
         vehicles.map((vehicle) => {
-          if (!vehicle.documents) return;
+          if (!vehicle.documents) return null;
 
           vehicle.documents.map((document, index) => {
             return (
@@ -58,7 +54,6 @@ const ModerarDocumentos: React.FC = () => {
         </div>
       )}
 
-      <IonContent fullscreen>
         <IonToast
           position="top"
           color="danger"
