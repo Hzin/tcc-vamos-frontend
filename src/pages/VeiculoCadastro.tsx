@@ -327,6 +327,7 @@ const VeiculoCadastro: React.FC = () => {
               onIonChange={(e: any) =>
                 setInputValues({ seats_number: e.target.value })
               }
+              slot="end"
             />
           </IonItem>
         </IonList>
