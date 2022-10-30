@@ -8,6 +8,6 @@ export interface VehicleDocument {
   document_type: string;
   path: string;
   status: vehicleDocumentStatus;
-  created_at: Date;
-  updated_at: Date;
+  // created_at: Date;
+  // updated_at: Date;
 };

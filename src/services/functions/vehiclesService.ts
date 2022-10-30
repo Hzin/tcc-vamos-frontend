@@ -1,5 +1,7 @@
 import { getStaticUrl } from "../../config/api.config";
 import { vehicleDocumentStatus } from "../../constants/vehicleDocumentStatus";
+import { Itinerary } from "../../models/itinerary.model";
+import { User } from "../../models/user.model";
 import { Vehicle } from "../../models/vehicle.model";
 import { VehicleDocument } from "../../models/vehicleDocument.model";
 import * as vehiclesRoutes from "../api/vehicles";
@@ -99,7 +101,7 @@ export async function deletePictureFile(vehicle_plate: string): Promise<Vehicle>
   return res;
 }
 
-export async function updateDocumentStatus(vehicle_plate: string, document_type: string, status: vehicleDocumentStatus): Promise<Vehicle> {
+export async function updateDocumentStatus(vehicle_plate: string, document_type: string, status: vehicleDocumentStatus): Promise<string> {
   let res: any;
 
   try {
@@ -108,10 +110,21 @@ export async function updateDocumentStatus(vehicle_plate: string, document_type:
     // TODO
   }
 
-  return res.data;
+  return res.message;
 }
 
-export async function getPendingDocuments(): Promise<Vehicle[]> {
+// obs.: igual a Vehicle
+export interface GetPendingDocumentsResponse {
+  document_status: string;
+  document_type: string;
+  document_url: string;
+  vehicle_brand: string;
+  vehicle_model: string;
+  vehicle_plate: string;
+  vehicle_picture: string;
+};
+
+export async function getPendingDocuments(): Promise<GetPendingDocumentsResponse[]> {
   let res: any;
 
   try {

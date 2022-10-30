@@ -77,7 +77,7 @@ const IonChipVehicleDocumentStatus = (
       ionChipColor = "success";
       ionChipLabel = "Aprovado";
       break;
-    case vehicleDocumentStatus.denied:
+    case vehicleDocumentStatus.rejected:
       ionChipColor = "danger";
       ionChipLabel = "Recusado";
       break;

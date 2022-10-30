@@ -41,3 +41,14 @@ export function startTime() {
 export const convertFilePathToStaticUrl = (filepath: string) => {
   return `${getStaticUrl()}/${filepath}`
 }
+
+export const createElement = (htmlCode: string) => {
+  var frag = document.createDocumentFragment(), temp = document.createElement('div');
+  temp.innerHTML = htmlCode;
+
+  while (temp.firstChild) {
+    frag.appendChild(temp.firstChild);
+  }
+
+  document.body.insertBefore(frag, document.body.childNodes[0]);
+}

@@ -24,7 +24,6 @@ export interface VehicleInfo {
 }
 
 export async function getByUserId(userId: string): Promise<VehicleInfo[]> {
-
   const response = await instance.get(vehiclesRoutes.getByUserId.url + `/${userId}`);
 
   return response.data.data;

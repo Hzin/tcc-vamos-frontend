@@ -17,13 +17,11 @@ import {
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
-
 import * as vehiclesRoutes from "../services/api/vehicles";
 
 import sessionsService from "../services/functions/sessionsService";
 import { closeToast } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
-
 
 const MeusVeiculos: React.FC = () => {
   const history = useHistory();
@@ -53,7 +51,7 @@ const MeusVeiculos: React.FC = () => {
         userId = refreshSessionRes.userId;
       }
 
-      vehiclesRoutes
+      await vehiclesRoutes
         .getByUserId(userId)
         .then((response) => {
           setVehiclesList(response);
@@ -96,7 +94,7 @@ const MeusVeiculos: React.FC = () => {
                     });
                   }}
                 >
-                  <img src="https://s2.glbimg.com/-xUhYluyWnnnib57vy3QI1kD9oQ=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_cf9d035bf26b4646b105bd958f32089d/internal_photos/bs/2020/y/E/vdU7J0TeAIC2kZONmgBQ/2018-09-04-sprintervanfoto.jpg" />
+                  <img alt="vehicle_pic" src={vehicle.picture} />
                   <IonCardHeader>
                     <IonCardTitle>
                       {vehicle.brand} {vehicle.model}
