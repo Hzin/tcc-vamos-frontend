@@ -113,7 +113,7 @@ const Home: React.FC = () => {
                 <IonLabel>Viagens de hoje - {clock}</IonLabel>
               </IonItem>
 
-              {todaysTrips && todaysTrips.length === 0 ? (
+              {todaysTrips && todaysTrips.length !== 0 ? (
                 todaysTrips.map((tripInfo, index) => {
                   return (
                     <TripCard
@@ -140,7 +140,7 @@ const Home: React.FC = () => {
                 <IonLabel>Próximas viagens</IonLabel>
               </IonItem>
 
-              {notTodaysTrips && notTodaysTrips.length === 0 ? (
+              {notTodaysTrips && notTodaysTrips.length !== 0 ? (
                 notTodaysTrips.map((tripInfo, index) => {
                   return (
                     <TripCard
