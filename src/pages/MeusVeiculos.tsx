@@ -17,7 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
-import * as vehiclesRoutes from "../services/api/vehicles";
+import * as vehiclesService from "../services/functions/vehiclesService";
 
 import sessionsService from "../services/functions/sessionsService";
 import { closeToast } from "../services/utils";
@@ -30,7 +30,7 @@ const MeusVeiculos: React.FC = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
-  const [vehiclesList, setVehiclesList] = useState<vehiclesRoutes.VehicleInfo[]>();
+  const [vehiclesList, setVehiclesList] = useState<vehiclesService.VehicleInfo[]>();
 
   const redirectUserToLogin = () => {
     history.push({ pathname: "/login" });
@@ -51,7 +51,7 @@ const MeusVeiculos: React.FC = () => {
         userId = refreshSessionRes.userId;
       }
 
-      await vehiclesRoutes
+      await vehiclesService
         .getByUserId(userId)
         .then((response) => {
           setVehiclesList(response);
@@ -94,7 +94,7 @@ const MeusVeiculos: React.FC = () => {
                     });
                   }}
                 >
-                  <img alt="vehicle_pic" src={vehicle.picture} />
+                  {vehicle.picture ? (<img alt="vehicle_pic" src={vehicle.picture} />) : <></>}
                   <IonCardHeader>
                     <IonCardTitle>
                       {vehicle.brand} {vehicle.model}

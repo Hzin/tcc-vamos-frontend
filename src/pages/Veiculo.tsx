@@ -29,7 +29,7 @@ import { closeToast } from "../services/utils";
 
 import * as vehiclesService from "../services/functions/vehiclesService";
 import { PageHeader } from "../components/PageHeader";
-import { VehicleInfo } from "../services/api/vehicles";
+import { VehicleInfo } from "../services/functions/vehiclesService";
 
 import { vehicleDocumentStatus } from "../constants/vehicleDocumentStatus";
 import { cameraOutline } from "ionicons/icons";

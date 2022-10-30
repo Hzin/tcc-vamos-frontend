@@ -7,8 +7,39 @@ import { VehicleDocument } from "../../models/vehicleDocument.model";
 import * as vehiclesRoutes from "../api/vehicles";
 import { convertFilePathToStaticUrl } from "../utils";
 
+export interface VehicleInfo {
+  picture: string | undefined;
+  plate: string;
+  brand: string;
+  model: string;
+  seats_number: string;
+  document_status: boolean;
+  locator_name: string;
+  locator_address: string;
+  locator_complement: string;
+  locator_city: string;
+  locator_state: string;
+}
 
-export async function getByPlate(vehicle_plate: string): Promise<vehiclesRoutes.VehicleInfo> {
+export async function getByUserId(user_id: string): Promise<any[]> {
+  let res: VehicleInfo[] = [];
+
+  try {
+    res = await vehiclesRoutes.getByUserId(user_id);
+
+    res = res.map((vehicle) => {
+      if (vehicle.picture) vehicle.picture = convertFilePathToStaticUrl(vehicle.picture)
+
+      return vehicle
+    })
+  } catch (error) {
+    // TODO
+  }
+
+  return res;
+}
+
+export async function getByPlate(vehicle_plate: string): Promise<VehicleInfo> {
   let res: any;
 
   try {
@@ -17,7 +48,7 @@ export async function getByPlate(vehicle_plate: string): Promise<vehiclesRoutes.
     // TODO
   }
 
-  if (res.data.picture) res.data.picture = `${getStaticUrl()}/${res.data.picture}`
+  if (res.data.picture) res.data.picture = convertFilePathToStaticUrl(res.data.picture)
 
   return res.data;
 }
@@ -30,8 +61,6 @@ export async function searchDocumentFile(vehicle_plate: string, document_type: s
   } catch (error) {
     // TODO
   }
-
-  if (res.path) res.path = convertFilePathToStaticUrl(res.path)
 
   return res;
 }

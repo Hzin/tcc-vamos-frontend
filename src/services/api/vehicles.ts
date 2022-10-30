@@ -2,25 +2,12 @@ import instance from "./api";
 
 import vehiclesRoutes from "../../constants/routes/vehiclesRoutes";
 import { vehicleDocumentStatus } from "../../constants/vehicleDocumentStatus";
+import { VehicleInfo } from "../functions/vehiclesService";
 
 export async function getByPlate(vehicleId: string): Promise<VehicleInfo> {
   let response = await instance.get(vehiclesRoutes.getByPlate.url + `/${vehicleId}`);
 
   return response.data;
-}
-
-export interface VehicleInfo {
-  picture: string | undefined;
-  plate: string;
-  brand: string;
-  model: string;
-  seats_number: string;
-  document_status: boolean;
-  locator_name: string;
-  locator_address: string;
-  locator_complement: string;
-  locator_city: string;
-  locator_state: string;
 }
 
 export async function getByUserId(userId: string): Promise<VehicleInfo[]> {
