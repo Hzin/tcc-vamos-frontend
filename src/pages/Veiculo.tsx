@@ -33,6 +33,7 @@ import { VehicleInfo } from "../services/functions/vehiclesService";
 
 import { vehicleDocumentStatus } from "../constants/vehicleDocumentStatus";
 import { cameraOutline } from "ionicons/icons";
+import { CardInfoBasic } from "../components/CardInfoBasic";
 
 interface ScanNewProps {
   match: {
@@ -384,17 +385,14 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
         {
           text: "Escolher arquivo",
           role: "choose",
-          handler: () => {},
         },
         {
           text: "Redefinir",
           role: "reset",
-          handler: () => {},
         },
         {
           text: "Cancelar",
           role: "cancel",
-          handler: () => {},
         },
       ],
       onDidDismiss: async (e: CustomEvent) => {
@@ -458,7 +456,7 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
 
             <div className="m-3">
               <h1 className="mb-3 text-2xl ion-text-center">
-                {vehicleInfo.brand} - {vehicleInfo.model}
+                {vehicleInfo.brand} {vehicleInfo.model}
               </h1>
 
               <h1 className="mb-3 text-xl ion-text-center">
@@ -467,6 +465,12 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
             </div>
 
             <IonGrid className="ion-padding">
+              <IonRow>
+                <IonCol size="12">
+                  <CardInfoBasic size="small" message="Para poder criar itinerários, o veículo precisa ter os documentos 'CRLV' e 'CRV' aprovados!"/>
+                </IonCol>
+              </IonRow>
+
               <IonRow>
                 <IonCol size="12">
                   <IonCardTitle>Documentos</IonCardTitle>
