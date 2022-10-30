@@ -31,6 +31,15 @@ export interface CreateItineraryRequest {
   destinations: Array<Address>;
 }
 
+export interface CreateRequest {
+  user_id: string;
+  itinerary_id: number;
+  address: string;
+  latitude_address: number;
+  longitude_address: number;
+  is_single: boolean;
+}
+
 export async function getItineraries() {
 
   const response = await instance.get(transportsRoutes.get.url);
@@ -50,5 +59,11 @@ export async function search(body: SearchItinerariesRequest
     transportsRoutes.search.url,
     body,
   );
+  return response.data;
+}
+
+export async function createRequest(request: CreateRequest) {
+
+  const response = await instance.post(transportsRoutes.request.url, request);
   return response.data;
 }

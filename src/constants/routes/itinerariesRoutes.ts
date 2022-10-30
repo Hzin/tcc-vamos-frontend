@@ -12,6 +12,9 @@ const transportsRoutes = {
   update: {
     url: `${transportsRoutesDefault}`
   },
+  request: {
+    url: `${transportsRoutesDefault}/request`
+  }
 }
 
 export default transportsRoutes;

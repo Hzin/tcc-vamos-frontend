@@ -34,6 +34,12 @@ import BuscarItinerario from "./pages/BuscarItinerario";
 import BuscarPassageiro from "./pages/BuscarPassageiro";
 import ListaItinerarios from "./pages/ListaItinerarios";
 
+import SolicitaEntradaVan from "./pages/SolicitaEntradaVan";
+import VinculoVan from "./pages/VinculoVan";
+import VinculoVanEditar from "./pages/VinculoVanEditar";
+import Contratos from "./pages/Contratos";
+import ListaDePresenca from "./pages/ListaDePresenca";
+
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -94,6 +100,13 @@ const routes = (
     <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
     <Route exact path="/buscar/passageiro" component={BuscarPassageiro}></Route>
     <Route exact path="/buscar/itinerario/lista" component={ListaItinerarios}></Route>
+
+
+    <Route exact path="/itinerario/solicita-entrada-van" component={SolicitaEntradaVan}></Route>
+    <Route exact path="/vinculo-van" component={VinculoVan}></Route>
+    <Route exact path="/vinculo-van-editar" component={VinculoVanEditar}></Route>
+    <Route exact path="/contratos" component={Contratos}></Route>
+    <Route exact path="/itinerario/lista-de-presenca" component={ListaDePresenca}></Route>
 
     <Route exact path="/">
       <Redirect to="/home" />
