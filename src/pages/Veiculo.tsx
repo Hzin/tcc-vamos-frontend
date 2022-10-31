@@ -103,7 +103,7 @@ export const IonChipItineraryCreationStatus = (props: IonChipItineraryCreationSt
     return <></>;
   }
 
-  let ionChipColor: Color = "primary", ionChipLabel = "Pode criar itinerários";
+  let ionChipColor: Color = "success", ionChipLabel = "Pode criar itinerários";
 
   if (!props.status) {
     ionChipColor = "warning"
@@ -175,7 +175,6 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
     await vehiclesService
       .canCreateItineraries(vehicle_plate)
       .then((response) => {
-        console.log(response)
         setVehicleCanCreateItineraries(response.data)
       })
   }
@@ -410,6 +409,67 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
     });
   };
 
+  const handleConfirmVehicleDelete = () => {
+    if (!vehicleInfo) return
+
+    presentAlertConfirmation({
+      header: 'Confirma a deleção do veículo?',
+      subHeader: 'Digite a placa do veículo para confirmar a ação',
+      buttons: [
+        {
+          text: "Cancelar",
+          role: "cancel",
+        },
+        {
+          text: "Confirmar",
+          role: "confirmAction",
+        },
+      ],
+      inputs: [
+        {
+          placeholder: 'Placa',
+          attributes: {
+            maxlength: 7,
+          },
+        },
+      ],
+
+      onDidDismiss: async (e: CustomEvent) => {
+        if (e.detail.role === "cancel" || e.detail.role === "backdrop") {
+          return;
+        }
+
+        interface valuesObj {
+          0: string
+        }
+
+        const values: valuesObj = e.detail.data.values
+        const insertedPlate = values[0]
+
+        if (insertedPlate !== vehicleInfo.plate) {
+          setToastColor("warning");
+          setToastMessage('A placa informada não é igual a placa do veículo');
+          setShowToast(true);
+
+          return
+        }
+
+        await vehiclesService.deleteVehicle(vehicleInfo.plate).then((response) => {
+          history.push({
+            pathname: "/veiculos/meus",
+            state: {
+              redirectData: {
+                showToastMessage: true,
+                toastColor: "success",
+                toastMessage: response,
+              },
+            },
+          });
+        });
+      },
+    });
+  }
+
   // action sheet
   const [present] = useIonActionSheet();
 
@@ -506,9 +566,25 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
                 </IonCol>
               </IonRow>
 
+              {!vehicleCanCreateItineraries && (
+                <IonRow>
+                  <IonCol size="12">
+                    <CardInfoBasic size="small" message="Para poder criar itinerários, o veículo precisa ter os documentos 'CRLV' e 'CRV' aprovados!" />
+                  </IonCol>
+                </IonRow>
+              )}
+
               <IonRow>
                 <IonCol size="12">
-                  <CardInfoBasic size="small" message="Para poder criar itinerários, o veículo precisa ter os documentos 'CRLV' e 'CRV' aprovados!" />
+                  <IonCardTitle>Opções</IonCardTitle>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol size="12">
+                  <IonItem>
+                    <IonLabel>Deletar o veículo</IonLabel>
+                    <IonButton onClick={handleConfirmVehicleDelete} color="danger">Deletar</IonButton>
+                  </IonItem>
                 </IonCol>
               </IonRow>
 

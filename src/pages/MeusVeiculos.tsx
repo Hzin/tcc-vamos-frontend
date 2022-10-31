@@ -5,7 +5,7 @@ import {
 } from "@ionic/react";
 import { Color } from "@ionic/core";
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 
 import * as vehiclesService from "../services/functions/vehiclesService";
 
@@ -20,8 +20,17 @@ interface VehiclesItineraryCreationStatus {
   canCreate: boolean
 }
 
+interface LocationState {
+  redirectData?: {
+    showToastMessage: boolean;
+    toastColor: Color;
+    toastMessage: string;
+  };
+}
+
 const MeusVeiculos: React.FC = () => {
   const history = useHistory();
+  const location = useLocation<LocationState>();
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -46,6 +55,16 @@ const MeusVeiculos: React.FC = () => {
 
       if (refreshSessionRes.userId) {
         userId = refreshSessionRes.userId;
+      }
+
+      if (location.state && location.state.redirectData) {
+        const redirectData = location.state.redirectData;
+  
+        if (redirectData.showToastMessage) {
+          setToastColor(redirectData.toastColor);
+          setToastMessage(redirectData.toastMessage);
+          setShowToast(true);
+        }
       }
 
       await vehiclesService
