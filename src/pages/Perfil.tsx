@@ -160,10 +160,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       }
 
       const userIsAdminRes = await usersService.checkIfUserIsAdmin();
-
-      if (!userIsDriverRes.error && userIsDriverRes.result !== undefined) {
-        setIsAdmin(userIsAdminRes);
-      }
+      setIsAdmin(userIsAdminRes);
 
       if (getByIdRes.userData) {
         const userData = getByIdRes.userData;

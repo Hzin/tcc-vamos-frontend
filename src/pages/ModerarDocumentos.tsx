@@ -1,15 +1,16 @@
-import { IonButton, IonButtons, IonContent, IonList, IonPage, IonToast } from "@ionic/react";
+import { IonContent, IonList, IonPage } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 
 import { Color } from "@ionic/core";
 
-import { closeToast, createElement } from "../services/utils";
+import { createElement } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
 
 import * as vehiclesService from "../services/functions/vehiclesService";
 import { VehicleDocumentCard } from "../components/VehicleDocumentCard";
-import { useLocation } from "react-router";
-import { CustomToast } from "../components/CustomToast";
+import { useHistory, useLocation } from "react-router";
+
+import * as usersService from "../services/functions/usersService";
 
 interface LocationState {
   redirectData?: {
@@ -21,8 +22,27 @@ interface LocationState {
 
 const ModerarDocumentos: React.FC = () => {
   const location = useLocation<LocationState>();
+  const history = useHistory();
+
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [documentsInfo, setDocumentsInfo] = useState<vehiclesService.GetPendingDocumentsResponse[]>();
+
+  const checkIfUserIsAdmin = async () => {
+    const userIsAdminRes = await usersService.checkIfUserIsAdmin();
+    if (!userIsAdminRes) {
+      history.push({
+        pathname: '/perfil',
+        state: {
+          redirectData: {
+            showToastMessage: true,
+            toastColor: 'warning',
+            toastMessage: 'Você não tem permissão de acessar essa página!',
+          },
+        },
+      });
+    }
+  }
 
   useEffect(() => {
     if (location.state && location.state.redirectData) {
@@ -40,7 +60,7 @@ const ModerarDocumentos: React.FC = () => {
       });
     };
 
-    getPendingDocuments();
+    checkIfUserIsAdmin().then(() => { getPendingDocuments() })
   }, []);
 
   return (
