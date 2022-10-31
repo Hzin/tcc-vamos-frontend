@@ -136,3 +136,15 @@ export const checkIfUserIsDriver = async (
     };
   }
 };
+
+export async function checkIfUserIsAdmin(): Promise<boolean> {
+  let res: any;
+
+  try {
+    res = await usersRoutes.checkIfUserIsAdmin();
+  } catch (error) {
+    // TODO
+  }
+
+  return res.data;
+}

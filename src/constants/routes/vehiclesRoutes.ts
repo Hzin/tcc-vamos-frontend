@@ -1,5 +1,6 @@
 const vehiclesRoutesDefault = '/vehicles';
 const vehiclesRoutes = {
+  // urls de vehicle
   list: {
     url: `${vehiclesRoutesDefault}/list`
   },
@@ -14,6 +15,41 @@ const vehiclesRoutes = {
   },
   update: {
     url: `${vehiclesRoutesDefault}/`
+  },
+  delete: {
+    url: `${vehiclesRoutesDefault}/`
+  },
+
+  // urls de document
+  searchDocumentFile: {
+    url: `${vehiclesRoutesDefault}/document/search`
+  },
+  uploadDocumentFile: {
+    url: `${vehiclesRoutesDefault}/document/upload`
+  },
+  deleteDocumentFile: {
+    url: `${vehiclesRoutesDefault}/document/delete`
+  },
+  updateDocumentStatus: {
+    url: `${vehiclesRoutesDefault}/document/status`
+  },
+  getPendingDocuments: {
+    url: `${vehiclesRoutesDefault}/documents/pending`
+  },
+
+  // urls de picture
+  searchPictureFile: {
+    url: `${vehiclesRoutesDefault}/picture/search`
+  },
+  uploadPictureFile: {
+    url: `${vehiclesRoutesDefault}/picture/update`
+  },
+  deletePictureFile: {
+    url: `${vehiclesRoutesDefault}/picture/delete`
+  },
+
+  canCreateItineraries: {
+    url: `${vehiclesRoutesDefault}/can_create_itineraries`
   }
 }
 

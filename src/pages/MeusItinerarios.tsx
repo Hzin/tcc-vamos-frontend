@@ -1,4 +1,6 @@
 import {
+  IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -6,11 +8,16 @@ import {
   IonContent,
   IonFab,
   IonFabButton,
+  IonFooter,
+  IonHeader,
   IonIcon,
+  IonModal,
   IonPage,
+  IonTitle,
   IonToast,
+  IonToolbar,
 } from "@ionic/react";
-import { add, locateOutline, locationOutline } from "ionicons/icons";
+import { add, closeOutline, locateOutline, locationOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { getItineraries } from "../services/api/itineraries";
 import { PageHeader } from "../components/PageHeader";
@@ -54,12 +61,14 @@ interface LocationState {
 }
 
 export default function MeusItinerarios() {
-  const [routes, setRoutes] = useState<ItineraryInfo[]>([]);
+  const [itineraries, setItineraries] = useState<ItineraryInfo[]>([]);
+  const [selectedItinerary, setSelectedItinerary] = useState<ItineraryInfo>();
   
   const location = useLocation<LocationState>();
   const history = useHistory();
 
   const [showToast, setShowToast] = useState(false);
+  const [showModalEditItinerary, setShowModalEditItinerary] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
@@ -77,9 +86,15 @@ export default function MeusItinerarios() {
 
   useEffect(() => {
     getItineraries().then((response) => {
-      setRoutes(response.data);
+      setItineraries(response.data);
     });
   }, [])
+
+  function editItinerary(itinerary: ItineraryInfo) {
+    // setSelectedItinerary(itinerary);
+    // setShowModalEditItinerary(true);
+    history.push("/editar-itinerario", { itinerary });
+  }
 
   return (
     <IonPage>
@@ -89,10 +104,10 @@ export default function MeusItinerarios() {
       ></PageHeader>
 
       <IonContent fullscreen>
-        {routes ? (
-          routes.map((itinerary, index) => {
+        {itineraries ? (
+          itineraries.map((itinerary, index) => {
             return (
-              <IonCard key={index}>
+              <IonCard key={index} onClick={() => editItinerary(itinerary)}>
                 <IonCardHeader>
                   <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
                 </IonCardHeader>
@@ -109,9 +124,9 @@ export default function MeusItinerarios() {
                     {itinerary.destinations.map((destination, index) => {
                       if (destination.is_final) {
                         return ( 
-                          <div key={index}>
+                          <label key={index}>
                             {destination.formatted_address}
-                          </div>
+                          </label>
                         )
                       }
                     })}
@@ -130,6 +145,39 @@ export default function MeusItinerarios() {
             <IonIcon icon={add}></IonIcon>
           </IonFabButton>
         </IonFab>
+
+        <IonModal isOpen={showModalEditItinerary}>
+          <IonHeader translucent>
+            <IonToolbar>
+              <IonTitle>{selectedItinerary ? selectedItinerary.itinerary_nickname : ''}</IonTitle>
+              <IonButtons slot="start">
+                <IonIcon
+                  size="large"
+                  icon={closeOutline}
+                  onClick={() => setShowModalEditItinerary(false)}
+                />
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+
+          <IonContent>
+            {selectedItinerary ? (
+              <div>
+                <h1>{selectedItinerary.itinerary_nickname}</h1>
+                <h1>{selectedItinerary.estimated_departure_address}</h1>
+                <h1>{selectedItinerary.estimated_arrival_time}</h1>
+              </div>
+            ) : (
+              <h1>Carregando...</h1>
+            )}
+          </IonContent>
+
+          <IonFooter>
+            <IonButton expand="block">
+              Salvar alterações
+            </IonButton>
+          </IonFooter>
+        </IonModal>
 
         <IonToast
           position="top"

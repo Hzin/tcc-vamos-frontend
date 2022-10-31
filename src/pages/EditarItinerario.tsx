@@ -69,7 +69,7 @@ interface Destinations extends Address {
   is_final?: boolean;
 }
 
-export default function CadastrarItinerario() {
+export default function EditarItinerario() {
   const minDate = new Date();
 
   const history = useHistory();
@@ -89,6 +89,7 @@ export default function CadastrarItinerario() {
   const [vans, setVans] = useState<VanInfo[]>();
 
   //Infos
+  const [itinerary, setItinerary] = useState<CreateItineraryRequest>();
   const [initialAddress, setInitialAddress] = useState<Address>();
   const [neighborhoods, setNeighborhoods] = useState<Address[]>([]);
   const [finalAddress, setFinalAddress] = useState<Address>();
@@ -101,10 +102,15 @@ export default function CadastrarItinerario() {
   const [dailyPrice, setDailyPrice] = useState<number>(40);
   const [van, setVan] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
+  const [teste, setTeste] = useState<string>("");
 
   //Estados para limpar o valor dos campos após selecionar uma opção
   const [valueControl1, setValueControl1] = useState<string>("");
   const [valueControl2, setValueControl2] = useState<string>("");
+
+  const redirectUserToLogin = () => {
+    history.push({ pathname: "/login" });
+  };
 
   const onBtnClicked = async (direction: string) => {
     const swiper = await mySlides.current.getSwiper();
@@ -116,13 +122,21 @@ export default function CadastrarItinerario() {
   };
 
   useEffect(() => {
+    if (history.location.state === undefined) {
+      history.push({ pathname: "/itinerarios" });
+    } else {
+      const itinerary = history.location.state as CreateItineraryRequest;
+      setItinerary(itinerary);
+      // setTeste(itinerary.estimated_departure_address);
+    }
+
     const getUserVans = async () => {
       let userId = "";
 
       const refreshSessionRes = await sessionsService.refreshSession();
 
       if (refreshSessionRes.error) {
-        history.push({ pathname: "/login" });
+        redirectUserToLogin();
         return;
       }
 
@@ -152,6 +166,12 @@ export default function CadastrarItinerario() {
 
     getUserVans();
   }, []);
+
+  useEffect(() => {
+    if (itinerary) {
+      setTeste(itinerary.estimated_departure_address);
+    }
+  }, [itinerary]);
 
   useEffect(() => {
     if (initialAddress) {
@@ -389,9 +409,11 @@ export default function CadastrarItinerario() {
               </h1>
               <div className="flex items-center mb-3">
                 <IonIcon icon={locateOutline}></IonIcon>
+                <IonLabel>{teste}</IonLabel>
                 <AutoCompleteInput
                   placeholder="R. José Paulino, 1234"
                   className="ml-2"
+                  value={teste}
                   onAddressSelected={(address: Address) =>
                     setInitialAddress(address)
                   }

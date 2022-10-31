@@ -1,46 +1,23 @@
 import {
-  IonBackButton,
-  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonHeader,
-  IonIcon,
-  IonItem,
-  IonLabel,
   IonPage,
-  IonTitle,
   IonToast,
-  IonToolbar,
 } from "@ionic/react";
 import { Color } from "@ionic/core";
-import { carOutline } from "ionicons/icons";
-import { useContext, useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router";
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 
-import { UserContext } from "../App";
 
-import * as vehiclesRoutes from "../services/api/vehicles";
+import * as vehiclesService from "../services/functions/vehiclesService";
 
 import sessionsService from "../services/functions/sessionsService";
 import { closeToast } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
-
-interface VehicleInfo {
-  plate: string;
-  brand: string;
-  model: string;
-  seats_number: string;
-  document_status: boolean;
-  locator_name: string;
-  locator_address: string;
-  locator_complement: string;
-  locator_city: string;
-  locator_state: string;
-}
 
 const Itinerario: React.FC = () => {
   const history = useHistory();
@@ -49,7 +26,7 @@ const Itinerario: React.FC = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
-  const [userVehicles, setUserVehicles] = useState<VehicleInfo[]>();
+  const [userVehicles, setUserVehicles] = useState<vehiclesService.VehicleInfo[]>();
 
   const redirectUserToLogin = () => {
     history.push({ pathname: "/login" });
@@ -70,18 +47,10 @@ const Itinerario: React.FC = () => {
         userId = refreshSessionRes.userId;
       }
 
-      vehiclesRoutes
+      vehiclesService
         .getByUserId(userId)
         .then((response) => {
-          if (response.status === "error") {
-            setToastColor("danger");
-            setToastMessage(response.message);
-            setShowToast(true);
-
-            return;
-          }
-
-          setUserVehicles(response.data);
+          setUserVehicles(response);
         })
         .catch((err) => {
           setToastColor("danger");
@@ -114,7 +83,8 @@ const Itinerario: React.FC = () => {
                 {vehicle.locator_name ? (
                   <>
                     <IonCardContent>
-                      {vehicle.seats_number} assentos - Locador: {vehicle.locator_name}
+                      {vehicle.seats_number} assentos - Locador:{" "}
+                      {vehicle.locator_name}
                     </IonCardContent>
                   </>
                 ) : (

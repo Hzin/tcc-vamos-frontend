@@ -28,6 +28,7 @@ import PerfilEditar from "./pages/PerfilEditar";
 import CadastrarItinerario from "./pages/CadastrarItinerario";
 import MeusItinerarios from "./pages/MeusItinerarios";
 import MeusVeiculos from "./pages/MeusVeiculos";
+import Veiculo from "./pages/Veiculo";
 import VeiculoCadastro from "./pages/VeiculoCadastro";
 
 import BuscarItinerario from "./pages/BuscarItinerario";
@@ -39,6 +40,10 @@ import VinculoVan from "./pages/VinculoVan";
 import VinculoVanEditar from "./pages/VinculoVanEditar";
 import Contratos from "./pages/Contratos";
 import ListaDePresenca from "./pages/ListaDePresenca";
+import Buscas from "./pages/Buscas";
+import Viagem from "./pages/Viagem";
+
+import ModerarDocumentos from "./pages/ModerarDocumentos";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -57,11 +62,13 @@ import "@ionic/react/css/text-alignment.css";
 import "@ionic/react/css/text-transformation.css";
 
 /* Theme variables */
+import './theme/custom-tab-bar.css';
 import "./theme/variables.css";
 
 /* Tailwind styles */
 import "./theme/tailwind.css";
-import Buscas from "./pages/Buscas";
+
+import EditarItinerario from "./pages/EditarItinerario";
 
 setupIonicReact();
 
@@ -94,19 +101,27 @@ const routes = (
       path="/cadastrar-itinerario"
       component={CadastrarItinerario}
     ></Route>
+    <Route exact path="/veiculo" component={Home}></Route>
+    <Route exact path="/veiculo/placa" component={Home}></Route>
+    <Route exact path="/veiculo/placa/:id" component={Veiculo}></Route>
+
     <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
+    <Route exact path="/editar-itinerario" component={EditarItinerario}></Route>
 
     <Route exact path="/buscas" component={Buscas}></Route>
     <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
     <Route exact path="/buscar/passageiro" component={BuscarPassageiro}></Route>
     <Route exact path="/buscar/itinerario/lista" component={ListaItinerarios}></Route>
 
-
     <Route exact path="/itinerario/solicita-entrada-van" component={SolicitaEntradaVan}></Route>
     <Route exact path="/vinculo-van" component={VinculoVan}></Route>
     <Route exact path="/vinculo-van-editar" component={VinculoVanEditar}></Route>
     <Route exact path="/contratos" component={Contratos}></Route>
     <Route exact path="/itinerario/lista-de-presenca" component={ListaDePresenca}></Route>
+    <Route exact path="/viagem" component={Home}></Route>
+    <Route exact path="/viagem/:id" component={Viagem}></Route>
+
+    <Route exact path="/documentos/moderar" component={ModerarDocumentos}></Route>
 
     <Route exact path="/">
       <Redirect to="/home" />
