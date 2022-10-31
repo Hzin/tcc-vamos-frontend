@@ -55,7 +55,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "cross-env TAILWIND_MODE=watch craco start",
+    "start": "cross-env TAILWIND_MODE=watch craco start -p 10003",
     "build": "craco build",
     "ionic:serve": "cross-env TAILWIND_MODE=watch craco start",
     "ionic:build": "craco build",
