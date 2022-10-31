@@ -38,11 +38,8 @@ import { Itinerary } from "../models/itinerary.model";
 import { PageHeader } from "../components/PageHeader";
 
 import * as itinerariesService from "../services/functions/itinerariesService";
-<<<<<<< Updated upstream
-=======
 
 import { CardItinerary } from "../components/CardItinerary";
->>>>>>> Stashed changes
 
 interface coordinatesInfo {
   formatted_address: string;

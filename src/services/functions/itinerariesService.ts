@@ -49,3 +49,13 @@ export async function createItinerary(
 
   return res;
 }
+
+export async function createItineraryRequest(
+  request: itinerariesRoutes.CreateRequest
+): Promise<any> {
+  let res: any;
+
+  res = await itinerariesRoutes.createRequest(request);
+
+  return res;
+}
