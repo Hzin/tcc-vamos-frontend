@@ -16,6 +16,9 @@ const vehiclesRoutes = {
   update: {
     url: `${vehiclesRoutesDefault}/`
   },
+  delete: {
+    url: `${vehiclesRoutesDefault}/`
+  },
 
   // urls de document
   searchDocumentFile: {
@@ -30,17 +33,24 @@ const vehiclesRoutes = {
   updateDocumentStatus: {
     url: `${vehiclesRoutesDefault}/document/status`
   },
+  getPendingDocuments: {
+    url: `${vehiclesRoutesDefault}/documents/pending`
+  },
 
   // urls de picture
   searchPictureFile: {
     url: `${vehiclesRoutesDefault}/picture/search`
   },
   uploadPictureFile: {
-    url: `${vehiclesRoutesDefault}/picture/upload`
+    url: `${vehiclesRoutesDefault}/picture/update`
   },
   deletePictureFile: {
     url: `${vehiclesRoutesDefault}/picture/delete`
   },
+
+  canCreateItineraries: {
+    url: `${vehiclesRoutesDefault}/can_create_itineraries`
+  }
 }
 
 export default vehiclesRoutes;

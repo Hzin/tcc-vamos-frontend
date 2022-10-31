@@ -100,3 +100,9 @@ export async function createUserSearch(
   console.log(response);
   setStore(response);
 }
+
+export async function checkIfUserIsAdmin() {
+  const response = await instance.get(`${userRoutes.checkIfUserIsAdmin.url}`);
+
+  return response.data
+}

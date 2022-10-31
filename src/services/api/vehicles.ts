@@ -2,29 +2,15 @@ import instance from "./api";
 
 import vehiclesRoutes from "../../constants/routes/vehiclesRoutes";
 import { vehicleDocumentStatus } from "../../constants/vehicleDocumentStatus";
+import { VehicleInfo } from "../functions/vehiclesService";
 
 export async function getByPlate(vehicleId: string): Promise<VehicleInfo> {
-
-  const response = await instance.get(vehiclesRoutes.getByPlate.url + `/${vehicleId}`);
+  let response = await instance.get(vehiclesRoutes.getByPlate.url + `/${vehicleId}`);
 
   return response.data;
 }
 
-export interface VehicleInfo {
-  plate: string;
-  brand: string;
-  model: string;
-  seats_number: string;
-  document_status: boolean;
-  locator_name: string;
-  locator_address: string;
-  locator_complement: string;
-  locator_city: string;
-  locator_state: string;
-}
-
 export async function getByUserId(userId: string): Promise<VehicleInfo[]> {
-
   const response = await instance.get(vehiclesRoutes.getByUserId.url + `/${userId}`);
 
   return response.data.data;
@@ -55,6 +41,11 @@ interface UpdateVehicleBody {
 
 export async function update(vehicleData: UpdateVehicleBody): Promise<any> {
   const response = await instance.patch(vehiclesRoutes.update.url, vehicleData);
+  return response.data;
+}
+
+export async function deleteVehicle(plate: string): Promise<any> {
+  const response = await instance.delete(`${vehiclesRoutes.delete.url}/${plate}`);
   return response.data;
 }
 
@@ -105,7 +96,7 @@ export async function searchPictureFile(SearchFileBody: SearchFileBody): Promise
 }
 
 export async function uploadPictureFile(uploadData: FormData): Promise<any> {
-  const response = await instance.post(vehiclesRoutes.uploadPictureFile.url, uploadData);
+  const response = await instance.patch(vehiclesRoutes.uploadPictureFile.url, uploadData);
   return response.data;
 }
 
@@ -115,5 +106,15 @@ interface DeleteVehiclePictureFileBody {
 
 export async function deletePictureFile(deleteData: DeleteVehiclePictureFileBody): Promise<any> {
   const response = await instance.patch(vehiclesRoutes.deletePictureFile.url, deleteData);
+  return response.data;
+}
+
+export async function getPendingDocuments(): Promise<any> {
+  const response = await instance.get(vehiclesRoutes.getPendingDocuments.url);
+  return response.data;
+}
+
+export async function canCreateItineraries(plate: string): Promise<any> {
+  const response = await instance.get(`${vehiclesRoutes.canCreateItineraries.url}/${plate}`);
   return response.data;
 }

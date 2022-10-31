@@ -19,7 +19,6 @@ import * as tripsService from "../services/api/trips";
 import { reloadPage } from "../services/utils";
 
 import { useHistory } from "react-router";
-import { useState } from "react";
 
 interface ComponentProps {
   itinerary: Itinerary;

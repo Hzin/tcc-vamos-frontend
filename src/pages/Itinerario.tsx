@@ -1,29 +1,19 @@
 import {
-  IonBackButton,
-  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonHeader,
-  IonIcon,
-  IonItem,
-  IonLabel,
   IonPage,
-  IonTitle,
   IonToast,
-  IonToolbar,
 } from "@ionic/react";
 import { Color } from "@ionic/core";
-import { carOutline } from "ionicons/icons";
-import { useContext, useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router";
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 
-import { UserContext } from "../App";
 
-import * as vehiclesRoutes from "../services/api/vehicles";
+import * as vehiclesService from "../services/functions/vehiclesService";
 
 import sessionsService from "../services/functions/sessionsService";
 import { closeToast } from "../services/utils";
@@ -36,7 +26,7 @@ const Itinerario: React.FC = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
-  const [userVehicles, setUserVehicles] = useState<vehiclesRoutes.VehicleInfo[]>();
+  const [userVehicles, setUserVehicles] = useState<vehiclesService.VehicleInfo[]>();
 
   const redirectUserToLogin = () => {
     history.push({ pathname: "/login" });
@@ -57,7 +47,7 @@ const Itinerario: React.FC = () => {
         userId = refreshSessionRes.userId;
       }
 
-      vehiclesRoutes
+      vehiclesService
         .getByUserId(userId)
         .then((response) => {
           setUserVehicles(response);
