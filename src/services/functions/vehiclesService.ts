@@ -1,9 +1,5 @@
-import { getStaticUrl } from "../../config/api.config";
 import { vehicleDocumentStatus } from "../../constants/vehicleDocumentStatus";
-import { Itinerary } from "../../models/itinerary.model";
-import { User } from "../../models/user.model";
 import { Vehicle } from "../../models/vehicle.model";
-import { VehicleDocument } from "../../models/vehicleDocument.model";
 import * as vehiclesRoutes from "../api/vehicles";
 import { convertFilePathToStaticUrl } from "../utils";
 

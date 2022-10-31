@@ -22,6 +22,9 @@ const usersRoutes = {
   createUserSearch: {
     url: `${usersRoutesDefault}/search`
   },
+  checkIfUserIsAdmin: {
+    url: `${usersRoutesDefault}/is_admin`
+  },
 }
 
 export default usersRoutes;

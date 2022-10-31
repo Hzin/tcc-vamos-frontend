@@ -8,7 +8,6 @@ import {
   IonContent,
   IonIcon,
   IonItem,
-  IonItemDivider,
   IonLabel,
   IonList,
   IonListHeader,
@@ -64,6 +63,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
   const [isVisitor, setIsVisitor] = useState(true);
   const [isDriver, setIsDriver] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [incompleteProfile, setIncompleteProfile] = useState(false);
   const [incompleteProfileCounter, setIncompleteProfileCounter] = useState(0);
@@ -157,6 +157,12 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
       if (!userIsDriverRes.error && userIsDriverRes.result !== undefined) {
         setIsDriver(userIsDriverRes.result);
+      }
+
+      const userIsAdminRes = await usersService.checkIfUserIsAdmin();
+
+      if (!userIsDriverRes.error && userIsDriverRes.result !== undefined) {
+        setIsAdmin(userIsAdminRes);
       }
 
       if (getByIdRes.userData) {
@@ -317,8 +323,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
               <></>
             )}
 
-            <IonItemDivider />
-            <IonListHeader class="text-lg">Configurações de veículo</IonListHeader>
+            <IonListHeader class="text-lg mt-4">Configurações de veículo</IonListHeader>
 
             <IonItem
               button
@@ -328,7 +333,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
               <IonLabel>Cadastrar veículo</IonLabel>
             </IonItem>
 
-            {isDriver ? (
+            {isDriver && (
               <>
                 <IonItem
                   button
@@ -338,8 +343,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                   <IonLabel>Meus veículos</IonLabel>
                 </IonItem>
 
-                <IonItemDivider />
-                <IonListHeader class="text-lg">Configurações de itinerário</IonListHeader>
+                <IonListHeader class="text-lg mt-4">Configurações de itinerário</IonListHeader>
 
                 <IonItem
                   button
@@ -360,42 +364,47 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                   <IonLabel>Meus itinerários</IonLabel>
                 </IonItem>
               </>
-            ) : (
-              <></>
+            )
+            }
+
+            {isDriver && (
+              <>
+                <IonListHeader class="text-lg mt-4">Configurações de motorista</IonListHeader>
+                <IonItem>
+                  <IonIcon icon={cardOutline} slot="start" />
+                  <IonLabel>Pagamentos</IonLabel>
+                </IonItem>
+                <IonItem>
+                  <IonIcon icon={starOutline} slot="start" />
+                  <IonLabel>Avaliações</IonLabel>
+                </IonItem>
+
+                <IonItem
+                  button
+                  onClick={() => history.push({ pathname: "/buscar-passageiro" })}
+                >
+                  <IonIcon icon={personOutline} slot="start" />
+                  <IonLabel>Buscar passageiros</IonLabel>
+                </IonItem>
+              </>
             )}
 
-            <IonItemDivider />
-            <IonListHeader class="text-lg">Configurações de motorista</IonListHeader>
-            <IonItem>
-              <IonIcon icon={cardOutline} slot="start" />
-              <IonLabel>Pagamentos</IonLabel>
-            </IonItem>
-            <IonItem>
-              <IonIcon icon={starOutline} slot="start" />
-              <IonLabel>Avaliações</IonLabel>
-            </IonItem>
+            {isAdmin && (
+              <>
 
-            <IonItem
-              button
-              onClick={() => history.push({ pathname: "/buscar-passageiro" })}
-            >
-              <IonIcon icon={personOutline} slot="start" />
-              <IonLabel>Buscar passageiros</IonLabel>
-            </IonItem>
+                <IonListHeader class="text-lg mt-4">Configurações de administrador</IonListHeader>
+                <IonItem
+                  button
+                  onClick={() => history.push({ pathname: "/documentos/moderar" })}
+                >
+                  <IonIcon icon={hammerOutline} slot="start" />
+                  <IonLabel>Moderar documentos de vans</IonLabel>
+                </IonItem>
+              </>
+            )
+            }
 
-            <IonItemDivider />
-            <IonListHeader class="text-lg">Configurações de administrador</IonListHeader>
-
-            <IonItem
-              button
-              onClick={() => history.push({ pathname: "/documentos/moderar" })}
-            >
-              <IonIcon icon={hammerOutline} slot="start" />
-              <IonLabel>Moderar documentos de vans</IonLabel>
-            </IonItem>
-
-            <IonItemDivider />
-            <IonListHeader class="text-lg">Outros</IonListHeader>
+            <IonListHeader class="text-lg mt-4">Outros</IonListHeader>
 
             <IonItem button onClick={logoff}>
               <IonIcon icon={exitOutline} slot="start" />
