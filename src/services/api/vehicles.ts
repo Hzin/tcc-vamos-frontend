@@ -44,6 +44,11 @@ export async function update(vehicleData: UpdateVehicleBody): Promise<any> {
   return response.data;
 }
 
+export async function deleteVehicle(plate: string): Promise<any> {
+  const response = await instance.delete(`${vehiclesRoutes.delete.url}/${plate}`);
+  return response.data;
+}
+
 // interface
 interface SearchFileBody {
   vehicle_plate: string,
@@ -106,5 +111,10 @@ export async function deletePictureFile(deleteData: DeleteVehiclePictureFileBody
 
 export async function getPendingDocuments(): Promise<any> {
   const response = await instance.get(vehiclesRoutes.getPendingDocuments.url);
+  return response.data;
+}
+
+export async function canCreateItineraries(plate: string): Promise<any> {
+  const response = await instance.get(`${vehiclesRoutes.canCreateItineraries.url}/${plate}`);
   return response.data;
 }

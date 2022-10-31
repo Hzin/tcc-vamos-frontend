@@ -21,6 +21,18 @@ export interface VehicleInfo {
   locator_state: string;
 }
 
+export async function deleteVehicle(plate: string): Promise<any> {
+  let res: any;
+
+  try {
+    res = await vehiclesRoutes.deleteVehicle(plate);
+  } catch (error) {
+    // TODO
+  }
+
+  return res.message;
+}
+
 export async function getByUserId(user_id: string): Promise<any[]> {
   let res: VehicleInfo[] = [];
 
@@ -109,6 +121,23 @@ export async function deleteDocumentFile(vehicle_plate: string, document_type: s
 
   try {
     res = await vehiclesRoutes.deleteDocumentFile({ vehicle_plate, document_type });
+  } catch (error) {
+    // TODO
+  }
+
+  return res;
+}
+
+export interface CanCreateItinerariesResponse {
+  message: string,
+  data: boolean
+}
+
+export async function canCreateItineraries(plate: string): Promise<CanCreateItinerariesResponse> {
+  let res: any;
+
+  try {
+    res = await vehiclesRoutes.canCreateItineraries(plate);
   } catch (error) {
     // TODO
   }

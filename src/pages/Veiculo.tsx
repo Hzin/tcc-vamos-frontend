@@ -94,6 +94,29 @@ const IonChipVehicleDocumentStatus = (
   );
 };
 
+interface IonChipItineraryCreationStatusProps {
+  status: boolean | undefined
+}
+
+export const IonChipItineraryCreationStatus = (props: IonChipItineraryCreationStatusProps) => {
+  if (props.status === undefined) {
+    return <></>;
+  }
+
+  let ionChipColor: Color = "primary", ionChipLabel = "Pode criar itinerários";
+
+  if (!props.status) {
+    ionChipColor = "warning"
+    ionChipLabel = "Não pode criar itinerários"
+  }
+
+  return (
+    <>
+      <IonChip color={ionChipColor}>{ionChipLabel}</IonChip>
+    </>
+  );
+};
+
 const Veiculo: React.FC<ScanNewProps> = (props) => {
   const history = useHistory();
 
@@ -142,8 +165,20 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
   const getVehicle = async (vehicle_plate: string) => {
     await vehiclesService.getByPlate(vehicle_plate).then((response) => {
       setVehicleInfo(response);
+      getVehiclesItineraryCreationStatus(response.plate)
     });
   };
+
+  const [vehicleCanCreateItineraries, setVehicleCanCreateItineraries] = useState<boolean>();
+
+  const getVehiclesItineraryCreationStatus = async (vehicle_plate: string) => {
+    await vehiclesService
+      .canCreateItineraries(vehicle_plate)
+      .then((response) => {
+        console.log(response)
+        setVehicleCanCreateItineraries(response.data)
+      })
+  }
 
   const handleChangeFileVehicleDocument = (e: any) => {
     setSelectedFileVehicleDocument(e.target.files[0]);
@@ -467,7 +502,13 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
             <IonGrid className="ion-padding">
               <IonRow>
                 <IonCol size="12">
-                  <CardInfoBasic size="small" message="Para poder criar itinerários, o veículo precisa ter os documentos 'CRLV' e 'CRV' aprovados!"/>
+                  <IonChipItineraryCreationStatus status={vehicleCanCreateItineraries} />
+                </IonCol>
+              </IonRow>
+
+              <IonRow>
+                <IonCol size="12">
+                  <CardInfoBasic size="small" message="Para poder criar itinerários, o veículo precisa ter os documentos 'CRLV' e 'CRV' aprovados!" />
                 </IonCol>
               </IonRow>
 
