@@ -38,16 +38,21 @@ import { Itinerary } from "../models/itinerary.model";
 import { PageHeader } from "../components/PageHeader";
 
 import * as itinerariesService from "../services/functions/itinerariesService";
+<<<<<<< Updated upstream
+=======
 
-interface addressInfo {
+import { CardItinerary } from "../components/CardItinerary";
+>>>>>>> Stashed changes
+
+interface coordinatesInfo {
   formatted_address: string;
   lat: number;
   lng: number;
 }
 
 interface InfoBusca {
-  addressFrom: addressInfo;
-  addressTo: addressInfo;
+  coordinatesFrom: coordinatesInfo;
+  coordinatesTo: coordinatesInfo;
   period: string;
 
   itineraries: Itinerary[];
@@ -57,6 +62,7 @@ const ListaItinerarios: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
   const props = location.state as InfoBusca;
+
   const [itinerariesList, setItinerariesList] = useState<Itinerary[]>([]);
   const [showModalFilters, setShowModalFilters] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -80,14 +86,38 @@ const ListaItinerarios: React.FC = () => {
   useEffect(() => {
     if (props.itineraries) {
       setItinerariesList(props.itineraries);
+
+      return
     }
+
+    if (!props.coordinatesFrom || !props.coordinatesTo || !props.period) return
+
+    searchItineraries(
+      props.coordinatesFrom,
+      props.coordinatesTo,
+      props.period
+    )
   }, [props]);
+
+  const searchItineraries = async (coordinatesFrom: coordinatesInfo, coordinatesTo: coordinatesInfo, period: string) => {
+    // TODO, trocar
+    // await itinerariesService.searchItineraries(
+    // {
+    //   coordinatesFrom,
+    //   coordinatesTo,
+    //   period
+    // }
+    await itinerariesService.getAllItineraries()
+      .then((response) => {
+        setItinerariesList(response)
+      });
+  }
 
   function criaAlerta() {
     createUserSearch(
-      props.addressFrom.lat,
-      props.addressFrom.lng,
-      props.addressTo.formatted_address
+      props.coordinatesFrom.lat,
+      props.coordinatesFrom.lng,
+      props.coordinatesTo.formatted_address
     )
       .then(() => {
         setMessageToast("Alerta criado com sucesso!");
@@ -103,12 +133,12 @@ const ListaItinerarios: React.FC = () => {
   async function applyFilters() {
     const body = {
       coordinatesFrom: {
-        lat: props.addressFrom.lat,
-        lng: props.addressFrom.lng,
+        lat: props.coordinatesFrom.lat,
+        lng: props.coordinatesFrom.lng,
       },
       coordinatesTo: {
-        lat: props.addressTo.lat,
-        lng: props.addressTo.lng,
+        lat: props.coordinatesTo.lat,
+        lng: props.coordinatesTo.lng,
       },
       period: props.period,
       orderBy,
@@ -141,14 +171,14 @@ const ListaItinerarios: React.FC = () => {
         <IonCard button color="light">
           <IonCardHeader>
             <IonCardSubtitle>
-              Origem: {props.addressFrom.formatted_address}
+              Origem: {props.coordinatesFrom.formatted_address}
             </IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
         <IonCard button color="light">
           <IonCardHeader>
             <IonCardSubtitle>
-              Destino: {props.addressTo.formatted_address}
+              Destino: {props.coordinatesTo.formatted_address}
             </IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
