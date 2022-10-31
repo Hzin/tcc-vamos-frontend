@@ -28,7 +28,7 @@ export const CardInfoBasic = (props: ComponentProps) => {
     }
 
     setClassName(`text-[${fontSize}px]`)
-  }, [])
+  }, [props])
 
   return (
     <IonCard>
