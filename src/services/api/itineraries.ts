@@ -41,20 +41,17 @@ export interface CreateRequest {
 }
 
 export async function getItineraries() {
-
   const response = await instance.get(transportsRoutes.get.url);
   return response.data;
 }
 
 export async function create(itinerary: CreateItineraryRequest) {
-
   const response = await instance.post(transportsRoutes.create.url, itinerary);
   return response.data;
 }
 
 export async function search(body: SearchItinerariesRequest
 ) {
-
   const response = await instance.post(
     transportsRoutes.search.url,
     body,
@@ -63,7 +60,6 @@ export async function search(body: SearchItinerariesRequest
 }
 
 export async function createRequest(request: CreateRequest) {
-
   const response = await instance.post(transportsRoutes.request.url, request);
   return response.data;
 }

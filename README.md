@@ -7,4 +7,4 @@
     - Ao terminar o desenvolvimento abra um pull request para a branch "develop" e resolva os conflitos caso tenha
 
 # Caso dê o erro "Error: error:0308010C:digital envelope routines::unsupported"
-export NODE_OPTIONS=--openssl-legacy-provider
+    export NODE_OPTIONS=--openssl-legacy-provider

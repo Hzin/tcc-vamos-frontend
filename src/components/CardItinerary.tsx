@@ -2,13 +2,14 @@ import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, Ion
 import { cashOutline, cashSharp, timeOutline, timeSharp } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+
 import { Itinerary } from "../models/itinerary.model";
-import { Vehicle } from "../models/vehicle.model";
-import { convertNumberToPrice } from "../services/utils";
+
+import { convertNumberToPrice, getUserFullName } from "../services/utils";
+import { VehiclePicture } from "./VehiclePicture";
 
 interface ComponentProps {
   itinerary: Itinerary;
-  vehicle: Vehicle;
 }
 
 interface CardInfo {
@@ -25,8 +26,6 @@ export const CardItinerary = (props: ComponentProps) => {
 
   useEffect(() => {
     let cardInfoArray: CardInfo[] = []
-
-    console.log(props.itinerary)
 
     cardInfoArray.push({
       icon: cashSharp,
@@ -47,25 +46,39 @@ export const CardItinerary = (props: ComponentProps) => {
     cardTimeInfoArray.push({
       icon: timeOutline,
       label: 'Horário de saída estimado',
-      value: props.itinerary.estimated_departure_time
+      value: formatTimeField(props.itinerary.estimated_departure_time)
     })
 
     cardTimeInfoArray.push({
       icon: timeSharp,
       label: 'Horário de chegada estimado',
-      value: props.itinerary.estimated_arrival_time
+      value: formatTimeField(props.itinerary.estimated_arrival_time)
     })
 
     setCardInfo(cardInfoArray)
     setCardTimeInfo(cardTimeInfoArray)
   }, [])
 
+  const formatTimeField = (time: string) => {
+    const separator = ':'
+
+    const timeSplit = time.split(separator)
+    
+    if (timeSplit.length !== 3) return time
+
+    timeSplit.pop()
+    if (!timeSplit) return time
+
+    return timeSplit.join(separator)
+  }
+
   return (
-    <IonCard>
-      <img alt="vehicle_picture" src={props.vehicle.picture} />
+    <IonCard button>
+      <VehiclePicture picture_path={props.itinerary.vehicle.picture}  />
 
       <IonCardHeader>
         {props.itinerary.itinerary_nickname && (<IonCardSubtitle className="text-[13px]">Apelido: "{props.itinerary.itinerary_nickname}"</IonCardSubtitle>)}
+        <IonCardSubtitle className="text-[13px]">Motorista: {getUserFullName(props.itinerary.user)}</IonCardSubtitle>
         <IonCardTitle>Van de Nome do motorista</IonCardTitle>
       </IonCardHeader>
 

@@ -164,6 +164,7 @@ const ListaItinerarios: React.FC = () => {
         pageName="Resultados da busca"
         backButtonPageUrl="/buscar/itinerario"
       />
+
       <IonContent fullscreen>
         <IonCard button color="light">
           <IonCardHeader>
@@ -192,43 +193,9 @@ const ListaItinerarios: React.FC = () => {
         </IonToolbar>
 
         {itinerariesList && itinerariesList.length !== 0 ? (
-          <>
-            {itinerariesList.map((itinerary, index) => {
-              return (
-                <IonCard
-                  button
-                  key={index}
-                  onClick={() => {
-                    history.push(`/itinerary/${itinerary.id_itinerary}`);
-                  }}
-                >
-                  <IonCardHeader>
-                    <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
-                    {/* <IonCardContent> */}
-                    {/* <IonList> */}
-                    <IonItem>
-                      <IonIcon slot={"start"} icon={personOutline} />
-                      <IonLabel>Motorista: {itinerary.driverName}</IonLabel>
-                    </IonItem>
-                    <IonItem>
-                      <IonIcon slot={"start"} icon={cashOutline} />
-                      <IonLabel>
-                        Valor: {convertNumberToPrice(itinerary.monthly_price)}
-                      </IonLabel>
-                    </IonItem>
-                    <IonItem>
-                      <IonIcon slot={"start"} src="https://cdn-icons-png.flaticon.com/512/6165/6165835.png"/>
-                      <IonLabel>
-                        Vagas disponíveis: {itinerary.available_seats}
-                      </IonLabel>
-                    </IonItem>
-                    {/* </IonList> */}
-                    {/* </IonCardContent> */}
-                  </IonCardHeader>
-                </IonCard>
-              );
-            })}
-          </>
+          itinerariesList.map((itinerary, index) => {
+            return (<CardItinerary key={index} itinerary={itinerary} />)
+          })
         ) : (
           <>
             <div className="m-3">
