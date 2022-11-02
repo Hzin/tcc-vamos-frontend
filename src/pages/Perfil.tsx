@@ -45,6 +45,8 @@ interface ScanNewProps {
       id: string;
     };
   };
+
+  paramId?: string
 }
 
 interface LocationState {
@@ -114,9 +116,14 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
     const loadUserData = async () => {
       let userId = "";
+      console.log(props)
 
       // verify if user is authenticated
-      if (props.match.params.id) {
+      if (props.paramId) {
+        console.log('caiu aqui')
+
+        userId = props.paramId
+      } else if (props.match && props.match.params.id) {
         userId = props.match.params.id;
       } else {
         const refreshSessionRes = await sessionsService.refreshSession();
@@ -180,9 +187,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             document: userData.document,
           });
 
-          console.log(props.match.params.id)
-
-          if (props.match.params.id) {
+          if (props.paramId || (props.match && props.match.params.id)) {
             setIsVisitor(true);
             setPageName(`Perfil de ${userData.name}`)
 
