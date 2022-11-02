@@ -140,16 +140,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       const getByIdRes = await usersService.getById(userId);
 
       if (getByIdRes.error) {
-        if (isVisitor && props.match.params.id) {
-          setToastMessage("Usuário não existe!");
-          setShowToast(true);
-          history.push({ pathname: "/home" });
-        } else {
-          setToastMessage(getByIdRes.error.errorMessage);
-          setShowToast(true);
-        }
-
-        return;
+        history.push({ pathname: "/login" });
       }
 
       // check if user is driver (if they have vans)
