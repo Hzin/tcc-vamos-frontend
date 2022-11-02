@@ -4,18 +4,17 @@ import {
   IonAccordion,
   IonAccordionGroup,
   IonButton,
-  IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
+  IonButtons,
   IonChip,
   IonContent,
+  IonFooter,
   IonIcon,
   IonItem,
   IonLabel,
   IonList,
   IonPage,
   IonToast,
+  IonToolbar,
   useIonAlert,
 } from "@ionic/react";
 
@@ -26,7 +25,7 @@ import { useHistory } from "react-router";
 import Perfil from "./Perfil";
 
 import * as itinerariesService from "../services/functions/itinerariesService";
-import { closeToast, convertDaysOfWeekToObject, convertNumberToPrice, DaysOfWeekObject, formatTimeField, getFormatedAddresses, getUserFullName } from "../services/utils";
+import { closeToast, convertDaysOfWeekToObject, convertNumberToPrice, DaysOfWeekObject, formatTimeField, getFormatedAddresses } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
 import { VehiclePicture } from "../components/VehiclePicture";
 import { Itinerary } from "../models/itinerary.model";
@@ -35,6 +34,7 @@ import { NeighborhoodServed } from "../models/NeighborhoodServed.model";
 import { Destination } from "../models/destination.model";
 import { CardInfoBasicIntoAlertInfo } from "../components/CardInfoBasicIntoAlertInfo";
 import { ShowPageAsModal } from "../components/ShowPageAsModal";
+import { CardItinerary } from "../components/CardItinerary";
 
 interface ScanNewProps {
   match: {
@@ -166,23 +166,35 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
     <IonPage>
       <PageHeader
         pageName="Itinerário"
-        backButtonPageUrl="/perfil"
+        showBackButton
       ></PageHeader>
 
       <IonContent>
         {itinerary && (
           <>
-            <VehiclePicture picture_path={itinerary.vehicle.picture} />
-
-            <IonCard>
-              <IonCardHeader>
-                {itinerary.itinerary_nickname && (<IonCardSubtitle className="text-[13px]">Apelido: "{itinerary.itinerary_nickname}"</IonCardSubtitle>)}
-                <IonCardTitle>Van de {getUserFullName(itinerary.user)}</IonCardTitle>
-              </IonCardHeader>
-            </IonCard>
+            <CardItinerary itinerary={itinerary} onlyHeader />
 
             <IonList>
-              <IonAccordionGroup value="locais" className="mt-1">
+              <IonItem onClick={() => { setShowPageModal(true) }}>
+                <IonLabel>Motorista</IonLabel>
+                <IonChip color='secondary'>
+                  <IonIcon icon={eyeOutline} />
+                  <IonLabel>Ver perfil</IonLabel>
+                </IonChip>
+              </IonItem>
+
+              <ItineraryDetailItem label="Preço mensal" icon={cashSharp} value={convertNumberToPrice(itinerary.monthly_price)} />
+
+              <ItineraryDetailItem label='Vaga avulsa' color={itinerary.accept_daily ? "success" : "danger"} icon={cashOutline} value={convertNumberToPrice(itinerary.daily_price)} secondValue={itinerary.accept_daily ? "Aceita" : "Não aceita"} />
+              <CardInfoBasicIntoAlertInfo alertMessage="Vagas avulsas são viagens que você usa em um dia específico ao invés de pagar um contrato mensal." message="O que são vagas avulsas?" size="small" />
+            </IonList>
+
+            <IonList>
+              {/* <IonButton expand="block" color='success'>
+                <IonLabel>Contratar</IonLabel>
+              </IonButton> */}
+
+              <IonAccordionGroup value="locais">
                 <IonAccordion>
                   <IonItem slot="header" color="primary">
                     <IonLabel>Locais</IonLabel>
@@ -204,15 +216,6 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
                   </IonItem>
                   <div className="ion-padding" slot="content">
                     {/* <IonItem onClick={() => { history.push({ pathname: `/usuario/${itinerary.user.id_user}` }) }}> */}
-                    <IonItem onClick={() => { setShowPageModal(true) }}>
-                      <IonLabel>Motorista</IonLabel>
-                      <IonChip color='secondary'>
-                        <IonIcon icon={eyeOutline} />
-                        <IonLabel>Ver perfil</IonLabel>
-                      </IonChip>
-                    </IonItem>
-                    <ItineraryDetailItem label="Preço mensal" icon={cashSharp} value={convertNumberToPrice(itinerary.monthly_price)} />
-
                     <ItineraryDetailItem label="Lugares disponíveis" icon={personOutline} value={"" + itinerary.available_seats} />
 
 
@@ -240,10 +243,6 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
                     )}
 
                     {itinerary.specific_day && (<ItineraryDetailItem label="Dia específico" value={itinerary.specific_day.toString()} />)}
-
-                    <ItineraryDetailItem label='Vaga avulsa' color={itinerary.accept_daily ? "success" : "danger"} icon={cashOutline} value={convertNumberToPrice(itinerary.daily_price)} secondValue={itinerary.accept_daily ? "Aceita" : "Não aceita"} />
-                    <CardInfoBasicIntoAlertInfo alertMessage="Vagas avulsas são viagens que você usa em um dia específico ao invés de pagar um contrato mensal." message="O que são vagas avulsas?" size="small" />
-
                   </div>
                 </IonAccordion>
               </IonAccordionGroup>
@@ -304,7 +303,24 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
           duration={2500}
           cssClass="text-center max-w-[50%]"
         />
-      </IonContent >
+      </IonContent>
+
+      <IonFooter>
+        <IonToolbar>
+          {itinerary && (
+            <>
+              <IonButtons className="flex justify-between">
+                <div>
+                  <IonButton href={`tel:${itinerary.user.phone_number}`} fill='solid' color='success'>Ligar para motorista</IonButton>
+                </div>
+                <div>
+                  <IonButton onClick={() => { history.push({ pathname: `/itinerario/${itinerary.id_itinerary}/contratos` }) }} fill='solid' color='success'>Contratar</IonButton>
+                </div>
+              </IonButtons>
+            </>
+          )}
+        </IonToolbar>
+      </IonFooter>
     </IonPage >
   );
 };

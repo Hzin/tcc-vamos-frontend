@@ -60,7 +60,7 @@ export const createElement = (htmlCode: string) => {
   document.body.insertBefore(frag, document.body.childNodes[0]);
 }
 
-export const getUserFullName = (user: User) => {
+export const getUserFullName = (user: User): string => {
   return `${user.name} ${user.lastname}`
 }
 

@@ -120,8 +120,6 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
       // verify if user is authenticated
       if (props.paramId) {
-        console.log('caiu aqui')
-
         userId = props.paramId
       } else if (props.match && props.match.params.id) {
         userId = props.match.params.id;

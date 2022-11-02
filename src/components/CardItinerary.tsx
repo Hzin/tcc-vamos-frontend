@@ -8,14 +8,15 @@ import { Itinerary } from "../models/itinerary.model";
 import { convertNumberToPrice, formatTimeField, getUserFullName } from "../services/utils";
 import { VehiclePicture } from "./VehiclePicture";
 
-interface ComponentProps {
-  itinerary: Itinerary;
-}
-
 interface CardInfo {
   icon: string,
   label: string,
-  value: string
+  value: string,
+}
+
+interface ComponentProps {
+  itinerary: Itinerary;
+  onlyHeader?: boolean
 }
 
 export const CardItinerary = (props: ComponentProps) => {
@@ -57,50 +58,51 @@ export const CardItinerary = (props: ComponentProps) => {
 
     setCardInfo(cardInfoArray)
     setCardTimeInfo(cardTimeInfoArray)
-  }, [])
-
-  
+  }, [props])
 
   return (
     <IonCard button>
       <VehiclePicture picture_path={props.itinerary.vehicle.picture} />
-
       <IonCardHeader>
         {props.itinerary.itinerary_nickname && (<IonCardSubtitle className="text-[13px]">Apelido: "{props.itinerary.itinerary_nickname}"</IonCardSubtitle>)}
         <IonCardTitle>Van de {getUserFullName(props.itinerary.user)}</IonCardTitle>
       </IonCardHeader>
 
-      <IonCardContent>
-        {cardInfo && cardInfo.length !== 0 ? (
-          <>
-            {
-              cardInfo.map((info, index) => (
-                <div key={index}>
-                  <IonIcon icon={info.icon} />
-                  <IonLabel>{" "}{info.label}: {info.value}</IonLabel>
+      {!props.onlyHeader && (
+        <>
+          <IonCardContent>
+            {cardInfo && cardInfo.length !== 0 ? (
+              <>
+                {
+                  cardInfo.map((info, index) => (
+                    <div key={index}>
+                      <IonIcon icon={info.icon} />
+                      <IonLabel>{" "}{info.label}: {info.value}</IonLabel>
+                    </div>
+                  ))
+                }
+              </>
+            ) : <></>}
+
+            {cardTimeInfo && cardTimeInfo.length !== 0 ? (
+              <>
+                <div className="mt-4">
+                  {
+                    cardTimeInfo.map((info, index) => (
+                      <div key={index}>
+                        <IonIcon icon={info.icon} />
+                        <IonLabel>{" "}{info.label}: {info.value}</IonLabel>
+                      </div>
+                    ))
+                  }
                 </div>
-              ))
-            }
-          </>
-        ) : <></>}
+              </>
+            ) : <></>}
 
-        {cardTimeInfo && cardTimeInfo.length !== 0 ? (
-          <>
-            <div className="mt-4">
-              {
-                cardTimeInfo.map((info, index) => (
-                  <div key={index}>
-                    <IonIcon icon={info.icon} />
-                    <IonLabel>{" "}{info.label}: {info.value}</IonLabel>
-                  </div>
-                ))
-              }
-            </div>
-          </>
-        ) : <></>}
-
-      </IonCardContent>
-      <IonButton fill="clear" className="float-right" onClick={() => { history.push(`/itinerario/${props.itinerary.id_itinerary}`); }}>Ver detalhes</IonButton>
+          </IonCardContent>
+          <IonButton fill="clear" className="float-right" onClick={() => { history.push(`/itinerario/${props.itinerary.id_itinerary}`); }}>Ver detalhes</IonButton>
+        </>
+      )}
     </IonCard>
   );
 }
