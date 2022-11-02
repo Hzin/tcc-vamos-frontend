@@ -112,7 +112,7 @@ export const CardItinerary = (props: ComponentProps) => {
         ) : <></>}
 
       </IonCardContent>
-      <IonButton fill="clear" className="float-right" onClick={() => { history.push(`/itinerary/${props.itinerary.id_itinerary}`); }}>Ver detalhes</IonButton>
+      <IonButton fill="clear" className="float-right" onClick={() => { history.push(`/itinerario/${props.itinerary.id_itinerary}`); }}>Ver detalhes</IonButton>
     </IonCard>
   );
 }

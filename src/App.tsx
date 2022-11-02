@@ -40,10 +40,8 @@ import Viagem from "./pages/Viagem";
 
 import ModerarDocumentos from "./pages/ModerarDocumentos";
 
-import SolicitaEntradaVan from "./pages/SolicitaEntradaVan";
-import VinculoVan from "./pages/VinculoVan";
-import VinculoVanEditar from "./pages/VinculoVanEditar";
-import Contratos from "./pages/Contratos";
+import ItinerarioContratos from "./pages/ItinerarioContratos";
+import Contrato from "./pages/Contrato";
 import ListaDePresenca from "./pages/ListaDePresenca";
 
 /* Core CSS required for Ionic components to work properly */
@@ -70,6 +68,7 @@ import "./theme/variables.css";
 import "./theme/tailwind.css";
 
 import EditarItinerario from "./pages/EditarItinerario";
+import Itinerario from "./pages/Itinerario";
 
 setupIonicReact();
 
@@ -106,6 +105,7 @@ const routes = (
     <Route exact path="/veiculo/placa" component={Home}></Route>
     <Route exact path="/veiculo/placa/:id" component={Veiculo}></Route>
 
+    <Route exact path="/itinerario/:id" component={Itinerario}></Route>
     <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
     <Route exact path="/editar-itinerario" component={EditarItinerario}></Route>
 
@@ -119,11 +119,10 @@ const routes = (
 
     <Route exact path="/documentos/moderar" component={ModerarDocumentos}></Route>
 
-    <Route exact path="/itinerario/solicita-entrada-van" component={SolicitaEntradaVan}></Route>
-    <Route exact path="/vinculo-van" component={VinculoVan}></Route>
-    <Route exact path="/vinculo-van-editar" component={VinculoVanEditar}></Route>
-    <Route exact path="/contratos" component={Contratos}></Route>
-    <Route exact path="/itinerario/lista-de-presenca" component={ListaDePresenca}></Route>
+    <Route exact path="/itinerario/:id/contratos" component={ItinerarioContratos}></Route>
+    <Route exact path="/viagem/:id" component={Viagem}></Route>
+    <Route exact path="/contrato/:id" component={Contrato}></Route>
+    <Route exact path="/viagem/:id/presenca" component={ListaDePresenca}></Route>
 
     <Route exact path="/">
       <Redirect to="/home" />

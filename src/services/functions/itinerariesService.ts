@@ -60,3 +60,11 @@ export async function createItineraryRequest(
 
   return res;
 }
+
+export async function getById(id: string): Promise<any> {
+  let res: any;
+
+  res = await itinerariesRoutes.getById(id);
+
+  return res.data;
+}

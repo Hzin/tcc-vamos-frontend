@@ -14,6 +14,10 @@ const transportsRoutes = {
   },
   request: {
     url: `${transportsRoutesDefault}/request`
+  },
+
+  getById: {
+    url: `${transportsRoutesDefault}`
   }
 }
 

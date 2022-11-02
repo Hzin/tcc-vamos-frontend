@@ -1,111 +1,172 @@
-import { IonButton, IonContent, IonItemDivider, IonPage, IonToast } from "@ionic/react";
-import { Color } from "@ionic/core";
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
 
-import { closeToast, startTime } from "../services/utils";
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonIcon,
+  IonButtons,
+  IonBackButton,
+} from "@ionic/react";
+import React, { useContext, useState } from "react";
+import { IonGrid, IonRow, IonCol, IonToast } from "@ionic/react";
+import { useHistory } from "react-router-dom";
+import {
+  IonItem,
+  IonLabel,
+  IonButton,
+} from "@ionic/react";
 
-import * as tripsService from "../services/functions/tripsService";
-import { PageHeader } from "../components/PageHeader";
-import { Trip } from "../models/trip.model";
-import { IonChipTripStatus } from "../components/TripCard";
+import * as sessionRoutes from '../services/api/session';
+import LocalStorage from '../LocalStorage';
+import { UserContext } from "../App";
+import { alarmOutline, bookmarkOutline, documentOutline, idCardOutline } from "ionicons/icons";
 
-interface ScanNewProps {
-  match: {
-    params: {
-      id: string;
-    };
-  };
-}
-
-interface ScanNewProps {
-  match: {
-    params: {
-      id: string;
-    };
-  };
-}
-
-const Viagem: React.FC<ScanNewProps> = (props) => {
-  const history = useHistory();
-
-  const [tripInfo, setTripInfo] = useState<Trip>();
-  const [pageName, setPageName] = useState("carregando");
-
+const Viagem: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastColor, setToastColor] = useState<Color>("primary");
+  const [messageToast, setMessageToast] = useState('');
 
-  useEffect(() => {
-    let tripId = "";
+  const history = useHistory();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    if (!props.match.params.id) {
-      history.push({
-        pathname: "/home",
-        state: {
-          redirectData: {
-            showToastMessage: true,
-            toastColor: "warning",
-            toastMessage: "A viagem não existe.",
-          },
-        },
-      });
+  const user = useContext(UserContext);
+
+  function validateEmail(email: string) {
+    const re =
+      // eslint-disable-next-line no-control-regex
+      /^((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$/;
+    return re.test(String(email).toLowerCase());
+  }
+
+  const validateForm = () => {
+    if (!email) {
+      setMessageToast("Por favor, informe o e-mail");
+      setShowToast(true);
+      return false;
     }
 
-    tripId = props.match.params.id;
+    if (!validateEmail(email)) {
+      setMessageToast("E-mail inválido");
+      setShowToast(true);
+      return false;
+    }
 
-    getTrip(tripId);
-  }, []);
+    if (!password) {
+      setMessageToast("Por favor, digite a sua senha");
+      setShowToast(true);
+      return false;
+    }
 
-  const getTrip = async (tripId: string) => {
-    await tripsService.getTrip(tripId).then((response) => {
-      setTripInfo(response);
-      if (tripInfo && tripInfo.nickname) {
-        setPageName(tripInfo.nickname);
-        return;
+    if (password.length < 7 || password.length > 12) {
+      setMessageToast("A senha deve conter entre 7 e 12 dígitos");
+      setShowToast(true);
+      return false;
+    }
+
+    return true;
+  }
+
+  const handleLogin = async () => {
+    if (!validateForm()) {
+      return
+    }
+
+    const singinForm = {
+      login: email,
+      password: password,
+    };
+
+    await sessionRoutes.create(singinForm).then(response => {
+      if (response.status === 'error') {
+        setMessageToast(response.message);
+        setShowToast(true);
+
+        return
       }
-      setPageName(startTime());
-    });
+
+      const { token } = response.token
+
+      LocalStorage.setToken(token);
+
+      user.setIsLoggedIn(true);
+
+      history.push({
+        pathname: '/home', state: {
+          redirectData: {
+            showToastMessage: true,
+            toastColor: "success",
+            toastMessage: "Usuário autenticado com sucesso!",
+          }
+        }
+      })
+    }).catch(error => {
+      // if (!error.response) return
+
+      // se o backend retornou uma mensagem de erro customizada
+      // if (error.response.data.message) {
+      console.dir('Houve um erro: ', { error })
+      alert('Houve um erro')
+    })
   };
 
   return (
     <IonPage>
-      <PageHeader pageName={`Viagem - ${pageName}`} backButtonPageUrl="/home" />
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle >Puc - Campinas</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/vinculo-van" />
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
 
-      <IonContent>
-        {!tripInfo ? (
-          <></>
-        ) : (
-          <>
-            <div className="m-3">
-              <h1 className="mb-3 text-2xl ion-text-center">Viagem</h1>
-              <h1 className="mb-3 text-l">
-                Status: <IonChipTripStatus status={tripInfo.status} />
-              </h1>
-            </div>
+      <IonContent fullscreen>
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonTitle size="large">Minhas Vans</IonTitle>
+          </IonToolbar>
+        </IonHeader>
 
-            <div className="m-3">
-              <IonButton>Lista de presença</IonButton>
-            </div>
+        <IonGrid>
+          <IonRow>
+            <IonCol>
+              <IonButton expand="block" onClick={handleLogin} fill="outline" color="Blue" >
+                Faltar na proxima viagem
+              </IonButton>
+            </IonCol>
+          </IonRow>
 
-            <div className="m-3">
-              <IonButton>Visualizar rota</IonButton>
-            </div>
+          <IonItem>
+            <IonIcon icon={idCardOutline} slot="start" />
+            <IonLabel>Motorista: Maria</IonLabel>
+          </IonItem>
 
-            <div className="m-3">
-              <IonButton>Finalizar viagem</IonButton>
-            </div>
+          <IonItem>
+            <IonIcon icon={alarmOutline} slot="start" />
+            <IonLabel>Horario: 09:45</IonLabel>
+          </IonItem>
 
-            <IonToast
-              position="top"
-              color={toastColor}
-              isOpen={showToast}
-              onDidDismiss={() => closeToast(setShowToast)}
-              message={toastMessage}
-              duration={2500}
-            />
-          </>
-        )}
+          <IonItem>
+            <IonIcon icon={bookmarkOutline} slot="start" />
+            <IonLabel>Status: Ativo</IonLabel>
+          </IonItem>
+
+          <IonItem button onClick={() => history.push({ pathname: '/contratos' })}>
+            <IonIcon icon={documentOutline} slot="start" />
+            <IonLabel>Meu Contrato</IonLabel>
+          </IonItem>
+        </IonGrid>
+
+        <IonToast
+          position="top"
+          color='danger'
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={messageToast}
+          duration={2500}
+        />
       </IonContent>
     </IonPage>
   );

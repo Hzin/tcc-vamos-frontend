@@ -63,3 +63,8 @@ export async function createRequest(request: CreateRequest) {
   const response = await instance.post(transportsRoutes.request.url, request);
   return response.data;
 }
+
+export async function getById(id: string) {
+  const response = await instance.get(`${transportsRoutes.getById.url}/${id}`);
+  return response.data;
+}

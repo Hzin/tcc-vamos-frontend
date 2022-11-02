@@ -16,7 +16,6 @@ import {
   IonToast,
   IonCardHeader,
   IonCardSubtitle,
-  IonCardTitle,
   IonItemDivider,
   IonList,
   IonTitle,
@@ -25,15 +24,13 @@ import {
   IonSelectOption,
 } from "@ionic/react";
 import {
-  cashOutline,
   closeOutline,
   filterOutline,
-  personOutline,
 } from "ionicons/icons";
 import { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import { createUserSearch } from "../services/api/users";
-import { closeToast, convertNumberToPrice } from "../services/utils";
+import { closeToast } from "../services/utils";
 import { Itinerary } from "../models/itinerary.model";
 import { PageHeader } from "../components/PageHeader";
 
@@ -56,7 +53,6 @@ interface InfoBusca {
 }
 
 const ListaItinerarios: React.FC = () => {
-  const history = useHistory();
   const location = useLocation();
   const props = location.state as InfoBusca;
 
