@@ -61,6 +61,8 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
   const history = useHistory();
   const location = useLocation<LocationState>();
 
+  const [pageName, setPageName] = useState('Carregando...');
+
   const [isVisitor, setIsVisitor] = useState(true);
   const [isDriver, setIsDriver] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -178,9 +180,16 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             document: userData.document,
           });
 
-          if (!props.match.params.id) {
-            setIsVisitor(false);
+          console.log(props.match.params.id)
+
+          if (props.match.params.id) {
+            setIsVisitor(true);
+            setPageName(`Perfil de ${userData.name}`)
+
+            return
           }
+
+          setPageName('Meu perfil')
 
           if (!userData.document || !userData.phone_number) {
             setIncompleteProfile(true);
@@ -204,7 +213,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       redirectUserToLogin();
     }
 
-    loadUserData();
+    loadUserData()
 
     return () => {
       isMounted = false;
@@ -213,7 +222,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
   return (
     <IonPage>
-      <PageHeader pageName="Meu perfil"></PageHeader>
+      <PageHeader pageName={pageName} showBackButton></PageHeader>
 
       <IonContent fullscreen>
         <IonCard>
