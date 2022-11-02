@@ -31,24 +31,40 @@ export interface CreateItineraryRequest {
   destinations: Array<Address>;
 }
 
-export async function getItineraries() {
+export interface CreateRequest {
+  user_id: string;
+  itinerary_id: number;
+  address: string;
+  latitude_address: number;
+  longitude_address: number;
+  is_single: boolean;
+}
 
+export async function getItineraries() {
   const response = await instance.get(transportsRoutes.get.url);
   return response.data;
 }
 
 export async function create(itinerary: CreateItineraryRequest) {
-
   const response = await instance.post(transportsRoutes.create.url, itinerary);
   return response.data;
 }
 
 export async function search(body: SearchItinerariesRequest
 ) {
-
   const response = await instance.post(
     transportsRoutes.search.url,
     body,
   );
+  return response.data;
+}
+
+export async function createRequest(request: CreateRequest) {
+  const response = await instance.post(transportsRoutes.request.url, request);
+  return response.data;
+}
+
+export async function getById(id: string) {
+  const response = await instance.get(`${transportsRoutes.getById.url}/${id}`);
   return response.data;
 }

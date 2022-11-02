@@ -1,4 +1,5 @@
 import { getStaticUrl } from '../config/api.config';
+import { User } from '../models/user.model';
 import instance from '../services/api/api';
 
 export async function autoCompleteAddress(address: string) {
@@ -51,4 +52,8 @@ export const createElement = (htmlCode: string) => {
   }
 
   document.body.insertBefore(frag, document.body.childNodes[0]);
+}
+
+export const getUserFullName = (user: User) => {
+  return `${user.name} ${user.lastname}`
 }

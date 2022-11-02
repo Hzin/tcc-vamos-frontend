@@ -1,25 +1,12 @@
 import { Destination } from "./destination.model";
 import { NeighborhoodServed } from "./NeighborhoodServed.model";
 import { Trip } from "./trip.model";
+import { User } from "./user.model";
 import { Vehicle } from "./vehicle.model";
-
-// export interface Itinerary {
-//     id_itinerary: number;
-//     vehicle_plate: string;
-//     price: number;
-//     days_of_week: number;
-//     specific_day: Date;
-//     estimated_departure_time: Date;
-//     estimated_arrival_time: Date;
-//     available_seats: number;
-//     itinerary_nickname: string;
-//     created_at: Date;
-//     updated_at: Date;
-// }
 
 export interface Itinerary {
     id_itinerary: number;
-    vehicle: Vehicle;
+    vehicle_plate: string;
     days_of_week?: string;
     specific_day?: Date;
     estimated_departure_time: string;
@@ -38,5 +25,7 @@ export interface Itinerary {
     trips?: Trip[];
     // created_at: Date;
     // updated_at: Date;
-    driverName?: string
+
+    user: User
+    vehicle: Vehicle;
 }

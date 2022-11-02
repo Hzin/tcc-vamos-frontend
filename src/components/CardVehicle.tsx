@@ -2,6 +2,7 @@ import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, 
 import { peopleOutline } from "ionicons/icons";
 import { useHistory } from "react-router";
 import { VehicleInfo } from "../services/functions/vehiclesService";
+import { VehiclePicture } from "./VehiclePicture";
 
 interface ComponentProps {
   vehicle: VehicleInfo;
@@ -19,7 +20,7 @@ export const CardVehicle = (props: ComponentProps) => {
         });
       }}
     >
-      {props.vehicle.picture ? (<img alt="vehicle_pic" src={props.vehicle.picture} />) : <></>}
+      <VehiclePicture picture_path={props.vehicle.picture}  />
       <IonCardHeader>
         <IonCardTitle>
           {props.vehicle.brand} {props.vehicle.model}

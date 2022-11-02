@@ -2,7 +2,7 @@ import { IonCard, IonCardContent, IonIcon, IonLabel } from "@ionic/react";
 import { informationCircleOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
 
-interface ComponentProps {
+export interface ComponentProps {
   message: string;
   size: 'small' | 'medium' | 'large'
 }
@@ -33,7 +33,7 @@ export const CardInfoBasic = (props: ComponentProps) => {
   return (
     <IonCard>
       <IonCardContent className={className}>
-        <IonIcon icon={informationCircleOutline}/>
+        <IonIcon icon={informationCircleOutline} />
         <IonLabel>{" "}{props.message}</IonLabel>
       </IonCardContent>
     </IonCard>

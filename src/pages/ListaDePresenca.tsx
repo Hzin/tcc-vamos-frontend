@@ -5,25 +5,26 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  IonCard,
+  IonCardTitle,
   IonIcon,
   IonButtons,
   IonBackButton,
 } from "@ionic/react";
 import React, { useContext, useState } from "react";
-import { IonGrid, IonRow, IonCol, IonToast } from "@ionic/react";
+import { IonGrid, IonToast } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import {
   IonItem,
   IonLabel,
-  IonButton,
 } from "@ionic/react";
 
 import * as sessionRoutes from '../services/api/session';
 import LocalStorage from '../LocalStorage';
 import { UserContext } from "../App";
-import { alarmOutline, bookmarkOutline, documentOutline, idCardOutline } from "ionicons/icons";
+import { checkmarkOutline, closeOutline } from "ionicons/icons";
 
-const Viagem: React.FC = () => {
+const Contratos: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState('');
 
@@ -115,9 +116,9 @@ const Viagem: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle >Puc - Campinas</IonTitle>
+          <IonTitle>Lista de presença</IonTitle>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/vinculo-van" />
+            <IonBackButton defaultHref="/vinculo-van-editar" />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -129,34 +130,95 @@ const Viagem: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
+
         <IonGrid>
-          <IonRow>
-            <IonCol>
-              <IonButton expand="block" onClick={handleLogin} fill="outline" color="Blue" >
-                Faltar na proxima viagem
-              </IonButton>
-            </IonCol>
-          </IonRow>
+          <IonCardTitle>25/09/2022  16:50</IonCardTitle>
+          <IonCard>
+            <IonItem>
+              <IonIcon icon={checkmarkOutline} slot="start" />
+              <IonLabel>Carlos Augusto</IonLabel>
+            </IonItem>
+          </IonCard>
 
-          <IonItem>
-            <IonIcon icon={idCardOutline} slot="start" />
-            <IonLabel>Motorista: Maria</IonLabel>
-          </IonItem>
+          <IonCard>
+            <IonItem>
+              <IonIcon icon={closeOutline} slot="start" />
+              <IonLabel>Daniela Candido</IonLabel>
+            </IonItem>
+          </IonCard>
 
-          <IonItem>
-            <IonIcon icon={alarmOutline} slot="start" />
-            <IonLabel>Horario: 09:45</IonLabel>
-          </IonItem>
+          <IonCard>
+            <IonItem>
+              <IonIcon icon={checkmarkOutline} slot="start" />
+              <IonLabel>Danielle Rosa</IonLabel>
+            </IonItem>
+          </IonCard>
+          <IonCard>
 
-          <IonItem>
-            <IonIcon icon={bookmarkOutline} slot="start" />
-            <IonLabel>Status: Ativo</IonLabel>
-          </IonItem>
+            <IonItem>
+              <IonIcon icon={checkmarkOutline} slot="start" />
+              <IonLabel>Dara Silva</IonLabel>
+            </IonItem>
+          </IonCard>
 
-          <IonItem button onClick={() => history.push({ pathname: '/contratos' })}>
-            <IonIcon icon={documentOutline} slot="start" />
-            <IonLabel>Meu Contrato</IonLabel>
-          </IonItem>
+          <IonCard>
+            <IonItem>
+              <IonIcon icon={closeOutline} slot="start" />
+              <IonLabel>Eric Santos</IonLabel>
+            </IonItem>
+          </IonCard>
+
+          <IonCard>
+            <IonItem>
+              <IonIcon icon={checkmarkOutline} slot="start" />
+              <IonLabel>Elena Vanda</IonLabel>
+            </IonItem>
+          </IonCard>
+
+          <IonCard>
+            <IonItem>
+              <IonIcon icon={checkmarkOutline} slot="start" />
+              <IonLabel>Fabio Fernando</IonLabel>
+            </IonItem>
+          </IonCard>
+
+          <IonCard>
+            <IonItem>
+              <IonIcon icon={closeOutline} slot="start" />
+              <IonLabel>Vera Silva</IonLabel>
+            </IonItem>
+          </IonCard>
+
+          <IonCard>
+            <IonItem>
+              <IonIcon icon={checkmarkOutline} slot="start" />
+              <IonLabel>Bruna Paz</IonLabel>
+            </IonItem>
+          </IonCard>
+
+          <IonCard>
+
+            <IonItem>
+              <IonIcon icon={checkmarkOutline} slot="start" />
+              <IonLabel>Beatriz Santos</IonLabel>
+            </IonItem>
+          </IonCard>
+
+          <IonCard>
+
+            <IonItem>
+              <IonIcon icon={checkmarkOutline} slot="start" />
+              <IonLabel>Guilherme Santoro</IonLabel>
+            </IonItem>
+          </IonCard>
+
+          <IonCard>
+
+            <IonItem>
+              <IonIcon icon={checkmarkOutline} slot="start" />
+              <IonLabel>Fernando Faria</IonLabel>
+            </IonItem>
+          </IonCard>
         </IonGrid>
 
         <IonToast
@@ -172,4 +234,4 @@ const Viagem: React.FC = () => {
   );
 };
 
-export default Viagem;
+export default Contratos;

@@ -15,6 +15,7 @@ import {
   IonToast,
 } from "@ionic/react";
 import {
+  buildOutline,
   callOutline,
   cardOutline,
   carOutline,
@@ -30,7 +31,6 @@ import React, { useContext, useEffect, useReducer, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
 import LocalStorage from "../LocalStorage";
-import "./Perfil.css";
 
 import { Color } from "@ionic/core";
 import { UserContext } from "../App";
@@ -231,20 +231,28 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             </IonCardHeader>
 
             <div className="text-center">
-              {isDriver ? (
+              {isDriver && (
                 <>
                   <IonChip>
                     <IonIcon icon={carOutline}></IonIcon>
                     <IonLabel color="primary">Motorista</IonLabel>
                   </IonChip>
                 </>
-              ) : (
-                <></>
               )}
+
               <IonChip>
                 <IonIcon icon={personOutline}></IonIcon>
                 <IonLabel color="primary">Passageiro</IonLabel>
               </IonChip>
+
+              {isAdmin && (
+                <>
+                  <IonChip>
+                    <IonIcon icon={buildOutline}></IonIcon>
+                    <IonLabel color="primary">Administrador</IonLabel>
+                  </IonChip>
+                </>
+              )}
             </div>
           </IonCardContent>
         </IonCard>

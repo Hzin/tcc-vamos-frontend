@@ -33,7 +33,8 @@ import { VehicleInfo } from "../services/functions/vehiclesService";
 
 import { vehicleDocumentStatus } from "../constants/vehicleDocumentStatus";
 import { cameraOutline } from "ionicons/icons";
-import { CardInfoBasic } from "../components/CardInfoBasic";
+import { VehiclePicture } from "../components/VehiclePicture";
+import { CardInfoBasicIntoAlertInfo } from "../components/CardInfoBasicIntoAlertInfo";
 
 interface ScanNewProps {
   match: {
@@ -530,13 +531,7 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
           <></>
         ) : (
           <>
-            <div className="block ml-auto mr-auto max-w-max">
-              <img
-                className="max-h-72"
-                alt="vehicle_picture"
-                src={vehicleInfo.picture}
-              />
-            </div>
+            <VehiclePicture picture_path={vehicleInfo.picture} center />
 
             <IonFab vertical="top" horizontal="end" slot="fixed">
               <IonFabButton>
@@ -569,7 +564,7 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
               {!vehicleCanCreateItineraries && (
                 <IonRow>
                   <IonCol size="12">
-                    <CardInfoBasic size="small" message="Para poder criar itinerários, o veículo precisa ter os documentos 'CRLV' e 'CRV' aprovados!" />
+                    <CardInfoBasicIntoAlertInfo alertMessage="Para poder criar itinerários, o veículo precisa ter os documentos 'CRLV' e 'CRV' enviados e aprovados pela moderação!" message="Por que ainda não posso criar itinerários?" size="medium" />
                   </IonCol>
                 </IonRow>
               )}
