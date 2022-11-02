@@ -40,7 +40,12 @@ import Viagem from "./pages/Viagem";
 
 import ModerarDocumentos from "./pages/ModerarDocumentos";
 
+import EditarItinerario from "./pages/EditarItinerario";
+import Itinerario from "./pages/Itinerario";
+
 import ItinerarioContratos from "./pages/ItinerarioContratos";
+import ContratoResumo from "./pages/ContratoResumo";
+
 import Contrato from "./pages/Contrato";
 import ListaDePresenca from "./pages/ListaDePresenca";
 
@@ -66,9 +71,6 @@ import "./theme/variables.css";
 
 /* Tailwind styles */
 import "./theme/tailwind.css";
-
-import EditarItinerario from "./pages/EditarItinerario";
-import Itinerario from "./pages/Itinerario";
 
 setupIonicReact();
 
@@ -120,6 +122,7 @@ const routes = (
     <Route exact path="/documentos/moderar" component={ModerarDocumentos}></Route>
 
     <Route exact path="/itinerario/:id/contratos" component={ItinerarioContratos}></Route>
+    <Route exact path="/itinerario/:id/contratos/resumo" component={ContratoResumo}></Route>
     <Route exact path="/viagem/:id" component={Viagem}></Route>
     <Route exact path="/contrato/:id" component={Contrato}></Route>
     <Route exact path="/viagem/:id/presenca" component={ListaDePresenca}></Route>

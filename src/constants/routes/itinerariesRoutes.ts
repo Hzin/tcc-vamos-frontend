@@ -12,12 +12,14 @@ const transportsRoutes = {
   update: {
     url: `${transportsRoutesDefault}`
   },
-  request: {
-    url: `${transportsRoutesDefault}/request`
-  },
 
   getById: {
     url: `${transportsRoutesDefault}`
+  },
+
+  // rotas de contrato
+  createContractRequest: {
+    url: `${transportsRoutesDefault}/contract/request`
   }
 }
 

@@ -51,20 +51,27 @@ export async function createItinerary(
   return res;
 }
 
-export async function createItineraryRequest(
-  request: itinerariesRoutes.CreateRequest
-): Promise<any> {
-  let res: any;
-
-  res = await itinerariesRoutes.createRequest(request);
-
-  return res;
-}
-
 export async function getById(id: string): Promise<Itinerary> {
   let res: any;
 
   res = await itinerariesRoutes.getById(id);
+
+  return res.data;
+}
+
+export interface CreateContractRequestRequest {
+  user_id: string;
+  itinerary_id: string;
+  address: string;
+  latitude_address: string;
+  longitude_address: string;
+  is_single: boolean;
+}
+
+export async function createContractRequest(body: CreateContractRequestRequest): Promise<any> {
+  let res: any;
+
+  res = await itinerariesRoutes.createContractRequest(body);
 
   return res.data;
 }

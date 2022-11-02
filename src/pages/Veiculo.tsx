@@ -44,14 +44,6 @@ interface ScanNewProps {
   };
 }
 
-interface ScanNewProps {
-  match: {
-    params: {
-      id: string;
-    };
-  };
-}
-
 interface IonChipVehicleDocumentStatusProps {
   status?: string;
 }

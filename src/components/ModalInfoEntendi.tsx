@@ -1,4 +1,4 @@
-import { IonModal, IonContent, IonLabel, IonIcon, IonButton, IonChip, IonFooter, IonToolbar, IonBackButton, IonButtons, IonHeader } from "@ionic/react";
+import { IonModal, IonContent, IonLabel, IonIcon, IonButton, IonChip, IonFooter, IonToolbar, IonButtons } from "@ionic/react";
 import { informationOutline } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
@@ -13,8 +13,8 @@ export interface RedirectData {
 }
 
 interface ComponentProps {
-  id: string;
   isOpen: boolean;
+  header?: string;
   messages: string[];
   redirectData?: RedirectData;
 }
@@ -58,7 +58,7 @@ export const ModalInfoEntendi = (props: ComponentProps) => {
       <IonToolbar>
         <IonChip>
           <IonIcon icon={informationOutline} />
-          <IonLabel>Informação</IonLabel>
+          <IonLabel>{props.header ? props.header : 'Informação'}</IonLabel>
         </IonChip>
         <IonButtons slot="end">
           <IonButton fill="solid" onClick={handleDismissModal}>Fechar</IonButton>

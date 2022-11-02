@@ -14,7 +14,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
-import { IonGrid, IonToast } from "@ionic/react";
+import { IonGrid } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import {
   IonLabel,
@@ -26,6 +26,7 @@ import * as itinerariesService from "../services/functions/itinerariesService";
 import { Itinerary } from "../models/itinerary.model";
 import { CardItinerary } from "../components/CardItinerary";
 import { convertNumberToPrice, getUserFullName } from "../services/utils";
+import { itineraryContractTypes } from "../constants/itineraryContractTypes";
 
 interface ScanNewProps {
   match: {
@@ -36,11 +37,8 @@ interface ScanNewProps {
 }
 
 const ItinerarioContratos: React.FC<ScanNewProps> = (props) => {
-  const [showToast, setShowToast] = useState(false);
-  const [messageToast, setMessageToast] = useState('');
-
   const [itinerary, setItinerary] = useState<Itinerary>()
-  const [selectedContract, setSelectedContract] = useState<'recorrente' | 'avulso'>()
+  const [selectedContract, setSelectedContract] = useState<itineraryContractTypes>()
 
   const history = useHistory();
 
@@ -70,12 +68,12 @@ const ItinerarioContratos: React.FC<ScanNewProps> = (props) => {
                 </IonCardContent>
               </IonCard>
 
-              <IonCard button onClick={() => { setSelectedContract('recorrente') }}>
+              <IonCard button onClick={() => { setSelectedContract(itineraryContractTypes.recurring) }}>
                 <IonCardHeader>
                   <IonCardSubtitle className="flex justify-between">
                     <div />
                     <div>
-                      <IonCheckbox disabled checked={selectedContract === 'recorrente'} />
+                      <IonCheckbox disabled checked={selectedContract === itineraryContractTypes.recurring} />
                     </div>
                   </IonCardSubtitle>
                   <IonCardTitle>Contrato: Recorrente </IonCardTitle>
@@ -98,13 +96,13 @@ const ItinerarioContratos: React.FC<ScanNewProps> = (props) => {
                 </IonCardContent>
               </IonCard>
 
-              <IonCard button onClick={() => { setSelectedContract('avulso') }} disabled={!itinerary.accept_daily}>
+              <IonCard button onClick={() => { setSelectedContract(itineraryContractTypes.avulse) }} disabled={!itinerary.accept_daily}>
                 <IonCardHeader>
                   <IonCardSubtitle className="flex justify-between">
                     <div />
                     <div>
-                      {/* <IonCheckbox disabled={!itinerary.accept_daily} checked={selectedContract === 'avulso'} /> */}
-                      <IonCheckbox disabled checked={selectedContract === 'avulso'} />
+                      {/* <IonCheckbox disabled={!itinerary.accept_daily} checked={selectedContract === itineraryContractTypes.avulse} /> */}
+                      <IonCheckbox disabled checked={selectedContract === itineraryContractTypes.avulse} />
                     </div>
                   </IonCardSubtitle>
                   <IonCardTitle>Contrato: Vaga Avulsa </IonCardTitle>
@@ -134,20 +132,28 @@ const ItinerarioContratos: React.FC<ScanNewProps> = (props) => {
             </IonGrid>
           </>
         )}
-
-        <IonToast
-          position="top"
-          color='danger'
-          isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
-          message={messageToast}
-          duration={2500}
-        />
       </IonContent>
 
       <IonFooter>
         <IonToolbar>
-          <IonButton disabled={!selectedContract} onClick={() => { history.push({ pathname: `` }) }} expand='block' color='success'>Continuar</IonButton>
+          {itinerary && (
+            <IonButton
+              disabled={!selectedContract}
+              expand='block'
+              color='success'
+              onClick={() => {
+                history.push(
+                  {
+                    pathname: `/itinerario/${itinerary.id_itinerary}/contratos/resumo`,
+                    state: {
+                      contractData: {
+                        type: selectedContract,
+                      },
+                    },
+                  },
+                )
+              }}
+            >Continuar</IonButton>)}
         </IonToolbar>
       </IonFooter>
     </IonPage>

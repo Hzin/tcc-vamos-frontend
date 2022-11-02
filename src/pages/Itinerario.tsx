@@ -13,21 +13,20 @@ import {
   IonLabel,
   IonList,
   IonPage,
-  IonToast,
   IonToolbar,
   useIonAlert,
 } from "@ionic/react";
 
-import { Color } from "@ionic/core";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+
+import { Color } from "@ionic/core";
 
 import Perfil from "./Perfil";
 
 import * as itinerariesService from "../services/functions/itinerariesService";
-import { closeToast, convertDaysOfWeekToObject, convertNumberToPrice, DaysOfWeekObject, formatTimeField, getFormatedAddresses } from "../services/utils";
+import { convertDaysOfWeekToObject, convertNumberToPrice, DaysOfWeekObject, formatTimeField, getFormatedAddresses } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
-import { VehiclePicture } from "../components/VehiclePicture";
 import { Itinerary } from "../models/itinerary.model";
 import { cashOutline, cashSharp, eyeOutline, personOutline, timeOutline, timeSharp } from "ionicons/icons";
 import { NeighborhoodServed } from "../models/NeighborhoodServed.model";
@@ -35,6 +34,7 @@ import { Destination } from "../models/destination.model";
 import { CardInfoBasicIntoAlertInfo } from "../components/CardInfoBasicIntoAlertInfo";
 import { ShowPageAsModal } from "../components/ShowPageAsModal";
 import { CardItinerary } from "../components/CardItinerary";
+import { ChipsItineraryDaysOfWeek } from "../components/ChipsItineraryDaysOfWeek";
 
 interface ScanNewProps {
   match: {
@@ -127,10 +127,6 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
 
   const [showPageModal, setShowPageModal] = useState(false);
 
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastColor, setToastColor] = useState<Color>("primary");
-
   const [itinerary, setItinerary] = useState<Itinerary>()
   const [itineraryDaysOfWeek, setItineraryDaysOfWeek] = useState<DaysOfWeekObject>()
 
@@ -139,11 +135,7 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const presentToast = (message: string, isTrue: boolean) => {
-    setToastColor(isTrue ? 'success' : 'danger')
-    setToastMessage(message)
-    setShowToast(true)
-  }
+
 
   const loadItineraryData = async () => {
     // let itineraryId = "";
@@ -221,24 +213,7 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
 
                     {itineraryDaysOfWeek && (
                       <>
-                        <IonItem lines="none">
-                          <IonLabel>Dias da semana</IonLabel>
-                        </IonItem>
-
-                        <IonItem>
-                          {/* <div className="flex-grow"></div>
-                        <div> */}
-                          <div className="ml-auto mr-auto">
-                            <IonChip color={itineraryDaysOfWeek.sunday ? 'success' : 'danger'} onClick={() => { presentToast('Domingo', itineraryDaysOfWeek.sunday) }}>D</IonChip>
-                            <IonChip color={itineraryDaysOfWeek.monday ? 'success' : 'danger'} onClick={() => { presentToast('Segunda-feira', itineraryDaysOfWeek.monday) }}>S</IonChip>
-                            <IonChip color={itineraryDaysOfWeek.tuesday ? 'success' : 'danger'} onClick={() => { presentToast('Terça-feira', itineraryDaysOfWeek.tuesday) }}>T</IonChip>
-                            <IonChip color={itineraryDaysOfWeek.wednesday ? 'success' : 'danger'} onClick={() => { presentToast('Quarta-feira', itineraryDaysOfWeek.wednesday) }}>Q</IonChip>
-                            <IonChip color={itineraryDaysOfWeek.thursday ? 'success' : 'danger'} onClick={() => { presentToast('Quinta-feira', itineraryDaysOfWeek.thursday) }}>QQ</IonChip>
-                            <IonChip color={itineraryDaysOfWeek.friday ? 'success' : 'danger'} onClick={() => { presentToast('Sexta-feira', itineraryDaysOfWeek.friday) }}>S</IonChip>
-                            <IonChip color={itineraryDaysOfWeek.saturday ? 'success' : 'danger'} onClick={() => { presentToast('Sábado', itineraryDaysOfWeek.saturday) }}>SS</IonChip>
-                          </div>
-                          {/* </div> */}
-                        </IonItem>
+                        <ChipsItineraryDaysOfWeek itineraryDaysOfWeek={itineraryDaysOfWeek} />
                       </>
                     )}
 
@@ -293,16 +268,6 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
         </IonAccordionGroup>
 
         <ShowPageAsModal page={Perfil} paramId={itinerary?.user.id_user} isOpen={showPageModal} />
-
-        <IonToast
-          position="bottom"
-          color={toastColor}
-          isOpen={showToast}
-          onDidDismiss={() => closeToast(setShowToast)}
-          message={toastMessage}
-          duration={2500}
-          cssClass="text-center max-w-[50%]"
-        />
       </IonContent>
 
       <IonFooter>
