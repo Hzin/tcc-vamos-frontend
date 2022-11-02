@@ -7,7 +7,7 @@ import { Vehicle } from "./vehicle.model";
 export interface Itinerary {
     id_itinerary: number;
     vehicle_plate: string;
-    days_of_week?: string;
+    days_of_week: string;
     specific_day?: Date;
     estimated_departure_time: string;
     is_active: boolean;

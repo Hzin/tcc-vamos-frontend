@@ -61,7 +61,7 @@ export async function createItineraryRequest(
   return res;
 }
 
-export async function getById(id: string): Promise<any> {
+export async function getById(id: string): Promise<Itinerary> {
   let res: any;
 
   res = await itinerariesRoutes.getById(id);

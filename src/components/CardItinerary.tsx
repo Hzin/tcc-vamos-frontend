@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 
 import { Itinerary } from "../models/itinerary.model";
 
-import { convertNumberToPrice, getUserFullName } from "../services/utils";
+import { convertNumberToPrice, formatTimeField, getUserFullName } from "../services/utils";
 import { VehiclePicture } from "./VehiclePicture";
 
 interface ComponentProps {
@@ -59,27 +59,15 @@ export const CardItinerary = (props: ComponentProps) => {
     setCardTimeInfo(cardTimeInfoArray)
   }, [])
 
-  const formatTimeField = (time: string) => {
-    const separator = ':'
-
-    const timeSplit = time.split(separator)
-    
-    if (timeSplit.length !== 3) return time
-
-    timeSplit.pop()
-    if (!timeSplit) return time
-
-    return timeSplit.join(separator)
-  }
+  
 
   return (
     <IonCard button>
-      <VehiclePicture picture_path={props.itinerary.vehicle.picture}  />
+      <VehiclePicture picture_path={props.itinerary.vehicle.picture} />
 
       <IonCardHeader>
         {props.itinerary.itinerary_nickname && (<IonCardSubtitle className="text-[13px]">Apelido: "{props.itinerary.itinerary_nickname}"</IonCardSubtitle>)}
-        <IonCardSubtitle className="text-[13px]">Motorista: {getUserFullName(props.itinerary.user)}</IonCardSubtitle>
-        <IonCardTitle>Van de Nome do motorista</IonCardTitle>
+        <IonCardTitle>Van de {getUserFullName(props.itinerary.user)}</IonCardTitle>
       </IonCardHeader>
 
       <IonCardContent>
