@@ -88,10 +88,14 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
           <>
             <CardItinerary itinerary={itinerary} onlyHeader />
 
-            <CardInfoBasicIntoAlertInfo
-              size="small"
-              alertMessage={`${location.state.searchData.formatted_address_origin} -> ${location.state.searchData.formatted_address_destination}`}
-              message="Informações de pesquisa atuais"
+            <ItemItineraryDetailVer
+              label="Informações de pesquisa atuais"
+              infoString={
+                [
+                  `Origem: ${location.state.searchData.formatted_address_origin}`,
+                  `Destino: ${location.state.searchData.formatted_address_destination}`,
+                ]
+              }
             />
 
             <IonList>
@@ -121,8 +125,8 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
                   </IonItem>
                   <div className="ion-padding" slot="content">
                     {/* <IonListHeader className="mt-4">Locais</IonListHeader> */}
-                    <ItemItineraryDetailVer label="Locais atendidos" infoObject={itinerary.neighborhoods_served} />
-                    <ItemItineraryDetailVer label="Destinos" infoObject={itinerary.destinations} />
+                    <ItemItineraryDetailVer label="Locais atendidos" infoPlacesObject={itinerary.neighborhoods_served} />
+                    <ItemItineraryDetailVer label="Destinos" infoPlacesObject={itinerary.destinations} />
                     <ItemItineraryDetailVer label="Endereço de saída estimado" infoString={itinerary.estimated_departure_address} />
                   </div>
                 </IonAccordion>

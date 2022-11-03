@@ -19,7 +19,7 @@ const transportsRoutes = {
 
   // rotas de contrato
   createContractRequest: {
-    url: `${transportsRoutesDefault}/contract/request`
+    url: `${transportsRoutesDefault}/contract/:id`
   },
   updateContractStatus: {
     url: `${transportsRoutesDefault}/contract/status`

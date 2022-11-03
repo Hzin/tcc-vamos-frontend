@@ -27,7 +27,7 @@ import { Itinerary } from "../models/itinerary.model";
 import { itineraryContractTypes } from "../constants/itineraryContractTypes";
 import { calendarClearOutline, calendarNumberOutline, cashOutline, cashSharp, documentTextOutline, locateOutline, navigateOutline, personOutline, timeOutline, timeSharp } from "ionicons/icons";
 import { ChipsItineraryDaysOfWeek } from "../components/ChipsItineraryDaysOfWeek";
-import { ModalInfoEntendi } from "../components/ModalInfoEntendi";
+import { ModalInfoEntendi, RedirectData } from "../components/ModalInfoEntendi";
 import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
 
 interface ContractDetailSumaryItemProps {
@@ -48,6 +48,20 @@ const ContractDetailSumaryItem = (props: ContractDetailSumaryItemProps) => {
         <IonLabel className="ml-2">{props.label}</IonLabel>
         {/* <IonLabel slot='end'>{props.value}</IonLabel> */}
         <IonText slot='end' color={props.fontColor ? props.fontColor : 'primary'}>{props.value}</IonText>
+      </IonItem>
+    </>
+  );
+};
+const ContractPlaceDetailSumaryItem = (props: ContractDetailSumaryItemProps) => {
+  return (
+    <>
+      <IonItem lines='none' className={props.noAboveSpacing ? '' : 'mt-1'}>
+        <IonIcon className={props.icon ? 'visible' : 'invisible'} icon={props.icon} />
+
+        <IonLabel className="ml-2">{props.label}</IonLabel>
+      </IonItem>
+      <IonItem>
+        <IonText color={props.fontColor ? props.fontColor : 'primary'}>{props.value}</IonText>
       </IonItem>
     </>
   );
@@ -80,6 +94,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
   const [modalInfoShow, setModalInfoShow] = useState(false)
   const [modalInfoHeader, setModalInfoHeader] = useState('')
   const [modalInfoMessages, setModalInfoMessages] = useState<string[]>([])
+  const [modalInfoRedirectData, setModalInfoRedirectData] = useState<RedirectData>()
 
   useEffect(() => {
     loadItineraryData()
@@ -121,28 +136,28 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
 
         if (!itinerary) return
 
-        const body: itinerariesService.CreateContractRequestRequest = {
-          id_itinerary: itinerary.id_itinerary,
+        const body = {
           contract_type: location.state.contractData.type,
-          lat_origin: location.state.searchData.lat_origin, // number;
-          lng_origin: location.state.searchData.lng_origin, // number;
-          formatted_address_origin: location.state.searchData.formatted_address_origin, // string;
-          lat_destination: location.state.searchData.lat_destination, // number;
-          lng_destination: location.state.searchData.lng_destination, // number;
-          formatted_address_destination: location.state.searchData.formatted_address_destination, // string;
+          lat_origin: location.state.searchData.lat_origin,
+          lng_origin: location.state.searchData.lng_origin,
+          formatted_address_origin: location.state.searchData.formatted_address_origin,
+          lat_destination: location.state.searchData.lat_destination,
+          lng_destination: location.state.searchData.lng_destination,
+          formatted_address_destination: location.state.searchData.formatted_address_destination,
         }
 
-        console.log(body)
+        const response = await itinerariesService.createContractRequest({ id_itinerary: itinerary.id_itinerary, body })
 
-        return
-
-        const response = await itinerariesService.createContractRequest(body)
-
-        setModalInfoShow(true)
         setModalInfoHeader(response.message)
         setModalInfoMessages([
-          'Sua solicitação de contrato foi enviada ao motorista, será analisada e você será notificado com o resultado da solicitação.',
+          'Sua solicitação de contrato foi enviada ao motorista.',
+          'Agora ela será analisada e você será notificado se o motorista aprovar o contrato.'
         ])
+        setModalInfoRedirectData({
+          url: ''
+        })
+
+        setModalInfoShow(true)
       },
     });
   };
@@ -212,8 +227,8 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
                 )
               }
 
-              <ContractDetailSumaryItem label="Origem" icon={locateOutline} value='INSERIR' />
-              <ContractDetailSumaryItem label="Destino" icon={navigateOutline} value='INSERIR' />
+              <ContractPlaceDetailSumaryItem label="Origem" icon={locateOutline} value={location.state.searchData.formatted_address_origin} />
+              <ContractPlaceDetailSumaryItem label="Destino" icon={navigateOutline} value={location.state.searchData.formatted_address_destination} />
               <ContractDetailSumaryItem label='Horário de estimado saída' icon={timeOutline} value={formatTimeField(itinerary.estimated_departure_time)} />
               <ContractDetailSumaryItem label='Horário de estimado chegada' icon={timeSharp} value={formatTimeField(itinerary.estimated_arrival_time)} />
             </IonList>
@@ -234,7 +249,12 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
         </IonToolbar>
       </IonFooter>
 
-      <ModalInfoEntendi isOpen={modalInfoShow} header={modalInfoHeader} messages={modalInfoMessages} />
+      <ModalInfoEntendi
+        isOpen={modalInfoShow}
+        header={modalInfoHeader}
+        messages={modalInfoMessages}
+        redirectData={modalInfoRedirectData}
+      />
     </IonPage>
   );
 };

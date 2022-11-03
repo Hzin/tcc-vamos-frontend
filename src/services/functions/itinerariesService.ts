@@ -63,21 +63,24 @@ export async function getById(id: string): Promise<Itinerary> {
 
 export interface CreateContractRequestRequest {
   id_itinerary: number;
-  contract_type: itineraryContractTypes;
-  lat_origin: number;
-  lng_origin: number;
-  formatted_address_origin: string;
-  lat_destination: number;
-  lng_destination: number;
-  formatted_address_destination: string;
+
+  body: {
+    contract_type: itineraryContractTypes;
+    lat_origin: number;
+    lng_origin: number;
+    formatted_address_origin: string;
+    lat_destination: number;
+    lng_destination: number;
+    formatted_address_destination: string;
+  }
 }
 
-export async function createContractRequest({ id_itinerary, contract_type, lat_origin, lng_origin, formatted_address_origin, lat_destination, lng_destination, formatted_address_destination, }: CreateContractRequestRequest): Promise<any> {
+export async function createContractRequest({ id_itinerary, body }: CreateContractRequestRequest): Promise<any> {
   let res: any;
 
-  res = await itinerariesRoutes.createContractRequest({ id_itinerary, contract_type, lat_origin, lng_origin, formatted_address_origin, lat_destination, lng_destination, formatted_address_destination, });
+  res = await itinerariesRoutes.createContractRequest({ id_itinerary, body });
 
-  return res.data;
+  return res;
 }
 
 export interface UpdateContractStatusRequest {

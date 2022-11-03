@@ -8,8 +8,10 @@ import { reloadPage } from "../services/utils";
 
 export interface RedirectData {
   url: string,
-  toastColor: Color,
-  toastMessage: string,
+  toastInfo?: {
+    color: Color,
+    message: string,
+  }
 }
 
 interface ComponentProps {
@@ -42,8 +44,8 @@ export const ModalInfoEntendi = (props: ComponentProps) => {
       state: {
         redirectData: {
           showToastMessage: true,
-          toastColor: props.redirectData.toastColor,
-          toastMessage: props.redirectData.toastMessage,
+          toastColor: props.redirectData.toastInfo?.color,
+          toastMessage: props.redirectData.toastInfo?.message,
         },
       },
     });
@@ -58,7 +60,7 @@ export const ModalInfoEntendi = (props: ComponentProps) => {
       <IonToolbar>
         <IonChip>
           <IonIcon icon={informationOutline} />
-          <IonLabel>{props.header ? props.header : 'Informação'}</IonLabel>
+          <IonLabel>Informação</IonLabel>
         </IonChip>
         <IonButtons slot="end">
           <IonButton fill="solid" onClick={handleDismissModal}>Fechar</IonButton>
@@ -68,10 +70,11 @@ export const ModalInfoEntendi = (props: ComponentProps) => {
 
       <IonContent className="ion-padding">
         <div className="h-[100px] leading-[100px] text-center">
+          { props.header && (<span className="text-l inline-block align-middle leading-normal">{" "}{props.header}</span>)}
           {messages ? (
             messages.map((message, index) => {
               return (
-                <span key={index} className="text-xl inline-block align-middle leading-normal">{" "}{message}</span>
+                <span key={index} className="text-l inline-block align-middle leading-normal">{" "}{message}</span>
               )
             })
           ) : <span className="text-xl inline-block align-middle leading-normal">Carregando...</span>}

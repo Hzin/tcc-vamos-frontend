@@ -64,17 +64,9 @@ export async function getById(id: string) {
   return response.data;
 }
 
-export async function createContractRequest({ id_itinerary, contract_type, lat_origin, lng_origin, formatted_address_origin, lat_destination, lng_destination, formatted_address_destination }: CreateContractRequestRequest) {
-  const response = await instance.post(`${transportsRoutes.getById.url}/${id_itinerary}`, {
-    id_itinerary,
-    contract_type,
-    lat_origin,
-    lng_origin,
-    formatted_address_origin,
-    lat_destination,
-    lng_destination,
-    formatted_address_destination
-  });
+export async function createContractRequest({ id_itinerary, body }: CreateContractRequestRequest) {
+  const finalUrl = transportsRoutes.createContractRequest.url.replace(':id', "" + id_itinerary)
+  const response = await instance.post(finalUrl, body);
 
   return response.data;
 }
