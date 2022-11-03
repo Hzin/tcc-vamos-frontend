@@ -64,13 +64,18 @@ export async function getById(id: string) {
   return response.data;
 }
 
-export async function createContractRequest({ id_itinerary, address, latitude_address, longitude_address, is_single }: CreateContractRequestRequest) {
-  const response = await instance.post(
-    `${transportsRoutes.getById.url}/${id_itinerary}`,
-    {
-      address, latitude_address, longitude_address, is_single
-    }
-  );
+export async function createContractRequest({ id_itinerary, contract_type, lat_origin, lng_origin, formatted_address_origin, lat_destination, lng_destination, formatted_address_destination }: CreateContractRequestRequest) {
+  const response = await instance.post(`${transportsRoutes.getById.url}/${id_itinerary}`, {
+    id_itinerary,
+    contract_type,
+    lat_origin,
+    lng_origin,
+    formatted_address_origin,
+    lat_destination,
+    lng_destination,
+    formatted_address_destination
+  });
+
   return response.data;
 }
 
