@@ -2,6 +2,7 @@ import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, Ion
 import { cashOutline, cashSharp, timeOutline, timeSharp } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
 
 import { Itinerary } from "../models/itinerary.model";
 
@@ -16,7 +17,8 @@ interface CardInfo {
 
 interface ComponentProps {
   itinerary: Itinerary;
-  onlyHeader?: boolean
+  onlyHeader?: boolean;
+  searchData?: InterfaceItinerarySearchData;
 }
 
 export const CardItinerary = (props: ComponentProps) => {
@@ -100,7 +102,19 @@ export const CardItinerary = (props: ComponentProps) => {
             ) : <></>}
 
           </IonCardContent>
-          <IonButton fill="clear" className="float-right" onClick={() => { history.push(`/itinerario/${props.itinerary.id_itinerary}`); }}>Ver detalhes</IonButton>
+          <IonButton
+            fill="clear"
+            className="float-right"
+            onClick={() => {
+              if (!props.searchData) return
+
+              history.push({
+                pathname: `/itinerario/${props.itinerary.id_itinerary}`,
+                state: {
+                  searchData: props.searchData
+                }
+              });
+            }}>Ver detalhes</IonButton>
         </>
       )}
     </IonCard>

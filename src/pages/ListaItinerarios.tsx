@@ -28,33 +28,29 @@ import {
   filterOutline,
 } from "ionicons/icons";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router";
-import { createUserSearch } from "../services/api/users";
+import { useHistory, useLocation } from "react-router";
+
 import { closeToast } from "../services/utils";
 import { Itinerary } from "../models/itinerary.model";
 import { PageHeader } from "../components/PageHeader";
 
 import * as itinerariesService from "../services/functions/itinerariesService";
+import * as searchesService from "../services/functions/searchesService";
 
 import { CardItinerary } from "../components/CardItinerary";
 
-interface coordinatesInfo {
-  formatted_address: string;
-  lat: number;
-  lng: number;
-}
+import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
 
-interface InfoBusca {
-  coordinatesFrom: coordinatesInfo;
-  coordinatesTo: coordinatesInfo;
-  period: string;
-
-  itineraries: Itinerary[];
+interface LocationState {
+  itineraries?: Itinerary[];
+  searchData: InterfaceItinerarySearchData;
 }
 
 const ListaItinerarios: React.FC = () => {
+  const history = useHistory();
   const location = useLocation();
-  const props = location.state as InfoBusca;
+
+  const props = location.state as LocationState;
 
   const [itinerariesList, setItinerariesList] = useState<Itinerary[]>([]);
   const [showModalFilters, setShowModalFilters] = useState(false);
@@ -79,20 +75,26 @@ const ListaItinerarios: React.FC = () => {
   useEffect(() => {
     if (props.itineraries) {
       setItinerariesList(props.itineraries);
-
       return
     }
 
-    if (!props.coordinatesFrom || !props.coordinatesTo || !props.period) return
+    if (!props.searchData) history.goBack()
 
-    searchItineraries(
-      props.coordinatesFrom,
-      props.coordinatesTo,
-      props.period
+    searchItineraries({
+      lat_origin: props.searchData.lat_origin,
+      lng_origin: props.searchData.lng_origin,
+      lat_destination: props.searchData.lat_destination,
+      lng_destination: props.searchData.lng_destination,
+      period: props.searchData.period
+    }
     )
   }, [props]);
 
-  const searchItineraries = async (coordinatesFrom: coordinatesInfo, coordinatesTo: coordinatesInfo, period: string) => {
+  interface SearchItinerariesBody {
+    lat_origin: number, lng_origin: number, lat_destination: number, lng_destination: number, period: string
+  }
+
+  const searchItineraries = async ({ lat_origin, lng_origin, lat_destination, lng_destination, period }: SearchItinerariesBody) => {
     // TODO, trocar
     // await itinerariesService.searchItineraries(
     // {
@@ -107,15 +109,14 @@ const ListaItinerarios: React.FC = () => {
   }
 
   function criaAlerta() {
-    createUserSearch(
-      props.coordinatesFrom.lat,
-      props.coordinatesFrom.lng,
-      props.coordinatesTo.formatted_address
-    )
-      .then(() => {
-        setMessageToast("Alerta criado com sucesso!");
-        setShowToast(true);
-      })
+    searchesService.create({
+      latitude_from: props.searchData.lat_origin,
+      longitude_from: props.searchData.lng_origin,
+      address_to: props.searchData.formatted_address_destination
+    }).then(() => {
+      setMessageToast("Alerta criado com sucesso!");
+      setShowToast(true);
+    })
       .catch((err: any) => {
         setMessageToast("Não foi possível criar o alerta!");
         setToastColor("danger");
@@ -126,14 +127,14 @@ const ListaItinerarios: React.FC = () => {
   async function applyFilters() {
     const body = {
       coordinatesFrom: {
-        lat: props.coordinatesFrom.lat,
-        lng: props.coordinatesFrom.lng,
+        lat: props.searchData.lat_origin,
+        lng: props.searchData.lng_origin,
       },
       coordinatesTo: {
-        lat: props.coordinatesTo.lat,
-        lng: props.coordinatesTo.lng,
+        lat: props.searchData.lat_destination,
+        lng: props.searchData.lng_destination,
       },
-      period: props.period,
+      period: props.searchData.period,
       orderBy,
       orderOption,
       preference_AvulseSeat,
@@ -165,14 +166,14 @@ const ListaItinerarios: React.FC = () => {
         <IonCard button color="light">
           <IonCardHeader>
             <IonCardSubtitle>
-              Origem: {props.coordinatesFrom.formatted_address}
+              Origem: {props.searchData.formatted_address_origin}
             </IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
         <IonCard button color="light">
           <IonCardHeader>
             <IonCardSubtitle>
-              Destino: {props.coordinatesTo.formatted_address}
+              Destino: {props.searchData.formatted_address_destination}
             </IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
@@ -190,7 +191,7 @@ const ListaItinerarios: React.FC = () => {
 
         {itinerariesList && itinerariesList.length !== 0 ? (
           itinerariesList.map((itinerary, index) => {
-            return (<CardItinerary key={index} itinerary={itinerary} />)
+            return (<CardItinerary key={index} itinerary={itinerary} searchData={props.searchData} />)
           })
         ) : (
           <>

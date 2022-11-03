@@ -18,7 +18,7 @@ import {
 } from "@ionic/react";
 
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 
 import { Color } from "@ionic/core";
 
@@ -35,14 +35,7 @@ import { CardInfoBasicIntoAlertInfo } from "../components/CardInfoBasicIntoAlert
 import { ShowPageAsModal } from "../components/ShowPageAsModal";
 import { CardItinerary } from "../components/CardItinerary";
 import { ChipsItineraryDaysOfWeek } from "../components/ChipsItineraryDaysOfWeek";
-
-interface ScanNewProps {
-  match: {
-    params: {
-      id: string;
-    };
-  };
-}
+import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
 
 interface ItineraryDetailItemProps {
   label: string;
@@ -122,8 +115,21 @@ const ItineraryDetailItemVer = (props: ItineraryDetailItemVerProps) => {
   );
 };
 
+interface LocationState {
+  searchData: InterfaceItinerarySearchData
+}
+
+interface ScanNewProps {
+  match: {
+    params: {
+      id: string;
+    };
+  };
+}
+
 const Itinerario: React.FC<ScanNewProps> = (props) => {
   const history = useHistory();
+  const location = useLocation<LocationState>();
 
   const [showPageModal, setShowPageModal] = useState(false);
 
@@ -134,8 +140,6 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
     loadItineraryData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-
 
   const loadItineraryData = async () => {
     // let itineraryId = "";
@@ -163,6 +167,12 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
         {itinerary && (
           <>
             <CardItinerary itinerary={itinerary} onlyHeader />
+
+            <CardInfoBasicIntoAlertInfo
+              size="small"
+              alertMessage={`${location.state.searchData.formatted_address_origin} -> ${location.state.searchData.formatted_address_destination}`}
+              message="Informações de pesquisa atuais"
+            />
 
             <IonList>
               <IonItem onClick={() => { setShowPageModal(true) }}>
@@ -277,7 +287,18 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
                   <IonButton href={`tel:${itinerary.user.phone_number}`} fill='solid' color='success'>Ligar para motorista</IonButton>
                 </div>
                 <div>
-                  <IonButton onClick={() => { history.push({ pathname: `/itinerario/${itinerary.id_itinerary}/contratos` }) }} fill='solid' color='success'>Contratar</IonButton>
+                  <IonButton
+                    onClick={() => {
+                      history.push({
+                        pathname: `/itinerario/${itinerary.id_itinerary}/contratos`,
+                        state: {
+                          searchData: location.state.searchData
+                        }
+                      })
+                    }}
+                    fill='solid'
+                    color='success'
+                  >Contratar</IonButton>
                 </div>
               </IonButtons>
             </>

@@ -28,6 +28,7 @@ import { itineraryContractTypes } from "../constants/itineraryContractTypes";
 import { calendarClearOutline, calendarNumberOutline, cashOutline, cashSharp, documentTextOutline, locateOutline, navigateOutline, personOutline, timeOutline, timeSharp } from "ionicons/icons";
 import { ChipsItineraryDaysOfWeek } from "../components/ChipsItineraryDaysOfWeek";
 import { ModalInfoEntendi } from "../components/ModalInfoEntendi";
+import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
 
 interface ContractDetailSumaryItemProps {
   label: string;
@@ -53,7 +54,7 @@ const ContractDetailSumaryItem = (props: ContractDetailSumaryItemProps) => {
 };
 
 interface LocationState {
-  // contractData?: {
+  searchData: InterfaceItinerarySearchData,
   contractData: {
     type: itineraryContractTypes;
   };
@@ -120,15 +121,15 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
 
         if (!itinerary) return
 
-        let isSingle: boolean = false
-        if (contractType === itineraryContractTypes.avulse) isSingle = true
-
         const body: itinerariesService.CreateContractRequestRequest = {
-          id_itinerary: "" + itinerary.id_itinerary,
-          address: 'PREENCHER',
-          latitude_address: 'PREENCHER',
-          longitude_address: 'PREENCHER',
-          is_single: isSingle
+          id_itinerary: itinerary.id_itinerary,
+          contract_type: location.state.contractData.type,
+          lat_origin: location.state.searchData.lat_origin, // number;
+          lng_origin: location.state.searchData.lng_origin, // number;
+          formatted_address_origin: location.state.searchData.formatted_address_origin, // string;
+          lat_destination: location.state.searchData.lat_destination, // number;
+          lng_destination: location.state.searchData.lng_destination, // number;
+          formatted_address_destination: location.state.searchData.formatted_address_destination, // string;
         }
 
         const response = await itinerariesService.createContractRequest(body)

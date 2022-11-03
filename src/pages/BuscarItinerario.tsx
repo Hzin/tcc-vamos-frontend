@@ -30,6 +30,7 @@ import { closeToast } from "../services/utils";
 
 import { Color } from "@ionic/core";
 import AutoCompleteInput from "../components/AutoCompleteInput";
+import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
 
 interface Address {
   formatted_address: string;
@@ -90,12 +91,21 @@ const BuscarItinerario: React.FC = () => {
       },
     ]);
 
+    const searchData: InterfaceItinerarySearchData = {
+      period,
+      lat_origin: addressFrom.lat,
+      lng_origin: addressFrom.lng,
+      formatted_address_origin: addressFrom.formatted_address,
+      lat_destination: addressTo.lat,
+      lng_destination: addressTo.lng,
+      formatted_address_destination: addressTo.formatted_address,
+    }
+
     history.push({
       pathname: "/buscar/itinerario/lista",
       state: {
-        coordinatesFrom: addressFrom,
-        coordinatesTo: addressTo,
-        period,
+        // itineraries,
+        searchData
       },
     });
   }

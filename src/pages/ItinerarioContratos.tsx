@@ -15,7 +15,7 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { IonGrid } from "@ionic/react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   IonLabel,
 } from "@ionic/react";
@@ -27,6 +27,11 @@ import { Itinerary } from "../models/itinerary.model";
 import { CardItinerary } from "../components/CardItinerary";
 import { convertNumberToPrice, getUserFullName } from "../services/utils";
 import { itineraryContractTypes } from "../constants/itineraryContractTypes";
+import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
+
+interface LocationState {
+  searchData: InterfaceItinerarySearchData
+}
 
 interface ScanNewProps {
   match: {
@@ -37,10 +42,11 @@ interface ScanNewProps {
 }
 
 const ItinerarioContratos: React.FC<ScanNewProps> = (props) => {
+  const history = useHistory();
+  const location = useLocation<LocationState>();
+
   const [itinerary, setItinerary] = useState<Itinerary>()
   const [selectedContract, setSelectedContract] = useState<itineraryContractTypes>()
-
-  const history = useHistory();
 
   useEffect(() => {
     loadItineraryData()
@@ -146,6 +152,7 @@ const ItinerarioContratos: React.FC<ScanNewProps> = (props) => {
                   {
                     pathname: `/itinerario/${itinerary.id_itinerary}/contratos/resumo`,
                     state: {
+                      searchData: location.state.searchData,
                       contractData: {
                         type: selectedContract,
                       },
