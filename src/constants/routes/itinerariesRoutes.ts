@@ -12,9 +12,14 @@ const transportsRoutes = {
   update: {
     url: `${transportsRoutesDefault}`
   },
-
   getById: {
     url: `${transportsRoutesDefault}`
+  },
+  getByDriverUserId: {
+    url: `${transportsRoutesDefault}/driver/:id`
+  },
+  getByPassengerUserId: {
+    url: `${transportsRoutesDefault}/passenger/:id`
   },
 
   // rotas de contrato

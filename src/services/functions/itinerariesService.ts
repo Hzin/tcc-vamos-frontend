@@ -24,7 +24,7 @@ export async function getAllItineraries(): Promise<Itinerary[]> {
   let res: any;
 
   try {
-    res = await itinerariesRoutes.getItineraries();
+    res = await itinerariesRoutes.getAllItineraries();
   } catch (error) {
     // TODO
   }
@@ -57,6 +57,22 @@ export async function getById(id: string): Promise<Itinerary> {
   let res: any;
 
   res = await itinerariesRoutes.getById(id);
+
+  return res.data;
+}
+
+export async function getByDriverUserId(id_driver: string): Promise<Itinerary[]> {
+  let res: any;
+
+  res = await itinerariesRoutes.getByDriverUserId(id_driver);
+
+  return res.data;
+}
+
+export async function getByPassengerUserId(id_passenger: string): Promise<Itinerary[]> {
+  let res: any;
+
+  res = await itinerariesRoutes.getByPassengerUserId(id_passenger);
 
   return res.data;
 }

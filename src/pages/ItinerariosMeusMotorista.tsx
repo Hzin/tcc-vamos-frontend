@@ -1,10 +1,6 @@
 import {
   IonButton,
   IonButtons,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
   IonContent,
   IonFab,
   IonFabButton,
@@ -17,13 +13,18 @@ import {
   IonToast,
   IonToolbar,
 } from "@ionic/react";
-import { add, closeOutline, locateOutline, locationOutline } from "ionicons/icons";
+import { add, closeOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
-import { getItineraries } from "../services/api/itineraries";
 import { PageHeader } from "../components/PageHeader";
 import { useHistory, useLocation } from "react-router";
 import { Color } from "@ionic/core";
 import { closeToast } from "../services/utils";
+
+import * as itinerariesService from "../services/functions/itinerariesService";
+import * as sessionsService from "../services/functions/sessionsService";
+
+import { Itinerary } from "../models/itinerary.model";
+import { CardItinerary } from "../components/CardItinerary";
 
 interface Address {
   formatted_address: string;
@@ -60,10 +61,13 @@ interface LocationState {
   };
 }
 
-export default function MeusItinerarios() {
-  const [itineraries, setItineraries] = useState<ItineraryInfo[]>([]);
-  const [selectedItinerary, setSelectedItinerary] = useState<ItineraryInfo>();
-  
+const ItinerariosMeusMotorista: React.FC = () => {
+  // const [itineraries, setItineraries] = useState<ItineraryInfo[]>([]);
+  // const [selectedItinerary, setSelectedItinerary] = useState<ItineraryInfo>();
+
+  const [itineraries, setItineraries] = useState<Itinerary[]>([]);
+  const [selectedItinerary, setSelectedItinerary] = useState<Itinerary>();
+
   const location = useLocation<LocationState>();
   const history = useHistory();
 
@@ -85,55 +89,76 @@ export default function MeusItinerarios() {
   }, [location.state, history]);
 
   useEffect(() => {
-    getItineraries().then((response) => {
-      setItineraries(response.data);
-    });
+    getUserItineraries()
   }, [])
 
-  function editItinerary(itinerary: ItineraryInfo) {
+  const getUserItineraries = async () => {
+    const { userId } = await sessionsService.refreshSession()
+    if (!userId) return
+
+    const itineraries = await itinerariesService.getByDriverUserId(userId)
+    setItineraries(itineraries)
+  }
+
+  // function editItinerary(itinerary: ItineraryInfo) {
+  function editItinerary(itinerary: Itinerary) {
     // setSelectedItinerary(itinerary);
     // setShowModalEditItinerary(true);
-    history.push("/editar-itinerario", { itinerary });
+    history.push(`/itinerario/id/${itinerary.id_itinerary}/editar`, { itinerary });
   }
 
   return (
     <IonPage>
-      <PageHeader
-        pageName="Meus Itinerários"
-        backButtonPageUrl="/perfil"
-      ></PageHeader>
+      <PageHeader pageName="Meus itinerários (motorista)" showBackButton />
 
       <IonContent fullscreen>
         {itineraries ? (
           itineraries.map((itinerary, index) => {
             return (
-              <IonCard key={index} onClick={() => editItinerary(itinerary)}>
-                <IonCardHeader>
-                  <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
-                    <IonIcon icon={locateOutline} className="mr-1"></IonIcon>
-                    {itinerary.estimated_departure_address}
-                  </div>
-                  <div className="ml-[0.33rem] mb-[0.4rem]">
-                    | 
-                  </div>
-                  <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
-                    <IonIcon icon={locationOutline} className="mr-1"></IonIcon>
-                    {itinerary.destinations.map((destination, index) => {
-                      if (destination.is_final) {
-                        return ( 
-                          <label key={index}>
-                            {destination.formatted_address}
-                          </label>
-                        )
-                      }
-                    })}
-                  </div>
-                </IonCardContent>
-              </IonCard>
-            );
+              <CardItinerary
+                key={index}
+                itinerary={itinerary}
+
+                visualizeButton={
+                  { onClick: () => { history.push(`/itinerario/id/${itinerary.id_itinerary}`); } }
+                }
+
+                editButton={
+                  { onClick: () => { editItinerary(itinerary) } }
+                }
+              />
+
+
+              // return (
+              //   <IonCard key={index} onClick={() => editItinerary(itinerary)}>
+              //     <IonCardHeader>
+              //       <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
+              //     </IonCardHeader>
+              //     <IonCardContent>
+              //       <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
+              //         <IonIcon icon={locateOutline} className="mr-1"></IonIcon>
+              //         {itinerary.estimated_departure_address}
+              //       </div>
+              //       <div className="ml-[0.33rem] mb-[0.4rem]">
+              //         |
+              //       </div>
+              //       <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
+              //         <IonIcon icon={locationOutline} className="mr-1"></IonIcon>
+              //         {itinerary.destinations.map((destination, index) => {
+              //           if (destination.is_final) {
+              //             return (
+              //               <label key={index}>
+              //                 {destination.formatted_address}
+              //               </label>
+              //             )
+              //           }
+              //         })}
+              //       </div>
+              //     </IonCardContent>
+              //   </IonCard>
+              // );
+
+            )
           })
         ) : (
           <h1 className="m-6">
@@ -141,7 +166,7 @@ export default function MeusItinerarios() {
           </h1>
         )}
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton size="small" href="/cadastrar-itinerario">
+          <IonFabButton size="small" onClick={() => { history.push("/cadastrar-itinerario") }}>
             <IonIcon icon={add}></IonIcon>
           </IonFabButton>
         </IonFab>
@@ -191,3 +216,5 @@ export default function MeusItinerarios() {
     </IonPage>
   );
 }
+
+export default ItinerariosMeusMotorista

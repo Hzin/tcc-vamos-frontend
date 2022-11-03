@@ -36,7 +36,7 @@ import { ItemItineraryDetailVer } from "../components/ItemItineraryDetailVer";
 
 
 interface LocationState {
-  searchData: InterfaceItinerarySearchData
+  searchData?: InterfaceItinerarySearchData
 }
 
 interface ScanNewProps {
@@ -88,15 +88,17 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
           <>
             <CardItinerary itinerary={itinerary} onlyHeader />
 
-            <ItemItineraryDetailVer
-              label="Informações de pesquisa atuais"
-              infoString={
-                [
-                  `Origem: ${location.state.searchData.formatted_address_origin}`,
-                  `Destino: ${location.state.searchData.formatted_address_destination}`,
-                ]
-              }
-            />
+            {(location.state && location.state.searchData) && (
+              <ItemItineraryDetailVer
+                label="Informações de pesquisa atuais"
+                infoString={
+                  [
+                    `Origem: ${location.state.searchData.formatted_address_origin}`,
+                    `Destino: ${location.state.searchData.formatted_address_destination}`,
+                  ]
+                }
+              />
+            )}
 
             <IonList>
               <IonItem onClick={() => { setShowPageModal(true) }}>
@@ -203,31 +205,35 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
       </IonContent>
 
       <IonFooter>
-        <IonToolbar>
-          {itinerary && (
-            <>
-              <IonButtons className="flex justify-between">
-                <div>
-                  <IonButton href={`tel:${itinerary.user.phone_number}`} fill='solid' color='success'>Ligar para motorista</IonButton>
-                </div>
-                <div>
-                  <IonButton
-                    onClick={() => {
-                      history.push({
-                        pathname: `/itinerario/id/${itinerary.id_itinerary}/contratos`,
-                        state: {
-                          searchData: location.state.searchData
-                        }
-                      })
-                    }}
-                    fill='solid'
-                    color='success'
-                  >Contratar</IonButton>
-                </div>
-              </IonButtons>
-            </>
-          )}
-        </IonToolbar>
+        {(location.state && location.state.searchData) && (
+          <>
+            <IonToolbar>
+              {itinerary && (
+                <>
+                  <IonButtons className="flex justify-between">
+                    <div>
+                      <IonButton href={`tel:${itinerary.user.phone_number}`} fill='solid' color='success'>Ligar para motorista</IonButton>
+                    </div>
+                    <div>
+                      <IonButton
+                        onClick={() => {
+                          history.push({
+                            pathname: `/itinerario/id/${itinerary.id_itinerary}/contratos`,
+                            state: {
+                              searchData: location.state.searchData
+                            }
+                          })
+                        }}
+                        fill='solid'
+                        color='success'
+                      >Contratar</IonButton>
+                    </div>
+                  </IonButtons>
+                </>
+              )}
+            </IonToolbar>
+          </>
+        )}
       </IonFooter>
     </IonPage >
   );

@@ -40,7 +40,7 @@ export interface CreateRequest {
   is_single: boolean;
 }
 
-export async function getItineraries() {
+export async function getAllItineraries() {
   const response = await instance.get(transportsRoutes.get.url);
   return response.data;
 }
@@ -59,8 +59,21 @@ export async function search(body: SearchItinerariesRequest
   return response.data;
 }
 
-export async function getById(id: string) {
-  const response = await instance.get(`${transportsRoutes.getById.url}/${id}`);
+export async function getById(id_itinerary: string) {
+  const response = await instance.get(`${transportsRoutes.getById.url}/${id_itinerary}`);
+  return response.data;
+}
+
+export async function getByDriverUserId(id_driver: string) {
+  const finalUrl = transportsRoutes.getByDriverUserId.url.replace(':id', id_driver)
+  const response = await instance.get(finalUrl);
+  return response.data;
+}
+
+export async function getByPassengerUserId(id_user: string) {
+  const finalUrl = transportsRoutes.getByPassengerUserId.url.replace(':id', id_user)
+  console.log(`URL is ${finalUrl}`)
+  const response = await instance.get(finalUrl);
   return response.data;
 }
 

@@ -19,6 +19,14 @@ interface ComponentProps {
   itinerary: Itinerary;
   onlyHeader?: boolean;
   searchData?: InterfaceItinerarySearchData;
+
+  onClick?: () => void
+  visualizeButton?: {
+    onClick?: () => void
+  }
+  editButton?: {
+    onClick?: () => void
+  }
 }
 
 export const CardItinerary = (props: ComponentProps) => {
@@ -63,7 +71,7 @@ export const CardItinerary = (props: ComponentProps) => {
   }, [props])
 
   return (
-    <IonCard button>
+    <IonCard button onClick={props.onClick}>
       <VehiclePicture picture_path={props.itinerary.vehicle.picture} />
       <IonCardHeader>
         {props.itinerary.itinerary_nickname && (<IonCardSubtitle className="text-[13px]">Apelido: "{props.itinerary.itinerary_nickname}"</IonCardSubtitle>)}
@@ -102,19 +110,46 @@ export const CardItinerary = (props: ComponentProps) => {
             ) : <></>}
 
           </IonCardContent>
-          <IonButton
-            fill="clear"
-            className="float-right"
-            onClick={() => {
-              if (!props.searchData) return
 
-              history.push({
-                pathname: `/itinerario/id/${props.itinerary.id_itinerary}`,
-                state: {
-                  searchData: props.searchData
-                }
-              });
-            }}>Ver detalhes</IonButton>
+          {props.searchData && (
+            <IonButton
+              fill="clear"
+              className="float-right"
+              onClick={() => {
+                history.push({
+                  pathname: `/itinerario/id/${props.itinerary.id_itinerary}`,
+                  state: {
+                    searchData: props.searchData
+                  }
+                });
+              }}>Ver detalhes</IonButton>
+          )}
+        </>
+      )}
+
+      {(props.visualizeButton || props.editButton) && (
+        <>
+          <div className="mr-1">
+            {
+              props.visualizeButton && (
+                <IonButton
+                  fill="outline"
+                  className="float-right"
+                  onClick={props.visualizeButton.onClick}
+                >Ver detalhes</IonButton>
+              )
+            }
+
+            {
+              props.editButton && (
+                <IonButton
+                  fill="outline"
+                  className="float-right"
+                  onClick={props.editButton.onClick}
+                >Editar</IonButton>
+              )
+            }
+          </div>
         </>
       )}
     </IonCard>
