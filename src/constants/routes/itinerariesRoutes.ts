@@ -20,6 +20,18 @@ const transportsRoutes = {
   // rotas de contrato
   createContractRequest: {
     url: `${transportsRoutesDefault}/contract/request`
+  },
+  acceptContract: {
+    url: `${transportsRoutesDefault}/contract/accept`
+  },
+  rejectContract: {
+    url: `${transportsRoutesDefault}/contract/reject`
+  },
+  getPassengers: {
+    url: `${transportsRoutesDefault}/:id/passengers`
+  },
+  getPendingContractRequests: {
+    url: `${transportsRoutesDefault}/:id/contracts/pending`
   }
 }
 

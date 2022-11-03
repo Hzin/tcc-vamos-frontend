@@ -124,8 +124,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
         if (contractType === itineraryContractTypes.avulse) isSingle = true
 
         const body: itinerariesService.CreateContractRequestRequest = {
-          user_id: 'PREENCHER',
-          itinerary_id: "" + itinerary.id_itinerary,
+          id_itinerary: "" + itinerary.id_itinerary,
           address: 'PREENCHER',
           latitude_address: 'PREENCHER',
           longitude_address: 'PREENCHER',

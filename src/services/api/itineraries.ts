@@ -1,7 +1,7 @@
 import instance from "./api";
 
 import transportsRoutes from "../../constants/routes/itinerariesRoutes";
-import { SearchItinerariesRequest, CreateContractRequestRequest } from "../functions/itinerariesService";
+import { SearchItinerariesRequest, CreateContractRequestRequest, ChangeContractStatusRequest } from "../functions/itinerariesService";
 
 export interface Coordinates {
   lat: number;
@@ -64,7 +64,34 @@ export async function getById(id: string) {
   return response.data;
 }
 
-export async function createContractRequest(body: CreateContractRequestRequest) {
-  const response = await instance.post(transportsRoutes.getById.url, body);
+export async function createContractRequest({ id_itinerary, address, latitude_address, longitude_address, is_single }: CreateContractRequestRequest) {
+  const response = await instance.post(
+    `${transportsRoutes.getById.url}/${id_itinerary}`,
+    {
+      address, latitude_address, longitude_address, is_single
+    }
+  );
+  return response.data;
+}
+
+export async function acceptContract({ id_itinerary, id_user }: ChangeContractStatusRequest) {
+  const response = await instance.post(transportsRoutes.acceptContract.url, { id_itinerary, id_user });
+  return response.data;
+}
+
+export async function rejectContract({ id_itinerary, id_user }: ChangeContractStatusRequest) {
+  const response = await instance.post(transportsRoutes.rejectContract.url, { id_itinerary, id_user });
+  return response.data;
+}
+
+export async function getPassengers(id_itinerary: string) {
+  const finalUrl = transportsRoutes.getPassengers.url.replace(':id', id_itinerary)
+  const response = await instance.get(finalUrl);
+  return response.data;
+}
+
+export async function getPendingContractRequests(id_itinerary: string) {
+  const finalUrl = transportsRoutes.getPendingContractRequests.url.replace(':id', id_itinerary)
+  const response = await instance.get(finalUrl);
   return response.data;
 }

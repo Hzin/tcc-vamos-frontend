@@ -60,18 +60,54 @@ export async function getById(id: string): Promise<Itinerary> {
 }
 
 export interface CreateContractRequestRequest {
-  user_id: string;
-  itinerary_id: string;
+  id_itinerary: string;
   address: string;
   latitude_address: string;
   longitude_address: string;
   is_single: boolean;
 }
 
-export async function createContractRequest(body: CreateContractRequestRequest): Promise<any> {
+export async function createContractRequest({ id_itinerary, address, latitude_address, longitude_address, is_single }: CreateContractRequestRequest): Promise<any> {
   let res: any;
 
-  res = await itinerariesRoutes.createContractRequest(body);
+  res = await itinerariesRoutes.createContractRequest({ id_itinerary, address, latitude_address, longitude_address, is_single });
+
+  return res.data;
+}
+
+export interface ChangeContractStatusRequest {
+  id_itinerary: string;
+  id_user: string;
+}
+
+export async function acceptContract({ id_itinerary, id_user }: ChangeContractStatusRequest): Promise<any> {
+  let res: any;
+
+  res = await itinerariesRoutes.acceptContract({ id_itinerary, id_user });
+
+  return res.data;
+}
+
+export async function rejectContract({ id_itinerary, id_user }: ChangeContractStatusRequest): Promise<any> {
+  let res: any;
+
+  res = await itinerariesRoutes.rejectContract({ id_itinerary, id_user });
+
+  return res.data;
+}
+
+export async function getPassengers(id_itinerary: string): Promise<any> {
+  let res: any;
+
+  res = await itinerariesRoutes.getPassengers(id_itinerary);
+
+  return res.data;
+}
+
+export async function getPendingContractRequests(id_itinerary: string): Promise<any> {
+  let res: any;
+
+  res = await itinerariesRoutes.getPendingContractRequests(id_itinerary);
 
   return res.data;
 }

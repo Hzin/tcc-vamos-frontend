@@ -183,6 +183,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             return
           }
 
+          setIsVisitor(false)
           setPageName('Meu perfil')
 
           if (!userData.document || !userData.phone_number) {
