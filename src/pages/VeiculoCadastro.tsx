@@ -207,8 +207,10 @@ const VeiculoCadastro: React.FC = () => {
         setShowModal(true)
         setRedirectData({
           url: '/veiculos/meus',
-          toastColor: "success",
-          toastMessage: response.message,
+          toastInfo: {
+            color: "success",
+            message: response.message,
+          }
         })
 
       })
