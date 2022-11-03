@@ -15,13 +15,6 @@ const usersRoutes = {
   getSocialInfo: {
     url: `${usersRoutesDefault}/social`
   },
-  // TODO, depois corrigir
-  getUsersSearching: {
-    url: `/search/inraio`
-  },
-  createUserSearch: {
-    url: `${usersRoutesDefault}/search`
-  },
   checkIfUserIsAdmin: {
     url: `${usersRoutesDefault}/is_admin`
   },
