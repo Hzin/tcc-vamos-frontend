@@ -116,7 +116,6 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
     const loadUserData = async () => {
       let userId = "";
-      console.log(props)
 
       // verify if user is authenticated
       if (props.paramId) {

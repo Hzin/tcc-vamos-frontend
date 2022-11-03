@@ -1,7 +1,7 @@
 import instance from "./api";
 
 import transportsRoutes from "../../constants/routes/itinerariesRoutes";
-import { SearchItinerariesRequest, CreateContractRequestRequest, ChangeContractStatusRequest } from "../functions/itinerariesService";
+import { SearchItinerariesRequest, CreateContractRequestRequest, UpdateContractStatusRequest } from "../functions/itinerariesService";
 
 export interface Coordinates {
   lat: number;
@@ -74,13 +74,8 @@ export async function createContractRequest({ id_itinerary, address, latitude_ad
   return response.data;
 }
 
-export async function acceptContract({ id_itinerary, id_user }: ChangeContractStatusRequest) {
-  const response = await instance.post(transportsRoutes.acceptContract.url, { id_itinerary, id_user });
-  return response.data;
-}
-
-export async function rejectContract({ id_itinerary, id_user }: ChangeContractStatusRequest) {
-  const response = await instance.post(transportsRoutes.rejectContract.url, { id_itinerary, id_user });
+export async function updateContractStatus({ id_itinerary, id_user, status }: UpdateContractStatusRequest) {
+  const response = await instance.patch(transportsRoutes.updateContractStatus.url, { id_itinerary, id_user, status });
   return response.data;
 }
 

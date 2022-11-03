@@ -21,11 +21,8 @@ const transportsRoutes = {
   createContractRequest: {
     url: `${transportsRoutesDefault}/contract/request`
   },
-  acceptContract: {
-    url: `${transportsRoutesDefault}/contract/accept`
-  },
-  rejectContract: {
-    url: `${transportsRoutesDefault}/contract/reject`
+  updateContractStatus: {
+    url: `${transportsRoutesDefault}/contract/status`
   },
   getPassengers: {
     url: `${transportsRoutesDefault}/:id/passengers`

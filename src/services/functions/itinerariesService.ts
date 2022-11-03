@@ -1,3 +1,5 @@
+import { PassengerRequestStatusTypes } from "../../constants/enumPassengerRequestStatusTypes";
+import { itineraryContractTypes } from "../../constants/itineraryContractTypes";
 import { Itinerary } from "../../models/itinerary.model";
 import * as itinerariesRoutes from "../api/itineraries";
 
@@ -75,23 +77,16 @@ export async function createContractRequest({ id_itinerary, address, latitude_ad
   return res.data;
 }
 
-export interface ChangeContractStatusRequest {
+export interface UpdateContractStatusRequest {
   id_itinerary: string;
   id_user: string;
+  status: PassengerRequestStatusTypes
 }
 
-export async function acceptContract({ id_itinerary, id_user }: ChangeContractStatusRequest): Promise<any> {
+export async function updateContractStatus({ id_itinerary, id_user, status }: UpdateContractStatusRequest): Promise<any> {
   let res: any;
 
-  res = await itinerariesRoutes.acceptContract({ id_itinerary, id_user });
-
-  return res.data;
-}
-
-export async function rejectContract({ id_itinerary, id_user }: ChangeContractStatusRequest): Promise<any> {
-  let res: any;
-
-  res = await itinerariesRoutes.rejectContract({ id_itinerary, id_user });
+  res = await itinerariesRoutes.updateContractStatus({ id_itinerary, id_user, status });
 
   return res.data;
 }

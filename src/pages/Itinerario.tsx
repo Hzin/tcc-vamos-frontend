@@ -147,8 +147,6 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
     const itinerary = await itinerariesService.getById(itineraryId)
     setItinerary(itinerary)
 
-    console.log(itinerary)
-
     if (!itinerary) return
 
     setItineraryDaysOfWeek(convertDaysOfWeekToObject(itinerary.days_of_week))
