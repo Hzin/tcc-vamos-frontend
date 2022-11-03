@@ -205,9 +205,10 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
       </IonContent>
 
       <IonFooter>
-        {(location.state && location.state.searchData) && (
-          <>
-            <IonToolbar>
+        <IonToolbar>
+          {(location.state && location.state.searchData) ? (
+            <>
+
               {itinerary && (
                 <>
                   <IonButtons className="flex justify-between">
@@ -231,9 +232,12 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
                   </IonButtons>
                 </>
               )}
-            </IonToolbar>
-          </>
-        )}
+
+            </>
+          ) : (
+            <IonButton onClick={history.goBack} expand='full' fill='solid' color='light'>Voltar</IonButton>
+          )}
+        </IonToolbar>
       </IonFooter>
     </IonPage >
   );

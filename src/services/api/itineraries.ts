@@ -72,7 +72,6 @@ export async function getByDriverUserId(id_driver: string) {
 
 export async function getByPassengerUserId(id_user: string) {
   const finalUrl = transportsRoutes.getByPassengerUserId.url.replace(':id', id_user)
-  console.log(`URL is ${finalUrl}`)
   const response = await instance.get(finalUrl);
   return response.data;
 }

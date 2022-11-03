@@ -35,23 +35,24 @@ interface Address {
 interface Destination extends Address {
   is_final?: boolean;
 }
-interface ItineraryInfo {
-  id_itinerary: number;
-  vehicle_plate: string;
-  days_of_week?: string;
-  specific_day?: string;
-  estimated_departure_time: string;
-  estimated_arrival_time: string;
-  monthly_price: number;
-  daily_price?: number;
-  accept_daily: boolean;
-  itinerary_nickname: string;
-  estimated_departure_address: string;
-  departure_latitude: number;
-  departure_longitude: number;
-  neighborhoods_served: Address[];
-  destinations: Destination[];
-}
+
+// interface ItineraryInfo {
+//   id_itinerary: number;
+//   vehicle_plate: string;
+//   days_of_week?: string;
+//   specific_day?: string;
+//   estimated_departure_time: string;
+//   estimated_arrival_time: string;
+//   monthly_price: number;
+//   daily_price?: number;
+//   accept_daily: boolean;
+//   itinerary_nickname: string;
+//   estimated_departure_address: string;
+//   departure_latitude: number;
+//   departure_longitude: number;
+//   neighborhoods_served: Address[];
+//   destinations: Destination[];
+// }
 
 interface LocationState {
   redirectData?: {
@@ -89,10 +90,10 @@ const ItinerariosMeusMotorista: React.FC = () => {
   }, [location.state, history]);
 
   useEffect(() => {
-    getUserItineraries()
+    getDriverItineraries()
   }, [])
 
-  const getUserItineraries = async () => {
+  const getDriverItineraries = async () => {
     const { userId } = await sessionsService.refreshSession()
     if (!userId) return
 
@@ -112,7 +113,7 @@ const ItinerariosMeusMotorista: React.FC = () => {
       <PageHeader pageName="Meus itinerários (motorista)" showBackButton />
 
       <IonContent fullscreen>
-        {itineraries ? (
+        {(itineraries && itineraries.length !== 0) ? (
           itineraries.map((itinerary, index) => {
             return (
               <CardItinerary
@@ -166,7 +167,7 @@ const ItinerariosMeusMotorista: React.FC = () => {
           </h1>
         )}
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton size="small" onClick={() => { history.push("/cadastrar-itinerario") }}>
+          <IonFabButton onClick={() => { history.push("/itinerario/cadastrar") }}>
             <IonIcon icon={add}></IonIcon>
           </IonFabButton>
         </IonFab>

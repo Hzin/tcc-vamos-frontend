@@ -30,8 +30,9 @@ import Veiculo from "./pages/Veiculo";
 import VeiculoCadastro from "./pages/VeiculoCadastro";
 
 import CadastrarItinerario from "./pages/CadastrarItinerario";
-import ItinerariosMeusMotorista from "./pages/ItinerariosMeusMotorista";
 import ItinerariosMeusMenu from "./pages/ItinerariosMeusMenu";
+import ItinerariosMeusMotorista from "./pages/ItinerariosMeusMotorista";
+import ItinerariosMeusPassageiro from "./pages/ItinerariosMeusPassageiro";
 
 import BuscarItinerario from "./pages/BuscarItinerario";
 import BuscarPassageiro from "./pages/BuscarPassageiro";
@@ -100,18 +101,14 @@ const routes = (
 
     <Route exact path="/veiculos/cadastrar" component={VeiculoCadastro}></Route>
     <Route exact path="/veiculos/meus" component={MeusVeiculos}></Route>
-    <Route
-      exact
-      path="/cadastrar-itinerario"
-      component={CadastrarItinerario}
-    ></Route>
     <Route exact path="/veiculo" component={Home}></Route>
     <Route exact path="/veiculo/placa" component={Home}></Route>
     <Route exact path="/veiculo/placa/:id" component={Veiculo}></Route>
 
+    <Route exact path="/itinerario/cadastrar" component={CadastrarItinerario}></Route>
     <Route exact path="/itinerario/meus" component={ItinerariosMeusMenu}></Route>
     <Route exact path="/itinerario/meus/motorista" component={ItinerariosMeusMotorista}></Route>
-    {/* <Route exact path="/itinerario/meus/passageiro" component={ItinerariosMeusPassageiro}></Route> */}
+    <Route exact path="/itinerario/meus/passageiro" component={ItinerariosMeusPassageiro}></Route>
     <Route exact path="/itinerario/id/:id" component={Itinerario}></Route>
     <Route exact path="/itinerario/id/:id/editar" component={EditarItinerario}></Route>
 

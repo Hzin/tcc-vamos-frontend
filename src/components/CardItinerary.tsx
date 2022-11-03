@@ -71,7 +71,7 @@ export const CardItinerary = (props: ComponentProps) => {
   }, [props])
 
   return (
-    <IonCard button onClick={props.onClick}>
+    <IonCard button={!!props.onClick} onClick={props.onClick}>
       <VehiclePicture picture_path={props.itinerary.vehicle.picture} />
       <IonCardHeader>
         {props.itinerary.itinerary_nickname && (<IonCardSubtitle className="text-[13px]">Apelido: "{props.itinerary.itinerary_nickname}"</IonCardSubtitle>)}

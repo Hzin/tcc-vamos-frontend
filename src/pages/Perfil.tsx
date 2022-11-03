@@ -361,7 +361,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                 <IonItem
                   button
                   onClick={() =>
-                    history.push({ pathname: "/cadastrar-itinerario" })
+                    history.push({ pathname: "/itinerario/cadastrar" })
                   }
                 >
                   <IonIcon icon={mapOutline} slot="start" />
