@@ -14,106 +14,26 @@ import {
   IonList,
   IonPage,
   IonToolbar,
-  useIonAlert,
 } from "@ionic/react";
 
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 
-import { Color } from "@ionic/core";
-
 import Perfil from "./Perfil";
 
 import * as itinerariesService from "../services/functions/itinerariesService";
-import { convertDaysOfWeekToObject, convertNumberToPrice, DaysOfWeekObject, formatTimeField, getFormatedAddresses } from "../services/utils";
+import { convertDaysOfWeekToObject, convertNumberToPrice, DaysOfWeekObject, formatTimeField } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
 import { Itinerary } from "../models/itinerary.model";
 import { cashOutline, cashSharp, eyeOutline, personOutline, timeOutline, timeSharp } from "ionicons/icons";
-import { NeighborhoodServed } from "../models/NeighborhoodServed.model";
-import { Destination } from "../models/destination.model";
 import { CardInfoBasicIntoAlertInfo } from "../components/CardInfoBasicIntoAlertInfo";
 import { ShowPageAsModal } from "../components/ShowPageAsModal";
 import { CardItinerary } from "../components/CardItinerary";
 import { ChipsItineraryDaysOfWeek } from "../components/ChipsItineraryDaysOfWeek";
 import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
+import { ItemItineraryDetail } from "../components/ItemItineraryDetail";
+import { ItemItineraryDetailVer } from "../components/ItemItineraryDetailVer";
 
-interface ItineraryDetailItemProps {
-  label: string;
-  icon?: string;
-  value: string;
-  secondValue?: string;
-  color?: Color
-}
-
-const ItineraryDetailItem = (props: ItineraryDetailItemProps) => {
-  return (
-    <>
-      <IonItem>
-        <IonLabel>{props.label}</IonLabel>
-
-        {props.secondValue && (
-          <>
-            <IonChip className="min-w-[80px]" color={props.color}>
-              <IonLabel className="text-center w-full">{props.secondValue}</IonLabel>
-            </IonChip>
-          </>
-        )}
-
-        <IonChip className="min-w-[80px]">
-          <IonIcon icon={props.icon} />
-          <IonLabel className="text-center w-full">{props.value}</IonLabel>
-        </IonChip>
-      </IonItem>
-    </>
-  );
-};
-
-interface ItineraryDetailItemVerProps {
-  label: string;
-  icon?: string;
-  infoString?: string | string[]
-  infoObject?: NeighborhoodServed[] | Destination[]
-  // infoUser?: User
-}
-
-const ItineraryDetailItemVer = (props: ItineraryDetailItemVerProps) => {
-  const [presentAlert] = useIonAlert();
-
-  const [info, setInfo] = useState('')
-
-  useEffect(() => {
-    // if (!props.infoString && !props.infoObject && !props.infoUser) {
-    if (!props.infoString && !props.infoObject) {
-      setInfo('Sem informações.')
-      return
-    }
-
-    if (props.infoString) Array.isArray(props.infoString) ? setInfo(props.infoString.join('\n')) : setInfo(props.infoString)
-    if (props.infoObject) setInfo(getFormatedAddresses(props.infoObject).join('\n'))
-    // if (props.infoUser) setInfo(convertObjectToString(props.infoUser).join('\n'))
-  }, [props])
-
-  const handleShowAlert = (header: string, info: string) => {
-    presentAlert({
-      header: header,
-      message: info,
-      buttons: ['Ok'],
-    },
-    );
-  };
-
-  return (
-    <>
-      <IonItem onClick={() => { handleShowAlert(props.label, info) }}>
-        <IonLabel>{props.label}</IonLabel>
-        <IonChip color='secondary'>
-          <IonIcon icon={eyeOutline} />
-          <IonLabel>Ver</IonLabel>
-        </IonChip>
-      </IonItem>
-    </>
-  );
-};
 
 interface LocationState {
   searchData: InterfaceItinerarySearchData
@@ -183,9 +103,9 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
                 </IonChip>
               </IonItem>
 
-              <ItineraryDetailItem label="Preço mensal" icon={cashSharp} value={convertNumberToPrice(itinerary.monthly_price)} />
+              <ItemItineraryDetail label="Preço mensal" icon={cashSharp} value={convertNumberToPrice(itinerary.monthly_price)} />
 
-              <ItineraryDetailItem label='Vaga avulsa' color={itinerary.accept_daily ? "success" : "danger"} icon={cashOutline} value={convertNumberToPrice(itinerary.daily_price)} secondValue={itinerary.accept_daily ? "Aceita" : "Não aceita"} />
+              <ItemItineraryDetail label='Vaga avulsa' color={itinerary.accept_daily ? "success" : "danger"} icon={cashOutline} value={convertNumberToPrice(itinerary.daily_price)} secondValue={itinerary.accept_daily ? "Aceita" : "Não aceita"} />
               <CardInfoBasicIntoAlertInfo alertMessage="Vagas avulsas são viagens que você usa em um dia específico ao invés de pagar um contrato mensal." message="O que são vagas avulsas?" size="small" />
             </IonList>
 
@@ -201,9 +121,9 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
                   </IonItem>
                   <div className="ion-padding" slot="content">
                     {/* <IonListHeader className="mt-4">Locais</IonListHeader> */}
-                    <ItineraryDetailItemVer label="Locais atendidos" infoObject={itinerary.neighborhoods_served} />
-                    <ItineraryDetailItemVer label="Destinos" infoObject={itinerary.destinations} />
-                    <ItineraryDetailItemVer label="Endereço de saída estimado" infoString={itinerary.estimated_departure_address} />
+                    <ItemItineraryDetailVer label="Locais atendidos" infoObject={itinerary.neighborhoods_served} />
+                    <ItemItineraryDetailVer label="Destinos" infoObject={itinerary.destinations} />
+                    <ItemItineraryDetailVer label="Endereço de saída estimado" infoString={itinerary.estimated_departure_address} />
                   </div>
                 </IonAccordion>
               </IonAccordionGroup>
@@ -216,7 +136,7 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
                   </IonItem>
                   <div className="ion-padding" slot="content">
                     {/* <IonItem onClick={() => { history.push({ pathname: `/usuario/${itinerary.user.id_user}` }) }}> */}
-                    <ItineraryDetailItem label="Lugares disponíveis" icon={personOutline} value={"" + itinerary.available_seats} />
+                    <ItemItineraryDetail label="Lugares disponíveis" icon={personOutline} value={"" + itinerary.available_seats} />
 
 
                     {itineraryDaysOfWeek && (
@@ -225,7 +145,7 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
                       </>
                     )}
 
-                    {itinerary.specific_day && (<ItineraryDetailItem label="Dia específico" value={itinerary.specific_day.toString()} />)}
+                    {itinerary.specific_day && (<ItemItineraryDetail label="Dia específico" value={itinerary.specific_day.toString()} />)}
                   </div>
                 </IonAccordion>
               </IonAccordionGroup>
@@ -238,8 +158,8 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
                   </IonItem>
 
                   <div className="ion-padding" slot="content">
-                    <ItineraryDetailItem label='Horário de estimado saída' icon={timeOutline} value={formatTimeField(itinerary.estimated_departure_time)} />
-                    <ItineraryDetailItem label='Horário de estimado chegada' icon={timeSharp} value={formatTimeField(itinerary.estimated_arrival_time)} />
+                    <ItemItineraryDetail label='Horário de estimado saída' icon={timeOutline} value={formatTimeField(itinerary.estimated_departure_time)} />
+                    <ItemItineraryDetail label='Horário de estimado chegada' icon={timeSharp} value={formatTimeField(itinerary.estimated_arrival_time)} />
                   </div>
                 </IonAccordion>
               </IonAccordionGroup>

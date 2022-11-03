@@ -132,6 +132,10 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
           formatted_address_destination: location.state.searchData.formatted_address_destination, // string;
         }
 
+        console.log(body)
+
+        return
+
         const response = await itinerariesService.createContractRequest(body)
 
         setModalInfoShow(true)
