@@ -181,7 +181,7 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
 
             <div className="ion-padding" slot="content">
               <IonItem>
-                <IonButton onClick={() => { history.push({ pathname: "/itinerario/:id/contratos" }) }}>"/itinerario/:id/contratos"</IonButton>
+                <IonButton onClick={() => { history.push({ pathname: "/itinerario/id/:id/contratos" }) }}>"/itinerario/id/:id/contratos"</IonButton>
               </IonItem>
 
               <IonItem>
@@ -214,7 +214,7 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
                   <IonButton
                     onClick={() => {
                       history.push({
-                        pathname: `/itinerario/${itinerary.id_itinerary}/contratos`,
+                        pathname: `/itinerario/id/${itinerary.id_itinerary}/contratos`,
                         state: {
                           searchData: location.state.searchData
                         }

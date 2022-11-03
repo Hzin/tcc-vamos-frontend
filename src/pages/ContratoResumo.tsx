@@ -107,6 +107,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
         setContractType('Avulso')
         break;
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const loadItineraryData = async () => {

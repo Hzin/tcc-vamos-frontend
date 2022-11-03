@@ -63,7 +63,7 @@ const ItinerarioContratos: React.FC<ScanNewProps> = (props) => {
       <IonContent fullscreen>
         {itinerary && (
           <>
-            <PageHeader pageName="Contratos" backButtonPageUrl={`/itinerario/${itinerary.id_itinerary}`} />
+            <PageHeader pageName="Contratos" backButtonPageUrl={`/itinerario/id/${itinerary.id_itinerary}`} />
 
             <IonGrid>
               <CardItinerary itinerary={itinerary} onlyHeader />
@@ -150,7 +150,7 @@ const ItinerarioContratos: React.FC<ScanNewProps> = (props) => {
               onClick={() => {
                 history.push(
                   {
-                    pathname: `/itinerario/${itinerary.id_itinerary}/contratos/resumo`,
+                    pathname: `/itinerario/id/${itinerary.id_itinerary}/contratos/resumo`,
                     state: {
                       searchData: location.state.searchData,
                       contractData: {

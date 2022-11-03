@@ -57,7 +57,7 @@ const ListaDePresenca: React.FC<ScanNewProps> = (props) => {
       <IonContent>
         <IonList>
           <IonItem>
-            <IonButton onClick={() => { history.push({ pathname: "/itinerario/:id/contratos" }) }}>"/itinerario/:id/contratos"</IonButton>
+            <IonButton onClick={() => { history.push({ pathname: "/itinerario/id/:id/contratos" }) }}>"/itinerario/id/:id/contratos"</IonButton>
           </IonItem>
 
           <IonItem>

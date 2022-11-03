@@ -107,9 +107,9 @@ const routes = (
     <Route exact path="/veiculo/placa" component={Home}></Route>
     <Route exact path="/veiculo/placa/:id" component={Veiculo}></Route>
 
-    <Route exact path="/itinerario/:id" component={Itinerario}></Route>
-    <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
-    <Route exact path="/editar-itinerario" component={EditarItinerario}></Route>
+    <Route exact path="/itinerario/meus" component={MeusItinerarios}></Route>
+    <Route exact path="/itinerario/id/:id" component={Itinerario}></Route>
+    <Route exact path="/itinerario/id/:id/editar" component={EditarItinerario}></Route>
 
     <Route exact path="/buscas" component={Buscas}></Route>
     <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
@@ -121,11 +121,12 @@ const routes = (
 
     <Route exact path="/documentos/moderar" component={ModerarDocumentos}></Route>
 
-    <Route exact path="/itinerario/:id/contratos" component={ItinerarioContratos}></Route>
-    <Route exact path="/itinerario/:id/contratos/resumo" component={ContratoResumo}></Route>
-    <Route exact path="/viagem/:id" component={Viagem}></Route>
-    <Route exact path="/contrato/:id" component={Contrato}></Route>
-    <Route exact path="/viagem/:id/presenca" component={ListaDePresenca}></Route>
+    <Route exact path="/itinerario/id/:id/contratos" component={ItinerarioContratos}></Route>
+    <Route exact path="/itinerario/id/:id/contratos/resumo" component={ContratoResumo}></Route>
+
+    <Route exact path="/viagem/id/:id" component={Viagem}></Route>
+    <Route exact path="/contrato/id/:id" component={Contrato}></Route>
+    <Route exact path="/viagem/id/:id/presenca" component={ListaDePresenca}></Route>
 
     <Route exact path="/">
       <Redirect to="/home" />

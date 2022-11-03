@@ -109,7 +109,7 @@ export const CardItinerary = (props: ComponentProps) => {
               if (!props.searchData) return
 
               history.push({
-                pathname: `/itinerario/${props.itinerary.id_itinerary}`,
+                pathname: `/itinerario/id/${props.itinerary.id_itinerary}`,
                 state: {
                   searchData: props.searchData
                 }
