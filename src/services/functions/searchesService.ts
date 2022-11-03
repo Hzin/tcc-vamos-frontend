@@ -1,7 +1,5 @@
 import * as searchesRoutes from "../api/searches";
 
-import { setStore } from "../../store/RecordsStore";
-
 export async function list(): Promise<any[]> {
   let res: any;
 
@@ -37,16 +35,23 @@ export interface SearchInRadiusBody {
   longitude: number;
 }
 
-export async function searchInRadius(body: SearchInRadiusBody): Promise<any> {
+export interface SearchInRadiusResponse {
+  allRecords: [],
+  center: {
+    latitude: number,
+    longitude: number
+  }
+}
+export async function searchInRadius({ latitude, longitude }: SearchInRadiusBody): Promise<SearchInRadiusResponse> {
   let res: any;
 
   try {
-    res = await searchesRoutes.searchInRadius(body);
+    res = await searchesRoutes.searchInRadius({ latitude, longitude });
   } catch (error) {
     // TODO
   }
 
-  return res.data;
+  return res;
 }
 
 // TODO, estava em ./api/users.ts

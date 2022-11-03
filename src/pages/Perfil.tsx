@@ -389,7 +389,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
                 <IonItem
                   button
-                  onClick={() => history.push({ pathname: "/buscar-passageiro" })}
+                  onClick={() => history.push({ pathname: "/buscar/passageiro" })}
                 >
                   <IonIcon icon={personOutline} slot="start" />
                   <IonLabel>Buscar passageiros</IonLabel>

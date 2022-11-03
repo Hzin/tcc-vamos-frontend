@@ -18,6 +18,6 @@ export async function create(body: CreateBody) {
 }
 
 export async function searchInRadius(body: SearchInRadiusBody) {
-  const response = await instance.post(searchesRoutes.create.url, body);
+  const response = await instance.post(searchesRoutes.searchInRadius.url, body);
   return response.data;
 }

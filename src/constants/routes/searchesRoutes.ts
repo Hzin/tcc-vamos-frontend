@@ -1,4 +1,4 @@
-const searchesRoutesDefault = '/search';
+const searchesRoutesDefault = '/searches';
 const searchesRoutes = {
   list: {
     url: `${searchesRoutesDefault}/list`
