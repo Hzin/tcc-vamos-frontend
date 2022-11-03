@@ -212,6 +212,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
     return () => {
       isMounted = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -350,9 +351,13 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                   <IonIcon icon={carOutline} slot="start" />
                   <IonLabel>Meus veículos</IonLabel>
                 </IonItem>
+              </>
+            )}
 
-                <IonListHeader class="text-lg mt-4">Configurações de itinerário</IonListHeader>
+            <IonListHeader class="text-lg mt-4">Configurações de itinerário</IonListHeader>
 
+            {isDriver && (
+              <>
                 <IonItem
                   button
                   onClick={() =>
@@ -362,18 +367,18 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                   <IonIcon icon={mapOutline} slot="start" />
                   <IonLabel>Cadastrar itinerário</IonLabel>
                 </IonItem>
-                <IonItem
-                  button
-                  onClick={() =>
-                    history.push({ pathname: "/meus-itinerarios" })
-                  }
-                >
-                  <IonIcon icon={mapOutline} slot="start" />
-                  <IonLabel>Meus itinerários</IonLabel>
-                </IonItem>
               </>
-            )
-            }
+            )}
+
+            <IonItem
+              button
+              onClick={() =>
+                history.push({ pathname: "/itinerario/meus" })
+              }
+            >
+              <IonIcon icon={mapOutline} slot="start" />
+              <IonLabel>Meus itinerários</IonLabel>
+            </IonItem>
 
             {isDriver && (
               <>
@@ -432,7 +437,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
           duration={2500}
         />
       </IonContent>
-    </IonPage>
+    </IonPage >
   );
 };
 
