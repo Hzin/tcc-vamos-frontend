@@ -2,10 +2,10 @@ import { IonCard } from "@ionic/react";
 import { useEffect } from "react";
 import { useHistory } from "react-router";
 
-import PassengerRequest from "../models/passengerRequest.model";
+// import PassengerRequest from "../models/passengerRequest.model";
 
 interface ComponentProps {
-  contract: PassengerRequest;
+  // contract: PassengerRequest;
 }
 
 export const CardPassengerRequestContract = (props: ComponentProps) => {

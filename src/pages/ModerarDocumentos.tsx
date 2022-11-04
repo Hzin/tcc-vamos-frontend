@@ -24,7 +24,7 @@ const ModerarDocumentos: React.FC = () => {
   const location = useLocation<LocationState>();
   const history = useHistory();
 
-  const [isAdmin, setIsAdmin] = useState(false);
+  // const [isAdmin, setIsAdmin] = useState(false);
 
   const [documentsInfo, setDocumentsInfo] = useState<vehiclesService.GetPendingDocumentsResponse[]>();
 

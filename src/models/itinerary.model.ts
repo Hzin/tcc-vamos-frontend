@@ -1,6 +1,9 @@
 import { Destination } from "./destination.model";
 import { NeighborhoodServed } from "./NeighborhoodServed.model";
 import { Trip } from "./trip.model";
+import { Passenger } from "./passenger.model";
+import { PassengerRequest } from "./passengerRequest.model";
+
 import { User } from "./user.model";
 import { Vehicle } from "./vehicle.model";
 
@@ -23,6 +26,8 @@ export interface Itinerary {
     neighborhoods_served: NeighborhoodServed[];
     destinations: Destination[];
     trips?: Trip[];
+    passengers?: Passenger[];
+    passengerRequests?: PassengerRequest[];
     // created_at: Date;
     // updated_at: Date;
 

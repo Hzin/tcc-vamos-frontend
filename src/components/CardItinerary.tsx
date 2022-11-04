@@ -1,6 +1,6 @@
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon, IonLabel } from "@ionic/react";
 import { cashOutline, cashSharp, timeOutline, timeSharp } from "ionicons/icons";
-import { useEffect, useState } from "react";
+import { InputHTMLAttributes, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
 
@@ -9,28 +9,45 @@ import { Itinerary } from "../models/itinerary.model";
 import { convertNumberToPrice, formatTimeField, getUserFullName } from "../services/utils";
 import { VehiclePicture } from "./VehiclePicture";
 
+import type { JSX } from '@ionic/core/components';
+
 interface CardInfo {
   icon: string,
   label: string,
   value: string,
 }
 
-interface ComponentProps {
+interface ComponentProps extends JSX.IonCard {
+  // interface ComponentProps {
+  // interface ComponentProps extends InputHTMLAttributes<JSX.IonCard> {
   itinerary: Itinerary;
   onlyHeader?: boolean;
   searchData?: InterfaceItinerarySearchData;
 
   onClick?: () => void
   visualizeButton?: {
-    onClick?: () => void
+    label?: string,
+    onClick: () => void
   }
   editButton?: {
-    onClick?: () => void
+    label?: string,
+    onClick: () => void
   }
 }
 
 export const CardItinerary = (props: ComponentProps) => {
   const history = useHistory();
+
+  const {
+    itinerary,
+    onlyHeader,
+    searchData,
+    visualizeButton,
+    editButton,
+
+    onClick,
+    ...otherProps
+  } = props
 
   const [cardInfo, setCardInfo] = useState<CardInfo[]>([])
   const [cardTimeInfo, setCardTimeInfo] = useState<CardInfo[]>([])
@@ -71,7 +88,7 @@ export const CardItinerary = (props: ComponentProps) => {
   }, [props])
 
   return (
-    <IonCard button={!!props.onClick} onClick={props.onClick}>
+    <IonCard button={!!onClick} onClick={onClick} {...otherProps}>
       <VehiclePicture picture_path={props.itinerary.vehicle.picture} />
       <IonCardHeader>
         {props.itinerary.itinerary_nickname && (<IonCardSubtitle className="text-[13px]">Apelido: "{props.itinerary.itinerary_nickname}"</IonCardSubtitle>)}
@@ -130,25 +147,21 @@ export const CardItinerary = (props: ComponentProps) => {
       {(props.visualizeButton || props.editButton) && (
         <>
           <div className="mr-1">
-            {
-              props.visualizeButton && (
-                <IonButton
-                  fill="outline"
-                  className="float-right"
-                  onClick={props.visualizeButton.onClick}
-                >Ver detalhes</IonButton>
-              )
-            }
+            {props.visualizeButton && (
+              <IonButton
+                fill="outline"
+                className="float-right"
+                onClick={props.visualizeButton.onClick}
+              >{props.visualizeButton.label ? props.visualizeButton.label : 'Ver detalhes'}</IonButton>
+            )}
 
-            {
-              props.editButton && (
-                <IonButton
-                  fill="outline"
-                  className="float-right"
-                  onClick={props.editButton.onClick}
-                >Editar</IonButton>
-              )
-            }
+            {props.editButton && (
+              <IonButton
+                fill="outline"
+                className="float-right"
+                onClick={props.editButton.onClick}
+              >{props.editButton.label ? props.editButton.label : 'Editar'}</IonButton>
+            )}
           </div>
         </>
       )}
