@@ -31,7 +31,6 @@ export const ItemItineraryDetailVer = (props: ComponentProps) => {
   useEffect(() => {
     if (props.infoString) {
       Array.isArray(props.infoString) ? setInfo(props.infoString) : setInfo([props.infoString])
-      if (Array.isArray(props.infoString)) console.log(props.infoString)
     }
 
     if (props.infoObject) setInfo(convertObjectToStringArray(props.infoObject))
