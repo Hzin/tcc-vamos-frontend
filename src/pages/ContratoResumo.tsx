@@ -32,6 +32,8 @@ import { calendarClearOutline, calendarNumberOutline, cashOutline, cashSharp, co
 import { ChipsItineraryDaysOfWeek } from "../components/ChipsItineraryDaysOfWeek";
 import { ModalInfoEntendi, RedirectData } from "../components/ModalInfoEntendi";
 import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
+import { User } from "../models/user.model";
+import { PassengerRequestStatusTypes } from "../constants/enumPassengerRequestStatusTypes";
 
 interface ContractDetailSumaryItemProps {
   label: string;
@@ -91,9 +93,12 @@ interface ScanNewProps {
   contractData?: {
     type: itineraryContractTypes;
   };
-  passengerName?: string;
+
+  passenger?: User;
+  itinerary?: Itinerary;
 
   showContractButton?: boolean,
+  showContractModerateButton?: boolean,
 
   noHeaderBackButton?: boolean
 }
@@ -163,11 +168,11 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
 
     const user = await usersService.getById(refreshSessionInfo.userId)
 
-    if (props.passengerName) setPassengerName(props.passengerName)
+    if (props.passenger) setPassengerName(getUserFullName(props.passenger))
     else setPassengerName(`${getUserFullName(user)} (você)`)
   };
 
-  const showConfirmAlert = async () => {
+  const showConfirmRequestContractAlert = async () => {
     const message = "Confirmar envio do contrato?";
 
     presentAlertConfirmation({
@@ -208,6 +213,71 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
         ])
         setModalInfoRedirectData({
           url: ''
+        })
+
+        setModalInfoShow(true)
+      },
+    });
+  };
+
+  const showConfirmUpdateContractStatusAlert = async (action: 'approve' | 'reject') => {
+    let message = ''
+
+    switch (action) {
+      case 'approve':
+        message = 'Confirma APROVAÇÃO do contrato?'
+        break;
+      case 'reject':
+        message = 'Confirma REJEIÇÃO do contrato?'
+        break;
+      default:
+        break;
+    }
+
+    presentAlertConfirmation({
+      header: message,
+      buttons: [
+        {
+          text: "Cancelar",
+          role: "cancel",
+        },
+        {
+          text: "Confirmar",
+          role: "confirmAction",
+        },
+      ],
+
+      onDidDismiss: async (e: CustomEvent) => {
+        if (e.detail.role === "cancel" || e.detail.role === "backdrop") return
+
+        if (!props.passenger || !props.itinerary) return
+
+        switch (action) {
+          case 'approve':
+            const responseApproved = await itinerariesService.updateContractStatus({ id_itinerary: "" + props.itinerary.id_itinerary, id_user: props.passenger.id_user, status: PassengerRequestStatusTypes.accepted })
+
+            setModalInfoHeader(responseApproved.message)
+            setModalInfoMessages([
+              `Agora ${getUserFullName(props.passenger)} é um passageiro do seu itinerário!`,
+              `Ele(a) será notificado(a) sobre a aprovação e em breve vocês iniciarão a sua viagem.`
+            ])
+            break;
+          case 'reject':
+            const responseRejected = await itinerariesService.updateContractStatus({ id_itinerary: "" + props.itinerary.id_itinerary, id_user: props.passenger.id_user, status: PassengerRequestStatusTypes.rejected })
+
+            setModalInfoHeader(responseRejected.message)
+            setModalInfoMessages([
+              `A requisição de contrato de ${getUserFullName(props.passenger)} foi rejeitada.`,
+              `Ele(a) será notificado(a) sobre a rejeição do contrato.`
+            ])
+
+
+            setModalInfoShow(true)
+            break
+        }
+
+        setModalInfoRedirectData({
+          url: `/itinerario/meus/motorista/contratos/moderar/itinerario/id/${props.itinerary.id_itinerary}`
         })
 
         setModalInfoShow(true)
@@ -290,19 +360,39 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
         }
       </IonContent>
 
-      {props.showContractButton && (
+      {(props.showContractButton || props.showContractModerateButton) && (
         <>
+          {/* botões de contratar */}
           <IonFooter>
-            <IonToolbar>
-              <div className="flex justify-between">
-                <div>
-                  <IonButton fill='outline' onClick={history.goBack}>Cancelar</IonButton>
-                </div>
-                <div>
-                  <IonButton className="mr-1" color='success' onClick={showConfirmAlert}>Confirmar</IonButton>
-                </div>
-              </div>
-            </IonToolbar>
+            {props.showContractButton && (
+              <>
+                <IonToolbar>
+                  <div className="flex justify-between">
+                    <div>
+                      <IonButton fill='outline' onClick={history.goBack}>Cancelar</IonButton>
+                    </div>
+                    <div>
+                      <IonButton className="mr-1" color='success' onClick={showConfirmRequestContractAlert}>Confirmar</IonButton>
+                    </div>
+                  </div>
+                </IonToolbar>
+              </>
+            )}
+
+            {props.showContractModerateButton && (
+              <>
+                <IonToolbar>
+                  <div className="flex justify-between">
+                    <div>
+                      <IonButton expand="block" fill='outline' color='danger' onClick={() => { showConfirmUpdateContractStatusAlert('reject') }}>Recusar</IonButton>
+                    </div>
+                    <div>
+                      <IonButton expand="block" className="mr-1" color='success' onClick={() => { showConfirmUpdateContractStatusAlert('approve') }}>Aprovar</IonButton>
+                    </div>
+                  </div>
+                </IonToolbar>
+              </>
+            )}
           </IonFooter>
         </>
       )}

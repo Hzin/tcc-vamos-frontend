@@ -5,6 +5,8 @@ import type { JSX } from '@ionic/core/components';
 
 import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
 import { itineraryContractTypes } from "../constants/itineraryContractTypes";
+import { User } from "../models/user.model";
+import { Itinerary } from "../models/itinerary.model";
 
 interface ComponentProps extends JSX.IonModal {
   page: React.FC<any>,
@@ -19,7 +21,11 @@ interface ComponentProps extends JSX.IonModal {
   contractData?: {
     type: itineraryContractTypes;
   };
-  passengerName?: string;
+
+  passenger?: User;
+  itinerary?: Itinerary;
+
+  showContractModerateButton?: boolean
 }
 
 export const ShowPageAsModal = (props: ComponentProps) => {
@@ -35,7 +41,11 @@ export const ShowPageAsModal = (props: ComponentProps) => {
 
     searchData,
     contractData,
-    passengerName,
+
+    passenger,
+    itinerary,
+
+    showContractModerateButton,
 
     ...otherProps
   } = props
@@ -47,6 +57,8 @@ export const ShowPageAsModal = (props: ComponentProps) => {
   return (
     <IonModal ref={modal} {...otherProps}>
       <props.page
+        noHeaderBackButton
+
         // itinerary_id
         paramId={props.paramId}
 
@@ -56,9 +68,12 @@ export const ShowPageAsModal = (props: ComponentProps) => {
         // mostra conteúdos em ContratoResumo
         searchData={props.searchData}
         contractData={props.contractData}
-        passengerName={props.passengerName}
 
-        noHeaderBackButton
+        passenger={props.passenger}
+        itinerary={props.itinerary}
+
+        // mostra botões de aprovar e recusar requisição de contrato em ContratoResumo
+        showContractModerateButton
       />
 
       <IonFooter>

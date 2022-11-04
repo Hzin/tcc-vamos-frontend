@@ -131,3 +131,11 @@ export async function getPendingContractRequests(id_itinerary: string): Promise<
 
   return res.data;
 }
+
+export async function getDriverItinerariesWithOnlyPendingPassengerRequests(id_user: string): Promise<Itinerary[]> {
+  let res: any;
+
+  res = await itinerariesRoutes.getDriverItinerariesWithOnlyPendingPassengerRequests(id_user);
+
+  return res.data;
+}

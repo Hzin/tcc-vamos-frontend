@@ -18,14 +18,15 @@ const ModerarContratosListaItinerarios: React.FC = () => {
   const [hasPassengerRequests, setHasPassengerRequests] = useState(false)
 
   useEffect(() => {
-    getDriverItineraries()
+    getDriverItinerariesWithOnlyPendingPassengerRequests()
   }, []);
 
-  const getDriverItineraries = async () => {
+  const getDriverItinerariesWithOnlyPendingPassengerRequests = async () => {
     const { userId } = await sessionsService.refreshSession()
     if (!userId) return
 
-    const itineraries = await itinerariesService.getByDriverUserId(userId)
+    const itineraries = await itinerariesService.getDriverItinerariesWithOnlyPendingPassengerRequests(userId)
+    
     setItineraries(itineraries)
   }
 
@@ -42,21 +43,23 @@ const ModerarContratosListaItinerarios: React.FC = () => {
 
       <IonContent>
         <IonList>
-          <CardInfoBasic size="small" message="Um itinerário esmaecido não contém pedidos de contrato." />
+          <CardInfoBasic size="small" message="Um itinerário esmaecido não contém pedidos de contrato pendentes." />
           {itineraries && itineraries.length !== 0 ? (
-            itineraries.map((itinerary, index) => (
-              <CardItinerary
-                key={index}
-                disabled={!(itinerary.passengerRequests && itinerary.passengerRequests.length !== 0)}
-                itinerary={itinerary}
+            itineraries.map((itinerary, index) => {
+              return (
+                <CardItinerary
+                  key={index}
+                  disabled={!(itinerary.passengerRequests && itinerary.passengerRequests.length !== 0)}
+                  itinerary={itinerary}
 
-                visualizeButton={
-                  { label: 'Ver requisições', onClick: () => checkRequests("" + itinerary.id_itinerary) }
-                }
+                  visualizeButton={
+                    { label: 'Ver requisições', onClick: () => checkRequests("" + itinerary.id_itinerary) }
+                  }
 
-                badge={(itinerary.passengerRequests && itinerary.passengerRequests.length !== 0) ? itinerary.passengerRequests.length : undefined}
-              />
-            ))
+                  badge={(itinerary.passengerRequests && itinerary.passengerRequests.length !== 0) ? itinerary.passengerRequests.length : undefined}
+                />
+              )
+            })
           ) : (
             <div className="ion-padding">
               Você não possui itinerários!

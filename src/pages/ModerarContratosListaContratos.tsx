@@ -13,6 +13,8 @@ import { ShowPageAsModal } from "../components/ShowPageAsModal";
 import ContratoResumo, { LocationState } from "./ContratoResumo";
 import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
 import { itineraryContractTypes } from "../constants/itineraryContractTypes";
+import { User } from "../models/user.model";
+import { Itinerary } from "../models/itinerary.model";
 
 interface ScanNewProps {
   match: {
@@ -30,7 +32,9 @@ const ModerarContratosListaContratos: React.FC<ScanNewProps> = (props) => {
 
   const [searchData, setSearchData] = useState<InterfaceItinerarySearchData>()
   const [contractData, setContractData] = useState<{ type: itineraryContractTypes }>()
-  const [passengerName, setPassengerName] = useState('')
+
+  const [passenger, setPassenger] = useState<User>()
+  const [itinerary, setItinerary] = useState<Itinerary>()
 
   useEffect(() => {
     if (!(props.match && props.match.params.id)) return
@@ -68,7 +72,8 @@ const ModerarContratosListaContratos: React.FC<ScanNewProps> = (props) => {
       type: contractFound.contract_type
     })
 
-    setPassengerName(getUserFullName(contractFound.user))
+    setPassenger(contractFound.user)
+    setItinerary(contractFound.itinerary)
 
     document.getElementById('modal-contrato')?.click()
   }
@@ -96,12 +101,16 @@ const ModerarContratosListaContratos: React.FC<ScanNewProps> = (props) => {
           trigger="modal-contrato"
 
           page={ContratoResumo}
+          
           paramId={modalParamId}
           searchData={searchData}
           contractData={contractData}
-          passengerName={passengerName}
+
+          passenger={passenger}
+          itinerary={itinerary}
 
           noHeaderBackButton
+          showContractModerateButton
         />
 
         <IonButton className="invisible" id='modal-contrato' />

@@ -99,3 +99,9 @@ export async function getPendingContractRequests(id_itinerary: string) {
   const response = await instance.get(finalUrl);
   return response.data;
 }
+
+export async function getDriverItinerariesWithOnlyPendingPassengerRequests(id_user: string) {
+  const finalUrl = transportsRoutes.getDriverItinerariesWithOnlyPendingPassengerRequests.url.replace(':id', id_user)
+  const response = await instance.get(finalUrl);
+  return response.data;
+}
