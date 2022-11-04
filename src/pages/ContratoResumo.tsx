@@ -23,6 +23,9 @@ import { PageHeader } from "../components/PageHeader";
 import { getUserFullName, convertNumberToPrice, formatTimeField, convertDaysOfWeekToObject } from "../services/utils";
 
 import * as itinerariesService from "../services/functions/itinerariesService";
+import * as sessionsService from "../services/functions/sessionsService";
+import * as usersService from "../services/functions/usersService";
+
 import { Itinerary } from "../models/itinerary.model";
 import { itineraryContractTypes } from "../constants/itineraryContractTypes";
 import { calendarClearOutline, calendarNumberOutline, cashOutline, cashSharp, documentTextOutline, locateOutline, navigateOutline, personOutline, timeOutline, timeSharp } from "ionicons/icons";
@@ -90,6 +93,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
 
   const [itinerary, setItinerary] = useState<Itinerary>()
   const [contractType, setContractType] = useState('')
+  const [passengerName, setPassengerName] = useState('')
 
   const [modalInfoShow, setModalInfoShow] = useState(false)
   const [modalInfoHeader, setModalInfoHeader] = useState('')
@@ -107,13 +111,23 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
         setContractType('Avulso')
         break;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    loadPassengerData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const loadItineraryData = async () => {
     const itineraryId = props.match.params.id;
     const itinerary = await itinerariesService.getById(itineraryId)
     setItinerary(itinerary)
+  };
+
+  const loadPassengerData = async () => {
+    const refreshSessionInfo = await sessionsService.refreshSession()
+    if (!refreshSessionInfo.userId) return
+
+    const user = await usersService.getById(refreshSessionInfo.userId)
+    setPassengerName(getUserFullName(user))
   };
 
   const showConfirmAlert = async () => {
@@ -152,7 +166,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
         setModalInfoHeader(response.message)
         setModalInfoMessages([
           'Sua solicitação de contrato foi enviada ao motorista.',
-          'Agora ela será analisada e você será notificado se o motorista aprovar o contrato.'
+          'Agora ela será analisada e você será notificado assim que o motorista decidir a aprovação.'
         ])
         setModalInfoRedirectData({
           url: ''
@@ -182,7 +196,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
 
               <ContractDetailSumaryItem
                 label="Passageiro"
-                value='Nome da pessoa'
+                value={`${passengerName} (você)`}
                 icon={personOutline}
               />
 

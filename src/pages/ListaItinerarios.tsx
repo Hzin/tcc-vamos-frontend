@@ -96,16 +96,19 @@ const ListaItinerarios: React.FC = () => {
 
   const searchItineraries = async ({ lat_origin, lng_origin, lat_destination, lng_destination, period }: SearchItinerariesBody) => {
     // TODO, trocar
-    // await itinerariesService.searchItineraries(
-    // {
-    //   coordinatesFrom,
-    //   coordinatesTo,
+    // const itineraries = await itinerariesService.searchItineraries({
+    //   coordinatesFrom: {
+    //     lat: lat_origin,
+    //     lng: lng_origin,
+    //   },
+    //   coordinatesTo: {
+    //     lat: lat_destination,
+    //     lng: lng_destination,
+    //   },
     //   period
-    // }
-    await itinerariesService.getAllItineraries()
-      .then((response) => {
-        setItinerariesList(response)
-      });
+    // })
+    const itineraries = await itinerariesService.getAllItineraries()
+    setItinerariesList(itineraries)
   }
 
   function criaAlerta() {

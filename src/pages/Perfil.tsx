@@ -38,6 +38,7 @@ import { PageHeader } from "../components/PageHeader";
 import sessionsService from "../services/functions/sessionsService";
 import * as usersService from "../services/functions/usersService";
 import { closeToast } from "../services/utils";
+import { User } from "../models/user.model";
 
 interface ScanNewProps {
   match: {
@@ -136,9 +137,10 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       }
 
       // get user info by ID
-      const getByIdRes = await usersService.getById(userId);
-
-      if (getByIdRes.error) {
+      let userData: User | undefined
+      try {
+        userData = await usersService.getById(userId);
+      } catch {
         history.push({ pathname: "/login" });
       }
 
@@ -159,42 +161,38 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       const userIsAdminRes = await usersService.checkIfUserIsAdmin();
       setIsAdmin(userIsAdminRes);
 
-      if (getByIdRes.userData) {
-        const userData = getByIdRes.userData;
+      if (userData && isMounted) {
+        setInputValues({
+          id: userId,
+          name: userData.name,
+          lastname: userData.lastname,
+          email: userData.email,
+          phone_number: userData.phone_number,
+          birth_date: userData.birth_date,
+          bio: userData.bio,
+          document_type: userData.document_type,
+          document: userData.document,
+        });
 
-        if (isMounted) {
-          setInputValues({
-            id: userId,
-            name: userData.name,
-            lastname: userData.lastname,
-            email: userData.email,
-            phone_number: userData.phone_number,
-            birth_date: userData.birth_date,
-            bio: userData.bio,
-            document_type: userData.document_type,
-            document: userData.document,
-          });
+        if (props.paramId || (props.match && props.match.params.id)) {
+          setIsVisitor(true);
+          setPageName(`Perfil de ${userData.name}`)
 
-          if (props.paramId || (props.match && props.match.params.id)) {
-            setIsVisitor(true);
-            setPageName(`Perfil de ${userData.name}`)
+          return
+        }
 
-            return
-          }
+        setIsVisitor(false)
+        setPageName('Meu perfil')
 
-          setIsVisitor(false)
-          setPageName('Meu perfil')
+        if (!userData.document || !userData.phone_number) {
+          setIncompleteProfile(true);
 
-          if (!userData.document || !userData.phone_number) {
-            setIncompleteProfile(true);
+          let counter = 0;
 
-            let counter = 0;
+          if (!userData.document) counter++;
+          if (!userData.phone_number) counter++;
 
-            if (!userData.document) counter++;
-            if (!userData.phone_number) counter++;
-
-            setIncompleteProfileCounter(counter);
-          }
+          setIncompleteProfileCounter(counter);
         }
       }
     };
