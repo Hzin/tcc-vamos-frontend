@@ -382,6 +382,20 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
             {isDriver && (
               <>
+                <IonItem
+                  button
+                  onClick={() =>
+                    history.push({ pathname: '/itinerario/meus/motorista/contratos/moderar' })
+                  }
+                >
+                  <IonIcon icon={hammerOutline} slot="start" />
+                  <IonLabel>Solicitações de contrato</IonLabel>
+                </IonItem>
+              </>
+            )}
+
+            {isDriver && (
+              <>
                 <IonListHeader class="text-lg mt-4">Configurações de motorista</IonListHeader>
                 <IonItem>
                   <IonIcon icon={cardOutline} slot="start" />

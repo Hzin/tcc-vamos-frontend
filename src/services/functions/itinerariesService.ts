@@ -1,6 +1,7 @@
 import { PassengerRequestStatusTypes } from "../../constants/enumPassengerRequestStatusTypes";
 import { itineraryContractTypes } from "../../constants/itineraryContractTypes";
 import { Itinerary } from "../../models/itinerary.model";
+import PassengerRequest from "../../models/passengerRequest.model";
 import * as itinerariesRoutes from "../api/itineraries";
 
 export interface SearchItinerariesRequest {
@@ -121,7 +122,7 @@ export async function getPassengers(id_itinerary: string): Promise<any> {
   return res.data;
 }
 
-export async function getPendingContractRequests(id_itinerary: string): Promise<any> {
+export async function getPendingContractRequests(id_itinerary: string): Promise<PassengerRequest[]> {
   let res: any;
 
   res = await itinerariesRoutes.getPendingContractRequests(id_itinerary);
