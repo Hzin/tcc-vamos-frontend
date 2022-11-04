@@ -29,9 +29,6 @@ const transportsRoutes = {
   updateContractStatus: {
     url: `${transportsRoutesDefault}/contract/status`
   },
-  getPassengers: {
-    url: `${transportsRoutesDefault}/:id/passengers`
-  },
   getPendingContractRequests: {
     url: `${transportsRoutesDefault}/:id/contracts/pending`
   },

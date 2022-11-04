@@ -122,9 +122,7 @@ export const convertObjectToStringArray = (object: Object): string[] => {
   Object.entries(object).forEach((entry) => {
     returnObject.push(`${entry[0]}: ${entry[1]}`)
   })
-
-  console.log(returnObject)
-
+  
   return returnObject
 }
 

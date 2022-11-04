@@ -1,5 +1,7 @@
 import { PassengerRequestStatusTypes } from "../constants/enumPassengerRequestStatusTypes";
 import { schoolPeriods } from "../constants/schoolPeriods";
+import { Itinerary } from "./itinerary.model";
+import { User } from "./user.model";
 
 export interface Passenger {
   id_passenger: number;
@@ -16,4 +18,7 @@ export interface Passenger {
   payment_status: boolean;
   start_date: Date;
   end_date: Date;
+
+  itinerary: Itinerary,
+  user: User
 }

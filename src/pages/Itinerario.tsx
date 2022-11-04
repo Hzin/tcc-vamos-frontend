@@ -33,6 +33,7 @@ import { ChipsItineraryDaysOfWeek } from "../components/ChipsItineraryDaysOfWeek
 import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
 import { ItemItineraryDetail } from "../components/ItemItineraryDetail";
 import { ItemItineraryDetailVer } from "../components/ItemItineraryDetailVer";
+import ItinerarioPassageiros from "./ItinerarioPassageiros";
 
 
 interface LocationState {
@@ -183,10 +184,6 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
 
             <div className="ion-padding" slot="content">
               <IonItem>
-                <IonButton onClick={() => { history.push({ pathname: "/itinerario/id/:id/contratos" }) }}>"/itinerario/id/:id/contratos"</IonButton>
-              </IonItem>
-
-              <IonItem>
                 <IonButton onClick={() => { history.push({ pathname: "/viagem/:id" }) }}>"/viagem/:id"</IonButton>
               </IonItem>
 
@@ -201,7 +198,13 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
           </IonAccordion>
         </IonAccordionGroup>
 
-        {itinerary && (<ShowPageAsModal page={Perfil} paramId={itinerary.user.id_user} trigger='modal-driver' />)}
+        {itinerary && (
+          <>
+            <ShowPageAsModal page={Perfil} paramId={itinerary.user.id_user} trigger='modal-driver' />
+            <ShowPageAsModal page={ItinerarioPassageiros} id_itinerary={"" + itinerary.id_itinerary} trigger='modal-passengers' />
+          </>
+        )}
+
       </IonContent>
 
       <IonFooter>
@@ -235,7 +238,11 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
 
             </>
           ) : (
-            <IonButton onClick={history.goBack} expand='full' fill='solid' color='light'>Voltar</IonButton>
+            <>
+              <IonButton id='modal-passengers' expand='full' fill='solid' color='tertiary'>Ver passageiros</IonButton>
+              <IonButton onClick={() => { }} expand='full' fill='solid' color='success'>Ver viagens</IonButton>
+              <IonButton onClick={history.goBack} expand='full' fill='solid' color='light'>Voltar</IonButton>
+            </>
           )}
         </IonToolbar>
       </IonFooter>

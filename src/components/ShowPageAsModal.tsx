@@ -25,7 +25,9 @@ interface ComponentProps extends JSX.IonModal {
   passenger?: User;
   itinerary?: Itinerary;
 
-  showContractModerateButton?: boolean
+  showContractModerateButton?: boolean;
+
+  id_itinerary?: string;
 }
 
 export const ShowPageAsModal = (props: ComponentProps) => {
@@ -46,6 +48,8 @@ export const ShowPageAsModal = (props: ComponentProps) => {
     itinerary,
 
     showContractModerateButton,
+
+    id_itinerary,
 
     ...otherProps
   } = props
@@ -69,11 +73,13 @@ export const ShowPageAsModal = (props: ComponentProps) => {
         searchData={props.searchData}
         contractData={props.contractData}
 
+        // mostra conteúdos em ContratoResumo e popula informações para aprovação o rejeição de contrato em ContratoResumo
+        showContractModerateButton
         passenger={props.passenger}
         itinerary={props.itinerary}
 
-        // mostra botões de aprovar e recusar requisição de contrato em ContratoResumo
-        showContractModerateButton
+        // mostra lista de presença em Itinerary
+        id_itinerary={props.id_itinerary}
       />
 
       <IonFooter>

@@ -116,14 +116,6 @@ export async function updateContractStatus({ id_itinerary, id_user, status }: Up
   return res.data;
 }
 
-export async function getPassengers(id_itinerary: string): Promise<any> {
-  let res: any;
-
-  res = await itinerariesRoutes.getPassengers(id_itinerary);
-
-  return res.data;
-}
-
 export async function getPendingContractRequests(id_itinerary: string): Promise<PassengerRequest[]> {
   let res: any;
 

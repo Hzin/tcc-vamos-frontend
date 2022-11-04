@@ -88,12 +88,6 @@ export async function updateContractStatus({ id_itinerary, id_user, status }: Up
   return response.data;
 }
 
-export async function getPassengers(id_itinerary: string) {
-  const finalUrl = transportsRoutes.getPassengers.url.replace(':id', id_itinerary)
-  const response = await instance.get(finalUrl);
-  return response.data;
-}
-
 export async function getPendingContractRequests(id_itinerary: string) {
   const finalUrl = transportsRoutes.getPendingContractRequests.url.replace(':id', id_itinerary)
   const response = await instance.get(finalUrl);
