@@ -33,6 +33,7 @@ import CadastrarItinerario from "./pages/CadastrarItinerario";
 import ItinerariosMeusMenu from "./pages/ItinerariosMeusMenu";
 import ItinerariosMeusMotorista from "./pages/ItinerariosMeusMotorista";
 import ModerarContratosListaItinerarios from "./pages/ModerarContratosListaItinerarios";
+import ModerarContratosListaContratos from "./pages/ModerarContratosListaContratos";
 import ItinerariosMeusPassageiro from "./pages/ItinerariosMeusPassageiro";
 
 import BuscarItinerario from "./pages/BuscarItinerario";
@@ -109,7 +110,8 @@ const routes = (
     <Route exact path="/itinerario/cadastrar" component={CadastrarItinerario}></Route>
     <Route exact path="/itinerario/meus" component={ItinerariosMeusMenu}></Route>
     <Route exact path="/itinerario/meus/motorista" component={ItinerariosMeusMotorista}></Route>
-    <Route exact path="/itinerario/meus/motorista/contratos/moderar" component={ModerarContratosListaItinerarios}></Route>
+    <Route exact path="/itinerario/meus/motorista/contratos/moderar/itinerarios" component={ModerarContratosListaItinerarios}></Route>
+    <Route exact path="/itinerario/meus/motorista/contratos/moderar/itinerario/id/:id" component={ModerarContratosListaContratos}></Route>
     <Route exact path="/itinerario/meus/passageiro" component={ItinerariosMeusPassageiro}></Route>
     <Route exact path="/itinerario/id/:id" component={Itinerario}></Route>
     <Route exact path="/itinerario/id/:id/editar" component={EditarItinerario}></Route>

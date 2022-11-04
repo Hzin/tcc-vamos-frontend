@@ -1,7 +1,9 @@
 import { PassengerRequestStatusTypes } from "../../constants/enumPassengerRequestStatusTypes";
 import { itineraryContractTypes } from "../../constants/itineraryContractTypes";
+
 import { Itinerary } from "../../models/itinerary.model";
-import PassengerRequest from "../../models/passengerRequest.model";
+import { PassengerRequest } from "../../models/passengerRequest.model";
+
 import * as itinerariesRoutes from "../api/itineraries";
 
 export interface SearchItinerariesRequest {

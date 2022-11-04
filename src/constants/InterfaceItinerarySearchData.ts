@@ -1,5 +1,7 @@
+import { schoolPeriods } from "./schoolPeriods";
+
 export interface InterfaceItinerarySearchData {
-  period: string;
+  period: schoolPeriods;
   lat_origin: number,
   lng_origin: number,
   formatted_address_origin: string,

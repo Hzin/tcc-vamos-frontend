@@ -103,7 +103,7 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
             <IonList>
               <IonItem onClick={() => { setShowPageModal(true) }}>
                 <IonLabel>Motorista</IonLabel>
-                <IonChip color='secondary'>
+                <IonChip color='secondary' id='modal-driver'>
                   <IonIcon icon={eyeOutline} />
                   <IonLabel>Ver perfil</IonLabel>
                 </IonChip>
@@ -201,7 +201,7 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
           </IonAccordion>
         </IonAccordionGroup>
 
-        <ShowPageAsModal page={Perfil} paramId={itinerary?.user.id_user} isOpen={showPageModal} />
+        {itinerary && (<ShowPageAsModal page={Perfil} paramId={itinerary.user.id_user} trigger='modal-driver' />)}
       </IonContent>
 
       <IonFooter>

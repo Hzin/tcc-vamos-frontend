@@ -156,6 +156,7 @@ const ItinerarioContratos: React.FC<ScanNewProps> = (props) => {
                       contractData: {
                         type: selectedContract,
                       },
+                      showContractButton: true
                     },
                   },
                 )

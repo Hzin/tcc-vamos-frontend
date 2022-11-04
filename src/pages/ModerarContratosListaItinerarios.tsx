@@ -6,14 +6,16 @@ import { PageHeader } from "../components/PageHeader";
 
 import * as sessionsService from "../services/functions/sessionsService";
 import * as itinerariesService from "../services/functions/itinerariesService";
-import { CardItineraryRequestContractModerar } from "../components/CardItineraryRequestContractModerar";
 import { Itinerary } from "../models/itinerary.model";
 import { CardInfoBasic } from "../components/CardInfoBasic";
+import { CardItinerary } from "../components/CardItinerary";
 
 const ModerarContratosListaItinerarios: React.FC = () => {
   const history = useHistory();
 
   const [itineraries, setItineraries] = useState<Itinerary[]>([]);
+
+  const [hasPassengerRequests, setHasPassengerRequests] = useState(false)
 
   useEffect(() => {
     getDriverItineraries()
@@ -27,20 +29,32 @@ const ModerarContratosListaItinerarios: React.FC = () => {
     setItineraries(itineraries)
   }
 
+  const checkRequests = (id_itinerary: string) => {
+    history.push(`/itinerario/meus/motorista/contratos/moderar/itinerario/id/${id_itinerary}`)
+  }
+
   return (
     <IonPage>
       <PageHeader
-        pageName="Solicitações de contrato"
+        pageName="Solicitações de contrato (itinerários)"
         backButtonPageUrl="/perfil"
       />
 
       <IonContent>
         <IonList>
           <CardInfoBasic size="small" message="Um itinerário esmaecido não contém pedidos de contrato." />
-
-
           {itineraries && itineraries.length !== 0 ? (
-            itineraries.map((itinerary, index) => <CardItineraryRequestContractModerar key={index} itinerary={itinerary} />)
+            itineraries.map((itinerary, index) => (
+              <CardItinerary
+                key={index}
+                disabled={!(itinerary.passengerRequests && itinerary.passengerRequests.length !== 0)}
+                itinerary={itinerary}
+
+                visualizeButton={
+                  { label: 'Ver requisições', onClick: () => checkRequests("" + itinerary.id_itinerary) }
+                }
+              />
+            ))
           ) : (
             <div className="ion-padding">
               Você não possui itinerários!

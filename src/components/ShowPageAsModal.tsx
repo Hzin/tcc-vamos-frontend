@@ -1,31 +1,57 @@
 import { IonModal, IonButton, IonFooter, IonToolbar } from "@ionic/react";
 import { useEffect, useRef, useState } from "react";
 
-interface ComponentProps {
+import type { JSX } from '@ionic/core/components';
+
+import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
+import { itineraryContractTypes } from "../constants/itineraryContractTypes";
+
+interface ComponentProps extends JSX.IonModal {
   page: React.FC<any>,
-  isOpen: boolean
+  // id: string;
+
   paramId?: string
+  fileUrl?: string
+
+  searchData?: InterfaceItinerarySearchData,
+  contractData?: {
+    type: itineraryContractTypes;
+  };
+  passengerName?: string;
 }
 
 export const ShowPageAsModal = (props: ComponentProps) => {
   const modal = useRef<HTMLIonModalElement>(null);
 
-  const [isOpen, setIsOpen] = useState(false);
+  const {
+    page,
 
-  useEffect(() => {
-    setIsOpen(props.isOpen)
-  }, [props])
+    paramId,
+    fileUrl,
+
+    searchData,
+    contractData,
+    ...otherProps
+  } = props
 
   const handleDismissModal = () => {
     modal.current?.dismiss()
   }
 
   return (
-    <IonModal ref={modal} trigger="open-modal" isOpen={isOpen}>
-      {/* <IonContent className="ion-padding">
-      </IonContent> */}
+    <IonModal ref={modal} {...otherProps}>
+      <props.page
+        // itinerary_id
+        paramId={props.paramId}
 
-      <props.page paramId={props.paramId} />
+        // mostra arquivo em Meu Veículo
+        fileUrl={props.fileUrl}
+
+        // mostra conteúdos em ContratoResumo
+        searchData={props.searchData}
+        contractData={props.contractData}
+        passengerName={props.passengerName}
+      />
 
       <IonFooter>
         <IonToolbar>

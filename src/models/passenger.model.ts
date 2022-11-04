@@ -1,10 +1,12 @@
 import { PassengerRequestStatusTypes } from "../constants/enumPassengerRequestStatusTypes";
+import { schoolPeriods } from "../constants/schoolPeriods";
 
 export interface Passenger {
   id_passenger: number;
   itinerary_id: string;
   user_id: string;
   status: PassengerRequestStatusTypes;
+  period: schoolPeriods,
   lat_origin: number;
   lng_origin: number;
   formatted_address_origin: string;

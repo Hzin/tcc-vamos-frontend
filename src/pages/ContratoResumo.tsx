@@ -20,7 +20,7 @@ import { Color } from "@ionic/core"
 
 import { PageHeader } from "../components/PageHeader";
 
-import { getUserFullName, convertNumberToPrice, formatTimeField, convertDaysOfWeekToObject } from "../services/utils";
+import { getUserFullName, convertNumberToPrice, formatTimeField, convertDaysOfWeekToObject, getSchoolPeriodFormattedName, getContractTypeFormattedName } from "../services/utils";
 
 import * as itinerariesService from "../services/functions/itinerariesService";
 import * as sessionsService from "../services/functions/sessionsService";
@@ -28,7 +28,7 @@ import * as usersService from "../services/functions/usersService";
 
 import { Itinerary } from "../models/itinerary.model";
 import { itineraryContractTypes } from "../constants/itineraryContractTypes";
-import { calendarClearOutline, calendarNumberOutline, cashOutline, cashSharp, documentTextOutline, locateOutline, navigateOutline, personOutline, timeOutline, timeSharp } from "ionicons/icons";
+import { calendarClearOutline, calendarNumberOutline, cashOutline, cashSharp, contract, documentTextOutline, locateOutline, navigateOutline, personOutline, school, schoolSharp, timeOutline, timeSharp } from "ionicons/icons";
 import { ChipsItineraryDaysOfWeek } from "../components/ChipsItineraryDaysOfWeek";
 import { ModalInfoEntendi, RedirectData } from "../components/ModalInfoEntendi";
 import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
@@ -55,6 +55,7 @@ const ContractDetailSumaryItem = (props: ContractDetailSumaryItemProps) => {
     </>
   );
 };
+
 const ContractPlaceDetailSumaryItem = (props: ContractDetailSumaryItemProps) => {
   return (
     <>
@@ -70,9 +71,9 @@ const ContractPlaceDetailSumaryItem = (props: ContractDetailSumaryItemProps) => 
   );
 };
 
-interface LocationState {
-  searchData: InterfaceItinerarySearchData,
-  contractData: {
+export interface LocationState {
+  searchData?: InterfaceItinerarySearchData,
+  contractData?: {
     type: itineraryContractTypes;
   };
 }
@@ -83,6 +84,16 @@ interface ScanNewProps {
       id: string;
     };
   };
+
+  paramId?: string
+
+  searchData?: InterfaceItinerarySearchData,
+  contractData?: {
+    type: itineraryContractTypes;
+  };
+  passengerName?: string;
+
+  showContractButton?: boolean
 }
 
 const ContratoResumo: React.FC<ScanNewProps> = (props) => {
@@ -94,6 +105,10 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
   const [itinerary, setItinerary] = useState<Itinerary>()
   const [contractType, setContractType] = useState('')
   const [passengerName, setPassengerName] = useState('')
+  const [periodName, setPeriodName] = useState('')
+
+  const [searchData, setSearchData] = useState<InterfaceItinerarySearchData>()
+  const [contractData, setContractData] = useState<{ type: itineraryContractTypes }>()
 
   const [modalInfoShow, setModalInfoShow] = useState(false)
   const [modalInfoHeader, setModalInfoHeader] = useState('')
@@ -103,21 +118,39 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
   useEffect(() => {
     loadItineraryData()
 
-    switch (location.state.contractData.type) {
-      case itineraryContractTypes.recurring:
-        setContractType('Recorrente')
-        break;
-      case itineraryContractTypes.avulse:
-        setContractType('Avulso')
-        break;
+    if (location.state) {
+      if (location.state.searchData) {
+        setSearchData(location.state.searchData)
+        setPeriodName(getSchoolPeriodFormattedName(location.state.searchData.period))
+      }
+      if (location.state.contractData) {
+        setContractData(location.state.contractData)
+        setContractType(getContractTypeFormattedName(location.state.contractData.type))
+      }
+    }
+
+    if (props.searchData) {
+      setSearchData(props.searchData)
+      setPeriodName(getSchoolPeriodFormattedName(props.searchData.period))
+    }
+
+    if (props.contractData) {
+      setContractData(props.contractData)
+      setContractType(getContractTypeFormattedName(props.contractData.type))
     }
 
     loadPassengerData()
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const loadItineraryData = async () => {
-    const itineraryId = props.match.params.id;
+    let itineraryId = ''
+
+    if (props.paramId) itineraryId = props.paramId
+    else if (props.match && props.match.params.id) itineraryId = props.match.params.id
+    else history.goBack()
+
     const itinerary = await itinerariesService.getById(itineraryId)
     setItinerary(itinerary)
   };
@@ -127,7 +160,9 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
     if (!refreshSessionInfo.userId) return
 
     const user = await usersService.getById(refreshSessionInfo.userId)
-    setPassengerName(getUserFullName(user))
+
+    if (props.passengerName) setPassengerName(props.passengerName)
+    else setPassengerName(`${getUserFullName(user)} (você)`)
   };
 
   const showConfirmAlert = async () => {
@@ -149,16 +184,17 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
       onDidDismiss: async (e: CustomEvent) => {
         if (e.detail.role === "cancel" || e.detail.role === "backdrop") return
 
-        if (!itinerary) return
+        if (!itinerary || !searchData || !contractData) return
 
         const body = {
-          contract_type: location.state.contractData.type,
-          lat_origin: location.state.searchData.lat_origin,
-          lng_origin: location.state.searchData.lng_origin,
-          formatted_address_origin: location.state.searchData.formatted_address_origin,
-          lat_destination: location.state.searchData.lat_destination,
-          lng_destination: location.state.searchData.lng_destination,
-          formatted_address_destination: location.state.searchData.formatted_address_destination,
+          period: searchData.period,
+          contract_type: contractData.type,
+          lat_origin: searchData.lat_origin,
+          lng_origin: searchData.lng_origin,
+          formatted_address_origin: searchData.formatted_address_origin,
+          lat_destination: searchData.lat_destination,
+          lng_destination: searchData.lng_destination,
+          formatted_address_destination: searchData.formatted_address_destination,
         }
 
         const response = await itinerariesService.createContractRequest({ id_itinerary: itinerary.id_itinerary, body })
@@ -196,7 +232,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
 
               <ContractDetailSumaryItem
                 label="Passageiro"
-                value={`${passengerName} (você)`}
+                value={passengerName}
                 icon={personOutline}
               />
 
@@ -209,7 +245,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
               <IonListHeader className="mt-4">Preços</IonListHeader>
 
               {
-                location.state.contractData.type === itineraryContractTypes.recurring &&
+                contractData && contractData.type === itineraryContractTypes.recurring &&
                 (
                   <>
                     <ContractDetailSumaryItem label="Preço mensal" icon={cashSharp} value={convertNumberToPrice(itinerary.monthly_price)} />
@@ -219,7 +255,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
               }
 
               {
-                location.state.contractData.type === itineraryContractTypes.avulse &&
+                contractData && contractData.type === itineraryContractTypes.avulse &&
                 (
                   <>
                     <ContractDetailSumaryItem label="Preço da vaga avulsa" icon={cashOutline} value={convertNumberToPrice(itinerary.daily_price)} />
@@ -229,7 +265,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
               }
 
               <IonListHeader className="mt-4">Itinerário</IonListHeader>
-              {location.state.contractData.type === itineraryContractTypes.recurring ?
+              {contractData && contractData.type === itineraryContractTypes.recurring ?
                 (
                   <>
                     <ChipsItineraryDaysOfWeek showCalendarIcon itineraryDaysOfWeek={convertDaysOfWeekToObject(itinerary.days_of_week)} />
@@ -242,8 +278,9 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
                 )
               }
 
-              <ContractPlaceDetailSumaryItem label="Origem" icon={locateOutline} value={location.state.searchData.formatted_address_origin} />
-              <ContractPlaceDetailSumaryItem label="Destino" icon={navigateOutline} value={location.state.searchData.formatted_address_destination} />
+              {searchData && (<ContractPlaceDetailSumaryItem label="Origem" icon={locateOutline} value={searchData.formatted_address_origin} />)}
+              {searchData && (<ContractPlaceDetailSumaryItem label="Destino" icon={navigateOutline} value={searchData.formatted_address_destination} />)}
+              <ContractDetailSumaryItem label='Período' icon={timeOutline} value={periodName} />
               <ContractDetailSumaryItem label='Horário de estimado saída' icon={timeOutline} value={formatTimeField(itinerary.estimated_departure_time)} />
               <ContractDetailSumaryItem label='Horário de estimado chegada' icon={timeSharp} value={formatTimeField(itinerary.estimated_arrival_time)} />
             </IonList>
@@ -251,18 +288,22 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
         }
       </IonContent>
 
-      <IonFooter>
-        <IonToolbar>
-          <div className="flex justify-between">
-            <div>
-              <IonButton fill='outline' onClick={history.goBack}>Cancelar</IonButton>
-            </div>
-            <div>
-              <IonButton className="mr-1" color='success' onClick={showConfirmAlert}>Confirmar</IonButton>
-            </div>
-          </div>
-        </IonToolbar>
-      </IonFooter>
+      {props.showContractButton && (
+        <>
+          <IonFooter>
+            <IonToolbar>
+              <div className="flex justify-between">
+                <div>
+                  <IonButton fill='outline' onClick={history.goBack}>Cancelar</IonButton>
+                </div>
+                <div>
+                  <IonButton className="mr-1" color='success' onClick={showConfirmAlert}>Confirmar</IonButton>
+                </div>
+              </div>
+            </IonToolbar>
+          </IonFooter>
+        </>
+      )}
 
       <ModalInfoEntendi
         isOpen={modalInfoShow}
