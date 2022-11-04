@@ -35,7 +35,6 @@ const ItinerarioPassageiros: React.FC<ScanNewProps> = (props) => {
 
   const showPassengerProfile = (id_user: string) => {
     setSelectedUserId(id_user)
-
     document.getElementById('modal-passenger')?.click()
   }
 
@@ -46,7 +45,7 @@ const ItinerarioPassageiros: React.FC<ScanNewProps> = (props) => {
       <IonContent fullscreen>
         <IonList>
           <IonListHeader>Passageiros</IonListHeader>
-          {passengers ? (
+          {(passengers && passengers.length !== 0) ? (
             passengers.map((passenger, index) => {
               return (
                 <div key={index}>

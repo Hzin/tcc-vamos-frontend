@@ -13,6 +13,18 @@ export interface ChangeTripStatusResponse {
   data?: tripStatus
 }
 
+export async function getTripsByItineraryId(id_itinerary: string): Promise<Trip[]> {
+  let res: any;
+
+  try {
+    res = await tripsRoutes.getTripsByItineraryId(id_itinerary);
+  } catch (error) {
+    // TODO
+  }
+
+  return res.data;
+}
+
 export async function getTodaysTrips(): Promise<GetTripsFeedResponse[]> {
   let res: any;
 

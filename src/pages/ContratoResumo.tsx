@@ -20,7 +20,7 @@ import { Color } from "@ionic/core"
 
 import { PageHeader } from "../components/PageHeader";
 
-import { getUserFullName, convertNumberToPrice, formatTimeField, convertDaysOfWeekToObject, getSchoolPeriodFormattedName, getContractTypeFormattedName } from "../services/utils";
+import { getUserFullName, convertNumberToPrice, formatTimeField, convertDaysOfWeekToObject } from "../services/utils";
 
 import * as itinerariesService from "../services/functions/itinerariesService";
 import * as sessionsService from "../services/functions/sessionsService";
@@ -34,6 +34,7 @@ import { ModalInfoEntendi, RedirectData } from "../components/ModalInfoEntendi";
 import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
 import { User } from "../models/user.model";
 import { PassengerRequestStatusTypes } from "../constants/enumPassengerRequestStatusTypes";
+import EnumUtils from "../services/EnumUtils";
 
 interface ContractDetailSumaryItemProps {
   label: string;
@@ -128,22 +129,22 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
     if (location.state) {
       if (location.state.searchData) {
         setSearchData(location.state.searchData)
-        setPeriodName(getSchoolPeriodFormattedName(location.state.searchData.period))
+        setPeriodName(EnumUtils.getSchoolPeriodEnumFormatted(location.state.searchData.period))
       }
       if (location.state.contractData) {
         setContractData(location.state.contractData)
-        setContractType(getContractTypeFormattedName(location.state.contractData.type))
+        setContractType(EnumUtils.getContractTypeEnumFormatted(location.state.contractData.type))
       }
     }
 
     if (props.searchData) {
       setSearchData(props.searchData)
-      setPeriodName(getSchoolPeriodFormattedName(props.searchData.period))
+      setPeriodName(EnumUtils.getSchoolPeriodEnumFormatted(props.searchData.period))
     }
 
     if (props.contractData) {
       setContractData(props.contractData)
-      setContractType(getContractTypeFormattedName(props.contractData.type))
+      setContractType(EnumUtils.getContractTypeEnumFormatted(props.contractData.type))
     }
 
     loadPassengerData()

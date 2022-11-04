@@ -34,6 +34,7 @@ import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySea
 import { ItemItineraryDetail } from "../components/ItemItineraryDetail";
 import { ItemItineraryDetailVer } from "../components/ItemItineraryDetailVer";
 import ItinerarioPassageiros from "./ItinerarioPassageiros";
+import ItinerarioViagens from "./ItinerarioViagens";
 
 
 interface LocationState {
@@ -202,6 +203,7 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
           <>
             <ShowPageAsModal page={Perfil} paramId={itinerary.user.id_user} trigger='modal-driver' />
             <ShowPageAsModal page={ItinerarioPassageiros} id_itinerary={"" + itinerary.id_itinerary} trigger='modal-passengers' />
+            <ShowPageAsModal page={ItinerarioViagens} id_itinerary={"" + itinerary.id_itinerary} trigger='modal-trips' />
           </>
         )}
 
@@ -240,7 +242,7 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
           ) : (
             <>
               <IonButton id='modal-passengers' expand='full' fill='solid' color='tertiary'>Ver passageiros</IonButton>
-              <IonButton onClick={() => { }} expand='full' fill='solid' color='success'>Ver viagens</IonButton>
+              <IonButton id='modal-trips' expand='full' fill='solid' color='success'>Ver viagens</IonButton>
               <IonButton onClick={history.goBack} expand='full' fill='solid' color='light'>Voltar</IonButton>
             </>
           )}

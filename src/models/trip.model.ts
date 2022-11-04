@@ -7,8 +7,7 @@ export interface Trip {
     itinerary: Itinerary;
     nickname: string;
     date: string;
-    // status: tripStatus;
-    status: string;
+    status: tripStatus;
     trip_histories: TripHistory[];
     // created_at: Date;
     // updated_at: Date;

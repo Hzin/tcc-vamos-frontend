@@ -1,6 +1,4 @@
 import { getStaticUrl } from '../config/api.config';
-import { itineraryContractTypes } from '../constants/itineraryContractTypes';
-import { schoolPeriods } from '../constants/schoolPeriods';
 import { Destination } from '../models/destination.model';
 import { NeighborhoodServed } from '../models/NeighborhoodServed.model';
 import { User } from '../models/user.model';
@@ -122,28 +120,6 @@ export const convertObjectToStringArray = (object: Object): string[] => {
   Object.entries(object).forEach((entry) => {
     returnObject.push(`${entry[0]}: ${entry[1]}`)
   })
-  
+
   return returnObject
-}
-
-export const getSchoolPeriodFormattedName = (schoolPeriod: schoolPeriods): string => {
-  switch (schoolPeriod) {
-    case schoolPeriods.diurnal:
-      return 'Diurno'
-    case schoolPeriods.evening:
-      return 'Vespertino'
-    case schoolPeriods.integral:
-      return 'Integral'
-    case schoolPeriods.night:
-      return 'Noturno'
-  }
-}
-
-export const getContractTypeFormattedName = (contractType: itineraryContractTypes): string => {
-  switch (contractType) {
-    case itineraryContractTypes.recurring:
-      return 'Recorrente'
-    case itineraryContractTypes.avulse:
-      return 'Avulso'
-  }
 }

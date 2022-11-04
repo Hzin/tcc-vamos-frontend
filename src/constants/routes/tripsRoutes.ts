@@ -1,5 +1,8 @@
 const tripsRoutesDefault = '/trips';
 const tripsRoutes = {
+  getTripsByItineraryId: {
+    url: `${tripsRoutesDefault}/itinerary/:id`
+  },
   getTodaysTrips: {
     url: `${tripsRoutesDefault}/feed/today`
   },
@@ -9,11 +12,11 @@ const tripsRoutes = {
   getTrip: {
     url: `${tripsRoutesDefault}`
   },
-  getTripByItineraryId: {
-    url: `${tripsRoutesDefault}/itinerary`
+  getTodaysTripByItineraryId: {
+    url: `${tripsRoutesDefault}/today/itinerary/:id`
   },
   getTodaysTripStatusByItineraryId: {
-    url: `${tripsRoutesDefault}/today/status/itinerary`
+    url: `${tripsRoutesDefault}/today/status/itinerary/:id`
   },
   cancelTrip: {
     url: `${tripsRoutesDefault}/update/cancel`
