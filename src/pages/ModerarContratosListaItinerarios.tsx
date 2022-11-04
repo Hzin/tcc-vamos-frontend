@@ -53,6 +53,8 @@ const ModerarContratosListaItinerarios: React.FC = () => {
                 visualizeButton={
                   { label: 'Ver requisições', onClick: () => checkRequests("" + itinerary.id_itinerary) }
                 }
+
+                badge={(itinerary.passengerRequests && itinerary.passengerRequests.length !== 0) ? itinerary.passengerRequests.length : undefined}
               />
             ))
           ) : (

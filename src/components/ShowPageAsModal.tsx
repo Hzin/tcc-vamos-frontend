@@ -10,6 +10,8 @@ interface ComponentProps extends JSX.IonModal {
   page: React.FC<any>,
   // id: string;
 
+  noHeaderBackButton?: boolean
+
   paramId?: string
   fileUrl?: string
 
@@ -26,11 +28,15 @@ export const ShowPageAsModal = (props: ComponentProps) => {
   const {
     page,
 
+    noHeaderBackButton,
+
     paramId,
     fileUrl,
 
     searchData,
     contractData,
+    passengerName,
+
     ...otherProps
   } = props
 
@@ -51,6 +57,8 @@ export const ShowPageAsModal = (props: ComponentProps) => {
         searchData={props.searchData}
         contractData={props.contractData}
         passengerName={props.passengerName}
+
+        noHeaderBackButton
       />
 
       <IonFooter>

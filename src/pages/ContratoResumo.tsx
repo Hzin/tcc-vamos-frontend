@@ -93,7 +93,9 @@ interface ScanNewProps {
   };
   passengerName?: string;
 
-  showContractButton?: boolean
+  showContractButton?: boolean,
+
+  noHeaderBackButton?: boolean
 }
 
 const ContratoResumo: React.FC<ScanNewProps> = (props) => {
@@ -215,7 +217,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
 
   return (
     <IonPage>
-      <PageHeader pageName="Resumo do contrato" showBackButton />
+      <PageHeader pageName="Resumo do contrato" showBackButton={!props.noHeaderBackButton} />
 
       <IonContent>
         {itinerary &&

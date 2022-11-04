@@ -40,6 +40,14 @@ import * as usersService from "../services/functions/usersService";
 import { closeToast } from "../services/utils";
 import { User } from "../models/user.model";
 
+interface LocationState {
+  redirectData?: {
+    showToastMessage: boolean;
+    toastColor: Color;
+    toastMessage: string;
+  };
+}
+
 interface ScanNewProps {
   match: {
     params: {
@@ -47,15 +55,9 @@ interface ScanNewProps {
     };
   };
 
-  paramId?: string
-}
+  paramId?: string,
 
-interface LocationState {
-  redirectData?: {
-    showToastMessage: boolean;
-    toastColor: Color;
-    toastMessage: string;
-  };
+  noHeaderBackButton?: boolean
 }
 
 const Perfil: React.FC<ScanNewProps> = (props) => {
@@ -215,7 +217,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
   return (
     <IonPage>
-      <PageHeader pageName={pageName} showBackButton></PageHeader>
+      <PageHeader pageName={pageName} showBackButton={!props.noHeaderBackButton} />
 
       <IonContent fullscreen>
         <IonCard>

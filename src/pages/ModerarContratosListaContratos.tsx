@@ -100,6 +100,8 @@ const ModerarContratosListaContratos: React.FC<ScanNewProps> = (props) => {
           searchData={searchData}
           contractData={contractData}
           passengerName={passengerName}
+
+          noHeaderBackButton
         />
 
         <IonButton className="invisible" id='modal-contrato' />

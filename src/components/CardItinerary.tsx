@@ -1,5 +1,5 @@
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon, IonLabel } from "@ionic/react";
-import { cashOutline, cashSharp, timeOutline, timeSharp } from "ionicons/icons";
+import { IonBadge, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon, IonLabel } from "@ionic/react";
+import { cashOutline, cashSharp, closeCircleOutline, timeOutline, timeSharp } from "ionicons/icons";
 import { InputHTMLAttributes, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
@@ -33,6 +33,8 @@ interface ComponentProps extends JSX.IonCard {
     label?: string,
     onClick: () => void
   }
+
+  badge?: number
 }
 
 export const CardItinerary = (props: ComponentProps) => {
@@ -46,6 +48,8 @@ export const CardItinerary = (props: ComponentProps) => {
     editButton,
 
     onClick,
+    badge,
+
     ...otherProps
   } = props
 
@@ -144,15 +148,17 @@ export const CardItinerary = (props: ComponentProps) => {
         </>
       )}
 
-      {(props.visualizeButton || props.editButton) && (
+      {(props.visualizeButton || props.editButton || props.badge) && (
         <>
           <div className="mr-1">
             {props.visualizeButton && (
-              <IonButton
-                fill="outline"
-                className="float-right"
-                onClick={props.visualizeButton.onClick}
-              >{props.visualizeButton.label ? props.visualizeButton.label : 'Ver detalhes'}</IonButton>
+              <>
+                <IonButton
+                  fill="outline"
+                  className="float-right"
+                  onClick={props.visualizeButton.onClick}
+                >{props.visualizeButton.label ? props.visualizeButton.label : 'Ver detalhes'}</IonButton>
+              </>
             )}
 
             {props.editButton && (
@@ -162,6 +168,8 @@ export const CardItinerary = (props: ComponentProps) => {
                 onClick={props.editButton.onClick}
               >{props.editButton.label ? props.editButton.label : 'Editar'}</IonButton>
             )}
+
+            {props.badge && (<IonBadge className="float-right">{props.badge}</IonBadge>)}
           </div>
         </>
       )}
