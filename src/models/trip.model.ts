@@ -4,11 +4,12 @@ import { TripHistory } from "./tripHistory.model";
 
 export interface Trip {
     id_trip: number;
-    itinerary: Itinerary;
+    itinerary_id: number;
     nickname: string;
     date: string;
     status: tripStatus;
     trip_histories: TripHistory[];
-    // created_at: Date;
-    // updated_at: Date;
+    
+    
+    itinerary?: Itinerary;
 }

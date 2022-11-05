@@ -3,24 +3,23 @@ import { cashOutline, eyeOutline, personOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
 
 import { PageHeader } from "../components/PageHeader";
-import { ShowPageAsModal } from "../components/ShowPageAsModal";
 
 import * as passengersService from "../services/functions/passengersService"
 
 import { Passenger } from "../models/passenger.model";
 import { getUserFullName } from "../services/utils";
-import Perfil from "./Perfil";
+import { ShowPerfilPageAsModal } from "../components/ShowPageAsModal/ShowPerfilPageAsModal";
 
-interface ScanNewProps {
+export interface ItinerarioPassageirosProps {
   id_itinerary: string
 
   noHeaderBackButton?: boolean
 }
 
-const ItinerarioPassageiros: React.FC<ScanNewProps> = (props) => {
+const ItinerarioPassageiros: React.FC<ItinerarioPassageirosProps> = (props) => {
   const [passengers, setPassengers] = useState<Passenger[]>()
 
-  const [selectedUserId, setSelectedUserId] = useState('')
+  const [paramIdUser, setParamIdUser] = useState('')
 
   useEffect(() => {
     if (!props.id_itinerary) return
@@ -33,10 +32,15 @@ const ItinerarioPassageiros: React.FC<ScanNewProps> = (props) => {
     setPassengers(passengers)
   }
 
-  const showPassengerProfile = (id_user: string) => {
-    setSelectedUserId(id_user)
-    document.getElementById('modal-passenger')?.click()
+  const showPassengerProfile = async (id_user: string) => {
+    setParamIdUser(id_user)
+    // await sleep(1000)
+    document.getElementById('modal-passageiro')?.click()
   }
+
+  // const sleep = (ms: number) => new Promise(
+  //   resolve => setTimeout(resolve, ms)
+  // );
 
   return (
     <IonPage>
@@ -76,9 +80,8 @@ const ItinerarioPassageiros: React.FC<ScanNewProps> = (props) => {
           )}
         </IonList>
 
-        <ShowPageAsModal page={Perfil} paramId={selectedUserId} trigger='modal-passenger' />
+        <ShowPerfilPageAsModal trigger='modal-passageiro' id_user={paramIdUser} />
       </IonContent>
-
       <IonButton className="invisible" id='modal-passenger' />
     </IonPage>
   );

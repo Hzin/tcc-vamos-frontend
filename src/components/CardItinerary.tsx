@@ -1,8 +1,9 @@
 import { IonBadge, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon, IonLabel } from "@ionic/react";
-import { cashOutline, cashSharp, closeCircleOutline, timeOutline, timeSharp } from "ionicons/icons";
-import { InputHTMLAttributes, useEffect, useState } from "react";
+import { cashOutline, cashSharp, timeOutline, timeSharp } from "ionicons/icons";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
+
+import { SearchData, ContractData } from "../constants/InterfaceContractInfo";
 
 import { Itinerary } from "../models/itinerary.model";
 
@@ -22,7 +23,7 @@ interface ComponentProps extends JSX.IonCard {
   // interface ComponentProps extends InputHTMLAttributes<JSX.IonCard> {
   itinerary: Itinerary;
   onlyHeader?: boolean;
-  searchData?: InterfaceItinerarySearchData;
+  searchData?: SearchData;
 
   onClick?: () => void
   visualizeButton?: {
@@ -132,7 +133,7 @@ export const CardItinerary = (props: ComponentProps) => {
 
           </IonCardContent>
 
-          {props.searchData && (
+          {/* {props.searchData && (
             <IonButton
               fill="clear"
               className="float-right"
@@ -144,7 +145,7 @@ export const CardItinerary = (props: ComponentProps) => {
                   }
                 });
               }}>Ver detalhes</IonButton>
-          )}
+          )} */}
         </>
       )}
 

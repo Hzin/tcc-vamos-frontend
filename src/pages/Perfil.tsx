@@ -48,19 +48,19 @@ interface LocationState {
   };
 }
 
-interface ScanNewProps {
-  match: {
+export interface PerfilProps {
+  match?: {
     params: {
       id: string;
     };
   };
 
-  paramId?: string,
+  id_user?: string,
 
   noHeaderBackButton?: boolean
 }
 
-const Perfil: React.FC<ScanNewProps> = (props) => {
+const Perfil: React.FC<PerfilProps> = (props) => {
   const user = useContext(UserContext);
 
   const history = useHistory();
@@ -121,8 +121,8 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       let userId = "";
 
       // verify if user is authenticated
-      if (props.paramId) {
-        userId = props.paramId
+      if (props.id_user) {
+        userId = props.id_user
       } else if (props.match && props.match.params.id) {
         userId = props.match.params.id;
       } else {
@@ -176,7 +176,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
           document: userData.document,
         });
 
-        if (props.paramId || (props.match && props.match.params.id)) {
+        if (props.id_user || (props.match && props.match.params.id)) {
           setIsVisitor(true);
           setPageName(`Perfil de ${userData.name}`)
 

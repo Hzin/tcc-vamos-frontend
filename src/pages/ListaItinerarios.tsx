@@ -39,11 +39,12 @@ import * as searchesService from "../services/functions/searchesService";
 
 import { CardItinerary } from "../components/CardItinerary";
 
-import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
+import { SearchData, ContractData } from "../constants/InterfaceContractInfo";
 
 interface LocationState {
   itineraries?: Itinerary[];
-  searchData: InterfaceItinerarySearchData;
+  searchData: SearchData;
+  contractData: ContractData;
 }
 
 const ListaItinerarios: React.FC = () => {

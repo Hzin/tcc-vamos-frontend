@@ -6,6 +6,7 @@ import { PassengerRequest } from "../../models/passengerRequest.model";
 
 import * as itinerariesRoutes from "../api/itineraries";
 
+
 export interface SearchItinerariesRequest {
   coordinatesFrom: {
     lat: number;

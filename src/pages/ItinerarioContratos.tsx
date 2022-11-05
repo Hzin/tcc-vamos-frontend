@@ -27,10 +27,11 @@ import { Itinerary } from "../models/itinerary.model";
 import { CardItinerary } from "../components/CardItinerary";
 import { convertNumberToPrice, getUserFullName } from "../services/utils";
 import { itineraryContractTypes } from "../constants/itineraryContractTypes";
-import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
+
+import { SearchData, ContractData } from "../constants/InterfaceContractInfo";
 
 interface LocationState {
-  searchData: InterfaceItinerarySearchData
+  searchData: SearchData
 }
 
 interface ScanNewProps {

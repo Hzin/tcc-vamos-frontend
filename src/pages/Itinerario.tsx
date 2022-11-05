@@ -19,7 +19,6 @@ import {
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 
-import Perfil from "./Perfil";
 
 import * as itinerariesService from "../services/functions/itinerariesService";
 import { convertDaysOfWeekToObject, convertNumberToPrice, DaysOfWeekObject, formatTimeField } from "../services/utils";
@@ -27,18 +26,18 @@ import { PageHeader } from "../components/PageHeader";
 import { Itinerary } from "../models/itinerary.model";
 import { cashOutline, cashSharp, eyeOutline, personOutline, timeOutline, timeSharp } from "ionicons/icons";
 import { CardInfoBasicIntoAlertInfo } from "../components/CardInfoBasicIntoAlertInfo";
-import { ShowPageAsModal } from "../components/ShowPageAsModal";
 import { CardItinerary } from "../components/CardItinerary";
 import { ChipsItineraryDaysOfWeek } from "../components/ChipsItineraryDaysOfWeek";
-import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
 import { ItemItineraryDetail } from "../components/ItemItineraryDetail";
 import { ItemItineraryDetailVer } from "../components/ItemItineraryDetailVer";
-import ItinerarioPassageiros from "./ItinerarioPassageiros";
-import ItinerarioViagens from "./ItinerarioViagens";
 
+import { SearchData, ContractData } from "../constants/InterfaceContractInfo";
+import { ShowItinerarioPassageirosPageAsModal } from "../components/ShowPageAsModal/ShowItinerarioPassageirosPageAsModal";
+import { ShowItinerarioViagensPageAsModal } from "../components/ShowPageAsModal/ShowItinerarioViagensPageAsModal";
 
 interface LocationState {
-  searchData?: InterfaceItinerarySearchData
+  searchData?: SearchData
+  contractData?: ContractData
 }
 
 interface ScanNewProps {
@@ -201,9 +200,9 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
 
         {itinerary && (
           <>
-            <ShowPageAsModal page={Perfil} paramId={itinerary.user.id_user} trigger='modal-driver' />
-            <ShowPageAsModal page={ItinerarioPassageiros} id_itinerary={"" + itinerary.id_itinerary} trigger='modal-passengers' />
-            <ShowPageAsModal page={ItinerarioViagens} id_itinerary={"" + itinerary.id_itinerary} trigger='modal-trips' />
+            {/* <ShowPageAsModal page={Perfil} paramId={itinerary.user.id_user} trigger='modal-driver' /> */}
+            <ShowItinerarioPassageirosPageAsModal id_itinerary={"" + itinerary.id_itinerary} trigger='modal-passageiros' hasButtonAlready />
+            <ShowItinerarioViagensPageAsModal id_itinerary={"" + itinerary.id_itinerary} trigger='modal-viagens' hasButtonAlready />
           </>
         )}
 
@@ -241,8 +240,8 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
             </>
           ) : (
             <>
-              <IonButton id='modal-passengers' expand='full' fill='solid' color='tertiary'>Ver passageiros</IonButton>
-              <IonButton id='modal-trips' expand='full' fill='solid' color='success'>Ver viagens</IonButton>
+              <IonButton id='modal-passageiros' expand='full' fill='solid' color='tertiary'>Ver passageiros</IonButton>
+              <IonButton id='modal-viagens' expand='full' fill='solid' color='success'>Ver viagens</IonButton>
               <IonButton onClick={history.goBack} expand='full' fill='solid' color='light'>Voltar</IonButton>
             </>
           )}

@@ -14,7 +14,7 @@ import {
   useIonAlert,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { Color } from "@ionic/core"
 
@@ -25,16 +25,18 @@ import { getUserFullName, convertNumberToPrice, formatTimeField, convertDaysOfWe
 import * as itinerariesService from "../services/functions/itinerariesService";
 import * as sessionsService from "../services/functions/sessionsService";
 import * as usersService from "../services/functions/usersService";
+import * as passengersRequestsService from "../services/functions/passengersRequestsService";
 
 import { Itinerary } from "../models/itinerary.model";
 import { itineraryContractTypes } from "../constants/itineraryContractTypes";
-import { calendarClearOutline, calendarNumberOutline, cashOutline, cashSharp, contract, documentTextOutline, locateOutline, navigateOutline, personOutline, school, schoolSharp, timeOutline, timeSharp } from "ionicons/icons";
+import { calendarClearOutline, calendarNumberOutline, cashOutline, cashSharp, documentTextOutline, locateOutline, navigateOutline, personOutline, timeOutline, timeSharp } from "ionicons/icons";
 import { ChipsItineraryDaysOfWeek } from "../components/ChipsItineraryDaysOfWeek";
 import { ModalInfoEntendi, RedirectData } from "../components/ModalInfoEntendi";
-import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
 import { User } from "../models/user.model";
 import { PassengerRequestStatusTypes } from "../constants/enumPassengerRequestStatusTypes";
 import EnumUtils from "../services/EnumUtils";
+
+import { SearchData, ContractData } from "../constants/InterfaceContractInfo";
 
 interface ContractDetailSumaryItemProps {
   label: string;
@@ -74,49 +76,31 @@ const ContractPlaceDetailSumaryItem = (props: ContractDetailSumaryItemProps) => 
   );
 };
 
-export interface LocationState {
-  searchData?: InterfaceItinerarySearchData,
-  contractData?: {
-    type: itineraryContractTypes;
-  };
-}
+export interface ContratoResumoProps {
+  id_itinerary?: string;
+  id_passenger_request?: string
 
-interface ScanNewProps {
-  match: {
-    params: {
-      id: string;
-    };
-  };
-
-  paramId?: string
-
-  searchData?: InterfaceItinerarySearchData,
-  contractData?: {
-    type: itineraryContractTypes;
-  };
+  searchData?: SearchData,
 
   passenger?: User;
   itinerary?: Itinerary;
 
+  noHeaderBackButton?: boolean
   showContractButton?: boolean,
   showContractModerateButton?: boolean,
-
-  noHeaderBackButton?: boolean
 }
 
-const ContratoResumo: React.FC<ScanNewProps> = (props) => {
+const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
   const history = useHistory();
-  const location = useLocation<LocationState>();
 
   const [presentAlertConfirmation] = useIonAlert();
 
+  // location contract info
   const [itinerary, setItinerary] = useState<Itinerary>()
-  const [contractType, setContractType] = useState('')
-  const [passengerName, setPassengerName] = useState('')
-  const [periodName, setPeriodName] = useState('')
-
-  const [searchData, setSearchData] = useState<InterfaceItinerarySearchData>()
-  const [contractData, setContractData] = useState<{ type: itineraryContractTypes }>()
+  const [searchData, setSearchData] = useState<SearchData>()
+  const [contractData, setContractData] = useState<ContractData>()
+  const [passenger, setPassenger] = useState<User>()
+  const [driver, setDriver] = useState<User>()
 
   const [modalInfoShow, setModalInfoShow] = useState(false)
   const [modalInfoHeader, setModalInfoHeader] = useState('')
@@ -124,53 +108,50 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
   const [modalInfoRedirectData, setModalInfoRedirectData] = useState<RedirectData>()
 
   useEffect(() => {
-    loadItineraryData()
-
-    if (location.state) {
-      if (location.state.searchData) {
-        setSearchData(location.state.searchData)
-        setPeriodName(EnumUtils.getSchoolPeriodEnumFormatted(location.state.searchData.period))
-      }
-      if (location.state.contractData) {
-        setContractData(location.state.contractData)
-        setContractType(EnumUtils.getContractTypeEnumFormatted(location.state.contractData.type))
-      }
-    }
-
-    if (props.searchData) {
-      setSearchData(props.searchData)
-      setPeriodName(EnumUtils.getSchoolPeriodEnumFormatted(props.searchData.period))
-    }
-
-    if (props.contractData) {
-      setContractData(props.contractData)
-      setContractType(EnumUtils.getContractTypeEnumFormatted(props.contractData.type))
-    }
-
-    loadPassengerData()
+    loadData()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const loadItineraryData = async () => {
+  const loadData = async () => {
     let itineraryId = ''
 
-    if (props.paramId) itineraryId = props.paramId
-    else if (props.match && props.match.params.id) itineraryId = props.match.params.id
-    else history.goBack()
+    if (props.id_itinerary) {
+      const itinerary = await itinerariesService.getById(itineraryId)
+      if (itinerary) setItinerary(itinerary)
+    }
 
-    const itinerary = await itinerariesService.getById(itineraryId)
-    setItinerary(itinerary)
-  };
+    if (props.id_passenger_request) {
+      const response = await passengersRequestsService.getPassengerRequestInfoForContractSummary(+props.id_passenger_request)
+      if (response) {
+        setSearchData({
+          period: response.searchData.period,
+          lat_origin: response.searchData.lat_origin,
+          lng_origin: response.searchData.lng_origin,
+          formatted_address_origin: response.searchData.formatted_address_origin,
+          lat_destination: response.searchData.lat_destination,
+          lng_destination: response.searchData.lng_destination,
+          formatted_address_destination: response.searchData.formatted_address_destination,
+        })
 
-  const loadPassengerData = async () => {
-    const refreshSessionInfo = await sessionsService.refreshSession()
-    if (!refreshSessionInfo.userId) return
+        setContractData({
+          type: response.contractData.type,
+        })
 
-    const user = await usersService.getById(refreshSessionInfo.userId)
+        setPassenger(response.passenger)
+        setDriver(response.itinerary.user)
 
-    if (props.passenger) setPassengerName(getUserFullName(props.passenger))
-    else setPassengerName(`${getUserFullName(user)} (você)`)
+        setItinerary(response.itinerary)
+      }
+    }
+
+    // if (props.passenger) setPassengerName(getUserFullName(props.passenger))
+    // else {
+    //   const refreshSessionInfo = await sessionsService.refreshSession()
+    //   if (!refreshSessionInfo.userId) return
+    //   const user = await usersService.getById(refreshSessionInfo.userId)
+    //   setPassengerName(`${getUserFullName(user)} (você)`)
+    // }
   };
 
   const showConfirmRequestContractAlert = async () => {
@@ -213,7 +194,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
           'Agora ela será analisada e você será notificado assim que o motorista decidir a aprovação.'
         ])
         setModalInfoRedirectData({
-          url: ''
+          url: '/home'
         })
 
         setModalInfoShow(true)
@@ -251,24 +232,24 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
       onDidDismiss: async (e: CustomEvent) => {
         if (e.detail.role === "cancel" || e.detail.role === "backdrop") return
 
-        if (!props.passenger || !props.itinerary) return
+        if (!passenger || !itinerary) return
 
         switch (action) {
           case 'approve':
-            const responseApproved = await itinerariesService.updateContractStatus({ id_itinerary: "" + props.itinerary.id_itinerary, id_user: props.passenger.id_user, status: PassengerRequestStatusTypes.accepted })
+            const responseApproved = await itinerariesService.updateContractStatus({ id_itinerary: "" + itinerary.id_itinerary, id_user: passenger.id_user, status: PassengerRequestStatusTypes.accepted })
 
             setModalInfoHeader(responseApproved.message)
             setModalInfoMessages([
-              `Agora ${getUserFullName(props.passenger)} é um passageiro do seu itinerário!`,
+              `Agora ${getUserFullName(passenger)} é um passageiro do seu itinerário!`,
               `Ele(a) será notificado(a) sobre a aprovação e em breve vocês iniciarão a sua viagem.`
             ])
             break;
           case 'reject':
-            const responseRejected = await itinerariesService.updateContractStatus({ id_itinerary: "" + props.itinerary.id_itinerary, id_user: props.passenger.id_user, status: PassengerRequestStatusTypes.rejected })
+            const responseRejected = await itinerariesService.updateContractStatus({ id_itinerary: "" + itinerary.id_itinerary, id_user: passenger.id_user, status: PassengerRequestStatusTypes.rejected })
 
             setModalInfoHeader(responseRejected.message)
             setModalInfoMessages([
-              `A requisição de contrato de ${getUserFullName(props.passenger)} foi rejeitada.`,
+              `A requisição de contrato de ${getUserFullName(passenger)} foi rejeitada.`,
               `Ele(a) será notificado(a) sobre a rejeição do contrato.`
             ])
 
@@ -278,7 +259,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
         }
 
         setModalInfoRedirectData({
-          url: `/itinerario/meus/motorista/contratos/moderar/itinerario/id/${props.itinerary.id_itinerary}`
+          url: `/itinerario/meus/motorista/contratos/moderar/itinerario/id/${itinerary.id_itinerary}`
         })
 
         setModalInfoShow(true)
@@ -291,34 +272,37 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
       <PageHeader pageName="Resumo do contrato" showBackButton={!props.noHeaderBackButton} />
 
       <IonContent>
-        {itinerary &&
+        {(itinerary && searchData && contractData) && (
           <>
             <IonList>
               <IonListHeader>Detalhes gerais</IonListHeader>
 
               <ContractDetailSumaryItem
                 label="Tipo de contrato"
-                value={contractType}
+                value={EnumUtils.getContractTypeEnumFormatted(contractData.type)}
                 icon={documentTextOutline}
                 noAboveSpacing
               />
 
-              <ContractDetailSumaryItem
-                label="Passageiro"
-                value={passengerName}
-                icon={personOutline}
-              />
+              {passenger && (
+                <ContractDetailSumaryItem
+                  label="Passageiro"
+                  value={getUserFullName(passenger)}
+                  icon={personOutline}
+                />
+              )}
 
-              <ContractDetailSumaryItem
-                label="Motorista"
-                value={getUserFullName(itinerary.user)}
-                icon={personOutline}
-              />
+              {driver && (
+                <ContractDetailSumaryItem
+                  label="Motorista"
+                  value={getUserFullName(driver)}
+                  icon={personOutline}
+                />
+              )}
 
               <IonListHeader className="mt-4">Preços</IonListHeader>
 
-              {
-                contractData && contractData.type === itineraryContractTypes.recurring &&
+              {contractData.type === itineraryContractTypes.recurring &&
                 (
                   <>
                     <ContractDetailSumaryItem label="Preço mensal" icon={cashSharp} value={convertNumberToPrice(itinerary.monthly_price)} />
@@ -327,8 +311,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
                 )
               }
 
-              {
-                contractData && contractData.type === itineraryContractTypes.avulse &&
+              {contractData.type === itineraryContractTypes.avulse &&
                 (
                   <>
                     <ContractDetailSumaryItem label="Preço da vaga avulsa" icon={cashOutline} value={convertNumberToPrice(itinerary.daily_price)} />
@@ -338,7 +321,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
               }
 
               <IonListHeader className="mt-4">Itinerário</IonListHeader>
-              {contractData && contractData.type === itineraryContractTypes.recurring ?
+              {contractData.type === itineraryContractTypes.recurring ?
                 (
                   <>
                     <ChipsItineraryDaysOfWeek showCalendarIcon itineraryDaysOfWeek={convertDaysOfWeekToObject(itinerary.days_of_week)} />
@@ -351,19 +334,28 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
                 )
               }
 
-              {searchData && (<ContractPlaceDetailSumaryItem label="Origem" icon={locateOutline} value={searchData.formatted_address_origin} />)}
-              {searchData && (<ContractPlaceDetailSumaryItem label="Destino" icon={navigateOutline} value={searchData.formatted_address_destination} />)}
-              <ContractDetailSumaryItem label='Período' icon={timeOutline} value={periodName} />
-              <ContractDetailSumaryItem label='Horário de estimado saída' icon={timeOutline} value={formatTimeField(itinerary.estimated_departure_time)} />
-              <ContractDetailSumaryItem label='Horário de estimado chegada' icon={timeSharp} value={formatTimeField(itinerary.estimated_arrival_time)} />
+              {searchData && (
+                <>
+                  <ContractPlaceDetailSumaryItem label="Origem" icon={locateOutline} value={searchData.formatted_address_origin} />
+                  <ContractPlaceDetailSumaryItem label="Destino" icon={navigateOutline} value={searchData.formatted_address_destination} />
+                  <ContractDetailSumaryItem label='Período' icon={timeOutline} value={EnumUtils.getSchoolPeriodEnumFormatted(searchData.period)} />
+                </>
+              )}
+
+              {itinerary && (
+                <>
+                  <ContractDetailSumaryItem label='Horário de estimado saída' icon={timeOutline} value={formatTimeField(itinerary.estimated_departure_time)} />
+                  <ContractDetailSumaryItem label='Horário de estimado chegada' icon={timeSharp} value={formatTimeField(itinerary.estimated_arrival_time)} />
+                </>
+              )}
             </IonList>
           </>
-        }
+        )}
       </IonContent>
 
       {(props.showContractButton || props.showContractModerateButton) && (
         <>
-          {/* botões de contratar */}
+          {/* botões do passageiro contratar o motorista */}
           <IonFooter>
             {props.showContractButton && (
               <>
@@ -380,6 +372,7 @@ const ContratoResumo: React.FC<ScanNewProps> = (props) => {
               </>
             )}
 
+            {/* botões do motorista aceitar ou recusar o contrato do passageiro */}
             {props.showContractModerateButton && (
               <>
                 <IonToolbar>

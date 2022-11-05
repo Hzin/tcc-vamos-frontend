@@ -30,7 +30,7 @@ import { closeToast } from "../services/utils";
 
 import { Color } from "@ionic/core";
 import AutoCompleteInput from "../components/AutoCompleteInput";
-import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
+import { SearchData, ContractData } from "../constants/InterfaceContractInfo";
 import { schoolPeriods } from "../constants/schoolPeriods";
 
 interface Address {
@@ -92,7 +92,7 @@ const BuscarItinerario: React.FC = () => {
       },
     ]);
 
-    const searchData: InterfaceItinerarySearchData = {
+    const searchData: SearchData = {
       period,
       lat_origin: addressFrom.lat,
       lng_origin: addressFrom.lng,

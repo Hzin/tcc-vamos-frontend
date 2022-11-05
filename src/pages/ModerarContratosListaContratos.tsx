@@ -2,19 +2,20 @@ import { IonButton, IonContent, IonList, IonPage } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 
 import * as itinerariesService from "../services/functions/itinerariesService";
-import { PassengerRequest } from "../models/passengerRequest.model";
+import * as passengersRequestsService from "../services/functions/passengersRequestsService";
 
-import { getUserFullName } from "../services/utils";
+import { PassengerRequest } from "../models/passengerRequest.model";
 
 import { PageHeader } from "../components/PageHeader";
 import { CardContract } from "../components/CardContract";
-import { ShowPageAsModal } from "../components/ShowPageAsModal";
 
-import ContratoResumo, { LocationState } from "./ContratoResumo";
-import { InterfaceItinerarySearchData } from "../constants/InterfaceItinerarySearchData";
+import ContratoResumo from "./ContratoResumo";
 import { itineraryContractTypes } from "../constants/itineraryContractTypes";
 import { User } from "../models/user.model";
 import { Itinerary } from "../models/itinerary.model";
+import { ShowContratoResumoPageAsModal } from "../components/ShowPageAsModal/ShowContratoResumoPageAsModal";
+
+import { SearchData, ContractData } from "../constants/InterfaceContractInfo";
 
 interface ScanNewProps {
   match: {
@@ -27,14 +28,7 @@ interface ScanNewProps {
 const ModerarContratosListaContratos: React.FC<ScanNewProps> = (props) => {
   const [contracts, setContracts] = useState<PassengerRequest[]>([]);
 
-  const [modalOpen, setModalOpen] = useState(false)
-  const [modalParamId, setModalParamId] = useState('')
-
-  const [searchData, setSearchData] = useState<InterfaceItinerarySearchData>()
-  const [contractData, setContractData] = useState<{ type: itineraryContractTypes }>()
-
-  const [passenger, setPassenger] = useState<User>()
-  const [itinerary, setItinerary] = useState<Itinerary>()
+  const [paramIdPassengerRequest, setParamIdPassengerRequest] = useState('')
 
   useEffect(() => {
     if (!(props.match && props.match.params.id)) return
@@ -47,35 +41,9 @@ const ModerarContratosListaContratos: React.FC<ScanNewProps> = (props) => {
     setContracts(itineraries)
   }
 
-  const seeContract = (id_passenger_request: number) => {
-    // pega o tipo do contrato pelo id_passenger_request
-    let contractFound: PassengerRequest | undefined
-    contracts.forEach((contract) => {
-      if (contract.id_passenger_request === id_passenger_request) contractFound = contract
-    })
-
-    if (!contractFound) return
-
-    setModalParamId(contractFound.itinerary_id)
-
-    setSearchData({
-      period: contractFound.period,
-      lat_origin: contractFound.lat_origin,
-      lng_origin: contractFound.lng_origin,
-      formatted_address_origin: contractFound.formatted_address_origin,
-      lat_destination: contractFound.lat_destination,
-      lng_destination: contractFound.lng_destination,
-      formatted_address_destination: contractFound.formatted_address_destination,
-    })
-
-    setContractData({
-      type: contractFound.contract_type
-    })
-
-    setPassenger(contractFound.user)
-    setItinerary(contractFound.itinerary)
-
-    document.getElementById('modal-contrato')?.click()
+  const seeContract = async (id_passenger_request: number) => {
+    setParamIdPassengerRequest("" + id_passenger_request)
+    document.getElementById(`modal-contrato-${paramIdPassengerRequest}`)?.click()
   }
 
   return (
@@ -96,24 +64,14 @@ const ModerarContratosListaContratos: React.FC<ScanNewProps> = (props) => {
           )}
         </IonList>
 
-        {/* como passar itineraryId em paramId? e também preciso passar contractData */}
-        <ShowPageAsModal
-          trigger="modal-contrato"
+        <ShowContratoResumoPageAsModal
+          trigger={`modal-contrato-${paramIdPassengerRequest}`}
 
-          page={ContratoResumo}
-          
-          paramId={modalParamId}
-          searchData={searchData}
-          contractData={contractData}
-
-          passenger={passenger}
-          itinerary={itinerary}
+          id_passenger_request={paramIdPassengerRequest}
 
           noHeaderBackButton
           showContractModerateButton
         />
-
-        <IonButton className="invisible" id='modal-contrato' />
       </IonContent>
     </IonPage>
   );
