@@ -2,27 +2,49 @@ import {
   IonContent,
   IonPage,
 } from "@ionic/react";
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IonGrid, IonRow, IonCol, IonToast } from "@ionic/react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { IonItem, IonLabel, IonInput, IonButton } from "@ionic/react";
 
-import * as sessionRoutes from "../services/api/session";
-import LocalStorage from "../LocalStorage";
 import { Action } from "../components/Action";
-import { UserContext } from "../App";
 import { closeToast } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
+import { useAuth } from "../contexts/auth";
+import { Color } from "@ionic/core";
+
+interface LocationState {
+  redirectData?: {
+    showToastMessage: boolean;
+    toastColor: Color;
+    toastMessage: string;
+  };
+}
 
 const Page: React.FC = () => {
+  const location = useLocation<LocationState>();
+
   const [showToast, setShowToast] = useState(false);
-  const [messageToast, setMessageToast] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastColor, setToastColor] = useState<Color>("primary");
 
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const user = useContext(UserContext);
+  const {signed, signIn} =  useAuth();
+
+  useEffect(() => {
+    if (location.state && location.state.redirectData) {
+      const redirectData = location.state.redirectData;
+
+      if (redirectData.showToastMessage) {
+        setToastColor(redirectData.toastColor);
+        setToastMessage(redirectData.toastMessage);
+        setShowToast(true);
+      }
+    }
+  }, [location.state]);
 
   function validateEmail(email: string) {
     const re =
@@ -33,25 +55,29 @@ const Page: React.FC = () => {
 
   const validateForm = () => {
     if (!email) {
-      setMessageToast("Por favor, informe o e-mail");
+      setToastMessage("Por favor, informe o e-mail");
+      setToastColor("danger");
       setShowToast(true);
       return false;
     }
 
     if (!validateEmail(email)) {
-      setMessageToast("E-mail inválido");
+      setToastMessage("E-mail inválido");
+      setToastColor("danger");
       setShowToast(true);
       return false;
     }
 
     if (!password) {
-      setMessageToast("Por favor, digite a sua senha");
+      setToastMessage("Por favor, digite a sua senha");
+      setToastColor("danger");
       setShowToast(true);
       return false;
     }
 
     if (password.length < 7 || password.length > 12) {
-      setMessageToast("A senha deve conter entre 7 e 12 dígitos");
+      setToastMessage("A senha deve conter entre 7 e 12 dígitos");
+      setToastColor("danger");
       setShowToast(true);
       return false;
     }
@@ -64,46 +90,18 @@ const Page: React.FC = () => {
       return;
     }
 
-    const singinForm = {
-      login: email,
-      password: password,
-    };
-
-    await sessionRoutes
-      .create(singinForm)
-      .then((response) => {
-        if (response.status === "error") {
-          setMessageToast(response.message);
-          setShowToast(true);
-
-          return;
-        }
-
-        const { token } = response.token;
-
-        LocalStorage.setToken(token);
-
-        user.setIsLoggedIn(true);
-
-        history.push({
-          pathname: "/home",
-          state: {
-            redirectData: {
-              showToastMessage: true,
-              toastColor: "success",
-              toastMessage: "Usuário autenticado com sucesso!",
-            },
+    signIn(email, password).then(() => {
+      history.push({
+        pathname: "/home",
+        state: {
+          redirectData: {
+            showToastMessage: true,
+            toastColor: "success",
+            toastMessage: "Usuário autenticado com sucesso!",
           },
-        });
-      })
-      .catch((error) => {
-        // if (!error.response) return
-
-        // se o backend retornou uma mensagem de erro customizada
-        // if (error.response.data.message) {
-        console.dir("Houve um erro: ", { error });
-        // alert("Houve um erro");
+        },
       });
+    });
   };
 
   return (
@@ -156,10 +154,10 @@ const Page: React.FC = () => {
 
         <IonToast
           position="top"
-          color="danger"
+          color={toastColor}
           isOpen={showToast}
           onDidDismiss={() => closeToast(setShowToast)}
-          message={messageToast}
+          message={toastMessage}
           duration={2500}
         />
       </IonContent>

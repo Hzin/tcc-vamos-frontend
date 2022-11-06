@@ -9,6 +9,7 @@ import * as tripsService from "../services/functions/tripsService";
 import { PageHeader } from "../components/PageHeader";
 import { Trip } from "../models/trip.model";
 import { IonChipTripStatus } from "../components/TripCard";
+import { useAuth } from "../contexts/auth";
 
 interface ScanNewProps {
   match: {
@@ -27,6 +28,7 @@ interface ScanNewProps {
 }
 
 const Viagem: React.FC<ScanNewProps> = (props) => {
+  const { user } = useAuth();
   const history = useHistory();
 
   const [tripInfo, setTripInfo] = useState<Trip>();
@@ -59,6 +61,7 @@ const Viagem: React.FC<ScanNewProps> = (props) => {
 
   const getTrip = async (tripId: string) => {
     await tripsService.getTrip(tripId).then((response) => {
+      console.log(response);
       setTripInfo(response);
       if (tripInfo && tripInfo.nickname) {
         setPageName(tripInfo.nickname);
@@ -84,17 +87,26 @@ const Viagem: React.FC<ScanNewProps> = (props) => {
               </h1>
             </div>
 
-            <div className="m-3">
-              <IonButton>Lista de presença</IonButton>
-            </div>
+            {tripInfo.itinerary.vehicle.user.id_user === user?.id_user ? (
+              <>  
+                <div className="m-3">
+                  <IonButton onClick={() => history.push('/itinerario/lista-presenca')}>Lista de presença</IonButton>
+                </div>
 
-            <div className="m-3">
-              <IonButton>Visualizar rota</IonButton>
-            </div>
+                <div className="m-3">
+                  <IonButton>Visualizar rota</IonButton>
+                </div>
 
-            <div className="m-3">
-              <IonButton>Finalizar viagem</IonButton>
-            </div>
+                <div className="m-3">
+                  <IonButton>Finalizar viagem</IonButton>
+                </div>
+              </>
+              ) : (
+                <>
+                teste
+                </>
+              )
+            }
 
             <IonToast
               position="top"

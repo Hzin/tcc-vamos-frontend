@@ -19,7 +19,6 @@ import * as tripsService from "../services/api/trips";
 import { reloadPage } from "../services/utils";
 
 import { useHistory } from "react-router";
-import { useState } from "react";
 
 interface ComponentProps {
   itinerary: Itinerary;
@@ -27,6 +26,7 @@ interface ComponentProps {
   slot?: string;
   clickable: boolean;
   tripId?: string;
+  isPassenger: boolean;
 }
 
 interface IonChipTripStatusProps {
@@ -196,7 +196,9 @@ export const TripCard = (props: ComponentProps) => {
             if (props.tripId) redirectToTripPage(props.tripId);
             break;
           case tripStatus.pending:
-            handleChooseActionTripAlert(itineraryId, itineraryNickname);
+            if (!props.isPassenger) {
+              handleChooseActionTripAlert(itineraryId, itineraryNickname);
+            }
             break;
           default:
             break;

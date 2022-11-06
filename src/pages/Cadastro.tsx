@@ -14,9 +14,9 @@ import {
 } from "@ionic/react";
 import { useContext, useState } from "react";
 import { useHistory, useParams } from "react-router";
-import { UserContext } from "../App";
 import { Action } from "../components/Action";
 import { PageHeader } from "../components/PageHeader";
+import { useAuth } from "../contexts/auth";
 import LocalStorage from "../LocalStorage";
 import * as UsersService from "../services/api/users";
 import { closeToast } from "../services/utils";
@@ -24,7 +24,7 @@ import { closeToast } from "../services/utils";
 const Cadastro: React.FC = () => {
   const history = useHistory();
 
-  const user = useContext(UserContext);
+  const { signIn } = useAuth();
 
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState("");
@@ -130,12 +130,10 @@ const Cadastro: React.FC = () => {
       return;
     }
 
-    LocalStorage.setToken(retorno.token.token);
-
-    user.setIsLoggedIn(true);
+    // signIn(email, password);
 
     history.push({
-      pathname: "/home",
+      pathname: "/login",
       state: {
         redirectData: {
           showToastMessage: true,

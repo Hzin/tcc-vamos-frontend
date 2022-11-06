@@ -2,6 +2,7 @@ import * as usersRoutes from "../api/users";
 
 interface getByIdReturn {
   userData?: {
+    avatar_image: any;
     name: string;
     lastname: string;
     email: string;
@@ -21,6 +22,7 @@ interface getByIdRes {
   message: string;
   userId?: string;
   data: {
+    avatar_image: string;
     name: string;
     lastname: string;
     email: string;

@@ -7,22 +7,22 @@ export interface GetTripsFeedResponse {
   itinerary: Itinerary;
   tripStatus: tripStatus;
   tripId?: string // vai ser trazido caso a viagem existir
+  isPassenger: boolean;
 }
 
 export interface ChangeTripStatusResponse {
   data?: tripStatus
 }
 
-export async function getTodaysTrips(): Promise<GetTripsFeedResponse[]> {
+export async function getTodaysTrips(): Promise<GetTripsFeedResponse[] | undefined> {
   let res: any;
 
   try {
     res = await tripsRoutes.getTodaysTrips();
+    return res.data;
   } catch (error) {
     // TODO
   }
-
-  return res.data;
 }
 
 export async function getNotTodaysTrips(): Promise<GetTripsFeedResponse[]> {

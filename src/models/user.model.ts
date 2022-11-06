@@ -7,7 +7,6 @@ export interface User {
     email: string;
     phone_number: string;
     birth_date: string;
-    password: string;
     avatar_image: string;
     bio: string;
     star_rating: number;

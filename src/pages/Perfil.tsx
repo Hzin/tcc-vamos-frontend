@@ -27,18 +27,17 @@ import {
   shieldCheckmarkOutline,
   starOutline,
 } from "ionicons/icons";
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
 import LocalStorage from "../LocalStorage";
-import "./Perfil.css";
 
 import { Color } from "@ionic/core";
-import { UserContext } from "../App";
 import { PageHeader } from "../components/PageHeader";
 import sessionsService from "../services/functions/sessionsService";
 import * as usersService from "../services/functions/usersService";
 import { closeToast } from "../services/utils";
+import { useAuth } from "../contexts/auth";
 
 interface ScanNewProps {
   match: {
@@ -57,7 +56,7 @@ interface LocationState {
 }
 
 const Perfil: React.FC<ScanNewProps> = (props) => {
-  const user = useContext(UserContext);
+  const { user, signOut } = useAuth();
 
   const history = useHistory();
   const location = useLocation<LocationState>();
@@ -94,8 +93,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
   };
 
   const logoff = () => {
-    LocalStorage.clearToken();
-    user.setIsLoggedIn(false);
+    signOut();
     history.push({ pathname: "/login" });
   };
 
@@ -168,6 +166,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             name: userData.name,
             lastname: userData.lastname,
             email: userData.email,
+            avatar: userData.avatar_image,
             phone_number: userData.phone_number,
             birth_date: userData.birth_date,
             bio: userData.bio,
@@ -216,7 +215,8 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
         <IonCard>
           <IonCardContent>
             <img
-              src="https://static.generated.photos/vue-static/home/feed/adult.png"
+              // src="https://static.generated.photos/vue-static/home/feed/adult.png"
+              src={inputValues.avatar}
               alt="avatar"
               className="rounded w-28 h-28 block mx-auto"
             />

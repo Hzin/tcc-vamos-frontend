@@ -1,27 +1,16 @@
 import {
-  IonBackButton,
-  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonHeader,
-  IonIcon,
-  IonItem,
-  IonLabel,
   IonPage,
-  IonTitle,
   IonToast,
-  IonToolbar,
 } from "@ionic/react";
 import { Color } from "@ionic/core";
-import { carOutline } from "ionicons/icons";
-import { useContext, useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router";
-
-import { UserContext } from "../App";
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 
 import * as vehiclesRoutes from "../services/api/vehicles";
 

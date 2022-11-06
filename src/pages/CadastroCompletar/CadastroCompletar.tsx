@@ -12,7 +12,6 @@ import React, { useEffect, useState } from "react";
 
 import { callOutline, documentTextOutline } from "ionicons/icons";
 import { useHistory, useLocation } from "react-router";
-import "../Perfil.css";
 
 import { Color } from "@ionic/core";
 import { PageHeader } from "../../components/PageHeader";

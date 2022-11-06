@@ -9,7 +9,7 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import React, { useContext, useState } from "react";
+import React from "react";
 import { Redirect, Route } from "react-router-dom";
 
 import { home, person, search } from "ionicons/icons";
@@ -65,6 +65,8 @@ import "./theme/tailwind.css";
 
 import EditarItinerario from "./pages/EditarItinerario";
 import Passageiros from "./pages/Passageiros";
+import ListaPresenca from "./pages/ListaPresenca";
+import { AuthProvider, useAuth } from "./contexts/auth";
 
 setupIonicReact();
 
@@ -104,6 +106,7 @@ const routes = (
     <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
     <Route exact path="/editar-itinerario" component={EditarItinerario}></Route>
     <Route exact path="/itinerario/passageiros" component={Passageiros}></Route>
+    <Route exact path="/itinerario/lista-presenca" component={ListaPresenca}></Route>
 
     <Route exact path="/buscas" component={Buscas}></Route>
     <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
@@ -122,26 +125,13 @@ const routes = (
   </>
 );
 
-interface IUserManager {
-  setIsLoggedIn: Function;
-}
-
-const user: IUserManager = {
-  setIsLoggedIn: () => {},
-};
-
-export const UserContext = React.createContext<IUserManager>(user);
-
 const IonicApp: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const user = useContext(UserContext);
-
-  user.setIsLoggedIn = setIsLoggedIn;
+  const { signed } = useAuth();
 
   return (
     <IonApp>
       <IonReactRouter>
-        {isLoggedIn ? (
+        {signed? (
           <IonTabs>
             <IonRouterOutlet>{routes}</IonRouterOutlet>
 
@@ -170,9 +160,9 @@ const IonicApp: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <UserContext.Provider value={user}>
+    <AuthProvider>
       <IonicApp />
-    </UserContext.Provider>
+    </AuthProvider>
   );
 };
 

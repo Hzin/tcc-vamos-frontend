@@ -51,7 +51,7 @@ interface LocationState {
   itinerary: ItineraryInfo;
 }
 
-export default function Passageiros() {
+export default function ListaPresenca() {
   const history = useHistory();
 
   const [passengers, setPassengers] = useState<Passenger[]>([]);
@@ -60,21 +60,21 @@ export default function Passageiros() {
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
-  useEffect(() => {
-    if (history.location.state === undefined) {
-      history.push({ pathname: "/itinerarios" });
-    } else {
-      const infos = history.location.state as LocationState;
-      getItineraryPassengers(infos.itinerary.id_itinerary).then((response) => {
-        setPassengers(response.data);
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (history.location.state === undefined) {
+  //     history.push({ pathname: "/itinerarios" });
+  //   } else {
+  //     const infos = history.location.state as LocationState;
+  //     getItineraryPassengers(infos.itinerary.id_itinerary).then((response) => {
+  //       setPassengers(response.data);
+  //     });
+  //   }
+  // }, []);
 
   return (
     <IonPage>
       <PageHeader
-        pageName="Passageiros"
+        pageName="Lista de Presença"
         backButtonPageUrl="/perfil"
       ></PageHeader>
 
@@ -100,15 +100,15 @@ export default function Passageiros() {
         ) : (
           <>
             <h1 className="m-6 text-xl">
-              Ainda não tem passageiros cadastrados nesse itinerário. Que tal
-              experimentar a busca de passageiros para visualizar onde está tendo mais procura?
+              Parece que ninguém irá hoje. Que tal aproveitar para fazer uma
+              grana extra? Veja os locais onde está tendo mais demanda.
             </h1>
             <IonButton
               expand="block"
               className="m-6"
               onClick={() => history.push({ pathname: "/buscar/passageiro" })}
             >
-              Buscar passageiros
+              Visualizar passageiros buscando
               <IonIcon icon={search} className="ml-1"></IonIcon>
             </IonButton>
           </>

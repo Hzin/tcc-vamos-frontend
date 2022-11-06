@@ -10,7 +10,6 @@ import { IonGrid, IonRow, IonCol, IonToast } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { IonItem, IonLabel, IonInput, IonButton } from "@ionic/react";
 
-import { UserContext } from "../App";
 import { PageHeader } from "../components/PageHeader";
 
 const Debug: React.FC = () => {
