@@ -40,6 +40,10 @@ import Viagem from "./pages/Viagem";
 
 import ModerarDocumentos from "./pages/ModerarDocumentos";
 
+import ItinerarioContratos from "./pages/ItinerarioContratos";
+import Contrato from "./pages/Contrato";
+import ListaDePresenca from "./pages/ListaDePresenca";
+
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -67,6 +71,7 @@ import EditarItinerario from "./pages/EditarItinerario";
 import Passageiros from "./pages/Passageiros";
 import ListaPresenca from "./pages/ListaPresenca";
 import { AuthProvider, useAuth } from "./contexts/auth";
+import Itinerario from "./pages/Itinerario";
 
 setupIonicReact();
 
@@ -103,6 +108,7 @@ const routes = (
     <Route exact path="/veiculo/placa" component={Home}></Route>
     <Route exact path="/veiculo/placa/:id" component={Veiculo}></Route>
 
+    <Route exact path="/itinerario/:id" component={Itinerario}></Route>
     <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
     <Route exact path="/editar-itinerario" component={EditarItinerario}></Route>
     <Route exact path="/itinerario/passageiros" component={Passageiros}></Route>
@@ -118,6 +124,11 @@ const routes = (
     <Route exact path="/viagem/:id" component={Viagem}></Route>
 
     <Route exact path="/documentos/moderar" component={ModerarDocumentos}></Route>
+
+    <Route exact path="/itinerario/:id/contratos" component={ItinerarioContratos}></Route>
+    <Route exact path="/viagem/:id" component={Viagem}></Route>
+    <Route exact path="/contrato/:id" component={Contrato}></Route>
+    <Route exact path="/viagem/:id/presenca" component={ListaDePresenca}></Route>
 
     <Route exact path="/">
       <Redirect to="/home" />

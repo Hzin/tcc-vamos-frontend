@@ -5,25 +5,29 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
   IonIcon,
   IonButtons,
   IonBackButton,
 } from "@ionic/react";
 import React, { useContext, useState } from "react";
-import { IonGrid, IonRow, IonCol, IonToast } from "@ionic/react";
+import { IonGrid, IonToast } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import {
   IonItem,
   IonLabel,
-  IonButton,
 } from "@ionic/react";
 
 import * as sessionRoutes from '../services/api/session';
 import LocalStorage from '../LocalStorage';
 import { UserContext } from "../App";
-import { alarmOutline, bookmarkOutline, documentOutline, idCardOutline } from "ionicons/icons";
+import { bookmarkOutline } from "ionicons/icons";
 
-const Viagem: React.FC = () => {
+const ItinerarioContratos: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState('');
 
@@ -115,9 +119,9 @@ const Viagem: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle >Puc - Campinas</IonTitle>
+          <IonTitle>Escolha seu contrato</IonTitle>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/vinculo-van" />
+            <IonBackButton defaultHref="/vinculo-van-editar" />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -129,34 +133,42 @@ const Viagem: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
+
         <IonGrid>
-          <IonRow>
-            <IonCol>
-              <IonButton expand="block" onClick={handleLogin} fill="outline" color="Blue" >
-                Faltar na proxima viagem
-              </IonButton>
-            </IonCol>
-          </IonRow>
+          <IonCard>
+            <IonCardHeader>
+              <IonCardTitle>Contrato: Recorrente </IonCardTitle>
+              <IonCardSubtitle>Renovação: 22/09/2022 </IonCardSubtitle>
+            </IonCardHeader>
+            <IonCardContent>
+              O Contrato Recorrente é o plano mensal de vinculo a van da/o motorista (Nome do motorista)
+              portador do CPF (Numero do CPF) junto ao passageiro (Nome do passageiro) no valor pré estabelecido
+              R$ (Valor) a ser pago no dia (Numero do dia) e renovado a cada mês até o seu encerramento.
+              O pagamento é feito diretamente ao motorista, e o mesmo atualizará o status do contrato da van via App.
+            </IonCardContent>
+            <IonItem>
+              <IonIcon icon={bookmarkOutline} slot="start" />
+              <IonLabel>Escolher contrato</IonLabel>
+            </IonItem>
+          </IonCard>
 
-          <IonItem>
-            <IonIcon icon={idCardOutline} slot="start" />
-            <IonLabel>Motorista: Maria</IonLabel>
-          </IonItem>
-
-          <IonItem>
-            <IonIcon icon={alarmOutline} slot="start" />
-            <IonLabel>Horario: 09:45</IonLabel>
-          </IonItem>
-
-          <IonItem>
-            <IonIcon icon={bookmarkOutline} slot="start" />
-            <IonLabel>Status: Ativo</IonLabel>
-          </IonItem>
-
-          <IonItem button onClick={() => history.push({ pathname: '/contratos' })}>
-            <IonIcon icon={documentOutline} slot="start" />
-            <IonLabel>Meu Contrato</IonLabel>
-          </IonItem>
+          <IonCard>
+            <IonCardHeader>
+              <IonCardTitle>Contrato: Vaga Avulsa </IonCardTitle>
+              <IonCardSubtitle>Renovação: 22/09/2022 </IonCardSubtitle>
+            </IonCardHeader>
+            <IonCardContent>
+              O Contrato Vaga Avulsa é o plano de uma vaga unica em uma viagem da van da/o motorista (Nome do motorista)
+              portador do CPF (Numero do CPF) junto ao passageiro (Nome do passageiro) no valor pré estabelecido
+              R$ (Valor) a ser pago no dia (Numero do dia) e ao termino da viagem é encerrado automaticamente, caso necessario uma nova viagem deverá ser feita uma
+              nova solicitação pois esse contrato só tem validade para uma unica viagem.
+              O pagamento é feito diretamente ao motorista, e o mesmo atualizará o status do contrato da van via App.
+            </IonCardContent>
+            <IonItem>
+              <IonIcon icon={bookmarkOutline} slot="start" />
+              <IonLabel>Escolher contrato</IonLabel>
+            </IonItem>
+          </IonCard>
         </IonGrid>
 
         <IonToast
@@ -172,4 +184,4 @@ const Viagem: React.FC = () => {
   );
 };
 
-export default Viagem;
+export default ItinerarioContratos;

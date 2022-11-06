@@ -1,10 +1,18 @@
 import {
+<<<<<<< HEAD
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
+=======
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonItem,
+  IonList,
+>>>>>>> 474ad61afc9f1f5fc1d482768a038b0d2bdbb37f
   IonPage,
   IonToast,
 } from "@ionic/react";
@@ -12,93 +20,74 @@ import { Color } from "@ionic/core";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
+<<<<<<< HEAD
 import * as vehiclesRoutes from "../services/api/vehicles";
 
 import sessionsService from "../services/functions/sessionsService";
+=======
+import * as itinerariesService from "../services/functions/itinerariesService";
+>>>>>>> 474ad61afc9f1f5fc1d482768a038b0d2bdbb37f
 import { closeToast } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
 
-const Itinerario: React.FC = () => {
+interface ScanNewProps {
+  match: {
+    params: {
+      id: string;
+    };
+  };
+}
+
+const Itinerario: React.FC<ScanNewProps> = (props) => {
   const history = useHistory();
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
-  const [userVehicles, setUserVehicles] = useState<vehiclesRoutes.VehicleInfo[]>();
-
-  const redirectUserToLogin = () => {
-    history.push({ pathname: "/login" });
-  };
-
   useEffect(() => {
-    const getUserVehicles = async () => {
-      let userId = "";
-
-      const refreshSessionRes = await sessionsService.refreshSession();
-
-      if (refreshSessionRes.error) {
-        redirectUserToLogin();
-        return;
-      }
-
-      if (refreshSessionRes.userId) {
-        userId = refreshSessionRes.userId;
-      }
-
-      vehiclesRoutes
-        .getByUserId(userId)
-        .then((response) => {
-          setUserVehicles(response);
-        })
-        .catch((err) => {
-          setToastColor("danger");
-          setToastMessage(err);
-          setShowToast(true);
-        });
-    };
-
-    getUserVehicles();
+    loadItineraryData();
   }, []);
+
+  const loadItineraryData = async () => {
+    // let itineraryId = "";
+
+    // TODO, necessário
+    // if (!props.match.params.id) history.push({ pathname: "/login" });
+
+    const itineraryId = props.match.params.id;
+
+    // get user info by ID
+    const res = await itinerariesService.getById(itineraryId);
+
+    console.log(res)
+  };
 
   return (
     <IonPage>
       <PageHeader
-        pageName="Minhas vehicles"
+        pageName="Itinerário"
         backButtonPageUrl="/perfil"
       ></PageHeader>
 
       <IonContent>
-        {userVehicles ? (
-          userVehicles.map((vehicle, index) => {
-            return (
-              <IonCard key={index}>
-                <IonCardHeader>
-                  <IonCardTitle>{vehicle.plate}</IonCardTitle>
-                  <IonCardSubtitle>
-                    {vehicle.brand} - {vehicle.model}
-                  </IonCardSubtitle>
-                </IonCardHeader>
-                {vehicle.locator_name ? (
-                  <>
-                    <IonCardContent>
-                      {vehicle.seats_number} assentos - Locador:{" "}
-                      {vehicle.locator_name}
-                    </IonCardContent>
-                  </>
-                ) : (
-                  <>
-                    <IonCardContent>
-                      {vehicle.seats_number} assentos - Não é alugado
-                    </IonCardContent>
-                  </>
-                )}
-              </IonCard>
-            );
-          })
-        ) : (
-          <></>
-        )}
+        <IonList>
+          <IonItem>
+            <IonButton onClick={() => { history.push({ pathname: "/itinerario/:id/contratos" }) }}>"/itinerario/:id/contratos"</IonButton>
+          </IonItem>
+
+          <IonItem>
+            <IonButton onClick={() => { history.push({ pathname: "/viagem/:id" }) }}>"/viagem/:id"</IonButton>
+          </IonItem>
+
+          <IonItem>
+            <IonButton onClick={() => { history.push({ pathname: "/contrato/:id" }) }}>"/contrato/:id"</IonButton>
+          </IonItem>
+
+          <IonItem>
+            <IonButton onClick={() => { history.push({ pathname: "/viagem/:id/presenca" }) }}>"/viagem/:id/presenca"</IonButton>
+          </IonItem>
+        </IonList>
 
         <IonToast
           position="top"

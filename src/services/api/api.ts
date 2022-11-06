@@ -1,12 +1,12 @@
 import axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
-import apiConfig from '../../config/api.config';
+import { getBaseUrl } from '../../config/api.config';
 import LocalStorage from '../../LocalStorage';
 
 let token: string;
 let header: AxiosRequestHeaders;
 
 const instance = axios.create({
-  baseURL: apiConfig.getBaseUrl(),
+  baseURL: getBaseUrl(),
 });
 
 instance.interceptors.request.use(function (config: AxiosRequestConfig) {

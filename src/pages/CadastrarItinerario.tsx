@@ -106,10 +106,6 @@ export default function CadastrarItinerario() {
   const [valueControl1, setValueControl1] = useState<string>("");
   const [valueControl2, setValueControl2] = useState<string>("");
 
-  const redirectUserToLogin = () => {
-    history.push({ pathname: "/login" });
-  };
-
   const onBtnClicked = async (direction: string) => {
     const swiper = await mySlides.current.getSwiper();
     if (direction === "next") {
@@ -126,7 +122,7 @@ export default function CadastrarItinerario() {
       const refreshSessionRes = await sessionsService.refreshSession();
 
       if (refreshSessionRes.error) {
-        redirectUserToLogin();
+        history.push({ pathname: "/login" });
         return;
       }
 

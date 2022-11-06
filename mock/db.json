@@ -1,0 +1,26 @@
+{
+    "cadastro-van": [
+      {
+        "id": 1,
+        "placa": "DBE2356",
+        "marca": "Fiat",
+        "modelo": "Ducatto",
+        "numPassageiros": 14,
+        "alugado": false
+      }
+    ]
+  }
+  
+  {
+    "vinculo-van": [
+      {
+        "id": 1,
+        "idVan": "01",
+        "NomeMotorista": "Joao",
+        "idPassageiro": "04",
+        "NomePassageiro": "Carlos",
+        "Validade": "25/10/2022",
+        "StatusVinculo": false
+      }
+    ]
+  }

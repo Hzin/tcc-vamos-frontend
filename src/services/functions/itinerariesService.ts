@@ -1,3 +1,4 @@
+import { Itinerary } from "../../models/itinerary.model";
 import * as itinerariesRoutes from "../api/itineraries";
 
 export interface SearchItinerariesRequest {
@@ -17,7 +18,7 @@ export interface SearchItinerariesRequest {
   preference_PrioritySeat?: boolean
 }
 
-export async function getAllItineraries(): Promise<any> {
+export async function getAllItineraries(): Promise<Itinerary[]> {
   let res: any;
 
   try {
@@ -29,7 +30,7 @@ export async function getAllItineraries(): Promise<any> {
   return res.data;
 }
 
-export async function searchItineraries(body: SearchItinerariesRequest): Promise<any> {
+export async function searchItineraries(body: SearchItinerariesRequest): Promise<Itinerary[]> {
   let res: any;
   try {
     res = await itinerariesRoutes.search(body);
@@ -48,4 +49,22 @@ export async function createItinerary(
   res = await itinerariesRoutes.create(itinerary);
 
   return res;
+}
+
+export async function createItineraryRequest(
+  request: itinerariesRoutes.CreateRequest
+): Promise<any> {
+  let res: any;
+
+  res = await itinerariesRoutes.createRequest(request);
+
+  return res;
+}
+
+export async function getById(id: string): Promise<any> {
+  let res: any;
+
+  res = await itinerariesRoutes.getById(id);
+
+  return res.data;
 }

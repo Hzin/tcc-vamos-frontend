@@ -16,7 +16,6 @@ import {
   IonToast,
   IonCardHeader,
   IonCardSubtitle,
-  IonCardTitle,
   IonItemDivider,
   IonList,
   IonTitle,
@@ -25,38 +24,38 @@ import {
   IonSelectOption,
 } from "@ionic/react";
 import {
-  cashOutline,
   closeOutline,
   filterOutline,
-  personOutline,
 } from "ionicons/icons";
 import { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import { createUserSearch } from "../services/api/users";
-import { closeToast, convertNumberToPrice } from "../services/utils";
+import { closeToast } from "../services/utils";
 import { Itinerary } from "../models/itinerary.model";
 import { PageHeader } from "../components/PageHeader";
 
 import * as itinerariesService from "../services/functions/itinerariesService";
 
-interface addressInfo {
+import { CardItinerary } from "../components/CardItinerary";
+
+interface coordinatesInfo {
   formatted_address: string;
   lat: number;
   lng: number;
 }
 
 interface InfoBusca {
-  addressFrom: addressInfo;
-  addressTo: addressInfo;
+  coordinatesFrom: coordinatesInfo;
+  coordinatesTo: coordinatesInfo;
   period: string;
 
   itineraries: Itinerary[];
 }
 
 const ListaItinerarios: React.FC = () => {
-  const history = useHistory();
   const location = useLocation();
   const props = location.state as InfoBusca;
+
   const [itinerariesList, setItinerariesList] = useState<Itinerary[]>([]);
   const [showModalFilters, setShowModalFilters] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -80,14 +79,38 @@ const ListaItinerarios: React.FC = () => {
   useEffect(() => {
     if (props.itineraries) {
       setItinerariesList(props.itineraries);
+
+      return
     }
+
+    if (!props.coordinatesFrom || !props.coordinatesTo || !props.period) return
+
+    searchItineraries(
+      props.coordinatesFrom,
+      props.coordinatesTo,
+      props.period
+    )
   }, [props]);
+
+  const searchItineraries = async (coordinatesFrom: coordinatesInfo, coordinatesTo: coordinatesInfo, period: string) => {
+    // TODO, trocar
+    // await itinerariesService.searchItineraries(
+    // {
+    //   coordinatesFrom,
+    //   coordinatesTo,
+    //   period
+    // }
+    await itinerariesService.getAllItineraries()
+      .then((response) => {
+        setItinerariesList(response)
+      });
+  }
 
   function criaAlerta() {
     createUserSearch(
-      props.addressFrom.lat,
-      props.addressFrom.lng,
-      props.addressTo.formatted_address
+      props.coordinatesFrom.lat,
+      props.coordinatesFrom.lng,
+      props.coordinatesTo.formatted_address
     )
       .then(() => {
         setMessageToast("Alerta criado com sucesso!");
@@ -103,12 +126,12 @@ const ListaItinerarios: React.FC = () => {
   async function applyFilters() {
     const body = {
       coordinatesFrom: {
-        lat: props.addressFrom.lat,
-        lng: props.addressFrom.lng,
+        lat: props.coordinatesFrom.lat,
+        lng: props.coordinatesFrom.lng,
       },
       coordinatesTo: {
-        lat: props.addressTo.lat,
-        lng: props.addressTo.lng,
+        lat: props.coordinatesTo.lat,
+        lng: props.coordinatesTo.lng,
       },
       period: props.period,
       orderBy,
@@ -137,18 +160,19 @@ const ListaItinerarios: React.FC = () => {
         pageName="Resultados da busca"
         backButtonPageUrl="/buscar/itinerario"
       />
+
       <IonContent fullscreen>
         <IonCard button color="light">
           <IonCardHeader>
             <IonCardSubtitle>
-              Origem: {props.addressFrom.formatted_address}
+              Origem: {props.coordinatesFrom.formatted_address}
             </IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
         <IonCard button color="light">
           <IonCardHeader>
             <IonCardSubtitle>
-              Destino: {props.addressTo.formatted_address}
+              Destino: {props.coordinatesTo.formatted_address}
             </IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
@@ -165,43 +189,9 @@ const ListaItinerarios: React.FC = () => {
         </IonToolbar>
 
         {itinerariesList && itinerariesList.length !== 0 ? (
-          <>
-            {itinerariesList.map((itinerary, index) => {
-              return (
-                <IonCard
-                  button
-                  key={index}
-                  onClick={() => {
-                    history.push(`/itinerary/${itinerary.id_itinerary}`);
-                  }}
-                >
-                  <IonCardHeader>
-                    <IonCardTitle>{itinerary.itinerary_nickname}</IonCardTitle>
-                    {/* <IonCardContent> */}
-                    {/* <IonList> */}
-                    <IonItem>
-                      <IonIcon slot={"start"} icon={personOutline} />
-                      <IonLabel>Motorista: {itinerary.driverName}</IonLabel>
-                    </IonItem>
-                    <IonItem>
-                      <IonIcon slot={"start"} icon={cashOutline} />
-                      <IonLabel>
-                        Valor: {convertNumberToPrice(itinerary.monthly_price)}
-                      </IonLabel>
-                    </IonItem>
-                    <IonItem>
-                      <IonIcon slot={"start"} src="https://cdn-icons-png.flaticon.com/512/6165/6165835.png"/>
-                      <IonLabel>
-                        Vagas disponíveis: {itinerary.available_seats}
-                      </IonLabel>
-                    </IonItem>
-                    {/* </IonList> */}
-                    {/* </IonCardContent> */}
-                  </IonCardHeader>
-                </IonCard>
-              );
-            })}
-          </>
+          itinerariesList.map((itinerary, index) => {
+            return (<CardItinerary key={index} itinerary={itinerary} />)
+          })
         ) : (
           <>
             <div className="m-3">

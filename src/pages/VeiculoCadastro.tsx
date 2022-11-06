@@ -2,6 +2,7 @@ import {
   IonButton,
   IonCheckbox,
   IonContent,
+  IonFooter,
   IonInput,
   IonItem,
   IonItemDivider,
@@ -11,10 +12,10 @@ import {
   IonSelect,
   IonSelectOption,
   IonToast,
+  IonToolbar,
 } from "@ionic/react";
 
 import React, { useEffect, useReducer, useState } from "react";
-import { useHistory } from "react-router-dom";
 
 // import * as yup from 'yup';
 
@@ -25,10 +26,9 @@ import * as vehiclesRoutes from "../services/api/vehicles";
 import { Color } from "@ionic/core";
 import { PageHeader } from "../components/PageHeader";
 import { closeToast } from "../services/utils";
+import { ModalInfoEntendi, RedirectData } from "../components/ModalInfoEntendi";
 
 const VeiculoCadastro: React.FC = () => {
-  const history = useHistory();
-
   const [showToast, setShowToast] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastColor, setToastColor] = useState<Color>("primary");
@@ -175,6 +175,9 @@ const VeiculoCadastro: React.FC = () => {
     }
   };
 
+  const [showModal, setShowModal] = useState(false);
+  const [redirectData, setRedirectData] = useState<RedirectData>();
+
   const handleSubmit = async () => {
     if (!validateForm()) {
       return;
@@ -201,16 +204,13 @@ const VeiculoCadastro: React.FC = () => {
           return;
         }
 
-        history.push({
-          pathname: "/veiculos/meus",
-          state: {
-            redirectData: {
-              showToastMessage: true,
-              toastColor: "success",
-              toastMessage: response.message,
-            },
-          },
-        });
+        setShowModal(true)
+        setRedirectData({
+          url: '/veiculos/meus',
+          toastColor: "success",
+          toastMessage: response.message,
+        })
+
       })
       .catch((err) => {
         setToastColor("danger");
@@ -327,6 +327,7 @@ const VeiculoCadastro: React.FC = () => {
               onIonChange={(e: any) =>
                 setInputValues({ seats_number: e.target.value })
               }
+              slot="end"
             />
           </IonItem>
         </IonList>
@@ -390,17 +391,9 @@ const VeiculoCadastro: React.FC = () => {
               />
             </IonItem>
           )}
-
-          <div>
-            <IonButton
-              className="ion-margin-top"
-              expand="block"
-              onClick={handleSubmit}
-            >
-              Salvar
-            </IonButton>
-          </div>
         </IonList>
+
+        <ModalInfoEntendi id="modal-info" isOpen={showModal} messages={['Veículo cadastrado com sucesso!', 'Obs.: para criar um itinerário, você precisa enviar os documentos do veículo em "Meus Veículos" e aguardar a aprovação.']} redirectData={redirectData} />
 
         <IonToast
           position="top"
@@ -411,6 +404,12 @@ const VeiculoCadastro: React.FC = () => {
           duration={2500}
         />
       </IonContent>
+
+      <IonFooter>
+        <IonToolbar>
+          <IonButton onClick={handleSubmit} expand="full">Cadastrar</IonButton>
+        </IonToolbar>
+      </IonFooter>
     </IonPage>
   );
 };
