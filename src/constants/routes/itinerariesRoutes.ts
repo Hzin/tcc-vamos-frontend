@@ -35,6 +35,9 @@ const transportsRoutes = {
   getDriverItinerariesWithOnlyPendingPassengerRequests: {
     url: `${transportsRoutesDefault}/driver/:id/onlypendingrequests`
   },
+  countItinerariesPendingPassengerRequestsByDriverId: {
+    url: `${transportsRoutesDefault}/driver/contracts/pending/count`
+  }
 }
 
 export default transportsRoutes;

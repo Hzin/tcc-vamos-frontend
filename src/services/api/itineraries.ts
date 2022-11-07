@@ -99,3 +99,8 @@ export async function getDriverItinerariesWithOnlyPendingPassengerRequests(id_us
   const response = await instance.get(finalUrl);
   return response.data;
 }
+
+export async function countItinerariesPendingPassengerRequestsByDriverId() {
+  const response = await instance.get(transportsRoutes.countItinerariesPendingPassengerRequestsByDriverId.url);
+  return response.data;
+}

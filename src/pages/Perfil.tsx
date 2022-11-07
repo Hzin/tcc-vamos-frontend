@@ -37,6 +37,7 @@ import { UserContext } from "../App";
 import { PageHeader } from "../components/PageHeader";
 import sessionsService from "../services/functions/sessionsService";
 import * as usersService from "../services/functions/usersService";
+import * as itinerariesService from "../services/functions/itinerariesService";
 import { closeToast } from "../services/utils";
 import { User } from "../models/user.model";
 
@@ -74,6 +75,8 @@ const Perfil: React.FC<PerfilProps> = (props) => {
 
   const [incompleteProfile, setIncompleteProfile] = useState(false);
   const [incompleteProfileCounter, setIncompleteProfileCounter] = useState(0);
+
+  const [countItinerariesPendingPassengerRequests, setCountItinerariesPendingPassengerRequests] = useState(0);
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -196,6 +199,9 @@ const Perfil: React.FC<PerfilProps> = (props) => {
 
           setIncompleteProfileCounter(counter);
         }
+
+        const countItinerariesPendingPassengerRequests = await itinerariesService.countItinerariesPendingPassengerRequestsByDriverId()
+        setCountItinerariesPendingPassengerRequests(countItinerariesPendingPassengerRequests)
       }
     };
 
@@ -390,6 +396,13 @@ const Perfil: React.FC<PerfilProps> = (props) => {
                 >
                   <IonIcon icon={hammerOutline} slot="start" />
                   <IonLabel>Solicitações de contrato</IonLabel>
+                  {countItinerariesPendingPassengerRequests !== 0 && (
+                    <>
+                      <IonBadge color="primary">
+                        {countItinerariesPendingPassengerRequests}
+                      </IonBadge>
+                    </>
+                  )}
                 </IonItem>
               </>
             )}

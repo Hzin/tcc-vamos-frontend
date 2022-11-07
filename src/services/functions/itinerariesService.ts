@@ -132,3 +132,11 @@ export async function getDriverItinerariesWithOnlyPendingPassengerRequests(id_us
 
   return res.data;
 }
+
+export async function countItinerariesPendingPassengerRequestsByDriverId(): Promise<number> {
+  let res: any;
+
+  res = await itinerariesRoutes.countItinerariesPendingPassengerRequestsByDriverId();
+
+  return res.data;
+}
