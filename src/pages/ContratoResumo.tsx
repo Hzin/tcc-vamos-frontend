@@ -123,6 +123,9 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
   const [passenger, setPassenger] = useState<User>()
   const [driver, setDriver] = useState<User>()
 
+  const [showContractButton, setShowContractButton] = useState(false)
+  const [showContractModerateButton, setShowContractModerateButton] = useState(false)
+
   const [modalInfoShow, setModalInfoShow] = useState(false)
   const [modalInfoHeader, setModalInfoHeader] = useState('')
   const [modalInfoMessages, setModalInfoMessages] = useState<string[]>([])
@@ -171,7 +174,6 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
     }
 
     if (props.passenger) {
-      console.log('1')
       setPassenger(props.passenger)
       return true
     } else {
@@ -185,11 +187,13 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
         if (!passenger) {
           didWorkFlag = false
         } else {
-          // console.log(typeof passenger)
           setPassenger(passenger)
         }
       }
     }
+
+    setShowContractButton(!!props.showContractButton || !!locationProps.showContractButton)
+    setShowContractModerateButton(!!props.showContractModerateButton || !!locationProps.showContractModerateButton)
 
     if (!didWorkFlag) {
       // console.log('Algo está faltando.')
@@ -434,19 +438,19 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
         )}
       </IonContent>
 
-      {(props.showContractButton || props.showContractModerateButton) && (
+      {(showContractButton || showContractModerateButton) && (
         <>
           {/* botões do passageiro contratar o motorista */}
           <IonFooter>
-            {props.showContractButton && (
+            {showContractButton && (
               <>
                 <IonToolbar>
                   <div className="flex justify-between">
                     <div>
-                      <IonButton fill='outline' onClick={history.goBack}>Cancelar</IonButton>
+                      <IonButton fill='outline' onClick={history.goBack}>Voltar</IonButton>
                     </div>
                     <div>
-                      <IonButton className="mr-1" color='success' onClick={showConfirmRequestContractAlert}>Confirmar</IonButton>
+                      <IonButton className="mr-1" color='success' onClick={showConfirmRequestContractAlert}>Enviar solicitação de contrato</IonButton>
                     </div>
                   </div>
                 </IonToolbar>
@@ -454,7 +458,7 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
             )}
 
             {/* botões do motorista aceitar ou recusar o contrato do passageiro */}
-            {props.showContractModerateButton && (
+            {showContractModerateButton && (
               <>
                 <IonToolbar>
                   <div className="flex justify-between">
