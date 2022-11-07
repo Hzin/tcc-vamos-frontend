@@ -76,6 +76,7 @@ import "./theme/variables.css";
 
 /* Tailwind styles */
 import "./theme/tailwind.css";
+import HomeFeedViagensMeusMotorista from "./pages/HomeFeedViagensMeusMotorista";
 
 setupIonicReact();
 
@@ -95,6 +96,8 @@ const routes = (
     ></Route>
 
     <Route exact path="/home" component={Home}></Route>
+    <Route exact path="/feed/meus/motorista" component={HomeFeedViagensMeusMotorista}></Route>
+
     <Route exact path="/login" component={Login}></Route>
     <Route exact path="/perfil" component={Perfil}></Route>
     <Route exact path="/usuario/:id" component={Perfil}></Route>

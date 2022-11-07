@@ -11,13 +11,23 @@ export async function getTripsByItineraryId(id_itinerary: string): Promise<Trip[
   return response.data;
 }
 
-export async function getTodaysTrips(): Promise<GetTripsFeedResponse[]> {
-  const response = await instance.get(tripsRoutes.getTodaysTrips.url)
+export async function getTodaysTripsAsDriver(): Promise<GetTripsFeedResponse[]> {
+  const response = await instance.get(tripsRoutes.getTodaysTripsAsDriver.url)
   return response.data;
 }
 
-export async function getNotTodaysTrips(): Promise<GetTripsFeedResponse[]> {
-  const response = await instance.get(tripsRoutes.getNotTodaysTrips.url)
+export async function getNotTodaysTripsAsDriver(): Promise<GetTripsFeedResponse[]> {
+  const response = await instance.get(tripsRoutes.getNotTodaysTripsAsDriver.url)
+  return response.data;
+}
+
+export async function getTodaysTripsAsPassenger(): Promise<GetTripsFeedResponse[]> {
+  const response = await instance.get(tripsRoutes.getTodaysTripsAsPassenger.url)
+  return response.data;
+}
+
+export async function getNotTodaysTripsAsPassenger(): Promise<GetTripsFeedResponse[]> {
+  const response = await instance.get(tripsRoutes.getNotTodaysTripsAsPassenger.url)
   return response.data;
 }
 

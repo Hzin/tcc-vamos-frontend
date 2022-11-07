@@ -169,8 +169,6 @@ const Perfil: React.FC<PerfilProps> = (props) => {
       }
 
       const userIsAdminRes = await usersService.checkIfUserIsAdmin();
-      console.log('userIsAdminRes: ', userIsAdminRes)
-
       if (userIsAdminRes) {
         setIsAdmin(userIsAdminRes);
 

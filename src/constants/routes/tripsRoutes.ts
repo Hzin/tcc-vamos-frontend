@@ -3,12 +3,20 @@ const tripsRoutes = {
   getTripsByItineraryId: {
     url: `${tripsRoutesDefault}/itinerary/:id`
   },
-  getTodaysTrips: {
-    url: `${tripsRoutesDefault}/feed/today`
+
+  getTodaysTripsAsDriver: {
+    url: `${tripsRoutesDefault}/feed/driver/today`
   },
-  getNotTodaysTrips: {
-    url: `${tripsRoutesDefault}/feed/nottoday`
+  getNotTodaysTripsAsDriver: {
+    url: `${tripsRoutesDefault}/feed/driver/nottoday`
   },
+  getTodaysTripsAsPassenger: {
+    url: `${tripsRoutesDefault}/feed/passenger/today`
+  },
+  getNotTodaysTripsAsPassenger: {
+    url: `${tripsRoutesDefault}/feed/passenger/nottoday`
+  },
+
   getTrip: {
     url: `${tripsRoutesDefault}`
   },

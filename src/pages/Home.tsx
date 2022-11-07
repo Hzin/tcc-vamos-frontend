@@ -1,11 +1,9 @@
 import {
-  IonAccordion,
-  IonAccordionGroup,
-  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
   IonContent,
-  IonItem,
-  IonLabel,
-  IonList,
   IonPage,
   IonToast,
 } from "@ionic/react";
@@ -18,9 +16,7 @@ import { UserContext } from "../App";
 import * as sessionRoutes from "../services/api/session";
 import { closeToast, startTime } from "../services/utils";
 
-import * as tripsService from "../services/functions/tripsService";
 import { PageHeader } from "../components/PageHeader";
-import { TripCard } from "../components/TripCard";
 
 interface LocationState {
   redirectData?: {
@@ -83,83 +79,28 @@ const Home: React.FC = () => {
     refreshUserToken();
   }, [location.state, user, history]);
 
-  useEffect(() => {
-    getUserTodaysTrips();
-  }, []);
-
-  const [todaysTrips, setTodaysTrips] =
-    useState<tripsService.GetTripsFeedResponse[]>();
-  const [notTodaysTrips, setNotTodaysTrips] =
-    useState<tripsService.GetTripsFeedResponse[]>();
-
-  const getUserTodaysTrips = async () => {
-    await tripsService.getTodaysTrips().then((response) => {
-      setTodaysTrips(response);
-    });
-
-    await tripsService.getNotTodaysTrips().then((response) => {
-      setNotTodaysTrips(response);
-    });
-  };
-
   return (
     <IonPage>
       <PageHeader pageName="Página inicial" />
 
       <IonContent>
-        <IonList>
-          <IonAccordionGroup value="today">
-            <IonAccordion value="today">
-              <IonItem slot="header" color="primary">
-                <IonLabel>Viagens de hoje - {clock}</IonLabel>
-              </IonItem>
+        <IonCard button class="cardItem" onClick={() => history.push({ pathname: "/feed/meus/motorista" })}>
+          <img alt="" src="https://images.unsplash.com/photo-1561361513-2d000a50f0dc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dmFufGVufDB8fDB8fA%3D%3D&w=1000&q=80" />
+          <IonCardHeader>
+            <IonCardTitle>Meus itinerários como motorista</IonCardTitle>
+          </IonCardHeader>
 
-              {todaysTrips && todaysTrips.length !== 0 ? (
-                todaysTrips.map((tripInfo, index) => {
-                  return (
-                    <TripCard
-                      key={index}
-                      slot="content"
-                      itinerary={tripInfo.itinerary}
-                      tripStatus={tripInfo.tripStatus}
-                      clickable={true}
-                      tripId={tripInfo.tripId}
-                    ></TripCard>
-                  );
-                })
-              ) : (
-                <div className="ion-padding" slot="content">
-                  Sem viagens para hoje!
-                </div>
-              )}
-            </IonAccordion>
-          </IonAccordionGroup>
+          <IonCardContent>Clique para ver</IonCardContent>
+        </IonCard>
 
-          <IonAccordionGroup value="nottoday">
-            <IonAccordion>
-              <IonItem slot="header" color="primary">
-                <IonLabel>Próximas viagens</IonLabel>
-              </IonItem>
+        <IonCard button class="cardItem" onClick={() => history.push({ pathname: "/feed/meus/passageiro" })}>
+          <img alt="" src="https://aqwra1nnpxg1d7ppd3phnnll-wpengine.netdna-ssl.com/wp-content/uploads/2017/10/pexels-mentatdgt-1399282-1024x683.jpg" />
+          <IonCardHeader>
+            <IonCardTitle>Meus itinerários como passageiro</IonCardTitle>
+          </IonCardHeader>
 
-              {notTodaysTrips && notTodaysTrips.length !== 0 ? (
-                notTodaysTrips.map((tripInfo, index) => {
-                  return (
-                    <TripCard
-                      key={index}
-                      slot="content"
-                      itinerary={tripInfo.itinerary}
-                      clickable={false}
-                    ></TripCard>
-                  );
-                })
-              ) : (
-                <div className="ion-padding" slot="content">
-                  Sem próximas viagens!
-                </div>
-              )}
-            </IonAccordion>
-          </IonAccordionGroup>
-        </IonList>
+          <IonCardContent>Clique para ver</IonCardContent>
+        </IonCard>
 
         <IonToast
           position="top"
