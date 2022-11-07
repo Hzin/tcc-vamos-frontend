@@ -25,7 +25,7 @@ import { useHistory } from "react-router";
 
 import { PhotoViewer } from "@awesome-cordova-plugins/photo-viewer";
 
-import { closeToast } from "../services/utils";
+import { closeToast, convertFilePathToStaticUrl } from "../services/utils";
 
 import * as vehiclesService from "../services/functions/vehiclesService";
 import { PageHeader } from "../components/PageHeader";
@@ -35,6 +35,7 @@ import { vehicleDocumentStatus } from "../constants/vehicleDocumentStatus";
 import { cameraOutline } from "ionicons/icons";
 import { VehiclePicture } from "../components/VehiclePicture";
 import { CardInfoBasicIntoAlertInfo } from "../components/CardInfoBasicIntoAlertInfo";
+import { ShowImageFileAsModal } from "../components/ShowPageAsModal/ShowImageFileAsModal";
 
 interface ScanNewProps {
   match: {
@@ -286,7 +287,7 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
           return;
         }
 
-        setDocumentFileUrl(response);
+        setDocumentFileUrl(response.path);
         setDocumentStatus(response.status);
       });
   };
@@ -611,7 +612,7 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
                 <>
                   <IonItem>
                     <IonLabel>Visualizar documento</IonLabel>
-                    <IonButton onClick={handleOpenDocument}>Abrir</IonButton>
+                    <IonButton id='modal-document'>Abrir</IonButton>
                   </IonItem>
                   <IonItem>
                     <IonLabel>Deletar documento</IonLabel>
@@ -695,6 +696,12 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
               message={toastMessage}
               duration={2500}
             />
+          </>
+        )}
+
+        {documentFileUrl && (
+          <>
+            <ShowImageFileAsModal trigger='modal-document' url={convertFilePathToStaticUrl(documentFileUrl)} title={`Documento - ${selectedDocumentType.toUpperCase()}`} />
           </>
         )}
       </IonContent>

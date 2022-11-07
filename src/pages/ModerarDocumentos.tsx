@@ -1,4 +1,4 @@
-import { IonContent, IonList, IonPage } from "@ionic/react";
+import { IonButton, IonContent, IonList, IonPage } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 
 import { Color } from "@ionic/core";
@@ -11,6 +11,7 @@ import { VehicleDocumentCard } from "../components/VehicleDocumentCard";
 import { useHistory, useLocation } from "react-router";
 
 import * as usersService from "../services/functions/usersService";
+import { ShowImageFileAsModal } from "../components/ShowPageAsModal/ShowImageFileAsModal";
 
 interface LocationState {
   redirectData?: {
@@ -73,17 +74,19 @@ const ModerarDocumentos: React.FC = () => {
       <IonContent>
         <IonList>
           {documentsInfo && documentsInfo.length !== 0 ? (
-            documentsInfo.map((info, index) => {
+            documentsInfo.map((documentInfo, index) => {
               return (
                 <VehicleDocumentCard
+                  document_status={documentInfo.document_status}
+                  document_type={documentInfo.document_type.toUpperCase()}
+                  document_url={documentInfo.document_url}
+                  vehicle_brand={documentInfo.vehicle_brand}
+                  vehicle_model={documentInfo.vehicle_model}
+                  vehicle_plate={documentInfo.vehicle_plate}
+                  vehicle_picture={documentInfo.vehicle_picture}
+
                   key={index}
-                  document_status={info.document_status}
-                  document_type={info.document_type.toUpperCase()}
-                  document_url={info.document_url}
-                  vehicle_brand={info.vehicle_brand}
-                  vehicle_model={info.vehicle_model}
-                  vehicle_plate={info.vehicle_plate}
-                  vehicle_picture={info.vehicle_picture}
+                  keyId={index}
                 />
               )
             })
