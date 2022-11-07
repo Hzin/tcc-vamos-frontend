@@ -14,7 +14,7 @@ import {
   useIonAlert,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 import { Color } from "@ionic/core"
 
@@ -77,13 +77,26 @@ const ContractPlaceDetailSumaryItem = (props: ContractDetailSumaryItemProps) => 
 };
 
 export interface ContratoResumoProps {
-  id_itinerary?: string;
+  // formas de se conseguir o ID do itinerário
+  match?: {
+    params: {
+      id: string;
+    };
+  };
+
+  id_itinerary?: string
+
+  // serve para recuperar todas as outras informações
+  // dispensa todas as outras opções
   id_passenger_request?: string
 
-  searchData?: SearchData,
-
-  passenger?: User;
+  // sempre precisa para finalizar contrato
   itinerary?: Itinerary;
+  passenger?: User;
+
+  // necessário para mostrar informações se "id_passenger_request" não for passado
+  searchData?: SearchData;
+  contractData?: ContractData;
 
   noHeaderBackButton?: boolean
   showContractButton?: boolean,
@@ -92,6 +105,14 @@ export interface ContratoResumoProps {
 
 const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
   const history = useHistory();
+  const location = useLocation();
+
+  const locationProps = location.state as ContratoResumoProps;
+
+  // console.log('props: ')
+  // console.log(props)
+  // console.log('locationProps: ')
+  // console.log(locationProps)
 
   const [presentAlertConfirmation] = useIonAlert();
 
@@ -114,45 +135,105 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
   }, [])
 
   const loadData = async () => {
-    let itineraryId = ''
+    // por id_passenger_request
+    let idPassengerRequest = ''
+    if (props.id_passenger_request) idPassengerRequest = props.id_passenger_request
+    if (locationProps.id_passenger_request) idPassengerRequest = locationProps.id_passenger_request
+    if (idPassengerRequest) {
+      const didWork = await loadDataByPassengerRequest(+idPassengerRequest)
 
-    if (props.id_itinerary) {
-      const itinerary = await itinerariesService.getById(itineraryId)
-      if (itinerary) setItinerary(itinerary)
+      if (didWork) return true
     }
 
-    if (props.id_passenger_request) {
-      const response = await passengersRequestsService.getPassengerRequestInfoForContractSummary(+props.id_passenger_request)
-      if (response) {
-        setSearchData({
-          period: response.searchData.period,
-          lat_origin: response.searchData.lat_origin,
-          lng_origin: response.searchData.lng_origin,
-          formatted_address_origin: response.searchData.formatted_address_origin,
-          lat_destination: response.searchData.lat_destination,
-          lng_destination: response.searchData.lng_destination,
-          formatted_address_destination: response.searchData.formatted_address_destination,
-        })
+    let idItinerary = ''
+    let searchData = {} as SearchData
+    let contractData = {} as ContractData
+    if (props.match && props.match.params.id) {
+      idItinerary = props.match.params.id
+    }
+    if (locationProps.id_itinerary) {
+      idItinerary = locationProps.id_itinerary
+    }
+    if (props.searchData && props.contractData) {
+      searchData = props.searchData
+      contractData = props.contractData
+    }
+    if (locationProps.searchData && locationProps.contractData) {
+      searchData = locationProps.searchData
+      contractData = locationProps.contractData
+    }
 
-        setContractData({
-          type: response.contractData.type,
-        })
+    let didWorkFlag = false
+    if (searchData && contractData) {
+      const didWork = await loadDataByOther(idItinerary, searchData, contractData)
 
-        setPassenger(response.passenger)
-        setDriver(response.itinerary.user)
+      if (!didWork) didWorkFlag = false
+    }
 
-        setItinerary(response.itinerary)
+    if (props.passenger) {
+      console.log('1')
+      setPassenger(props.passenger)
+      return true
+    } else {
+      const { userId } = await sessionsService.refreshSession()
+
+      if (!userId) {
+        didWorkFlag = false
+      } else {
+        const passenger = await usersService.getById(userId)
+
+        if (!passenger) {
+          didWorkFlag = false
+        } else {
+          // console.log(typeof passenger)
+          setPassenger(passenger)
+        }
       }
     }
 
-    // if (props.passenger) setPassengerName(getUserFullName(props.passenger))
-    // else {
-    //   const refreshSessionInfo = await sessionsService.refreshSession()
-    //   if (!refreshSessionInfo.userId) return
-    //   const user = await usersService.getById(refreshSessionInfo.userId)
-    //   setPassengerName(`${getUserFullName(user)} (você)`)
-    // }
-  };
+    if (!didWorkFlag) {
+      // console.log('Algo está faltando.')
+      return false
+    }
+  }
+
+  const loadDataByPassengerRequest = async (id: number): Promise<boolean> => {
+    const response = await passengersRequestsService.getPassengerRequestInfoForContractSummary(id)
+    if (!response) return false
+
+    setSearchData({
+      period: response.searchData.period,
+      lat_origin: response.searchData.lat_origin,
+      lng_origin: response.searchData.lng_origin,
+      formatted_address_origin: response.searchData.formatted_address_origin,
+      lat_destination: response.searchData.lat_destination,
+      lng_destination: response.searchData.lng_destination,
+      formatted_address_destination: response.searchData.formatted_address_destination,
+    })
+
+    setContractData({
+      type: response.contractData.type,
+    })
+
+    setPassenger(response.passenger)
+    setDriver(response.itinerary.user)
+    setItinerary(response.itinerary)
+
+    return true
+  }
+
+  const loadDataByOther = async (id_itinerary: string, searchData: SearchData, contractData: ContractData): Promise<boolean> => {
+    const itinerary = await itinerariesService.getById(id_itinerary)
+    if (!itinerary) return false
+
+    setItinerary(itinerary)
+    setDriver(itinerary.user)
+
+    setSearchData(searchData)
+    setContractData(contractData)
+
+    return true
+  }
 
   const showConfirmRequestContractAlert = async () => {
     const message = "Confirmar envio do contrato?";

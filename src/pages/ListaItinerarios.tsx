@@ -55,6 +55,7 @@ const ListaItinerarios: React.FC = () => {
 
   const [itinerariesList, setItinerariesList] = useState<Itinerary[]>([]);
   const [showModalFilters, setShowModalFilters] = useState(false);
+
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState("");
   const [toastColor, setToastColor] = useState("success");
@@ -195,7 +196,26 @@ const ListaItinerarios: React.FC = () => {
 
         {itinerariesList && itinerariesList.length !== 0 ? (
           itinerariesList.map((itinerary, index) => {
-            return (<CardItinerary key={index} itinerary={itinerary} searchData={props.searchData} />)
+            return (
+              <CardItinerary
+                key={index}
+                itinerary={itinerary}
+                searchData={props.searchData}
+                visualizeButton={
+                  {
+                    onClick: () => {
+                      history.push({
+                        pathname: `/itinerario/id/${itinerary.id_itinerary}`,
+                        state: {
+                          searchData: props.searchData,
+                          contractData: props.contractData
+                        }
+                      })
+                    }
+                  }
+                }
+              />
+            )
           })
         ) : (
           <>

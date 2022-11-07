@@ -32,6 +32,7 @@ import { SearchData, ContractData } from "../constants/InterfaceContractInfo";
 
 interface LocationState {
   searchData: SearchData
+  contractData: ContractData
 }
 
 interface ScanNewProps {
@@ -44,10 +45,14 @@ interface ScanNewProps {
 
 const ItinerarioContratos: React.FC<ScanNewProps> = (props) => {
   const history = useHistory();
+
   const location = useLocation<LocationState>();
 
   const [itinerary, setItinerary] = useState<Itinerary>()
   const [selectedContract, setSelectedContract] = useState<itineraryContractTypes>()
+
+  // console.log(props)
+  // console.log(location)
 
   useEffect(() => {
     loadItineraryData()

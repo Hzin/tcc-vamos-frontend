@@ -12,13 +12,13 @@ import {
   IonItem,
   IonLabel,
   IonList,
+  IonListHeader,
   IonPage,
   IonToolbar,
 } from "@ionic/react";
 
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
-
 
 import * as itinerariesService from "../services/functions/itinerariesService";
 import { convertDaysOfWeekToObject, convertNumberToPrice, DaysOfWeekObject, formatTimeField } from "../services/utils";
@@ -34,6 +34,7 @@ import { ItemItineraryDetailVer } from "../components/ItemItineraryDetailVer";
 import { SearchData, ContractData } from "../constants/InterfaceContractInfo";
 import { ShowItinerarioPassageirosPageAsModal } from "../components/ShowPageAsModal/ShowItinerarioPassageirosPageAsModal";
 import { ShowItinerarioViagensPageAsModal } from "../components/ShowPageAsModal/ShowItinerarioViagensPageAsModal";
+import { ShowPerfilPageAsModal } from "../components/ShowPageAsModal/ShowPerfilPageAsModal";
 
 interface LocationState {
   searchData?: SearchData
@@ -90,17 +91,21 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
             <CardItinerary itinerary={itinerary} onlyHeader />
 
             {(location.state && location.state.searchData) && (
-              <ItemItineraryDetailVer
-                label="Informações de pesquisa atuais"
-                infoString={
-                  [
-                    `Origem: ${location.state.searchData.formatted_address_origin}`,
-                    `Destino: ${location.state.searchData.formatted_address_destination}`,
-                  ]
-                }
-              />
+              <>
+                <IonListHeader>Sobre sua pesquisa de itinerário</IonListHeader>
+                <ItemItineraryDetailVer
+                  label="Informações de pesquisa atuais"
+                  infoString={
+                    [
+                      `Origem: ${location.state.searchData.formatted_address_origin}`,
+                      `Destino: ${location.state.searchData.formatted_address_destination}`,
+                    ]
+                  }
+                />
+              </>
             )}
 
+            <IonListHeader>Informações básicas</IonListHeader>
             <IonList>
               <IonItem onClick={() => { setShowPageModal(true) }}>
                 <IonLabel>Motorista</IonLabel>
@@ -200,7 +205,7 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
 
         {itinerary && (
           <>
-            {/* <ShowPageAsModal page={Perfil} paramId={itinerary.user.id_user} trigger='modal-driver' /> */}
+            <ShowPerfilPageAsModal id_user={itinerary.user.id_user} trigger='modal-driver' />
             <ShowItinerarioPassageirosPageAsModal id_itinerary={"" + itinerary.id_itinerary} trigger='modal-passageiros' hasButtonAlready />
             <ShowItinerarioViagensPageAsModal id_itinerary={"" + itinerary.id_itinerary} trigger='modal-viagens' hasButtonAlready />
           </>
