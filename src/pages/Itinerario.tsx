@@ -1,18 +1,9 @@
 import {
-<<<<<<< HEAD
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonContent,
-=======
   IonButton,
   IonButtons,
   IonContent,
   IonItem,
   IonList,
->>>>>>> 474ad61afc9f1f5fc1d482768a038b0d2bdbb37f
   IonPage,
   IonToast,
 } from "@ionic/react";
@@ -20,13 +11,7 @@ import { Color } from "@ionic/core";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
-<<<<<<< HEAD
-import * as vehiclesRoutes from "../services/api/vehicles";
-
-import sessionsService from "../services/functions/sessionsService";
-=======
 import * as itinerariesService from "../services/functions/itinerariesService";
->>>>>>> 474ad61afc9f1f5fc1d482768a038b0d2bdbb37f
 import { closeToast } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
 

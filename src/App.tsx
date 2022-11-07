@@ -99,15 +99,11 @@ const routes = (
 
     <Route exact path="/veiculos/cadastrar" component={VeiculoCadastro}></Route>
     <Route exact path="/veiculos/meus" component={MeusVeiculos}></Route>
-    <Route
-      exact
-      path="/cadastrar-itinerario"
-      component={CadastrarItinerario}
-    ></Route>
     <Route exact path="/veiculo" component={Home}></Route>
     <Route exact path="/veiculo/placa" component={Home}></Route>
     <Route exact path="/veiculo/placa/:id" component={Veiculo}></Route>
 
+    <Route exact path="/cadastrar-itinerario" component={CadastrarItinerario}></Route>
     <Route exact path="/itinerario/:id" component={Itinerario}></Route>
     <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
     <Route exact path="/editar-itinerario" component={EditarItinerario}></Route>

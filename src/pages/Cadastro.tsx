@@ -12,19 +12,15 @@ import {
   IonRow,
   IonToast,
 } from "@ionic/react";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { Action } from "../components/Action";
 import { PageHeader } from "../components/PageHeader";
-import { useAuth } from "../contexts/auth";
-import LocalStorage from "../LocalStorage";
 import * as UsersService from "../services/api/users";
 import { closeToast } from "../services/utils";
 
 const Cadastro: React.FC = () => {
   const history = useHistory();
-
-  const { signIn } = useAuth();
 
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState("");
@@ -130,8 +126,6 @@ const Cadastro: React.FC = () => {
       return;
     }
 
-    // signIn(email, password);
-
     history.push({
       pathname: "/login",
       state: {
@@ -225,8 +219,8 @@ const Cadastro: React.FC = () => {
           </IonRow>
           <small className="ion-margin-top">
             Ao se cadastrar, você aceita nossos{" "}
-            <a href="">Termos e Condições</a> e nossa{" "}
-            <a href=""> Política de Privacidade</a>.
+            <a href="#">Termos e Condições</a> e nossa{" "}
+            <a href="#"> Política de Privacidade</a>.
           </small>
           <Action message="Já tem conta?" text="Login" link="/login" />
         </IonGrid>

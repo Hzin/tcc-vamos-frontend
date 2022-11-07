@@ -34,7 +34,6 @@ import LocalStorage from "../LocalStorage";
 
 import { Color } from "@ionic/core";
 import { PageHeader } from "../components/PageHeader";
-import sessionsService from "../services/functions/sessionsService";
 import * as usersService from "../services/functions/usersService";
 import { closeToast } from "../services/utils";
 import { useAuth } from "../contexts/auth";
@@ -110,63 +109,22 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
     }
 
     const loadUserData = async () => {
-      let userId = "";
+      if (user) {
+        // check if user is driver (if they have vans)
+        const userIsDriverRes = await usersService.checkIfUserIsDriver(user.id_user);
 
-      // verify if user is authenticated
-      if (props.match.params.id) {
-        userId = props.match.params.id;
-      } else {
-        const refreshSessionRes = await sessionsService.refreshSession();
-
-        if (refreshSessionRes.error) {
-          redirectUserToLogin();
-          return;
+        if (!userIsDriverRes.error && userIsDriverRes.result !== undefined) {
+          setIsDriver(userIsDriverRes.result);
         }
 
-        if (refreshSessionRes.userId) {
-          userId = refreshSessionRes.userId;
-        }
-      }
+        const userIsAdminRes = await usersService.checkIfUserIsAdmin();
+        setIsAdmin(userIsAdminRes);
 
-      // get user info by ID
-      const getByIdRes = await usersService.getById(userId);
-
-      if (getByIdRes.error) {
-        if (isVisitor && props.match.params.id) {
-          setToastMessage("Usuário não existe!");
-          setShowToast(true);
-          history.push({ pathname: "/home" });
-        } else {
-          setToastMessage(getByIdRes.error.errorMessage);
-          setShowToast(true);
-        }
-
-        return;
-      }
-
-      // check if user is driver (if they have vans)
-      const userIsDriverRes = await usersService.checkIfUserIsDriver(userId);
-
-      // if (userIsDriverRes.error) {
-      //   setToastColor('warning')
-      //   setToastMessage(userIsDriverRes.error.errorMessage)
-      //   setShowToast(true)
-      //   return
-      // }
-
-      if (!userIsDriverRes.error && userIsDriverRes.result !== undefined) {
-        setIsDriver(userIsDriverRes.result);
-      }
-
-      const userIsAdminRes = await usersService.checkIfUserIsAdmin();
-      setIsAdmin(userIsAdminRes);
-
-      if (getByIdRes.userData) {
-        const userData = getByIdRes.userData;
+        const userData = user;
 
         if (isMounted) {
           setInputValues({
-            id: userId,
+            id: userData.id_user,
             name: userData.name,
             lastname: userData.lastname,
             email: userData.email,
@@ -193,6 +151,8 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             setIncompleteProfileCounter(counter);
           }
         }
+      } else {
+        redirectUserToLogin();
       }
     };
 
