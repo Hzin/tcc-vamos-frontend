@@ -109,6 +109,8 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
 
   const locationProps = location.state as ContratoResumoProps;
 
+  // console.log('location: ')
+  // console.log(location)
   // console.log('props: ')
   // console.log(props)
   // console.log('locationProps: ')
@@ -134,76 +136,66 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
   useEffect(() => {
     loadData()
 
+    if (props) {
+      if (props.showContractButton) setShowContractButton(true)
+      if (props.showContractModerateButton) setShowContractModerateButton(true)
+    }
+
+    if (locationProps) {
+      if (locationProps.showContractButton) setShowContractButton(true)
+      if (locationProps.showContractModerateButton) setShowContractModerateButton(true)
+    }
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const loadData = async () => {
-    console.log('props')
-    console.log(props)
-
-    console.log('locationProps')
-    console.log(locationProps)
-
-    // por id_passenger_request
     let idPassengerRequest = ''
-    if (props && props.id_passenger_request) idPassengerRequest = props.id_passenger_request
-    if (locationProps && locationProps.id_passenger_request) idPassengerRequest = locationProps.id_passenger_request
-    if (idPassengerRequest) {
-      const didWork = await loadDataByPassengerRequest(+idPassengerRequest)
-
-      if (didWork) return true
-    }
-
     let idItinerary = ''
     let searchData = {} as SearchData
     let contractData = {} as ContractData
-    if (props && props.match && props.match.params.id) {
-      idItinerary = props.match.params.id
-    }
-    if (locationProps && locationProps.id_itinerary) {
-      idItinerary = locationProps.id_itinerary
-    }
-    if (props && props.searchData && props.contractData) {
-      searchData = props.searchData
-      contractData = props.contractData
-    }
-    if (locationProps && locationProps.searchData && locationProps.contractData) {
-      searchData = locationProps.searchData
-      contractData = locationProps.contractData
+
+    if (props) {
+      if (props.id_passenger_request) idPassengerRequest = props.id_passenger_request
+
+      if (props.match && props.match.params.id) {
+        idItinerary = props.match.params.id
+      }
+
+      if (props.searchData && props.contractData) {
+        searchData = props.searchData
+        contractData = props.contractData
+      }
+    } else if (locationProps) {
+      if (locationProps.id_passenger_request) idPassengerRequest = locationProps.id_passenger_request
+
+      if (locationProps.id_itinerary) idItinerary = locationProps.id_itinerary
+
+      if (locationProps.searchData && locationProps.contractData) {
+        searchData = locationProps.searchData
+        contractData = locationProps.contractData
+      }
     }
 
-    let didWorkFlag = false
+    // por id_passenger_request
+    if (idPassengerRequest) {
+      await loadDataByPassengerRequest(+idPassengerRequest)
+
+      return
+    }
+
     if (searchData && contractData) {
-      const didWork = await loadDataByOther(idItinerary, searchData, contractData)
-
-      if (!didWork) didWorkFlag = false
+      await loadDataByOther(idItinerary, searchData, contractData)
     }
 
     if (props && props.passenger) {
       setPassenger(props.passenger)
-      return true
     } else {
       const { userId } = await sessionsService.refreshSession()
+      if (!userId) return
 
-      if (!userId) {
-        didWorkFlag = false
-      } else {
-        const passenger = await usersService.getById(userId)
-
-        if (!passenger) {
-          didWorkFlag = false
-        } else {
-          setPassenger(passenger)
-        }
-      }
-    }
-
-    setShowContractButton(!!props.showContractButton || !!locationProps.showContractButton)
-    setShowContractModerateButton(!!props.showContractModerateButton || !!locationProps.showContractModerateButton)
-
-    if (!didWorkFlag) {
-      // console.log('Algo está faltando.')
-      return false
+      const passenger = await usersService.getById(userId)
+      setPassenger(passenger)
     }
   }
 
@@ -235,6 +227,8 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
   const loadDataByOther = async (id_itinerary: string, searchData: SearchData, contractData: ContractData): Promise<boolean> => {
     const itinerary = await itinerariesService.getById(id_itinerary)
     if (!itinerary) return false
+
+    console.log(itinerary)
 
     setItinerary(itinerary)
     setDriver(itinerary.user)
