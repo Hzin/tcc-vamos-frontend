@@ -19,7 +19,7 @@ import {
   IonButton,
 } from "@ionic/react";
 
-import { bookmarkOutline, callOutline, documentOutline, idCardOutline, timeOutline, timeSharp, trashBinOutline } from "ionicons/icons";
+import { bookmarkOutline, callOutline, documentOutline, documentTextOutline, idCardOutline, timeOutline, timeSharp, trashBinOutline } from "ionicons/icons";
 
 import * as tripsService from "../services/functions/tripsService";
 import * as sessionsService from "../services/functions/sessionsService";
@@ -54,6 +54,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
   const [trip, setTrip] = useState<Trip>();
 
   const [paramIdPassengerRequest, setParamIdPassengerRequest] = useState('');
+  const [isPassenger, setIsPassenger] = useState(false);
 
   const [driverPhoneNumber, setDriverPhoneNumber] = useState('');
 
@@ -85,6 +86,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
     if (!passengerRequest) return
 
     setParamIdPassengerRequest("" + passengerRequest.id_passenger_request)
+    setIsPassenger(true)
   }
 
   const showContract = () => {
@@ -137,7 +139,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
                 </>
               )}
 
-              {paramIdPassengerRequest && (
+              {isPassenger && (
                 <>
                   <IonItem button onClick={showContract}>
                     <IonIcon icon={documentOutline} slot="start" />
@@ -147,32 +149,45 @@ const Viagem: React.FC<ViagemProps> = (props) => {
               )}
 
               <IonListHeader className="mt-4">Outras opções</IonListHeader>
-              {trip.itinerary && (
+
+              <IonRow>
+                <IonCol>
+                  <IonButton expand="block" color='success' fill="outline">
+                    <IonIcon icon={documentTextOutline} />
+                    <IonLabel>Lista de presença (WIP)</IonLabel>
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+
+              {isPassenger && (
                 <>
+                  {trip.itinerary && (
+                    <IonRow>
+                      <IonCol
+                        onClick={() => {
+                          if (!driverPhoneNumber) {
+                            handleShowAlert('O motorista dessa viagem não está com o telefone celular configurado.', 'Aviso')
+                          }
+                        }}>
+                        <IonButton expand="block" color='success' fill="outline" disabled={!driverPhoneNumber} href={`tel:${driverPhoneNumber}`}>
+                          <IonIcon icon={callOutline} />
+                          <IonLabel>Ligar para o motorista</IonLabel>
+                        </IonButton>
+                      </IonCol>
+                    </IonRow>
+                  )}
+
                   <IonRow>
-                    <IonCol
-                      onClick={() => {
-                        if (!driverPhoneNumber) {
-                          handleShowAlert('O motorista dessa viagem não está com o telefone celular configurado.', 'Aviso')
-                        }
-                      }}>
-                      <IonButton expand="block" color='success' fill="outline" disabled={!driverPhoneNumber} href={`tel:${driverPhoneNumber}`}>
-                        <IonIcon icon={callOutline} />
-                        <IonLabel>Ligar para o motorista</IonLabel>
+                    <IonCol>
+                      <IonButton expand="block" onClick={() => { }} fill="outline" color="Blue" >
+                        <IonIcon icon={trashBinOutline} />
+                        <IonLabel>Faltar na proxima viagem</IonLabel>
                       </IonButton>
                     </IonCol>
                   </IonRow>
                 </>
               )}
 
-              <IonRow>
-                <IonCol>
-                  <IonButton expand="block" onClick={() => { }} fill="outline" color="Blue" >
-                    <IonIcon icon={trashBinOutline} />
-                    <IonLabel>Faltar na proxima viagem</IonLabel>
-                  </IonButton>
-                </IonCol>
-              </IonRow>
             </IonGrid>
           </>
         )}
