@@ -35,11 +35,15 @@ import LocalStorage from "../LocalStorage";
 import { Color } from "@ionic/core";
 import { UserContext } from "../App";
 import { PageHeader } from "../components/PageHeader";
-import sessionsService from "../services/functions/sessionsService";
-import * as usersService from "../services/functions/usersService";
-import * as itinerariesService from "../services/functions/itinerariesService";
-import { closeToast } from "../services/utils";
+
 import { User } from "../models/user.model";
+
+import { closeToast } from "../services/utils";
+
+import * as sessionsService from "../services/functions/sessionsService";
+import * as usersService from "../services/functions/usersService";
+import * as vehiclesService from "../services/functions/vehiclesService";
+import * as itinerariesService from "../services/functions/itinerariesService";
 
 interface LocationState {
   redirectData?: {
@@ -77,6 +81,7 @@ const Perfil: React.FC<PerfilProps> = (props) => {
   const [incompleteProfileCounter, setIncompleteProfileCounter] = useState(0);
 
   const [countItinerariesPendingPassengerRequests, setCountItinerariesPendingPassengerRequests] = useState(0);
+  const [countVehiclesPendingDocuments, setCountVehiclesPendingDocuments] = useState(0);
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -164,7 +169,14 @@ const Perfil: React.FC<PerfilProps> = (props) => {
       }
 
       const userIsAdminRes = await usersService.checkIfUserIsAdmin();
-      setIsAdmin(userIsAdminRes);
+      console.log('userIsAdminRes: ', userIsAdminRes)
+
+      if (userIsAdminRes) {
+        setIsAdmin(userIsAdminRes);
+
+        const countVehiclesPendingDocuments = await vehiclesService.countVehiclesPendingDocuments()
+        setCountVehiclesPendingDocuments(countVehiclesPendingDocuments)
+      }
 
       if (userData && isMounted) {
         setInputValues({
@@ -439,6 +451,13 @@ const Perfil: React.FC<PerfilProps> = (props) => {
                 >
                   <IonIcon icon={hammerOutline} slot="start" />
                   <IonLabel>Moderar documentos de vans</IonLabel>
+                  {countVehiclesPendingDocuments !== 0 && (
+                    <>
+                      <IonBadge color="primary">
+                        {countVehiclesPendingDocuments}
+                      </IonBadge>
+                    </>
+                  )}
                 </IonItem>
               </>
             )

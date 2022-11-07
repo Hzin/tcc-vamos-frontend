@@ -176,3 +176,15 @@ export async function getPendingDocuments(): Promise<GetPendingDocumentsResponse
 
   return res.data;
 }
+
+export async function countVehiclesPendingDocuments(): Promise<number> {
+  let res: any;
+
+  try {
+    res = await vehiclesRoutes.countVehiclesPendingDocuments();
+  } catch (error) {
+    // TODO
+  }
+
+  return res.data;
+}

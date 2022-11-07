@@ -16,7 +16,7 @@ const usersRoutes = {
     url: `${usersRoutesDefault}/social`
   },
   checkIfUserIsAdmin: {
-    url: `${usersRoutesDefault}/is_admin`
+    url: `${usersRoutesDefault}/admin/check`
   },
 }
 
