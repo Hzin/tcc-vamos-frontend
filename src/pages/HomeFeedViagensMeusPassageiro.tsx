@@ -30,7 +30,7 @@ interface LocationState {
   };
 }
 
-const HomeFeedViagensMeusMotorista: React.FC = () => {
+const HomeFeedViagensMeusPassageiro: React.FC = () => {
   const location = useLocation<LocationState>();
   const history = useHistory();
 
@@ -47,7 +47,7 @@ const HomeFeedViagensMeusMotorista: React.FC = () => {
   }, [location.state, user, history]);
 
   useEffect(() => {
-    getUserTodaysTripsAsDriver();
+    getTodaysTripsAsPassenger();
   }, []);
 
   const [todaysTrips, setTodaysTrips] =
@@ -55,19 +55,19 @@ const HomeFeedViagensMeusMotorista: React.FC = () => {
   const [notTodaysTrips, setNotTodaysTrips] =
     useState<tripsService.GetTripsFeedResponse[]>();
 
-  const getUserTodaysTripsAsDriver = async () => {
-    await tripsService.getTodaysTripsAsDriver().then((response) => {
+  const getTodaysTripsAsPassenger = async () => {
+    await tripsService.getTodaysTripsAsPassenger().then((response) => {
       setTodaysTrips(response);
     });
 
-    await tripsService.getNotTodaysTripsAsDriver().then((response) => {
+    await tripsService.getNotTodaysTripsAsPassenger().then((response) => {
       setNotTodaysTrips(response);
     });
   };
 
   return (
     <IonPage>
-      <PageHeader pageName="Viagens (como motorista)" showBackButton />
+      <PageHeader pageName="Viagens (como passageiro)" showBackButton />
 
       <IonContent>
         <IonList>
@@ -137,4 +137,4 @@ const HomeFeedViagensMeusMotorista: React.FC = () => {
   );
 };
 
-export default HomeFeedViagensMeusMotorista;
+export default HomeFeedViagensMeusPassageiro;

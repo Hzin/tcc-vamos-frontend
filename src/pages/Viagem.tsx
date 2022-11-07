@@ -3,6 +3,8 @@ import {
   IonContent,
   IonPage,
   IonIcon,
+  IonListHeader,
+  useIonAlert,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -17,7 +19,7 @@ import {
   IonButton,
 } from "@ionic/react";
 
-import { alarmOutline, bookmarkOutline, documentOutline, idCardOutline } from "ionicons/icons";
+import { bookmarkOutline, callOutline, documentOutline, idCardOutline, timeOutline, timeSharp, trashBinOutline } from "ionicons/icons";
 
 import * as tripsService from "../services/functions/tripsService";
 import * as sessionsService from "../services/functions/sessionsService";
@@ -26,8 +28,10 @@ import * as passengersRequestsService from "../services/functions/passengersRequ
 import { PageHeader } from "../components/PageHeader";
 import { CardItinerary } from "../components/CardItinerary";
 import { Trip } from "../models/trip.model";
-import ContratoResumo from "./ContratoResumo";
 import { ShowContratoResumoPageAsModal } from "../components/ShowPageAsModal/ShowContratoResumoPageAsModal";
+import EnumUtils from "../services/EnumUtils";
+import { ItemItineraryDetail } from "../components/ItemItineraryDetail";
+import { formatTimeField, getUserFullName } from "../services/utils";
 
 export interface ViagemProps {
   match?: {
@@ -42,12 +46,16 @@ export interface ViagemProps {
 }
 
 const Viagem: React.FC<ViagemProps> = (props) => {
+  const [presentAlert] = useIonAlert();
+
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState('');
 
   const [trip, setTrip] = useState<Trip>();
 
   const [paramIdPassengerRequest, setParamIdPassengerRequest] = useState('');
+
+  const [driverPhoneNumber, setDriverPhoneNumber] = useState('');
 
   const history = useHistory();
 
@@ -59,8 +67,12 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
   const getTripInfo = async (id_trip: string) => {
     const trip = await tripsService.getTrip(id_trip)
+    console.log(trip)
+
     setTrip(trip)
     getContractInfo(trip)
+
+    if (trip.itinerary) setDriverPhoneNumber(trip.itinerary.user.phone_number)
   }
 
   const getContractInfo = async (trip: Trip) => {
@@ -79,6 +91,15 @@ const Viagem: React.FC<ViagemProps> = (props) => {
     document.getElementById('modal-contrato')?.click()
   }
 
+  const handleShowAlert = (message: string, title?: string) => {
+    presentAlert({
+      header: title ? title : "Informação",
+      message: message,
+      buttons: ['Entendi'],
+    },
+    );
+  };
+
   return (
     <IonPage>
       <PageHeader pageName="Viagem" showBackButton={!props.noHeaderBackButton} />
@@ -89,28 +110,32 @@ const Viagem: React.FC<ViagemProps> = (props) => {
             {trip.itinerary && (<CardItinerary itinerary={trip.itinerary} onlyHeader />)}
 
             <IonGrid>
-              <IonRow>
-                <IonCol>
-                  <IonButton expand="block" onClick={() => { }} fill="outline" color="Blue" >
-                    Faltar na proxima viagem
-                  </IonButton>
-                </IonCol>
-              </IonRow>
+              <IonListHeader>Informações da viagem</IonListHeader>
 
-              <IonItem>
-                <IonIcon icon={idCardOutline} slot="start" />
-                <IonLabel>Motorista: Maria</IonLabel>
-              </IonItem>
-
-              <IonItem>
-                <IonIcon icon={alarmOutline} slot="start" />
-                <IonLabel>Horario: 09:45</IonLabel>
-              </IonItem>
+              {trip.itinerary && (
+                <>
+                  <IonItem>
+                    <IonIcon icon={idCardOutline} slot="start" />
+                    <IonLabel>Motorista</IonLabel>
+                    <IonLabel slot='end'>{getUserFullName(trip.itinerary.user)}</IonLabel>
+                  </IonItem>
+                </>
+              )}
 
               <IonItem>
                 <IonIcon icon={bookmarkOutline} slot="start" />
-                <IonLabel>Status: Ativo</IonLabel>
+                <IonLabel>Status</IonLabel>
+                <IonLabel slot='end' color={EnumUtils.getTripStatusEnumColor(trip.status)}>{EnumUtils.getTripStatusEnumFormatted(trip.status)}</IonLabel>
               </IonItem>
+
+              {trip.itinerary && (
+                <>
+                  <IonListHeader className="mt-2">Horários</IonListHeader>
+
+                  <ItemItineraryDetail label='Horário de estimado saída' leftIcon={timeOutline} icon={timeOutline} value={formatTimeField(trip.itinerary.estimated_departure_time)} />
+                  <ItemItineraryDetail label='Horário de estimado chegada' leftIcon={timeSharp} icon={timeSharp} value={formatTimeField(trip.itinerary.estimated_arrival_time)} />
+                </>
+              )}
 
               {paramIdPassengerRequest && (
                 <>
@@ -120,6 +145,34 @@ const Viagem: React.FC<ViagemProps> = (props) => {
                   </IonItem>
                 </>
               )}
+
+              <IonListHeader className="mt-4">Outras opções</IonListHeader>
+              {trip.itinerary && (
+                <>
+                  <IonRow>
+                    <IonCol
+                      onClick={() => {
+                        if (!driverPhoneNumber) {
+                          handleShowAlert('O motorista dessa viagem não está com o telefone celular configurado.', 'Aviso')
+                        }
+                      }}>
+                      <IonButton expand="block" color='success' fill="outline" disabled={!driverPhoneNumber} href={`tel:${driverPhoneNumber}`}>
+                        <IonIcon icon={callOutline} />
+                        <IonLabel>Ligar para o motorista</IonLabel>
+                      </IonButton>
+                    </IonCol>
+                  </IonRow>
+                </>
+              )}
+
+              <IonRow>
+                <IonCol>
+                  <IonButton expand="block" onClick={() => { }} fill="outline" color="Blue" >
+                    <IonIcon icon={trashBinOutline} />
+                    <IonLabel>Faltar na proxima viagem</IonLabel>
+                  </IonButton>
+                </IonCol>
+              </IonRow>
             </IonGrid>
           </>
         )}

@@ -2,6 +2,8 @@ import { itineraryContractTypes } from "../constants/itineraryContractTypes"
 import { schoolPeriods } from "../constants/schoolPeriods"
 import { tripStatus } from "../constants/tripStatus"
 
+import { Color } from "@ionic/core";
+
 class EnumUtils {
   public static getSchoolPeriodEnumFormatted = (schoolPeriod: schoolPeriods): string => {
     switch (schoolPeriod) {
@@ -37,6 +39,21 @@ class EnumUtils {
         return 'Em progresso'
       case tripStatus.finished:
         return 'Finalizada'
+    }
+  }
+
+  public static getTripStatusEnumColor = (tripStatusString: tripStatus): Color => {
+    switch (tripStatusString) {
+      case tripStatus.pending:
+        return 'secondary'
+      case tripStatus.confirmed:
+        return 'success'
+      case tripStatus.canceled:
+        return 'light'
+      case tripStatus.inProgress:
+        return 'primary'
+      case tripStatus.finished:
+        return 'success'
     }
   }
 }

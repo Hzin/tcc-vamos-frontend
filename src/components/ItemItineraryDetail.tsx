@@ -10,6 +10,7 @@ import { Color } from "@ionic/core";
 interface ComponentProps {
   label: string;
   icon?: string;
+  leftIcon?: string;
   value: string;
   secondValue?: string;
   color?: Color
@@ -18,7 +19,8 @@ interface ComponentProps {
 export const ItemItineraryDetail = (props: ComponentProps) => (
   <>
     <IonItem>
-      <IonLabel>{props.label}</IonLabel>
+      {props.leftIcon && (<IonIcon icon={props.leftIcon} />)}
+      <IonLabel className={props.leftIcon ? 'ml-5' : ''}>{props.label}</IonLabel>
 
       {props.secondValue && (
         <>
@@ -29,7 +31,7 @@ export const ItemItineraryDetail = (props: ComponentProps) => (
       )}
 
       <IonChip className="min-w-[80px]">
-        <IonIcon icon={props.icon} />
+        {props.icon && (<IonIcon icon={props.icon} />)}
         <IonLabel className="text-center w-full">{props.value}</IonLabel>
       </IonChip>
     </IonItem>
