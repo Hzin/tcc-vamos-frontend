@@ -166,7 +166,9 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
         searchData = props.searchData
         contractData = props.contractData
       }
-    } else if (locationProps) {
+    }
+    
+    if (locationProps) {
       if (locationProps.id_passenger_request) idPassengerRequest = locationProps.id_passenger_request
 
       if (locationProps.id_itinerary) idItinerary = locationProps.id_itinerary
