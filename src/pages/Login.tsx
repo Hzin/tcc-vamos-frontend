@@ -79,7 +79,7 @@ const Page: React.FC = () => {
           return;
         }
 
-        const { token } = response.token;
+        const token = response.token;
 
         LocalStorage.setToken(token);
 
