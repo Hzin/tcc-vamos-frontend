@@ -1,19 +1,30 @@
 const tripsRoutesDefault = '/trips';
 const tripsRoutes = {
-  getTodaysTrips: {
-    url: `${tripsRoutesDefault}/feed/today`
+  getTripsByItineraryId: {
+    url: `${tripsRoutesDefault}/itinerary/:id`
   },
-  getNotTodaysTrips: {
-    url: `${tripsRoutesDefault}/feed/nottoday`
+
+  getTodaysTripsAsDriver: {
+    url: `${tripsRoutesDefault}/feed/driver/today`
   },
+  getNotTodaysTripsAsDriver: {
+    url: `${tripsRoutesDefault}/feed/driver/nottoday`
+  },
+  getTodaysTripsAsPassenger: {
+    url: `${tripsRoutesDefault}/feed/passenger/today`
+  },
+  getNotTodaysTripsAsPassenger: {
+    url: `${tripsRoutesDefault}/feed/passenger/nottoday`
+  },
+
   getTrip: {
     url: `${tripsRoutesDefault}`
   },
-  getTripByItineraryId: {
-    url: `${tripsRoutesDefault}/itinerary`
+  getTodaysTripByItineraryId: {
+    url: `${tripsRoutesDefault}/today/itinerary/:id`
   },
   getTodaysTripStatusByItineraryId: {
-    url: `${tripsRoutesDefault}/today/status/itinerary`
+    url: `${tripsRoutesDefault}/today/status/itinerary/:id`
   },
   cancelTrip: {
     url: `${tripsRoutesDefault}/update/cancel`

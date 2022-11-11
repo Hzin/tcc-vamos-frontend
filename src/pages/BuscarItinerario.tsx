@@ -30,6 +30,8 @@ import { closeToast } from "../services/utils";
 
 import { Color } from "@ionic/core";
 import AutoCompleteInput from "../components/AutoCompleteInput";
+import { SearchData, ContractData } from "../constants/InterfaceContractInfo";
+import { schoolPeriods } from "../constants/schoolPeriods";
 
 interface Address {
   formatted_address: string;
@@ -90,12 +92,21 @@ const BuscarItinerario: React.FC = () => {
       },
     ]);
 
+    const searchData: SearchData = {
+      period,
+      lat_origin: addressFrom.lat,
+      lng_origin: addressFrom.lng,
+      formatted_address_origin: addressFrom.formatted_address,
+      lat_destination: addressTo.lat,
+      lng_destination: addressTo.lng,
+      formatted_address_destination: addressTo.formatted_address,
+    }
+
     history.push({
       pathname: "/buscar/itinerario/lista",
       state: {
-        coordinatesFrom: addressFrom,
-        coordinatesTo: addressTo,
-        period,
+        // itineraries,
+        searchData
       },
     });
   }
@@ -151,10 +162,10 @@ const BuscarItinerario: React.FC = () => {
                     setPeriod(e.detail.value);
                   }}
                 >
-                  <IonSelectOption value="diurnal">Diurno</IonSelectOption>
-                  <IonSelectOption value="evening">Vespertino</IonSelectOption>
-                  <IonSelectOption value="integral">Integral</IonSelectOption>
-                  <IonSelectOption value="night">Noturno</IonSelectOption>
+                  <IonSelectOption value={schoolPeriods.diurnal}>Diurno</IonSelectOption>
+                  <IonSelectOption value={schoolPeriods.evening}>Vespertino</IonSelectOption>
+                  <IonSelectOption value={schoolPeriods.integral}>Integral</IonSelectOption>
+                  <IonSelectOption value={schoolPeriods.night}>Noturno</IonSelectOption>
                 </IonSelect>
               </IonItem>
 

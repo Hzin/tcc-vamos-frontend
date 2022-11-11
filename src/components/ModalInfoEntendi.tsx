@@ -1,4 +1,4 @@
-import { IonModal, IonContent, IonLabel, IonIcon, IonButton, IonChip, IonFooter, IonToolbar, IonBackButton, IonButtons, IonHeader } from "@ionic/react";
+import { IonModal, IonContent, IonLabel, IonIcon, IonButton, IonChip, IonFooter, IonToolbar, IonButtons } from "@ionic/react";
 import { informationOutline } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
@@ -8,13 +8,15 @@ import { reloadPage } from "../services/utils";
 
 export interface RedirectData {
   url: string,
-  toastColor: Color,
-  toastMessage: string,
+  toastInfo?: {
+    color: Color,
+    message: string,
+  }
 }
 
 interface ComponentProps {
-  id: string;
   isOpen: boolean;
+  header?: string;
   messages: string[];
   redirectData?: RedirectData;
 }
@@ -42,8 +44,8 @@ export const ModalInfoEntendi = (props: ComponentProps) => {
       state: {
         redirectData: {
           showToastMessage: true,
-          toastColor: props.redirectData.toastColor,
-          toastMessage: props.redirectData.toastMessage,
+          toastColor: props.redirectData.toastInfo?.color,
+          toastMessage: props.redirectData.toastInfo?.message,
         },
       },
     });
@@ -68,10 +70,11 @@ export const ModalInfoEntendi = (props: ComponentProps) => {
 
       <IonContent className="ion-padding">
         <div className="h-[100px] leading-[100px] text-center">
+          { props.header && (<span className="text-l inline-block align-middle leading-normal">{" "}{props.header}</span>)}
           {messages ? (
             messages.map((message, index) => {
               return (
-                <span key={index} className="text-xl inline-block align-middle leading-normal">{" "}{message}</span>
+                <span key={index} className="text-l inline-block align-middle leading-normal">{" "}{message}</span>
               )
             })
           ) : <span className="text-xl inline-block align-middle leading-normal">Carregando...</span>}

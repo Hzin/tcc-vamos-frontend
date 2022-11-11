@@ -27,7 +27,6 @@ interface CoordinatesRequest {
 export async function getTransportes(request: CoordinatesRequest) {
   updateHeader();
 
-  console.log(request)
   const response = await instance.post(`${transportRoutes.getTransportes.url}`, request);
   return response.data as [];
 }

@@ -114,6 +114,12 @@ export async function getPendingDocuments(): Promise<any> {
   return response.data;
 }
 
+export async function countVehiclesPendingDocuments(): Promise<any> {
+  const response = await instance.get(vehiclesRoutes.countVehiclesPendingDocuments.url);
+  return response.data;
+}
+
+// TODO, fazer
 export async function canCreateItineraries(plate: string): Promise<any> {
   const response = await instance.get(`${vehiclesRoutes.canCreateItineraries.url}/${plate}`);
   return response.data;

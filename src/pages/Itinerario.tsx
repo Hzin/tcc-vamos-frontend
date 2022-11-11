@@ -1,19 +1,45 @@
+// TODO, tentar usar IonAccordion
+
 import {
+  IonAccordion,
+  IonAccordionGroup,
   IonButton,
   IonButtons,
+  IonChip,
   IonContent,
+  IonFooter,
+  IonIcon,
   IonItem,
+  IonLabel,
   IonList,
+  IonListHeader,
   IonPage,
-  IonToast,
+  IonToolbar,
 } from "@ionic/react";
-import { Color } from "@ionic/core";
+
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 
 import * as itinerariesService from "../services/functions/itinerariesService";
-import { closeToast } from "../services/utils";
+import { convertDaysOfWeekToObject, convertNumberToPrice, DaysOfWeekObject, formatTimeField } from "../services/utils";
 import { PageHeader } from "../components/PageHeader";
+import { Itinerary } from "../models/itinerary.model";
+import { cashOutline, cashSharp, eyeOutline, personOutline, timeOutline, timeSharp } from "ionicons/icons";
+import { CardInfoBasicIntoAlertInfo } from "../components/CardInfoBasicIntoAlertInfo";
+import { CardItinerary } from "../components/CardItinerary";
+import { ChipsItineraryDaysOfWeek } from "../components/ChipsItineraryDaysOfWeek";
+import { ItemItineraryDetail } from "../components/ItemItineraryDetail";
+import { ItemItineraryDetailVer } from "../components/ItemItineraryDetailVer";
+
+import { SearchData, ContractData } from "../constants/InterfaceContractInfo";
+import { ShowItinerarioPassageirosPageAsModal } from "../components/ShowPageAsModal/ShowItinerarioPassageirosPageAsModal";
+import { ShowItinerarioViagensPageAsModal } from "../components/ShowPageAsModal/ShowItinerarioViagensPageAsModal";
+import { ShowPerfilPageAsModal } from "../components/ShowPageAsModal/ShowPerfilPageAsModal";
+
+interface LocationState {
+  searchData?: SearchData
+  contractData?: ContractData
+}
 
 interface ScanNewProps {
   match: {
@@ -25,13 +51,16 @@ interface ScanNewProps {
 
 const Itinerario: React.FC<ScanNewProps> = (props) => {
   const history = useHistory();
+  const location = useLocation<LocationState>();
 
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastColor, setToastColor] = useState<Color>("primary");
+  const [showPageModal, setShowPageModal] = useState(false);
+
+  const [itinerary, setItinerary] = useState<Itinerary>()
+  const [itineraryDaysOfWeek, setItineraryDaysOfWeek] = useState<DaysOfWeekObject>()
 
   useEffect(() => {
     loadItineraryData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadItineraryData = async () => {
@@ -41,49 +70,189 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
     // if (!props.match.params.id) history.push({ pathname: "/login" });
 
     const itineraryId = props.match.params.id;
+    const itinerary = await itinerariesService.getById(itineraryId)
+    setItinerary(itinerary)
 
-    // get user info by ID
-    const res = await itinerariesService.getById(itineraryId);
+    if (!itinerary) return
 
-    console.log(res)
+    setItineraryDaysOfWeek(convertDaysOfWeekToObject(itinerary.days_of_week))
   };
 
   return (
     <IonPage>
       <PageHeader
         pageName="Itinerário"
-        backButtonPageUrl="/perfil"
+        showBackButton
       ></PageHeader>
 
       <IonContent>
-        <IonList>
-          <IonItem>
-            <IonButton onClick={() => { history.push({ pathname: "/itinerario/:id/contratos" }) }}>"/itinerario/:id/contratos"</IonButton>
-          </IonItem>
+        {itinerary && (
+          <>
+            <CardItinerary itinerary={itinerary} onlyHeader />
 
-          <IonItem>
-            <IonButton onClick={() => { history.push({ pathname: "/viagem/:id" }) }}>"/viagem/:id"</IonButton>
-          </IonItem>
+            {(location.state && location.state.searchData) && (
+              <>
+                <IonListHeader>Sobre sua pesquisa de itinerário</IonListHeader>
+                <ItemItineraryDetailVer
+                  label="Informações de pesquisa atuais"
+                  infoString={
+                    [
+                      `Origem: ${location.state.searchData.formatted_address_origin}`,
+                      `Destino: ${location.state.searchData.formatted_address_destination}`,
+                    ]
+                  }
+                />
+              </>
+            )}
 
-          <IonItem>
-            <IonButton onClick={() => { history.push({ pathname: "/contrato/:id" }) }}>"/contrato/:id"</IonButton>
-          </IonItem>
+            <IonListHeader>Informações básicas</IonListHeader>
+            <IonList>
+              <IonItem onClick={() => { setShowPageModal(true) }}>
+                <IonLabel>Motorista</IonLabel>
+                <IonChip color='secondary' id='modal-driver'>
+                  <IonIcon icon={eyeOutline} />
+                  <IonLabel>Ver perfil</IonLabel>
+                </IonChip>
+              </IonItem>
 
-          <IonItem>
-            <IonButton onClick={() => { history.push({ pathname: "/viagem/:id/presenca" }) }}>"/viagem/:id/presenca"</IonButton>
-          </IonItem>
-        </IonList>
+              <ItemItineraryDetail label="Preço mensal" icon={cashSharp} value={convertNumberToPrice(itinerary.monthly_price)} />
 
-        <IonToast
-          position="top"
-          color={toastColor}
-          isOpen={showToast}
-          onDidDismiss={() => closeToast(setShowToast)}
-          message={toastMessage}
-          duration={2500}
-        />
+              <ItemItineraryDetail label='Vaga avulsa' color={itinerary.accept_daily ? "success" : "danger"} icon={cashOutline} value={convertNumberToPrice(itinerary.daily_price)} secondValue={itinerary.accept_daily ? "Aceita" : "Não aceita"} />
+              <CardInfoBasicIntoAlertInfo alertMessage="Vagas avulsas são viagens que você usa em um dia específico ao invés de pagar um contrato mensal." message="O que são vagas avulsas?" size="small" />
+            </IonList>
+
+            <IonList>
+              {/* <IonButton expand="block" color='success'>
+                <IonLabel>Contratar</IonLabel>
+              </IonButton> */}
+
+              <IonAccordionGroup value="locais">
+                <IonAccordion>
+                  <IonItem slot="header" color="primary">
+                    <IonLabel>Locais</IonLabel>
+                  </IonItem>
+                  <div className="ion-padding" slot="content">
+                    {/* <IonListHeader className="mt-4">Locais</IonListHeader> */}
+                    <ItemItineraryDetailVer label="Locais atendidos" infoPlacesObject={itinerary.neighborhoods_served} />
+                    <ItemItineraryDetailVer label="Destinos" infoPlacesObject={itinerary.destinations} />
+                    <ItemItineraryDetailVer label="Endereço de saída estimado" infoString={itinerary.estimated_departure_address} />
+                  </div>
+                </IonAccordion>
+              </IonAccordionGroup>
+
+              <IonAccordionGroup value="detalhes-gerais" className="mt-1">
+                <IonAccordion>
+                  {/* <IonListHeader className="mt-4">Detalhes gerais</IonListHeader> */}
+                  <IonItem slot="header" color="primary">
+                    <IonLabel>Detalhes gerais</IonLabel>
+                  </IonItem>
+                  <div className="ion-padding" slot="content">
+                    {/* <IonItem onClick={() => { history.push({ pathname: `/usuario/${itinerary.user.id_user}` }) }}> */}
+                    <ItemItineraryDetail label="Lugares disponíveis" icon={personOutline} value={"" + itinerary.available_seats} />
+
+
+                    {itineraryDaysOfWeek && (
+                      <>
+                        <ChipsItineraryDaysOfWeek itineraryDaysOfWeek={itineraryDaysOfWeek} />
+                      </>
+                    )}
+
+                    {itinerary.specific_day && (<ItemItineraryDetail label="Dia específico" value={itinerary.specific_day.toString()} />)}
+                  </div>
+                </IonAccordion>
+              </IonAccordionGroup>
+
+              <IonAccordionGroup value="horarios" className="mt-1">
+                <IonAccordion>
+                  {/* <IonListHeader className="mt-4">Horários</IonListHeader> */}
+                  <IonItem slot="header" color="primary">
+                    <IonLabel>Horários</IonLabel>
+                  </IonItem>
+
+                  <div className="ion-padding" slot="content">
+                    <ItemItineraryDetail label='Horário de estimado saída' icon={timeOutline} value={formatTimeField(itinerary.estimated_departure_time)} />
+                    <ItemItineraryDetail label='Horário de estimado chegada' icon={timeSharp} value={formatTimeField(itinerary.estimated_arrival_time)} />
+                  </div>
+                </IonAccordion>
+              </IonAccordionGroup>
+            </IonList>
+          </>
+        )
+        }
+
+        <IonAccordionGroup value="debug" className="mt-1">
+          {/* <IonListHeader className="mt-4">Debug</IonListHeader> */}
+          <IonAccordion>
+            <IonItem slot="header" color="primary">
+              <IonLabel>Debug</IonLabel>
+            </IonItem>
+
+            <div className="ion-padding" slot="content">
+              <IonItem>
+                <IonButton onClick={() => { history.push({ pathname: "/viagem/:id" }) }}>"/viagem/:id"</IonButton>
+              </IonItem>
+
+              <IonItem>
+                <IonButton onClick={() => { history.push({ pathname: "/contrato/:id" }) }}>"/contrato/:id"</IonButton>
+              </IonItem>
+
+              <IonItem className="">
+                <IonButton onClick={() => { history.push({ pathname: "/viagem/:id/presenca" }) }}>"/viagem/:id/presenca"</IonButton>
+              </IonItem>
+            </div>
+          </IonAccordion>
+        </IonAccordionGroup>
+
+        {itinerary && (
+          <>
+            <ShowPerfilPageAsModal id_user={itinerary.user.id_user} trigger='modal-driver' />
+            <ShowItinerarioPassageirosPageAsModal id_itinerary={"" + itinerary.id_itinerary} trigger='modal-passageiros' hasButtonAlready />
+            <ShowItinerarioViagensPageAsModal id_itinerary={"" + itinerary.id_itinerary} trigger='modal-viagens' hasButtonAlready />
+          </>
+        )}
+
       </IonContent>
-    </IonPage>
+
+      <IonFooter>
+        <IonToolbar>
+          {(location.state && location.state.searchData) ? (
+            <>
+
+              {itinerary && (
+                <>
+                  <IonButtons className="flex justify-between">
+                    <div>
+                      <IonButton href={`tel:${itinerary.user.phone_number}`} fill='solid' color='success'>Ligar para motorista</IonButton>
+                    </div>
+                    <div>
+                      <IonButton
+                        onClick={() => {
+                          history.push({
+                            pathname: `/itinerario/id/${itinerary.id_itinerary}/contratos`,
+                            state: {
+                              searchData: location.state.searchData
+                            }
+                          })
+                        }}
+                        fill='solid'
+                        color='success'
+                      >Contratar</IonButton>
+                    </div>
+                  </IonButtons>
+                </>
+              )}
+
+            </>
+          ) : (
+            <>
+              <IonButton id='modal-passageiros' expand='full' fill='solid' color='tertiary'>Ver passageiros</IonButton>
+              <IonButton id='modal-viagens' expand='full' fill='solid' color='success'>Ver viagens</IonButton>
+              <IonButton onClick={history.goBack} expand='full' fill='solid' color='light'>Voltar</IonButton>
+            </>
+          )}
+        </IonToolbar>
+      </IonFooter>
+    </IonPage >
   );
 };
 

@@ -1,7 +1,7 @@
 import instance from "./api";
 
 import transportsRoutes from "../../constants/routes/itinerariesRoutes";
-import { SearchItinerariesRequest } from "../functions/itinerariesService";
+import { SearchItinerariesRequest, CreateContractRequestRequest, UpdateContractStatusRequest } from "../functions/itinerariesService";
 
 export interface Coordinates {
   lat: number;
@@ -40,7 +40,7 @@ export interface CreateRequest {
   is_single: boolean;
 }
 
-export async function getItineraries() {
+export async function getAllItineraries() {
   const response = await instance.get(transportsRoutes.get.url);
   return response.data;
 }
@@ -59,12 +59,48 @@ export async function search(body: SearchItinerariesRequest
   return response.data;
 }
 
-export async function createRequest(request: CreateRequest) {
-  const response = await instance.post(transportsRoutes.request.url, request);
+export async function getById(id_itinerary: string) {
+  const response = await instance.get(`${transportsRoutes.getById.url}/${id_itinerary}`);
   return response.data;
 }
 
-export async function getById(id: string) {
-  const response = await instance.get(`${transportsRoutes.getById.url}/${id}`);
+export async function getByDriverUserId(id_driver: string) {
+  const finalUrl = transportsRoutes.getByDriverUserId.url.replace(':id', id_driver)
+  const response = await instance.get(finalUrl);
+  return response.data;
+}
+
+export async function getByPassengerUserId(id_user: string) {
+  const finalUrl = transportsRoutes.getByPassengerUserId.url.replace(':id', id_user)
+  const response = await instance.get(finalUrl);
+  return response.data;
+}
+
+export async function createContractRequest({ id_itinerary, body }: CreateContractRequestRequest) {
+  const finalUrl = transportsRoutes.createContractRequest.url.replace(':id', "" + id_itinerary)
+  const response = await instance.post(finalUrl, body);
+
+  return response.data;
+}
+
+export async function updateContractStatus({ id_itinerary, id_user, status }: UpdateContractStatusRequest) {
+  const response = await instance.patch(transportsRoutes.updateContractStatus.url, { id_itinerary, id_user, status });
+  return response.data;
+}
+
+export async function getPendingContractRequests(id_itinerary: string) {
+  const finalUrl = transportsRoutes.getPendingContractRequests.url.replace(':id', id_itinerary)
+  const response = await instance.get(finalUrl);
+  return response.data;
+}
+
+export async function getDriverItinerariesWithOnlyPendingPassengerRequests(id_user: string) {
+  const finalUrl = transportsRoutes.getDriverItinerariesWithOnlyPendingPassengerRequests.url.replace(':id', id_user)
+  const response = await instance.get(finalUrl);
+  return response.data;
+}
+
+export async function countItinerariesPendingPassengerRequestsByDriverId() {
+  const response = await instance.get(transportsRoutes.countItinerariesPendingPassengerRequestsByDriverId.url);
   return response.data;
 }

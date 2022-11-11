@@ -12,7 +12,7 @@ interface refreshSessionResponse {
   userId?: string;
 }
 
-const refreshSession = async (): Promise<refreshSessionReturn> => {
+export const refreshSession = async (): Promise<refreshSessionReturn> => {
   try {
     let res: refreshSessionResponse = await sessionRoutes.refresh();
 

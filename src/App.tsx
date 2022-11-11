@@ -25,11 +25,16 @@ import Login from "./pages/Login";
 import Perfil from "./pages/Perfil";
 import PerfilEditar from "./pages/PerfilEditar";
 
-import CadastrarItinerario from "./pages/CadastrarItinerario";
-import MeusItinerarios from "./pages/MeusItinerarios";
 import MeusVeiculos from "./pages/MeusVeiculos";
 import Veiculo from "./pages/Veiculo";
 import VeiculoCadastro from "./pages/VeiculoCadastro";
+
+import CadastrarItinerario from "./pages/CadastrarItinerario";
+import ItinerariosMeusMenu from "./pages/ItinerariosMeusMenu";
+import ItinerariosMeusMotorista from "./pages/ItinerariosMeusMotorista";
+import ModerarContratosListaItinerarios from "./pages/ModerarContratosListaItinerarios";
+import ModerarContratosListaContratos from "./pages/ModerarContratosListaContratos";
+import ItinerariosMeusPassageiro from "./pages/ItinerariosMeusPassageiro";
 
 import BuscarItinerario from "./pages/BuscarItinerario";
 import BuscarPassageiro from "./pages/BuscarPassageiro";
@@ -40,7 +45,12 @@ import Viagem from "./pages/Viagem";
 
 import ModerarDocumentos from "./pages/ModerarDocumentos";
 
+import EditarItinerario from "./pages/EditarItinerario";
+import Itinerario from "./pages/Itinerario";
+
 import ItinerarioContratos from "./pages/ItinerarioContratos";
+import ContratoResumo from "./pages/ContratoResumo";
+
 import Contrato from "./pages/Contrato";
 import ListaDePresenca from "./pages/ListaDePresenca";
 
@@ -66,9 +76,8 @@ import "./theme/variables.css";
 
 /* Tailwind styles */
 import "./theme/tailwind.css";
-
-import EditarItinerario from "./pages/EditarItinerario";
-import Itinerario from "./pages/Itinerario";
+import HomeFeedViagensMeusMotorista from "./pages/HomeFeedViagensMeusMotorista";
+import HomeFeedViagensMeusPassageiro from "./pages/HomeFeedViagensMeusPassageiro";
 
 setupIonicReact();
 
@@ -88,6 +97,9 @@ const routes = (
     ></Route>
 
     <Route exact path="/home" component={Home}></Route>
+    <Route exact path="/feed/meus/motorista" component={HomeFeedViagensMeusMotorista}></Route>
+    <Route exact path="/feed/meus/passageiro" component={HomeFeedViagensMeusPassageiro}></Route>
+
     <Route exact path="/login" component={Login}></Route>
     <Route exact path="/perfil" component={Perfil}></Route>
     <Route exact path="/usuario/:id" component={Perfil}></Route>
@@ -96,18 +108,18 @@ const routes = (
 
     <Route exact path="/veiculos/cadastrar" component={VeiculoCadastro}></Route>
     <Route exact path="/veiculos/meus" component={MeusVeiculos}></Route>
-    <Route
-      exact
-      path="/cadastrar-itinerario"
-      component={CadastrarItinerario}
-    ></Route>
     <Route exact path="/veiculo" component={Home}></Route>
     <Route exact path="/veiculo/placa" component={Home}></Route>
     <Route exact path="/veiculo/placa/:id" component={Veiculo}></Route>
 
-    <Route exact path="/itinerario/:id" component={Itinerario}></Route>
-    <Route exact path="/meus-itinerarios" component={MeusItinerarios}></Route>
-    <Route exact path="/editar-itinerario" component={EditarItinerario}></Route>
+    <Route exact path="/itinerario/cadastrar" component={CadastrarItinerario}></Route>
+    <Route exact path="/itinerario/meus" component={ItinerariosMeusMenu}></Route>
+    <Route exact path="/itinerario/meus/motorista" component={ItinerariosMeusMotorista}></Route>
+    <Route exact path="/itinerario/meus/motorista/contratos/moderar/itinerarios" component={ModerarContratosListaItinerarios}></Route>
+    <Route exact path="/itinerario/meus/motorista/contratos/moderar/itinerario/id/:id" component={ModerarContratosListaContratos}></Route>
+    <Route exact path="/itinerario/meus/passageiro" component={ItinerariosMeusPassageiro}></Route>
+    <Route exact path="/itinerario/id/:id" component={Itinerario}></Route>
+    <Route exact path="/itinerario/id/:id/editar" component={EditarItinerario}></Route>
 
     <Route exact path="/buscas" component={Buscas}></Route>
     <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
@@ -119,10 +131,12 @@ const routes = (
 
     <Route exact path="/documentos/moderar" component={ModerarDocumentos}></Route>
 
-    <Route exact path="/itinerario/:id/contratos" component={ItinerarioContratos}></Route>
-    <Route exact path="/viagem/:id" component={Viagem}></Route>
-    <Route exact path="/contrato/:id" component={Contrato}></Route>
-    <Route exact path="/viagem/:id/presenca" component={ListaDePresenca}></Route>
+    <Route exact path="/itinerario/id/:id/contratos" component={ItinerarioContratos}></Route>
+    <Route exact path="/itinerario/id/:id/contratos/resumo" component={ContratoResumo}></Route>
+
+    <Route exact path="/viagem/id/:id" component={Viagem}></Route>
+    <Route exact path="/contrato/id/:id" component={Contrato}></Route>
+    <Route exact path="/viagem/id/:id/presenca" component={ListaDePresenca}></Route>
 
     <Route exact path="/">
       <Redirect to="/home" />

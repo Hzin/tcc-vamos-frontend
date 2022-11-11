@@ -136,7 +136,7 @@ const Contrato: React.FC = () => {
           <IonCard>
             <IonCardHeader>
               <IonCardTitle>Contrato: Recorrente </IonCardTitle>
-              <IonCardSubtitle>Renovação: 22/09/2022 </IonCardSubtitle>
+              <IonCardSubtitle>Renovação: dia 01 do próximo mês </IonCardSubtitle>
               <p>
                 O Contrato Recorrente é o plano mensal de vinculo a van da/o motorista (Nome do motorista)
                 portador do CPF (Numero do CPF) junto ao passageiro (Nome do passageiro) no valor pré estabelecido

@@ -1,7 +1,6 @@
 import instance from "./api";
 
 import userRoutes from "../../constants/routes/usersRoutes";
-import { setStore } from "../../store/RecordsStore";
 
 export interface CadastroResponse {
   message?: string;
@@ -69,36 +68,6 @@ export async function getSocialInfo(userId: string) {
     userRoutes.getSocialInfo.url + `/${userId}`
   );
   return response.data;
-}
-
-export async function getUsersSearching(currentPoint: any) {
-  //	Replace lat/long with values from get current location.
-  //	Allow choosing of radius?
-  //	Offset could = amount loaded in an infinite scroll?
-  // var latitude = currentPoint.latitude, longitude = currentPoint.longitude, radius = 3000, offset = 0;
-  // const response = await fetch(`http://localhost:4000/get-records?latitude=${ latitude }&longitude=${ longitude }&radius=${ radius }&offset=${ offset }`);
-  const response = await instance.post(
-    `${userRoutes.getUsersSearching.url}`,
-    currentPoint
-  );
-  // const data = await response.json();
-  console.log(response.data);
-  setStore(response.data);
-}
-
-export async function createUserSearch(
-  latitude_from: any,
-  longitude_from: any,
-  addres_to: any
-) {
-  const response = await instance.post(`${userRoutes.createUserSearch.url}`, {
-    latitude_from,
-    longitude_from,
-    addres_to,
-  });
-
-  console.log(response);
-  setStore(response);
 }
 
 export async function checkIfUserIsAdmin() {

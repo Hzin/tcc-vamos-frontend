@@ -8,6 +8,7 @@ import {
 
 interface ComponentProps {
   pageName?: string;
+  showBackButton?: boolean;
   backButtonPageUrl?: string;
   backButtonIcon?: string;
 }
@@ -16,7 +17,7 @@ export const PageHeader = (props: ComponentProps) => (
   <IonHeader translucent>
     <IonToolbar>
       <IonTitle>{props.pageName}</IonTitle>
-      {props.backButtonPageUrl && (
+      {(props.backButtonPageUrl || props.showBackButton) && (
         <IonButtons slot="start">
           <IonBackButton
             text=""
