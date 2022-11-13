@@ -104,15 +104,15 @@ export async function createContractRequest({ id_itinerary, body }: CreateContra
 }
 
 export interface UpdateContractStatusRequest {
-  id_itinerary: string;
   id_user: string;
+  id_itinerary: string;
   status: PassengerRequestStatusTypes
 }
 
-export async function updateContractStatus({ id_itinerary, id_user, status }: UpdateContractStatusRequest): Promise<any> {
+export async function updateContractStatus({ id_user, id_itinerary, status }: UpdateContractStatusRequest): Promise<any> {
   let res: any;
 
-  res = await itinerariesRoutes.updateContractStatus({ id_itinerary, id_user, status });
+  res = await itinerariesRoutes.updateContractStatus({ id_user, id_itinerary, status });
 
   return res.data;
 }

@@ -134,8 +134,8 @@ const Viagem: React.FC<ViagemProps> = (props) => {
                 <>
                   <IonListHeader className="mt-2">Horários</IonListHeader>
 
-                  <ItemItineraryDetail label='Horário de estimado saída' leftIcon={timeOutline} icon={timeOutline} value={formatTimeField(trip.itinerary.estimated_departure_time)} />
-                  <ItemItineraryDetail label='Horário de estimado chegada' leftIcon={timeSharp} icon={timeSharp} value={formatTimeField(trip.itinerary.estimated_arrival_time)} />
+                  <ItemItineraryDetail label='Horário de estimado saída' leftIcon={timeOutline} icon={timeOutline} value={formatTimeField(trip.itinerary.estimated_departure_time_going)} />
+                  <ItemItineraryDetail label='Horário de estimado chegada' leftIcon={timeSharp} icon={timeSharp} value={formatTimeField(trip.itinerary.estimated_arrival_time_going)} />
                 </>
               )}
 

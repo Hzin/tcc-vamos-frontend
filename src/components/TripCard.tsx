@@ -231,7 +231,7 @@ export const TripCard = (props: ComponentProps) => {
         <div className="icons-location-divider">|</div>
         <div className="addresses-itinerary">
           <IonIcon icon={locationOutline} className="mr-1"></IonIcon>
-          {props.itinerary.destinations.map((destination) => {
+          {props.itinerary.destinations && props.itinerary.destinations.map((destination) => {
             if (destination.is_final) {
               return <>{destination.formatted_address}</>;
             }
