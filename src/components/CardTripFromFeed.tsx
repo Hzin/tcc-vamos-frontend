@@ -21,9 +21,12 @@ import * as tripsService from "../services/api/trips";
 import { reloadPage } from "../services/utils";
 
 import { useHistory } from "react-router";
-import { GetFeedPropsReturn } from "../services/functions/tripsService";
+import { GetFeedPropsReturn, UpdateTripStatusProps } from "../services/functions/tripsService";
 import EnumUtils from "../services/EnumUtils";
 import { ShowItinerarioViagemPageAsModal } from "./ShowPageAsModal/ShowItinerarioViagemPageAsModal";
+import { Separator } from "./Separator";
+import { VehiclePicture } from "./VehiclePicture";
+import { useEffect } from "react";
 
 interface IonChipTripStatusProps {
   status: string;
@@ -95,31 +98,21 @@ export const CardTripFromFeed = (props: ComponentProps) => {
     reloadPage();
   };
 
-  const handleCancelTrip = async (itineraryId: string) => {
-    await tripsService.cancelTrip(itineraryId).then((response) => {
+  const updateTripStatus = async ({ itineraryId, tripType, newStatus }: UpdateTripStatusProps) => {
+    await tripsService.updateTripStatus({ itineraryId, tripType, newStatus }).then((response) => {
       if (!response.data) {
-        refreshPage("Houve um erro ao cancelar a viagem!", "warning");
+        refreshPage("Houve um erro ao atualizar a viagem!", "warning");
         return;
       }
 
-      refreshPage("Viagem cancelada com sucesso!", "success");
-    });
-  };
-
-  const handleConfirmTrip = async (itineraryId: string) => {
-    await tripsService.confirmTrip(itineraryId).then((response) => {
-      if (!response.data) {
-        refreshPage("Houve um erro ao confirmar a viagem!", "warning");
-        return;
-      }
-
-      refreshPage("Viagem confirmada com sucesso.", "success");
-    });
-  };
+      refreshPage("Viagem atualizada com sucesso!", "success");
+    })
+  }
 
   const handleConfirmActionTripAlert = async (
     itineraryId: string,
-    action: string
+    action: string,
+    tripType: 'going' | 'return'
   ) => {
     presentAlertConfirmation({
       header: "Tem certeza?",
@@ -139,10 +132,10 @@ export const CardTripFromFeed = (props: ComponentProps) => {
 
         switch (action) {
           case "cancelTrip":
-            handleCancelTrip(itineraryId);
+            updateTripStatus({ itineraryId, tripType, newStatus: tripStatus.canceled });
             break;
           case "confirmTrip":
-            handleConfirmTrip(itineraryId);
+            updateTripStatus({ itineraryId, tripType, newStatus: tripStatus.confirmed });
             break;
           default:
             break;
@@ -152,62 +145,68 @@ export const CardTripFromFeed = (props: ComponentProps) => {
   };
 
   const handleChooseActionTripAlert = (
+    tripType: 'going' | 'return',
     itineraryId: string,
     itineraryNickname: string
   ) => {
+    let headerMessage = `A viagem de ida de "${itineraryNickname}" está pendente`
+    if (tripType === 'return') headerMessage = `A viagem de volta de "${itineraryNickname}" está pendente`
+
     presentAlert({
-      header: `A viagem "${itineraryNickname}" está pendente`,
-      message: "Deseja confirmar a viagem de hoje?",
+      header: headerMessage,
+      message: "Deseja confirmar a viagem?",
       buttons: [
         {
           text: "Confirmar viagem",
           role: "confirmTrip",
-          handler: () => { },
         },
         {
           text: "Cancelar viagem",
           role: "cancelTrip",
-          handler: () => { },
         },
         {
           text: "Cancelar",
           role: "cancel",
-          handler: () => { },
         },
       ],
       onDidDismiss: (e: CustomEvent) => {
         if (e.detail.role === "cancel" || e.detail.role === "backdrop") return;
 
-        handleConfirmActionTripAlert(itineraryId, e.detail.role);
+        handleConfirmActionTripAlert(itineraryId, tripType, e.detail.role);
       },
     });
   };
 
-  const redirectToTripPage = (itineraryId: string) => {
+  const redirectToTripPage = (id_trip: number) => {
     history.push({
-      pathname: `/viagem/${itineraryId}`,
+      pathname: `/viagem/${id_trip}`,
     });
   };
 
   const handleLoadTrip = async (
+    tripType: 'going' | 'return',
     itineraryId: string,
     itineraryNickname: string,
-    tripId?: string
+    tripId?: number
   ) => {
-    await tripsService
-      .getTodaysTripStatusByItineraryId(itineraryId)
-      .then((response) => {
-        switch (response) {
-          case tripStatus.confirmed:
-            if (tripId) redirectToTripPage(tripId);
-            break;
-          case tripStatus.pending:
-            handleChooseActionTripAlert(itineraryId, itineraryNickname);
-            break;
-          default:
-            break;
-        }
-      });
+    if (tripId) {
+      await tripsService
+        .getTodaysTripStatusByItineraryId(itineraryId)
+        .then((response) => {
+          switch (response) {
+            case tripStatus.confirmed:
+              if (tripId) redirectToTripPage(tripId);
+              break;
+            case tripStatus.pending:
+              handleChooseActionTripAlert(tripType, itineraryId, itineraryNickname);
+              break;
+            default:
+              break;
+          }
+        });
+    } else {
+      handleChooseActionTripAlert(tripType, itineraryId, itineraryNickname);
+    }
   };
 
   const isButtonClickable = (): boolean => {
@@ -215,27 +214,17 @@ export const CardTripFromFeed = (props: ComponentProps) => {
     return false
   }
 
+  useEffect(() => {
+  }, [])
+
   return (
     <>
       <IonCard slot={props.slot}>
+        <VehiclePicture picture_path={props.tripInfo.itinerary.vehicle.picture} />
 
-        {/* onClick={() => {
-        if (!props.clickable) return;
-        handleLoadTrip(
-          "" + props.itinerary.id_itinerary,
-          props.itinerary.itinerary_nickname
-        );
-      }} */}
-        {props.tripInfo && (
-          <IonCardHeader>
-
-            <IonCardSubtitle>
-
-            </IonCardSubtitle>
-
-            <IonCardTitle>{props.tripInfo.itinerary.itinerary_nickname}</IonCardTitle>
-          </IonCardHeader>
-        )}
+        <IonCardHeader>
+          <IonCardTitle>{props.tripInfo.itinerary.itinerary_nickname}</IonCardTitle>
+        </IonCardHeader>
 
         <IonCardContent>
           <div className="addresses-itinerary">
@@ -253,6 +242,8 @@ export const CardTripFromFeed = (props: ComponentProps) => {
             })}
           </div>
 
+          <Separator />
+
           <IonList>
             <IonItem lines='none'>
               <IonIcon icon={returnDownForwardOutline} />
@@ -262,14 +253,22 @@ export const CardTripFromFeed = (props: ComponentProps) => {
               Status:
               <IonChipTripStatus status={props.tripInfo.tripGoing.status} />
             </IonItem>
+
+            <Separator color='gray' />
+
             {props.tripInfo.tripGoing && props.tripInfo.tripGoing.id ? (
               <IonChip color='secondary' id='modal-trip-going'>
                 <IonIcon icon={eyeOutline} />
                 <IonLabel>Ver detalhes da viagem</IonLabel>
               </IonChip>
             ) : (
-              <IonItem onClick={() => {
-                handleChooseActionTripAlert("" + props.tripInfo.itinerary.id_itinerary, props.tripInfo.itinerary.itinerary_nickname)
+              <IonItem lines='none' onClick={() => {
+                handleLoadTrip(
+                  'going',
+                  "" + props.tripInfo.itinerary.id_itinerary,
+                  props.tripInfo.itinerary.itinerary_nickname,
+                  props.tripInfo.tripGoing.id
+                )
               }}>
                 Confirmar viagem de ida
                 <IonChip slot='end' color='secondary'>
@@ -280,35 +279,52 @@ export const CardTripFromFeed = (props: ComponentProps) => {
             )}
 
             {props.tripInfo.tripReturn && (
-              <div className="mt-1" aria-disabled={props.tripInfo.tripReturn.status === tripStatus.pendingGoingTrip}>
-                <IonItem lines='none' disabled={props.tripInfo.tripReturn.status === tripStatus.pendingGoingTrip}>
-                  <IonIcon icon={returnUpBackOutline} />
-                  <IonLabel className="ml-2">Viagem de volta</IonLabel>
-                </IonItem>
-                <IonItem lines='none' disabled={props.tripInfo.tripReturn.status === tripStatus.pendingGoingTrip}>
-                  Status:
-                </IonItem>
-                <IonItem lines='none' disabled={props.tripInfo.tripReturn.status === tripStatus.pendingGoingTrip}>
-                  <IonChipTripStatus status={props.tripInfo.tripReturn.status} />
-                </IonItem>
+              <>
 
-                {props.tripInfo.tripReturn && props.tripInfo.tripReturn.id ? (
-                  <IonChip color='secondary' id='modal-trip-return' disabled={props.tripInfo.tripReturn.status === tripStatus.pendingGoingTrip}>
-                    <IonIcon icon={eyeOutline} />
-                    <IonLabel>Ver detalhes da viagem</IonLabel>
-                  </IonChip>
-                ) : (
-                  <IonItem onClick={() => {
-                    handleChooseActionTripAlert("" + props.tripInfo.itinerary.id_itinerary, props.tripInfo.itinerary.itinerary_nickname)
-                  }} disabled={props.tripInfo.tripReturn.status === tripStatus.pendingGoingTrip}>
-                    Confirmar viagem de retorno
-                    <IonChip slot='end' color='secondary'>
-                      <IonIcon icon={eyeOutline} />
-                      <IonLabel>Ir</IonLabel>
-                    </IonChip>
+                <div className="mt-4">
+                  <IonItem lines='none'>
+                    <IonIcon icon={returnUpBackOutline} />
+                    <IonLabel className="ml-2">Viagem de volta</IonLabel>
                   </IonItem>
-                )}
-              </div>
+
+                  <Separator />
+
+                  <IonItem lines='none'>
+                    Status:
+                  </IonItem>
+                  <IonItem lines='none'>
+                    <IonChipTripStatus status={props.tripInfo.tripReturn.status} />
+                  </IonItem>
+
+                  <Separator color='gray' />
+
+                  {props.tripInfo.tripReturn && props.tripInfo.tripReturn.id ? (
+                    <IonChip color='secondary' id='modal-trip-return'>
+                      <IonIcon icon={eyeOutline} />
+                      <IonLabel>Ver detalhes da viagem</IonLabel>
+                    </IonChip>
+                  ) : (
+                    <IonItem lines='none'>
+                      Confirmar viagem de retorno
+                      <IonChip
+                        slot='end'
+                        color='secondary'
+                        disabled={props.tripInfo.tripReturn.status === tripStatus.pendingGoingTrip}
+                        onClick={() => {
+                          handleLoadTrip(
+                            'return',
+                            "" + props.tripInfo.itinerary.id_itinerary,
+                            props.tripInfo.itinerary.itinerary_nickname,
+                            props.tripInfo.tripGoing.id
+                          )
+                        }}>
+                        <IonIcon icon={eyeOutline} />
+                        <IonLabel>Ir</IonLabel>
+                      </IonChip>
+                    </IonItem>
+                  )}
+                </div>
+              </>
             )}
           </IonList>
         </IonCardContent>

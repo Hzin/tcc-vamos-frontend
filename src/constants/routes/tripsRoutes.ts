@@ -17,11 +17,8 @@ const tripsRoutes = {
   getTodaysTripStatusByItineraryId: {
     url: `${tripsRoutesDefault}/today/status/itinerary/:id`
   },
-  cancelTrip: {
-    url: `${tripsRoutesDefault}/update/cancel`
-  },
-  confirmTrip: {
-    url: `${tripsRoutesDefault}/update/confirm`
+  updateTripStatus: {
+    url: `${tripsRoutesDefault}/tripType/:tripType/update/status/:newStatus`
   }
 }
 

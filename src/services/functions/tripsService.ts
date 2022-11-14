@@ -105,3 +105,23 @@ export async function getFeed({ userType, tripDay }: GetFeedProps): Promise<GetF
 
   return res.data;
 }
+
+export interface UpdateTripStatusProps {
+  itineraryId: string,
+  tripType: 'going' | 'return',
+  newStatus: tripStatus
+}
+
+export async function updateTripStatus({ itineraryId, tripType, newStatus }: UpdateTripStatusProps): Promise<GetFeedPropsReturn[]> {
+  let res: any;
+
+  try {
+    res = await tripsRoutes.updateTripStatus({ itineraryId, tripType, newStatus });
+  } catch (error) {
+    // TODO
+  }
+
+  console.log(res)
+
+  return res.data;
+}
