@@ -4,17 +4,8 @@ const tripsRoutes = {
     url: `${tripsRoutesDefault}/itinerary/:id`
   },
 
-  getTodaysTripsAsDriver: {
-    url: `${tripsRoutesDefault}/feed/driver/today`
-  },
-  getNotTodaysTripsAsDriver: {
-    url: `${tripsRoutesDefault}/feed/driver/nottoday`
-  },
-  getTodaysTripsAsPassenger: {
-    url: `${tripsRoutesDefault}/feed/passenger/today`
-  },
-  getNotTodaysTripsAsPassenger: {
-    url: `${tripsRoutesDefault}/feed/passenger/nottoday`
+  getFeed: {
+    url: `${tripsRoutesDefault}/feed/tripDay/:tripDay/userType/:userType`
   },
 
   getTrip: {

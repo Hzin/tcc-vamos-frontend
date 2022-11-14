@@ -25,54 +25,6 @@ export async function getTripsByItineraryId(id_itinerary: string): Promise<Trip[
   return res.data;
 }
 
-export async function getTodaysTripsAsDriver(): Promise<GetTripsFeedResponse[]> {
-  let res: any;
-
-  try {
-    res = await tripsRoutes.getTodaysTripsAsDriver();
-  } catch (error) {
-    // TODO
-  }
-
-  return res.data;
-}
-
-export async function getNotTodaysTripsAsDriver(): Promise<GetTripsFeedResponse[]> {
-  let res: any;
-
-  try {
-    res = await tripsRoutes.getNotTodaysTripsAsDriver();
-  } catch (error) {
-    // TODO
-  }
-
-  return res.data;
-}
-
-export async function getTodaysTripsAsPassenger(): Promise<GetTripsFeedResponse[]> {
-  let res: any;
-
-  try {
-    res = await tripsRoutes.getTodaysTripsAsPassenger();
-  } catch (error) {
-    // TODO
-  }
-
-  return res.data;
-}
-
-export async function getNotTodaysTripsAsPassenger(): Promise<GetTripsFeedResponse[]> {
-  let res: any;
-
-  try {
-    res = await tripsRoutes.getNotTodaysTripsAsPassenger();
-  } catch (error) {
-    // TODO
-  }
-
-  return res.data;
-}
-
 export async function getTrip(tripId: string): Promise<Trip> {
   let res: any;
 
@@ -114,6 +66,39 @@ export async function confirmTrip(itineraryId: string): Promise<ChangeTripStatus
 
   try {
     res = await tripsRoutes.getTodaysTripStatusByItineraryId(itineraryId);
+  } catch (error) {
+    // TODO
+  }
+
+  return res.data;
+}
+
+// feed
+export interface GetFeedProps {
+  userType: 'driver' | 'passenger',
+  tripDay: 'today' | 'not_today',
+}
+
+export interface GetFeedPropsReturn {
+  itinerary: Itinerary;
+  itineraryInfoDriver?: string,
+  itineraryInfoPassenger?: string,
+
+  tripGoing: {
+    status: tripStatus;
+    id?: number; // é opcional porque a viagem pode ainda não ter sido criada
+  },
+  tripReturn?: {
+    status: tripStatus;
+    id?: number; // é opcional porque a viagem pode ainda não ter sido criada
+  }
+}
+
+export async function getFeed({ userType, tripDay }: GetFeedProps): Promise<GetFeedPropsReturn[]> {
+  let res: any;
+
+  try {
+    res = await tripsRoutes.getFeed({ userType, tripDay });
   } catch (error) {
     // TODO
   }
