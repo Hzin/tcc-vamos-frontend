@@ -17,8 +17,13 @@ const tripsRoutes = {
   getTodaysTripStatusByItineraryId: {
     url: `${tripsRoutesDefault}/today/status/itinerary/:id`
   },
-  updateTripStatus: {
+
+  createTrip: {
     url: `${tripsRoutesDefault}/tripType/:tripType/update/status/:newStatus`
+  },
+  updateTripStatus: {
+    // url: `${tripsRoutesDefault}/tripType/:tripType/update/status/:newStatus`
+    url: `${tripsRoutesDefault}/:id/status/:newStatus`
   }
 }
 

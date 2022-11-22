@@ -41,7 +41,7 @@ class EnumUtils {
         return 'Finalizada'
 
       case tripStatus.pendingGoingTrip:
-        return 'Pendente da finalização de viagem de ida'
+        return 'Pendente finalização da viagem de ida'
     }
 
     throw new Error("tripStatusString inválido.")
@@ -54,7 +54,7 @@ class EnumUtils {
       case tripStatus.confirmed:
         return 'success'
       case tripStatus.canceled:
-        return 'light'
+        return 'warning'
       case tripStatus.inProgress:
         return 'primary'
       case tripStatus.finished:

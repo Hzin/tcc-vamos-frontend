@@ -1,7 +1,7 @@
 import instance from "./api";
 
 import tripsRoutes from "../../constants/routes/tripsRoutes";
-import { ChangeTripStatusResponse, GetFeedProps, GetTripsFeedResponse, UpdateTripStatusProps } from "../functions/tripsService";
+import { ChangeTripStatusResponse, CreateTripProps, GetFeedProps, GetTripsFeedResponse, UpdateTripStatusProps } from "../functions/tripsService";
 import { tripStatus } from "../../constants/tripStatus";
 import { Trip } from "../../models/trip.model";
 
@@ -28,10 +28,17 @@ export async function getTodaysTripStatusByItineraryId(id_itinerary: string): Pr
   return response.data.data; // TODO, gambiarra
 }
 
-export async function updateTripStatus({ itineraryId, tripType, newStatus }: UpdateTripStatusProps): Promise<ChangeTripStatusResponse> {
-  const finalUrl = tripsRoutes.updateTripStatus.url.replace(':tripType', tripType).replace(':newStatus', newStatus)
+export async function createTrip({ itineraryId, tripType, newStatus }: CreateTripProps): Promise<ChangeTripStatusResponse> {
+  const finalUrl = tripsRoutes.createTrip.url.replace(':tripType', tripType).replace(':newStatus', newStatus)
 
   const response = await instance.post(finalUrl, { id_itinerary: itineraryId })
+  return response.data;
+}
+
+export async function updateTripStatus({ tripId, newStatus, description }: UpdateTripStatusProps): Promise<ChangeTripStatusResponse> {
+  const finalUrl = tripsRoutes.updateTripStatus.url.replace(':id', tripId).replace(':newStatus', newStatus)
+
+  const response = await instance.post(finalUrl, { description })
   return response.data;
 }
 

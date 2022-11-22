@@ -1,14 +1,11 @@
 import {
   IonAccordion,
   IonAccordionGroup,
-  IonCard,
-  IonCardContent,
   IonContent,
   IonItem,
   IonLabel,
   IonList,
   IonPage,
-  IonThumbnail,
   IonToast,
 } from "@ionic/react";
 import { Color } from "@ionic/core";
@@ -57,7 +54,7 @@ const HomeFeedViagensMeusMotorista: React.FC = () => {
   const getFeed = async () => {
     await tripsService.getFeed({ tripDay: 'today', userType: 'driver' }).then((response) => {
       setTodaysTrips(response);
-      console.log(response)
+      // console.log(response)
     })
 
     await tripsService.getFeed({ tripDay: 'not_today', userType: 'driver' }).then((response) => {

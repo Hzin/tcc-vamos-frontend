@@ -68,7 +68,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
   const getTripInfo = async (id_trip: string) => {
     const trip = await tripsService.getTrip(id_trip)
-    console.log(trip)
+    // console.log(trip)
 
     setTrip(trip)
     getContractInfo(trip)
