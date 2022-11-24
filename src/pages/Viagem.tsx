@@ -5,6 +5,8 @@ import {
   IonIcon,
   IonListHeader,
   useIonAlert,
+  IonFooter,
+  IonToolbar,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -32,6 +34,9 @@ import { ShowContratoResumoPageAsModal } from "../components/ShowPageAsModal/Sho
 import EnumUtils from "../services/EnumUtils";
 import { ItemItineraryDetail } from "../components/ItemItineraryDetail";
 import { formatTimeField, getUserFullName } from "../services/utils";
+import { tripStatus } from "../constants/tripStatus";
+import { tripStatusUpdateActions } from "../constants/tripStatusUpdateActions";
+import { Separator } from "../components/Separator";
 
 export interface ViagemProps {
   match?: {
@@ -72,6 +77,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
     setTrip(trip)
     getContractInfo(trip)
+    updateAvailableOptions(trip.status)
 
     if (trip.itinerary) setDriverPhoneNumber(trip.itinerary.user.phone_number)
   }
@@ -101,6 +107,27 @@ const Viagem: React.FC<ViagemProps> = (props) => {
     },
     );
   };
+
+  const [availableOptions, setAvailableOptions] = useState<tripStatusUpdateActions[]>([]);
+  const updateAvailableOptions = (currentTripStatus: tripStatus) => {
+    switch (currentTripStatus) {
+      case tripStatus.pending:
+      case tripStatus.finished:
+        setAvailableOptions([])
+        break;
+      case tripStatus.confirmed:
+        setAvailableOptions([tripStatusUpdateActions.start, tripStatusUpdateActions.cancel])
+        break;
+      case tripStatus.canceled:
+        setAvailableOptions([tripStatusUpdateActions.reconfirm])
+        break;
+      case tripStatus.inProgress:
+        setAvailableOptions([tripStatusUpdateActions.cancel, tripStatusUpdateActions.finish])
+        break;
+    }
+  }
+
+  // useEffect(() => console.log(availableOptions), [availableOptions])
 
   return (
     <IonPage>
@@ -148,46 +175,34 @@ const Viagem: React.FC<ViagemProps> = (props) => {
                 </>
               )}
 
-              <IonListHeader className="mt-4">Outras opções</IonListHeader>
+              <IonListHeader className="mt-4">Opções</IonListHeader>
 
               <IonRow>
                 <IonCol>
-                  <IonButton expand="block" color='success' fill="outline">
+                  <IonButton expand="block" color='success' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.start)}>
                     <IonIcon icon={documentTextOutline} />
-                    <IonLabel>Lista de presença (WIP)</IonLabel>
+                    <IonLabel className="ml-1">Iniciar viagem</IonLabel>
                   </IonButton>
                 </IonCol>
               </IonRow>
 
-              {isPassenger && (
-                <>
-                  {trip.itinerary && (
-                    <IonRow>
-                      <IonCol
-                        onClick={() => {
-                          if (!driverPhoneNumber) {
-                            handleShowAlert('O motorista dessa viagem não está com o telefone celular configurado.', 'Aviso')
-                          }
-                        }}>
-                        <IonButton expand="block" color='success' fill="outline" disabled={!driverPhoneNumber} href={`tel:${driverPhoneNumber}`}>
-                          <IonIcon icon={callOutline} />
-                          <IonLabel>Ligar para o motorista</IonLabel>
-                        </IonButton>
-                      </IonCol>
-                    </IonRow>
-                  )}
+              <IonRow>
+                <IonCol>
+                  <IonButton expand="block" color='primary' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.finish)}>
+                    <IonIcon icon={documentTextOutline} />
+                    <IonLabel className="ml-1">Finalizar viagem</IonLabel>
+                  </IonButton>
+                </IonCol>
+              </IonRow>
 
-                  <IonRow>
-                    <IonCol>
-                      <IonButton expand="block" onClick={() => { }} fill="outline" color="Blue" >
-                        <IonIcon icon={trashBinOutline} />
-                        <IonLabel>Faltar na proxima viagem</IonLabel>
-                      </IonButton>
-                    </IonCol>
-                  </IonRow>
-                </>
-              )}
-
+              <IonRow>
+                <IonCol>
+                  <IonButton expand="block" color='warning' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.cancel)}>
+                    <IonIcon icon={documentTextOutline} />
+                    <IonLabel className="ml-1">Cancelar viagem</IonLabel>
+                  </IonButton>
+                </IonCol>
+              </IonRow>
             </IonGrid>
           </>
         )}
@@ -203,7 +218,45 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
         <ShowContratoResumoPageAsModal trigger="modal-contrato" id_passenger_request={paramIdPassengerRequest} noHeaderBackButton />
       </IonContent>
-    </IonPage>
+
+      <IonFooter>
+        <IonToolbar>
+          <IonButton expand="block" color='primary' fill="outline">
+            <IonIcon icon={documentTextOutline} />
+            <IonLabel>ver lista de presença (WIP)</IonLabel>
+          </IonButton>
+
+          {isPassenger && (
+            <>
+              {trip && trip.itinerary && (
+                <IonRow>
+                  <IonCol
+                    onClick={() => {
+                      if (!driverPhoneNumber) {
+                        handleShowAlert('O motorista dessa viagem não está com o telefone celular configurado.', 'Aviso')
+                      }
+                    }}>
+                    <IonButton expand="block" color='success' fill="outline" disabled={!driverPhoneNumber} href={`tel:${driverPhoneNumber}`}>
+                      <IonIcon icon={callOutline} />
+                      <IonLabel>Ligar para o motorista</IonLabel>
+                    </IonButton>
+                  </IonCol>
+                </IonRow>
+              )}
+
+              <IonRow>
+                <IonCol>
+                  <IonButton expand="block" onClick={() => { }} fill="outline" color="Blue" >
+                    <IonIcon icon={trashBinOutline} />
+                    <IonLabel>Faltar na proxima viagem</IonLabel>
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+            </>
+          )}
+        </IonToolbar>
+      </IonFooter>
+    </IonPage >
   );
 };
 
