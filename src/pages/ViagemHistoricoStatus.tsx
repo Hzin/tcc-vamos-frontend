@@ -60,9 +60,9 @@ const ViagemHistoricoStatus: React.FC<ViagemHistoricoStatusProps> = (props) => {
                 <IonCard key={index}>
                   <IonCardContent>
                     {/* {history.old_status && <><IonChipTripStatus status={history.old_status} /> {'->'} </>} */}
-                    {history.old_status && <><IonChipTripStatus status={history.old_status} /> <IonIcon icon={arrowForwardOutline} /> </>}
-                    {history.new_status && <IonChipTripStatus status={history.new_status} />}
-                    {history.description && <p>{history.description}</p>}
+                    {history.old_status && <><IonChipTripStatus status={history.old_status} dontFadeFinishedStatusChip /> <IonIcon icon={arrowForwardOutline} /> </>}
+                    {history.new_status && <IonChipTripStatus status={history.new_status} dontFadeFinishedStatusChip />}
+                    {history.description && <p>{"Descrição: "} {history.description}</p>}
                   </IonCardContent>
                 </IonCard>
               );

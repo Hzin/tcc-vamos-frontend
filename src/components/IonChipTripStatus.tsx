@@ -6,6 +6,8 @@ import EnumUtils from "../services/EnumUtils";
 interface ComponentProps {
   status: string;
   slot?: "start" | "end";
+
+  dontFadeFinishedStatusChip?: boolean
 }
 
 export const IonChipTripStatus = (props: ComponentProps) => {
@@ -14,7 +16,7 @@ export const IonChipTripStatus = (props: ComponentProps) => {
 
   return (
     <>
-      <IonChip slot={props.slot ? props.slot : "end"} color={ionChipColor} disabled={props.status === tripStatus.finished}>
+      <IonChip slot={props.slot ? props.slot : "end"} color={ionChipColor} disabled={!props.dontFadeFinishedStatusChip && props.status === tripStatus.finished}>
         {ionChipLabel}
       </IonChip>
     </>

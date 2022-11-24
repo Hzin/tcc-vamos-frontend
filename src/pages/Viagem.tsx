@@ -145,10 +145,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
         description,
       })
       .then((response) => {
-        console.log('response')
-        console.log(response)
-
-        setMessageToast(response.message)
+        setMessageToast(response)
         setShowToast(true)
 
         loadPageInfo()
@@ -243,7 +240,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
                         })
                       }}>
                         <IonIcon icon={documentTextOutline} />
-                        <IonLabel className="ml-1">Descancelar viagem</IonLabel>
+                        <IonLabel className="ml-1">Reverter cancelamento da viagem</IonLabel>
                       </IonButton>
                     </IonCol>
                   </IonRow>

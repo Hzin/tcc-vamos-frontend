@@ -84,14 +84,6 @@ export const CardTripFromFeed = (props: ComponentProps) => {
         newStatus
       })
       .then((response) => {
-        console.log('response')
-        console.log(response)
-
-        // if (!response.data) {
-        //   refreshPage("Houve um erro ao atualizar a viagem!", "warning");
-        //   return;
-        // }
-
         refreshPage("Viagem atualizada com sucesso!", "success");
       });
   };
@@ -257,7 +249,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
               <IonLabel className="ml-2">Viagem de ida</IonLabel>
             </IonItem>
             <IonItem lines="none">
-              Status:
+              Status
               <IonChipTripStatus status={props.tripInfo.tripGoing.status} />
             </IonItem>
 
@@ -282,7 +274,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
                 }}
               >
                 Confirmar viagem de ida
-                <IonChip slot="end" color="secondary">
+                <IonChip slot="end" color="success">
                   <IonIcon icon={eyeOutline} />
                   <IonLabel>Ir</IonLabel>
                 </IonChip>
@@ -300,7 +292,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
                   </IonItem>
 
                   <IonItem lines="none">
-                    Status:
+                    Status
                     <IonChipTripStatus status={props.tripInfo.tripReturn.status} />
                   </IonItem>
 
@@ -314,7 +306,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
                       Confirmar viagem de retorno
                       <IonChip
                         slot="end"
-                        color="secondary"
+                        color="success"
                         disabled={
                           props.tripInfo.tripReturn.status ===
                           tripStatus.pendingGoingTrip
