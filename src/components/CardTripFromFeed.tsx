@@ -36,24 +36,8 @@ import { ShowItinerarioViagemPageAsModal } from "./ShowPageAsModal/ShowItinerari
 import { Separator } from "./Separator";
 import { VehiclePicture } from "./VehiclePicture";
 import { useEffect } from "react";
+import { IonChipTripStatus } from "./IonChipTripStatus";
 
-interface IonChipTripStatusProps {
-  status: string;
-  slot?: "start" | "end";
-}
-
-export const IonChipTripStatus = (props: IonChipTripStatusProps) => {
-  const ionChipColor = EnumUtils.getTripStatusEnumColor(props.status);
-  const ionChipLabel = EnumUtils.getTripStatusEnumFormatted(props.status);
-
-  return (
-    <>
-      <IonChip slot={props.slot ? props.slot : "end"} color={ionChipColor}>
-        {ionChipLabel}
-      </IonChip>
-    </>
-  );
-};
 interface ComponentProps {
   // itinerary: Itinerary;
   // tripStatus?: string;
@@ -76,7 +60,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
 
   const refreshPage = (message: string, toastColor: Color) => {
     history.push({
-      pathname: "/home",
+      pathname: "/feed/meus/motorista",
       state: {
         redirectData: {
           showToastMessage: true,
@@ -315,11 +299,9 @@ export const CardTripFromFeed = (props: ComponentProps) => {
                     <IonLabel className="ml-2">Viagem de volta</IonLabel>
                   </IonItem>
 
-                  <IonItem lines="none">Status:</IonItem>
                   <IonItem lines="none">
-                    <IonChipTripStatus
-                      status={props.tripInfo.tripReturn.status}
-                    />
+                    Status:
+                    <IonChipTripStatus status={props.tripInfo.tripReturn.status} />
                   </IonItem>
 
                   {props.tripInfo.tripReturn && props.tripInfo.tripReturn.id ? (

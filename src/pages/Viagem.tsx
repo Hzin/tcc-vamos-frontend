@@ -21,7 +21,7 @@ import {
   IonButton,
 } from "@ionic/react";
 
-import { bookmarkOutline, callOutline, documentOutline, documentTextOutline, idCardOutline, timeOutline, timeSharp, trashBinOutline } from "ionicons/icons";
+import { bookmarkOutline, callOutline, documentOutline, documentTextOutline, idCardOutline, pinOutline, timeOutline, timeSharp, trashBinOutline } from "ionicons/icons";
 
 import * as tripsService from "../services/functions/tripsService";
 import * as sessionsService from "../services/functions/sessionsService";
@@ -37,6 +37,7 @@ import { formatTimeField, getUserFullName, reloadPage } from "../services/utils"
 import { tripStatus } from "../constants/tripStatus";
 import { tripStatusUpdateActions } from "../constants/tripStatusUpdateActions";
 import { Separator } from "../components/Separator";
+import { ShowViagemHistoricoStatusPageAsModal } from "../components/ShowPageAsModal/ShowViagemHistoricoStatusPageAsModal";
 
 export interface ViagemProps {
   match?: {
@@ -58,6 +59,8 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
   const [trip, setTrip] = useState<Trip>();
 
+  const [paramIdTrip, setParamIdTrip] = useState('');
+
   const [paramIdPassengerRequest, setParamIdPassengerRequest] = useState('');
   const [isPassenger, setIsPassenger] = useState(false);
 
@@ -76,6 +79,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
   }
 
   const getTripInfo = async (id_trip: string) => {
+    setParamIdTrip(id_trip) // usado pelo modal de histórico de viagem
     const trip = await tripsService.getTrip(id_trip)
     // console.log(trip)
 
@@ -97,10 +101,6 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
     setParamIdPassengerRequest("" + passengerRequest.id_passenger_request)
     setIsPassenger(true)
-  }
-
-  const showContract = () => {
-    document.getElementById('modal-contrato')?.click()
   }
 
   const handleShowAlert = (message: string, title?: string) => {
@@ -194,57 +194,61 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
               {isPassenger && (
                 <>
-                  <IonItem button onClick={showContract}>
+                  <IonItem button onClick={() => { document.getElementById('modal-contrato')?.click() }}>
                     <IonIcon icon={documentOutline} slot="start" />
                     <IonLabel>Meu Contrato</IonLabel>
                   </IonItem>
                 </>
               )}
 
-              <IonListHeader className="mt-4">Opções</IonListHeader>
+              {!isPassenger && (
+                <>
+                  <IonListHeader className="mt-4">Opções</IonListHeader>
 
-              <IonRow>
-                <IonCol>
-                  <IonButton expand="block" color='success' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.start)} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'inProgress', description: 'Início de viagem' }) }}>
-                    <IonIcon icon={documentTextOutline} />
-                    <IonLabel className="ml-1">Iniciar viagem</IonLabel>
-                  </IonButton>
-                </IonCol>
-              </IonRow>
+                  <IonRow>
+                    <IonCol>
+                      <IonButton expand="block" color='success' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.start)} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'inProgress', description: 'Início de viagem' }) }}>
+                        <IonIcon icon={documentTextOutline} />
+                        <IonLabel className="ml-1">Iniciar viagem</IonLabel>
+                      </IonButton>
+                    </IonCol>
+                  </IonRow>
 
-              <IonRow>
-                <IonCol>
-                  <IonButton expand="block" color='primary' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.finish)} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'finished', description: 'Fim de viagem' }) }}>
-                    <IonIcon icon={documentTextOutline} />
-                    <IonLabel className="ml-1">Finalizar viagem</IonLabel>
-                  </IonButton>
-                </IonCol>
-              </IonRow>
+                  <IonRow>
+                    <IonCol>
+                      <IonButton expand="block" color='primary' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.finish)} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'finished', description: 'Fim de viagem' }) }}>
+                        <IonIcon icon={documentTextOutline} />
+                        <IonLabel className="ml-1">Finalizar viagem</IonLabel>
+                      </IonButton>
+                    </IonCol>
+                  </IonRow>
 
-              <IonRow>
-                <IonCol>
-                  <IonButton expand="block" color='warning' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.cancel)} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'canceled', description: 'Viagem cancelada' }) }}>
-                    <IonIcon icon={documentTextOutline} />
-                    <IonLabel className="ml-1">Cancelar viagem</IonLabel>
-                  </IonButton>
-                </IonCol>
-              </IonRow>
+                  <IonRow>
+                    <IonCol>
+                      <IonButton expand="block" color='warning' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.cancel)} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'canceled', description: 'Viagem cancelada' }) }}>
+                        <IonIcon icon={documentTextOutline} />
+                        <IonLabel className="ml-1">Cancelar viagem</IonLabel>
+                      </IonButton>
+                    </IonCol>
+                  </IonRow>
 
-              <IonRow>
-                <IonCol>
-                  <IonButton expand="block" color='primary' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.undoCancel)} onClick={() => {
-                    tripsService.undoLastStatusChange({ tripId: "" + trip.id_trip }).then((response) => {
-                      setMessageToast(response.message)
-                      setShowToast(true)
+                  <IonRow>
+                    <IonCol>
+                      <IonButton expand="block" color='primary' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.undoCancel)} onClick={() => {
+                        tripsService.undoLastStatusChange({ tripId: "" + trip.id_trip }).then((response) => {
+                          setMessageToast(response.message)
+                          setShowToast(true)
 
-                      loadPageInfo()
-                    })
-                  }}>
-                    <IonIcon icon={documentTextOutline} />
-                    <IonLabel className="ml-1">Descancelar viagem</IonLabel>
-                  </IonButton>
-                </IonCol>
-              </IonRow>
+                          loadPageInfo()
+                        })
+                      }}>
+                        <IonIcon icon={documentTextOutline} />
+                        <IonLabel className="ml-1">Descancelar viagem</IonLabel>
+                      </IonButton>
+                    </IonCol>
+                  </IonRow>
+                </>
+              )}
             </IonGrid>
           </>
         )}
@@ -259,13 +263,24 @@ const Viagem: React.FC<ViagemProps> = (props) => {
         />
 
         <ShowContratoResumoPageAsModal trigger="modal-contrato" id_passenger_request={paramIdPassengerRequest} noHeaderBackButton />
+        <ShowViagemHistoricoStatusPageAsModal trigger='modal-historico-viagem' id_trip={paramIdTrip} noHeaderBackButton />
       </IonContent>
 
       <IonFooter>
         <IonToolbar>
           <IonButton expand="block" color='primary' fill="outline">
             <IonIcon icon={documentTextOutline} />
-            <IonLabel>ver lista de presença (WIP)</IonLabel>
+            <IonLabel>Lista de presença (WIP)</IonLabel>
+          </IonButton>
+
+          <IonButton expand="block" color='primary' fill="outline">
+            <IonIcon icon={pinOutline} />
+            <IonLabel>Rota de viagem (WIP)</IonLabel>
+          </IonButton>
+
+          <IonButton expand="block" color='primary' fill="outline" disabled={!!!paramIdTrip} onClick={() => { document.getElementById('modal-historico-viagem')?.click() }}>
+            <IonIcon icon={timeOutline} />
+            <IonLabel>Histórico de status da viagem</IonLabel>
           </IonButton>
 
           {isPassenger && (
@@ -298,7 +313,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
           )}
         </IonToolbar>
       </IonFooter>
-    </IonPage >
+    </IonPage>
   );
 };
 

@@ -1,10 +1,11 @@
 import instance from "./api";
 
 import tripsRoutes from "../../constants/routes/tripsRoutes";
-import { ChangeTripStatusResponse, CreateTripProps, GetFeedProps, GetTripsFeedResponse, UndoLastStatusChangeProps, UpdateTripStatusProps } from "../functions/tripsService";
+import { ChangeTripStatusResponse, CreateTripProps, GetFeedProps, getTripHistoricDataProps, GetTripsFeedResponse, UndoLastStatusChangeProps, UpdateTripStatusProps } from "../functions/tripsService";
 import { tripStatus } from "../../constants/tripStatus";
 import { Trip } from "../../models/trip.model";
 import { MessageAndData } from "../../constants/responses/MessageAndData";
+import { Data } from "../../constants/responses/Data";
 
 export async function getTripsByItineraryId(id_itinerary: string): Promise<Trip[]> {
   const finalUrl = tripsRoutes.getTripsByItineraryId.url.replace(':id', id_itinerary)
@@ -47,6 +48,13 @@ export async function undoLastStatusChange({ tripId }: UndoLastStatusChangeProps
   const finalUrl = tripsRoutes.undoLastStatusChange.url.replace(':id', tripId)
 
   const response = await instance.patch(finalUrl)
+  return response.data;
+}
+
+export async function getTripHistoricData({ tripId }: getTripHistoricDataProps): Promise<Data> {
+  const finalUrl = tripsRoutes.getTripHistoricData.url.replace(':id', tripId)
+
+  const response = await instance.get(finalUrl)
   return response.data;
 }
 

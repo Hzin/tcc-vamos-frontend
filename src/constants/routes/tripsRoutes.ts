@@ -27,6 +27,9 @@ const tripsRoutes = {
   },
   undoLastStatusChange: {
     url: `${tripsRoutesDefault}/:id/status/undo`
+  },
+  getTripHistoricData: {
+    url: `${tripsRoutesDefault}/:id/status/history`
   }
 }
 

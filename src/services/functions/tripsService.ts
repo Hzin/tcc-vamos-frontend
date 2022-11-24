@@ -2,6 +2,7 @@ import { MessageAndData } from "../../constants/responses/MessageAndData";
 import { tripStatus } from "../../constants/tripStatus";
 import { Itinerary } from "../../models/itinerary.model";
 import { Trip } from "../../models/trip.model";
+import { TripHistory } from "../../models/tripHistory.model";
 import * as tripsRoutes from "../api/trips";
 
 export interface GetTripsFeedResponse {
@@ -133,8 +134,8 @@ export async function createTrip({
 
   try {
     res = await tripsRoutes.createTrip({ itineraryId, tripType, newStatus });
-    console.log('res')
-    console.log(res)
+    console.log("res");
+    console.log(res);
   } catch (error) {
     // TODO
   }
@@ -171,7 +172,9 @@ export async function updateTripStatus({
 export interface UndoLastStatusChangeProps {
   tripId: string;
 }
-export async function undoLastStatusChange({ tripId }: UndoLastStatusChangeProps): Promise<MessageAndData> {
+export async function undoLastStatusChange({
+  tripId,
+}: UndoLastStatusChangeProps): Promise<MessageAndData> {
   let res: any;
 
   try {
@@ -181,4 +184,21 @@ export async function undoLastStatusChange({ tripId }: UndoLastStatusChangeProps
   }
 
   return res;
+}
+
+export interface getTripHistoricDataProps {
+  tripId: string;
+}
+export async function getTripHistoricData({
+  tripId,
+}: getTripHistoricDataProps): Promise<TripHistory[]> {
+  let res: any;
+
+  try {
+    res = await tripsRoutes.getTripHistoricData({ tripId });
+  } catch (error) {
+    // TODO
+  }
+
+  return res.data;
 }
