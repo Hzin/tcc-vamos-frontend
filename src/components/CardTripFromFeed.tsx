@@ -112,30 +112,6 @@ export const CardTripFromFeed = (props: ComponentProps) => {
       });
   };
 
-  const updateTripStatus = async ({
-    tripId,
-    newStatus,
-    description,
-  }: UpdateTripStatusProps) => {
-    await tripsService
-      .updateTripStatus({
-        tripId,
-        newStatus,
-        description,
-      })
-      .then((response) => {
-        console.log('response')
-        console.log(response)
-
-        // if (!response.data) {
-        //   refreshPage("Houve um erro ao atualizar a viagem!", "warning");
-        //   return;
-        // }
-
-        refreshPage("Viagem atualizada com sucesso!", "success");
-      });
-  };
-
   const handleConfirmActionTripAlert = async (
     itineraryId: string,
     action: string,

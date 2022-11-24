@@ -51,6 +51,14 @@ const HomeFeedViagensMeusMotorista: React.FC = () => {
     getFeed()
   }, []);
 
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     getFeed()
+  //   }, 1000);
+
+  //   return () => clearInterval(interval);
+  // }, []);
+
   const getFeed = async () => {
     await tripsService.getFeed({ tripDay: 'today', userType: 'driver' }).then((response) => {
       setTodaysTrips(response);

@@ -1,3 +1,4 @@
+import { MessageAndData } from "../../constants/responses/MessageAndData";
 import { tripStatus } from "../../constants/tripStatus";
 import { Itinerary } from "../../models/itinerary.model";
 import { Trip } from "../../models/trip.model";
@@ -151,7 +152,7 @@ export async function updateTripStatus({
   tripId,
   newStatus,
   description,
-}: UpdateTripStatusProps): Promise<GetFeedPropsReturn[]> {
+}: UpdateTripStatusProps): Promise<any> {
   let res: any;
 
   try {
@@ -164,5 +165,20 @@ export async function updateTripStatus({
     // TODO
   }
 
-  return res.data;
+  return res.message;
+}
+
+export interface UndoLastStatusChangeProps {
+  tripId: string;
+}
+export async function undoLastStatusChange({ tripId }: UndoLastStatusChangeProps): Promise<MessageAndData> {
+  let res: any;
+
+  try {
+    res = await tripsRoutes.undoLastStatusChange({ tripId });
+  } catch (error) {
+    // TODO
+  }
+
+  return res;
 }

@@ -3,5 +3,6 @@ export enum tripStatusUpdateActions {
   cancel = 'CANCEL',
   finish = 'FINISH',
 
-  reconfirm = 'RECONFIRM'
+  reconfirm = 'RECONFIRM',
+  undoCancel = 'UNDOCANCEL'
 }

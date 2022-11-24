@@ -23,7 +23,10 @@ const tripsRoutes = {
   },
   updateTripStatus: {
     // url: `${tripsRoutesDefault}/tripType/:tripType/update/status/:newStatus`
-    url: `${tripsRoutesDefault}/:id/status/:newStatus`
+    url: `${tripsRoutesDefault}/:id/status/new/:newStatus`
+  },
+  undoLastStatusChange: {
+    url: `${tripsRoutesDefault}/:id/status/undo`
   }
 }
 
