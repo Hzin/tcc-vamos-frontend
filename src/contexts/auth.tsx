@@ -16,6 +16,20 @@ const AuthProvider: React.FC<PropsWithChildren> = ({children}) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
+  useEffect(() => {
+    async function loadStorageData() {
+      const storagedUser = await localStorage.getItem("user");
+      const storagedToken = await localStorage.getItem("tokenId");
+
+      if (storagedUser && storagedToken) {
+        setUser(JSON.parse(storagedUser));
+        setToken(storagedToken);
+      }
+    }
+
+    loadStorageData();
+  }, []);
+
   async function signIn(login: string, password: string) {
     const singinForm = {
       login,

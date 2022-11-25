@@ -91,7 +91,7 @@ export default function ListaPresenca() {
                 <IonCardContent>
                   <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
                     <IonIcon icon={locateOutline} className="mr-1"></IonIcon>
-                    {passenger.address}
+                    {passenger.formatted_address_origin}
                   </div>
                 </IonCardContent>
               </IonCard>

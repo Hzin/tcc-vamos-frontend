@@ -140,7 +140,7 @@ const Perfil: React.FC<PerfilProps> = (props) => {
           const countVehiclesPendingDocuments = await vehiclesService.countVehiclesPendingDocuments()
           setCountVehiclesPendingDocuments(countVehiclesPendingDocuments)
         }
-          const userData = user;
+        const userData = user;
 
         if (userData && isMounted) {
           setInputValues({
@@ -148,7 +148,7 @@ const Perfil: React.FC<PerfilProps> = (props) => {
             name: userData.name,
             lastname: userData.lastname,
             email: userData.email,
-              avatar: userData.avatar_image,
+            avatar: userData.avatar_image,
             phone_number: userData.phone_number,
             birth_date: userData.birth_date,
             bio: userData.bio,
@@ -179,8 +179,6 @@ const Perfil: React.FC<PerfilProps> = (props) => {
 
           const countItinerariesPendingPassengerRequests = await itinerariesService.countItinerariesPendingPassengerRequestsByDriverId()
           setCountItinerariesPendingPassengerRequests(countItinerariesPendingPassengerRequests)
-        } else {
-          redirectUserToLogin();
         }
       }
     };

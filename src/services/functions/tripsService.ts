@@ -22,6 +22,8 @@ export async function getTripsByItineraryId(id_itinerary: string): Promise<Trip[
   } catch (error) {
     // TODO
   }
+
+  return res.data;
 }
 
 export async function getTodaysTripsAsDriver(): Promise<GetTripsFeedResponse[]> {
