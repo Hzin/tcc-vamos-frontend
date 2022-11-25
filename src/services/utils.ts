@@ -123,3 +123,26 @@ export const convertObjectToStringArray = (object: Object): string[] => {
 
   return returnObject
 }
+
+export const formatDateObjectToDate = (date: string): string => {
+  const dateObj = new Date(date)
+  const day = dateObj.getDate();
+  const month = dateObj.getMonth() + 1;
+  const year = dateObj.getFullYear();
+
+  return `${day}/${month}/${year}`;
+}
+
+const timezoneOffset = 6
+export const formatDateObjectToTime = (date: string): string => {
+  console.log(date)
+  const dateObj = new Date(date);
+
+  dateObj.setHours(dateObj.getHours() - timezoneOffset);
+  console.log(dateObj)
+
+  const hours = dateObj.getHours();
+  const minutes = dateObj.getMinutes();
+
+  return hours + ':' + minutes
+}

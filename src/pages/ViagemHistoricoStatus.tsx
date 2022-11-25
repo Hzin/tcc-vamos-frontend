@@ -15,6 +15,8 @@ import { TripHistory } from "../models/tripHistory.model";
 
 import * as tripsService from "../services/functions/tripsService";
 
+import { formatDateObjectToDate, formatDateObjectToTime } from "../services/utils";
+
 export interface ViagemHistoricoStatusProps {
   match?: {
     params: {
@@ -45,7 +47,6 @@ const ViagemHistoricoStatus: React.FC<ViagemHistoricoStatusProps> = (props) => {
   const getTripHistoricInfo = async (id_trip: string) => {
     const tripHistoric = await tripsService.getTripHistoricData({ tripId: id_trip })
     setTripHistory(tripHistoric)
-    // console.log(tripHistoric)
   }
 
   return (
@@ -63,6 +64,7 @@ const ViagemHistoricoStatus: React.FC<ViagemHistoricoStatusProps> = (props) => {
                     {history.old_status && <><IonChipTripStatus status={history.old_status} dontFadeFinishedStatusChip /> <IonIcon icon={arrowForwardOutline} /> </>}
                     {history.new_status && <IonChipTripStatus status={history.new_status} dontFadeFinishedStatusChip />}
                     {history.description && <p>{"Descrição: "} {history.description}</p>}
+                    <p>{"Horário: "} {formatDateObjectToDate(history.created_at)} {", "} {formatDateObjectToTime(history.created_at)}</p>
                   </IonCardContent>
                 </IonCard>
               );

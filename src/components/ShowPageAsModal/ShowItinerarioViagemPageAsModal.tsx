@@ -20,6 +20,10 @@ export const ShowItinerarioViagemPageAsModal = (props: ShowItinerarioPassageiros
       <IonModal ref={modal} trigger={props.trigger}>
         <Viagem
           id_trip={props.id_trip}
+          tripType={props.tripType}
+
+          isReturnTripCreated
+          
           noHeaderBackButton={props.noHeaderBackButton}
         />
 

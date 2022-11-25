@@ -29,14 +29,14 @@ import { reloadPage } from "../services/utils";
 import { useHistory } from "react-router";
 import {
   GetFeedPropsReturn,
-  UpdateTripStatusProps,
 } from "../services/functions/tripsService";
-import EnumUtils from "../services/EnumUtils";
 import { ShowItinerarioViagemPageAsModal } from "./ShowPageAsModal/ShowItinerarioViagemPageAsModal";
 import { Separator } from "./Separator";
 import { VehiclePicture } from "./VehiclePicture";
 import { useEffect } from "react";
 import { IonChipTripStatus } from "./IonChipTripStatus";
+import { ChipInfo } from "./ChipInfo";
+import { TripType } from "../models/tripType.models";
 
 interface ComponentProps {
   // itinerary: Itinerary;
@@ -55,7 +55,9 @@ export const CardTripFromFeed = (props: ComponentProps) => {
   const [presentAlertConfirmation] = useIonAlert();
 
   useEffect(() => {
-    // console.log(props)
+    if (props.tripInfo.tripReturn && props.tripInfo.tripReturn.id) {
+      // não pode mais mexer nas opções da viagem de ida
+    }
   }, []);
 
   const refreshPage = (message: string, toastColor: Color) => {
@@ -204,13 +206,6 @@ export const CardTripFromFeed = (props: ComponentProps) => {
       });
   };
 
-  const isButtonClickable = (): boolean => {
-    console.log(props.tripInfo);
-    return false;
-  };
-
-  useEffect(() => { }, []);
-
   return (
     <>
       <IonCard slot={props.slot}>
@@ -247,6 +242,13 @@ export const CardTripFromFeed = (props: ComponentProps) => {
             <IonItem lines="none">
               <IonIcon icon={returnDownForwardOutline} />
               <IonLabel className="ml-2">Viagem de ida</IonLabel>
+
+              <ChipInfo infoString={
+                [
+                  'A viagem de ida não pode ser alterada depois do horário de finalização.',
+                  'A viagem de ida também não poderá ser alterada se a viagem de volta for iniciada. Mesmo se a viagem de volta for cancelada, você não poderá mais alterar a viagem de ida.'
+                ]
+              } />
             </IonItem>
             <IonItem lines="none">
               Status
@@ -289,6 +291,8 @@ export const CardTripFromFeed = (props: ComponentProps) => {
                   <IonItem lines="none">
                     <IonIcon icon={returnUpBackOutline} />
                     <IonLabel className="ml-2">Viagem de volta</IonLabel>
+
+                    <ChipInfo infoString={['A viagem de volta pode ser iniciada somente se a viagem de ida for finalizada ou cancelada.']} />
                   </IonItem>
 
                   <IonItem lines="none">
@@ -335,6 +339,9 @@ export const CardTripFromFeed = (props: ComponentProps) => {
       {props.tripInfo.tripGoing && props.tripInfo.tripGoing.id && (
         <ShowItinerarioViagemPageAsModal
           id_trip={"" + props.tripInfo.tripGoing.id}
+          tripType={TripType.going}
+          isReturnTripCreated={props.tripInfo.tripReturn && props.tripInfo.tripReturn.id ? true : false}
+
           trigger="modal-trip-going"
           hasButtonAlready
         />
@@ -342,6 +349,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
       {props.tripInfo.tripReturn && props.tripInfo.tripReturn.id && (
         <ShowItinerarioViagemPageAsModal
           id_trip={"" + props.tripInfo.tripReturn.id}
+          tripType={TripType.return}
           trigger="modal-trip-return"
           hasButtonAlready
         />
