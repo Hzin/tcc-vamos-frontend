@@ -9,7 +9,7 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import React, { useContext, useState } from "react";
+import React from "react";
 import { Redirect, Route } from "react-router-dom";
 
 import { home, person, search } from "ionicons/icons";
@@ -54,6 +54,9 @@ import ContratoResumo from "./pages/ContratoResumo";
 import Contrato from "./pages/Contrato";
 import ListaDePresenca from "./pages/ListaDePresenca";
 
+import HomeFeedViagensMeusMotorista from "./pages/HomeFeedViagensMeusMotorista";
+import HomeFeedViagensMeusPassageiro from "./pages/HomeFeedViagensMeusPassageiro";
+
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -76,8 +79,10 @@ import "./theme/variables.css";
 
 /* Tailwind styles */
 import "./theme/tailwind.css";
-import HomeFeedViagensMeusMotorista from "./pages/HomeFeedViagensMeusMotorista";
-import HomeFeedViagensMeusPassageiro from "./pages/HomeFeedViagensMeusPassageiro";
+
+import Passageiros from "./pages/Passageiros";
+import ListaPresenca from "./pages/ListaPresenca";
+import { AuthProvider, useAuth } from "./contexts/auth";
 
 setupIonicReact();
 
@@ -125,6 +130,7 @@ const routes = (
     <Route exact path="/buscar/itinerario" component={BuscarItinerario}></Route>
     <Route exact path="/buscar/passageiro" component={BuscarPassageiro}></Route>
     <Route exact path="/buscar/itinerario/lista" component={ListaItinerarios}></Route>
+    
 
     <Route exact path="/viagem" component={Home}></Route>
     <Route exact path="/viagem/:id" component={Viagem}></Route>
@@ -144,26 +150,13 @@ const routes = (
   </>
 );
 
-interface IUserManager {
-  setIsLoggedIn: Function;
-}
-
-const user: IUserManager = {
-  setIsLoggedIn: () => { },
-};
-
-export const UserContext = React.createContext<IUserManager>(user);
-
 const IonicApp: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const user = useContext(UserContext);
-
-  user.setIsLoggedIn = setIsLoggedIn;
+  const { signed } = useAuth();
 
   return (
     <IonApp>
       <IonReactRouter>
-        {isLoggedIn ? (
+        {signed? (
           <IonTabs>
             <IonRouterOutlet>{routes}</IonRouterOutlet>
 
@@ -192,9 +185,9 @@ const IonicApp: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <UserContext.Provider value={user}>
+    <AuthProvider>
       <IonicApp />
-    </UserContext.Provider>
+    </AuthProvider>
   );
 };
 

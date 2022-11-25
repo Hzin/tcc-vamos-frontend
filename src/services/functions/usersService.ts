@@ -3,6 +3,7 @@ import * as usersRoutes from "../api/users";
 
 interface getByIdReturn {
   userData?: {
+    avatar_image: any;
     name: string;
     lastname: string;
     email: string;

@@ -26,6 +26,7 @@ interface ComponentProps {
   slot?: string;
   clickable: boolean;
   tripId?: string;
+  // isPassenger: boolean;
 }
 
 interface IonChipTripStatusProps {
@@ -194,7 +195,9 @@ export const TripCard = (props: ComponentProps) => {
             if (props.tripId) redirectToTripPage(props.tripId);
             break;
           case tripStatus.pending:
-            handleChooseActionTripAlert(itineraryId, itineraryNickname);
+            // if (!props.isPassenger) {
+              handleChooseActionTripAlert(itineraryId, itineraryNickname);
+            // }
             break;
           default:
             break;

@@ -7,6 +7,7 @@ export interface GetTripsFeedResponse {
   itinerary: Itinerary;
   tripStatus: tripStatus;
   tripId?: string // vai ser trazido caso a viagem existir
+  isPassenger: boolean;
 }
 
 export interface ChangeTripStatusResponse {

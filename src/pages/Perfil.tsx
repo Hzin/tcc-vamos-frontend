@@ -27,13 +27,12 @@ import {
   shieldCheckmarkOutline,
   starOutline,
 } from "ionicons/icons";
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
 import LocalStorage from "../LocalStorage";
 
 import { Color } from "@ionic/core";
-import { UserContext } from "../App";
 import { PageHeader } from "../components/PageHeader";
 
 import { User } from "../models/user.model";
@@ -43,6 +42,7 @@ import { closeToast } from "../services/utils";
 import * as sessionsService from "../services/functions/sessionsService";
 import * as usersService from "../services/functions/usersService";
 import * as vehiclesService from "../services/functions/vehiclesService";
+import { useAuth } from "../contexts/auth";
 import * as itinerariesService from "../services/functions/itinerariesService";
 
 interface LocationState {
@@ -66,7 +66,7 @@ export interface PerfilProps {
 }
 
 const Perfil: React.FC<PerfilProps> = (props) => {
-  const user = useContext(UserContext);
+  const { user, signOut } = useAuth();
 
   const history = useHistory();
   const location = useLocation<LocationState>();
@@ -109,8 +109,7 @@ const Perfil: React.FC<PerfilProps> = (props) => {
   };
 
   const logoff = () => {
-    LocalStorage.clearToken();
-    user.setIsLoggedIn(false);
+    signOut();
     history.push({ pathname: "/login" });
   };
 
@@ -126,92 +125,61 @@ const Perfil: React.FC<PerfilProps> = (props) => {
     }
 
     const loadUserData = async () => {
-      let userId = "";
+      if (user) {
+        // check if user is driver (if they have vans)
+        const userIsDriverRes = await usersService.checkIfUserIsDriver(user.id_user);
 
-      // verify if user is authenticated
-      if (props.id_user) {
-        userId = props.id_user
-      } else if (props.match && props.match.params.id) {
-        userId = props.match.params.id;
-      } else {
-        const refreshSessionRes = await sessionsService.refreshSession();
-
-        if (refreshSessionRes.error) {
-          redirectUserToLogin();
-          return;
+        if (!userIsDriverRes.error && userIsDriverRes.result !== undefined) {
+          setIsDriver(userIsDriverRes.result);
         }
 
-        if (refreshSessionRes.userId) {
-          userId = refreshSessionRes.userId;
+        const userIsAdminRes = await usersService.checkIfUserIsAdmin();
+        if (userIsAdminRes) {
+          setIsAdmin(userIsAdminRes);
+
+          const countVehiclesPendingDocuments = await vehiclesService.countVehiclesPendingDocuments()
+          setCountVehiclesPendingDocuments(countVehiclesPendingDocuments)
         }
-      }
+        const userData = user;
 
-      // get user info by ID
-      let userData: User | undefined
-      try {
-        userData = await usersService.getById(userId);
-      } catch {
-        history.push({ pathname: "/login" });
-      }
+        if (userData && isMounted) {
+          setInputValues({
+            id: userData.id_user,
+            name: userData.name,
+            lastname: userData.lastname,
+            email: userData.email,
+            avatar: userData.avatar_image,
+            phone_number: userData.phone_number,
+            birth_date: userData.birth_date,
+            bio: userData.bio,
+            document_type: userData.document_type,
+            document: userData.document,
+          });
 
-      // check if user is driver (if they have vans)
-      const userIsDriverRes = await usersService.checkIfUserIsDriver(userId);
+          if (props.id_user || (props.match && props.match.params.id)) {
+            setIsVisitor(true);
+            setPageName(`Perfil de ${userData.name}`)
 
-      // if (userIsDriverRes.error) {
-      //   setToastColor('warning')
-      //   setToastMessage(userIsDriverRes.error.errorMessage)
-      //   setShowToast(true)
-      //   return
-      // }
+            return
+          }
 
-      if (!userIsDriverRes.error && userIsDriverRes.result !== undefined) {
-        setIsDriver(userIsDriverRes.result);
-      }
+          setIsVisitor(false)
+          setPageName('Meu perfil')
 
-      const userIsAdminRes = await usersService.checkIfUserIsAdmin();
-      if (userIsAdminRes) {
-        setIsAdmin(userIsAdminRes);
+          if (!userData.document || !userData.phone_number) {
+            setIncompleteProfile(true);
 
-        const countVehiclesPendingDocuments = await vehiclesService.countVehiclesPendingDocuments()
-        setCountVehiclesPendingDocuments(countVehiclesPendingDocuments)
-      }
+            let counter = 0;
 
-      if (userData && isMounted) {
-        setInputValues({
-          id: userId,
-          name: userData.name,
-          lastname: userData.lastname,
-          email: userData.email,
-          phone_number: userData.phone_number,
-          birth_date: userData.birth_date,
-          bio: userData.bio,
-          document_type: userData.document_type,
-          document: userData.document,
-        });
+            if (!userData.document) counter++;
+            if (!userData.phone_number) counter++;
 
-        if (props.id_user || (props.match && props.match.params.id)) {
-          setIsVisitor(true);
-          setPageName(`Perfil de ${userData.name}`)
+            setIncompleteProfileCounter(counter);
+          }
 
-          return
+          const countItinerariesPendingPassengerRequests = await itinerariesService.countItinerariesPendingPassengerRequestsByDriverId()
+          setCountItinerariesPendingPassengerRequests(countItinerariesPendingPassengerRequests)
         }
-
-        setIsVisitor(false)
-        setPageName('Meu perfil')
-
-        if (!userData.document || !userData.phone_number) {
-          setIncompleteProfile(true);
-
-          let counter = 0;
-
-          if (!userData.document) counter++;
-          if (!userData.phone_number) counter++;
-
-          setIncompleteProfileCounter(counter);
-        }
-
-        const countItinerariesPendingPassengerRequests = await itinerariesService.countItinerariesPendingPassengerRequestsByDriverId()
-        setCountItinerariesPendingPassengerRequests(countItinerariesPendingPassengerRequests)
       }
     };
 
@@ -239,7 +207,8 @@ const Perfil: React.FC<PerfilProps> = (props) => {
         <IonCard>
           <IonCardContent>
             <img
-              src="https://static.generated.photos/vue-static/home/feed/adult.png"
+              // src="https://static.generated.photos/vue-static/home/feed/adult.png"
+              src={inputValues.avatar}
               alt="avatar"
               className="rounded w-28 h-28 block mx-auto"
             />
