@@ -135,11 +135,9 @@ export const formatDateObjectToDate = (date: string): string => {
 
 const timezoneOffset = 6
 export const formatDateObjectToTime = (date: string): string => {
-  console.log(date)
   const dateObj = new Date(date);
 
   dateObj.setHours(dateObj.getHours() - timezoneOffset);
-  console.log(dateObj)
 
   const hours = dateObj.getHours();
   const minutes = dateObj.getMinutes();

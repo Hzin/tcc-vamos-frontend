@@ -3,6 +3,7 @@ import { schoolPeriods } from "../constants/schoolPeriods"
 import { tripStatus } from "../constants/tripStatus"
 
 import { Color } from "@ionic/core";
+import { TripType } from "../models/tripType.models";
 
 class EnumUtils {
   public static getSchoolPeriodEnumFormatted = (schoolPeriod: schoolPeriods): string => {
@@ -25,6 +26,17 @@ class EnumUtils {
       case itineraryContractTypes.avulse:
         return 'Avulso'
     }
+  }
+
+  public static getTripTypeEnumFormatted = (tripTypeString: TripType | string): string => {
+    switch (tripTypeString) {
+      case TripType.going:
+        return 'Ida'
+      case TripType.return:
+        return 'Volta'
+    }
+
+    throw new Error("tripTypeString inválido.")
   }
 
   public static getTripStatusEnumFormatted = (tripStatusString: tripStatus | string): string => {

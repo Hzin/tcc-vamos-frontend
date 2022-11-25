@@ -301,10 +301,13 @@ export const CardTripFromFeed = (props: ComponentProps) => {
                   </IonItem>
 
                   {props.tripInfo.tripReturn && props.tripInfo.tripReturn.id ? (
-                    <IonChip color="secondary" id="modal-trip-return">
-                      <IonIcon icon={eyeOutline} />
-                      <IonLabel>Ver detalhes da viagem</IonLabel>
-                    </IonChip>
+                    <IonItem lines="none" id='modal-trip-return'>
+                      Detalhes da viagem de volta
+                      <IonChip slot="end" color="secondary">
+                        <IonIcon icon={eyeOutline} />
+                        <IonLabel>Ir</IonLabel>
+                      </IonChip>
+                    </IonItem>
                   ) : (
                     <IonItem lines="none">
                       Confirmar viagem de retorno
@@ -320,7 +323,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
                             "return",
                             "" + props.tripInfo.itinerary.id_itinerary,
                             props.tripInfo.itinerary.itinerary_nickname,
-                            props.tripInfo.tripGoing.id
+                            props.tripInfo.tripReturn?.id
                           );
                         }}
                       >
@@ -346,10 +349,12 @@ export const CardTripFromFeed = (props: ComponentProps) => {
           hasButtonAlready
         />
       )}
+
       {props.tripInfo.tripReturn && props.tripInfo.tripReturn.id && (
         <ShowItinerarioViagemPageAsModal
           id_trip={"" + props.tripInfo.tripReturn.id}
           tripType={TripType.return}
+
           trigger="modal-trip-return"
           hasButtonAlready
         />

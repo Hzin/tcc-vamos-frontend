@@ -31,14 +31,15 @@ import { PageHeader } from "../components/PageHeader";
 import { CardItinerary } from "../components/CardItinerary";
 import { Trip } from "../models/trip.model";
 import { ShowContratoResumoPageAsModal } from "../components/ShowPageAsModal/ShowContratoResumoPageAsModal";
-import EnumUtils from "../services/EnumUtils";
 import { ItemItineraryDetail } from "../components/ItemItineraryDetail";
-import { formatTimeField, getUserFullName, reloadPage } from "../services/utils";
 import { tripStatus } from "../constants/tripStatus";
 import { tripStatusUpdateActions } from "../constants/tripStatusUpdateActions";
 import { ShowViagemHistoricoStatusPageAsModal } from "../components/ShowPageAsModal/ShowViagemHistoricoStatusPageAsModal";
 import { ChipInfo } from "../components/ChipInfo";
 import { TripType } from "../models/tripType.models";
+
+import EnumUtils from "../services/EnumUtils";
+import { getUserFullName, formatTimeField } from "../services/utils";
 
 export interface ViagemProps {
   match?: {
@@ -77,13 +78,12 @@ const Viagem: React.FC<ViagemProps> = (props) => {
   useEffect(() => {
     loadPageInfo()
 
-    if (! (props.tripType === TripType.return && props.isReturnTripCreated)) {
-      setAreOptionsAvailable(true)
-    } else {
+    if (props.tripType === TripType.going && props.isReturnTripCreated) {
+      setAreOptionsAvailable(false)
       setOptionsButtonsCss('line-through')
     }
   }, [])
-
+  
   const loadPageInfo = () => {
     if (props.id_trip) getTripInfo(props.id_trip)
     else if (props.match) getTripInfo(props.match.params.id)
@@ -130,6 +130,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
       case tripStatus.pending:
       case tripStatus.finished:
         setAvailableOptions([])
+        setOptionsButtonsCss('line-through')
         break;
       case tripStatus.confirmed:
         setAvailableOptions([tripStatusUpdateActions.start, tripStatusUpdateActions.cancel])
@@ -166,7 +167,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
   return (
     <IonPage>
-      <PageHeader pageName="Viagem" showBackButton={!props.noHeaderBackButton} />
+      <PageHeader pageName={`Viagem de ${EnumUtils.getTripTypeEnumFormatted(props.tripType)}`} showBackButton={!props.noHeaderBackButton} />
 
       <IonContent fullscreen>
         {trip && (
@@ -216,13 +217,14 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
                   <ChipInfo infoString={
                     [
-                      'Lembre-se de que você não poderá usar as opções da viagem de ida se você criar a viagem de volta.'
+                      'Lembre-se de que você não poderá usar as opções da viagem de ida se a viagem for finalizada.',
+                      'Você também não poderá usar as opções se criar a viagem de volta.'
                     ]
                   } />
 
                   <IonRow>
                     <IonCol>
-                      <IonButton expand="block" color='success' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.start) && areOptionsAvailable} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'inProgress', description: 'Início de viagem' }) }}>
+                      <IonButton expand="block" color='success' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.start) && !areOptionsAvailable} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'inProgress', description: 'Início de viagem' }) }}>
                         <IonIcon icon={documentTextOutline} />
                         <IonLabel className={`ml-1 ${optionsButtonsCss}`}>Iniciar viagem</IonLabel>
                       </IonButton>
@@ -231,37 +233,45 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
                   <IonRow>
                     <IonCol>
-                      <IonButton expand="block" color='primary' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.finish) && areOptionsAvailable} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'finished', description: 'Fim de viagem' }) }}>
+                      <IonButton expand="block" color='primary' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.finish) && !areOptionsAvailable} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'finished', description: 'Fim de viagem' }) }}>
                         <IonIcon icon={documentTextOutline} />
                         <IonLabel className={`ml-1 ${optionsButtonsCss}`}>Finalizar viagem</IonLabel>
                       </IonButton>
                     </IonCol>
                   </IonRow>
 
-                  <IonRow>
-                    <IonCol>
-                      <IonButton expand="block" color='warning' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.cancel) && areOptionsAvailable} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'canceled', description: 'Viagem cancelada' }) }}>
-                        <IonIcon icon={documentTextOutline} />
-                        <IonLabel className={`ml-1 ${optionsButtonsCss}`}>Cancelar viagem</IonLabel>
-                      </IonButton>
-                    </IonCol>
-                  </IonRow>
+                  {availableOptions.includes(tripStatusUpdateActions.cancel) && (
+                    <>
+                      <IonRow>
+                        <IonCol>
+                          <IonButton expand="block" color='warning' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.cancel) && !areOptionsAvailable} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'canceled', description: 'Viagem cancelada' }) }}>
+                            <IonIcon icon={documentTextOutline} />
+                            <IonLabel className={`ml-1 ${optionsButtonsCss}`}>Cancelar viagem</IonLabel>
+                          </IonButton>
+                        </IonCol>
+                      </IonRow>
+                    </>
+                  )}
 
-                  <IonRow>
-                    <IonCol>
-                      <IonButton expand="block" color='primary' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.undoCancel) && areOptionsAvailable} onClick={() => {
-                        tripsService.undoLastStatusChange({ tripId: "" + trip.id_trip }).then((response) => {
-                          setMessageToast(response.message)
-                          setShowToast(true)
+                  {availableOptions.includes(tripStatusUpdateActions.undoCancel) && (
+                    <>
+                      <IonRow>
+                        <IonCol>
+                          <IonButton expand="block" color='primary' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.undoCancel) && !areOptionsAvailable} onClick={() => {
+                            tripsService.undoLastStatusChange({ tripId: "" + trip.id_trip }).then((response) => {
+                              setMessageToast(response.message)
+                              setShowToast(true)
 
-                          loadPageInfo()
-                        })
-                      }}>
-                        <IonIcon icon={documentTextOutline} />
-                        <IonLabel className={`ml-1 ${optionsButtonsCss}`}>Reverter cancelamento da viagem</IonLabel>
-                      </IonButton>
-                    </IonCol>
-                  </IonRow>
+                              loadPageInfo()
+                            })
+                          }}>
+                            <IonIcon icon={documentTextOutline} />
+                            <IonLabel className={`ml-1 ${optionsButtonsCss}`}>Reverter cancelamento da viagem</IonLabel>
+                          </IonButton>
+                        </IonCol>
+                      </IonRow>  
+                    </>
+                  )}
                 </>
               )}
             </IonGrid>
