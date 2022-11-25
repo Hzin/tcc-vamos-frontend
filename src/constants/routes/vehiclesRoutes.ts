@@ -36,6 +36,9 @@ const vehiclesRoutes = {
   getPendingDocuments: {
     url: `${vehiclesRoutesDefault}/documents/pending`
   },
+  countVehiclesPendingDocuments: {
+    url: `${vehiclesRoutesDefault}/documents/pending/count`
+  },
 
   // urls de picture
   searchPictureFile: {

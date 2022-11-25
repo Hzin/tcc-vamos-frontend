@@ -1,3 +1,4 @@
+import { User } from "../../models/user.model";
 import * as usersRoutes from "../api/users";
 
 interface getByIdReturn {
@@ -18,83 +19,69 @@ interface getByIdReturn {
 }
 
 interface getByIdRes {
-  status: string;
-  message: string;
-  userId?: string;
-  data: {
-    avatar_image: string;
-    name: string;
-    lastname: string;
-    email: string;
-    phone_number: string;
-    birth_date: string;
-    bio: string;
-    document_type: string;
-    document: string;
-  };
+  status?: string;
+  message?: string;
+  error?: string;
+
+  avatar_image: string,
+  bio: string,
+  birth_date: string,
+  document: string,
+  document_type: string,
+  email: string,
+  id_user: string,
+  lastname: string,
+  name: string,
+  phone_number: string,
+
 }
 
-export const getById = async (userId: string): Promise<getByIdReturn> => {
-  try {
-    let res: getByIdRes = await usersRoutes.getById(userId);
+// export const getById = async (userId: string): Promise<getByIdRes> => {
+export const getById = async (userId: string): Promise<User> => {
+  const res = await usersRoutes.getById(userId);
 
-    if (res.status === "error") {
-      return {
-        error: {
-          errorMessage: res.message,
-        },
-      };
-    }
+  if (res.status === "error") throw new Error('Usuário inválido...')
 
-    return {
-      userData: res.data,
-    };
-  } catch (err) {
-    return {
-      error: {
-        errorMessage: "Por favor, autentique-se.",
-      },
-    };
-  }
+  return res.data
 };
 
-interface getByIdReturn {
-  data?: {
-    phone: "";
-    whatsapp: "";
-    facebook: "";
-    telegram: "";
-  };
-  error?: {
-    errorMessage: string;
-  };
-}
+// interface getByIdReturn {
+//   data?: {
+//     phone: "";
+//     whatsapp: "";
+//     facebook: "";
+//     telegram: "";
+//   };
+//   error?: {
+//     errorMessage: string;
+//   };
+// }
 
-export const getUserSocialInfo = async (
-  userId: string
-): Promise<getByIdReturn> => {
-  try {
-    let res: getByIdRes = await usersRoutes.getSocialInfo(userId);
+// export const getUserSocialInfo = async (
+//   userId: string
+// ): Promise<getByIdReturn> => {
+//   try {
+//     let res: getByIdRes = await usersRoutes.getSocialInfo(userId);
 
-    if (res.status === "error") {
-      return {
-        error: {
-          errorMessage: res.message,
-        },
-      };
-    }
+//     if (res.status === "error") {
+//       return {
+//         error: {
+//           errorMessage: res.message,
+//         },
+//       };
+//     }
 
-    return {
-      userData: res.data,
-    };
-  } catch (err) {
-    return {
-      error: {
-        errorMessage: "Por favor, autentique-se.",
-      },
-    };
-  }
-};
+//     return {
+//       userData: res.data,
+//     };
+//   } catch (err) {
+//     return {
+//       error: {
+//         errorMessage: "Por favor, autentique-se.",
+//       },
+//     };
+//   }
+// };
 
 interface checkIfUserIsDriverReturn {
   result?: boolean;

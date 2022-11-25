@@ -1,5 +1,11 @@
+import { PassengerRequestStatusTypes } from "../../constants/enumPassengerRequestStatusTypes";
+import { itineraryContractTypes } from "../../constants/itineraryContractTypes";
+
 import { Itinerary } from "../../models/itinerary.model";
+import { PassengerRequest } from "../../models/passengerRequest.model";
+
 import * as itinerariesRoutes from "../api/itineraries";
+
 
 export interface SearchItinerariesRequest {
   coordinatesFrom: {
@@ -22,7 +28,7 @@ export async function getAllItineraries(): Promise<Itinerary[]> {
   let res: any;
 
   try {
-    res = await itinerariesRoutes.getItineraries();
+    res = await itinerariesRoutes.getAllItineraries();
   } catch (error) {
     // TODO
   }
@@ -51,20 +57,86 @@ export async function createItinerary(
   return res;
 }
 
-export async function createItineraryRequest(
-  request: itinerariesRoutes.CreateRequest
-): Promise<any> {
+export async function getById(id: string): Promise<Itinerary> {
   let res: any;
 
-  res = await itinerariesRoutes.createRequest(request);
+  res = await itinerariesRoutes.getById(id);
+
+  return res.data;
+}
+
+export async function getByDriverUserId(id_driver: string): Promise<Itinerary[]> {
+  let res: any;
+
+  res = await itinerariesRoutes.getByDriverUserId(id_driver);
+
+  return res.data;
+}
+
+export async function getByPassengerUserId(id_passenger: string): Promise<Itinerary[]> {
+  let res: any;
+
+  res = await itinerariesRoutes.getByPassengerUserId(id_passenger);
+
+  return res.data;
+}
+
+export interface CreateContractRequestRequest {
+  id_itinerary: number;
+
+  body: {
+    contract_type: itineraryContractTypes;
+    lat_origin: number;
+    lng_origin: number;
+    formatted_address_origin: string;
+    lat_destination: number;
+    lng_destination: number;
+    formatted_address_destination: string;
+  }
+}
+
+export async function createContractRequest({ id_itinerary, body }: CreateContractRequestRequest): Promise<any> {
+  let res: any;
+
+  res = await itinerariesRoutes.createContractRequest({ id_itinerary, body });
 
   return res;
 }
 
-export async function getById(id: string): Promise<any> {
+export interface UpdateContractStatusRequest {
+  id_itinerary: string;
+  id_user: string;
+  status: PassengerRequestStatusTypes
+}
+
+export async function updateContractStatus({ id_itinerary, id_user, status }: UpdateContractStatusRequest): Promise<any> {
   let res: any;
 
-  res = await itinerariesRoutes.getById(id);
+  res = await itinerariesRoutes.updateContractStatus({ id_itinerary, id_user, status });
+
+  return res.data;
+}
+
+export async function getPendingContractRequests(id_itinerary: string): Promise<PassengerRequest[]> {
+  let res: any;
+
+  res = await itinerariesRoutes.getPendingContractRequests(id_itinerary);
+
+  return res.data;
+}
+
+export async function getDriverItinerariesWithOnlyPendingPassengerRequests(id_user: string): Promise<Itinerary[]> {
+  let res: any;
+
+  res = await itinerariesRoutes.getDriverItinerariesWithOnlyPendingPassengerRequests(id_user);
+
+  return res.data;
+}
+
+export async function countItinerariesPendingPassengerRequestsByDriverId(): Promise<number> {
+  let res: any;
+
+  res = await itinerariesRoutes.countItinerariesPendingPassengerRequestsByDriverId();
 
   return res.data;
 }

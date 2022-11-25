@@ -34,17 +34,16 @@ import LocalStorage from "../LocalStorage";
 
 import { Color } from "@ionic/core";
 import { PageHeader } from "../components/PageHeader";
-import * as usersService from "../services/functions/usersService";
-import { closeToast } from "../services/utils";
-import { useAuth } from "../contexts/auth";
 
-interface ScanNewProps {
-  match: {
-    params: {
-      id: string;
-    };
-  };
-}
+import { User } from "../models/user.model";
+
+import { closeToast } from "../services/utils";
+
+import * as sessionsService from "../services/functions/sessionsService";
+import * as usersService from "../services/functions/usersService";
+import * as vehiclesService from "../services/functions/vehiclesService";
+import { useAuth } from "../contexts/auth";
+import * as itinerariesService from "../services/functions/itinerariesService";
 
 interface LocationState {
   redirectData?: {
@@ -54,11 +53,25 @@ interface LocationState {
   };
 }
 
-const Perfil: React.FC<ScanNewProps> = (props) => {
+export interface PerfilProps {
+  match?: {
+    params: {
+      id: string;
+    };
+  };
+
+  id_user?: string,
+
+  noHeaderBackButton?: boolean
+}
+
+const Perfil: React.FC<PerfilProps> = (props) => {
   const { user, signOut } = useAuth();
 
   const history = useHistory();
   const location = useLocation<LocationState>();
+
+  const [pageName, setPageName] = useState('Carregando...');
 
   const [isVisitor, setIsVisitor] = useState(true);
   const [isDriver, setIsDriver] = useState(false);
@@ -66,6 +79,9 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
   const [incompleteProfile, setIncompleteProfile] = useState(false);
   const [incompleteProfileCounter, setIncompleteProfileCounter] = useState(0);
+
+  const [countItinerariesPendingPassengerRequests, setCountItinerariesPendingPassengerRequests] = useState(0);
+  const [countVehiclesPendingDocuments, setCountVehiclesPendingDocuments] = useState(0);
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -118,17 +134,21 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
         }
 
         const userIsAdminRes = await usersService.checkIfUserIsAdmin();
-        setIsAdmin(userIsAdminRes);
+        if (userIsAdminRes) {
+          setIsAdmin(userIsAdminRes);
 
-        const userData = user;
+          const countVehiclesPendingDocuments = await vehiclesService.countVehiclesPendingDocuments()
+          setCountVehiclesPendingDocuments(countVehiclesPendingDocuments)
+        }
+          const userData = user;
 
-        if (isMounted) {
+        if (userData && isMounted) {
           setInputValues({
             id: userData.id_user,
             name: userData.name,
             lastname: userData.lastname,
             email: userData.email,
-            avatar: userData.avatar_image,
+              avatar: userData.avatar_image,
             phone_number: userData.phone_number,
             birth_date: userData.birth_date,
             bio: userData.bio,
@@ -136,9 +156,15 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
             document: userData.document,
           });
 
-          if (!props.match.params.id) {
-            setIsVisitor(false);
+          if (props.id_user || (props.match && props.match.params.id)) {
+            setIsVisitor(true);
+            setPageName(`Perfil de ${userData.name}`)
+
+            return
           }
+
+          setIsVisitor(false)
+          setPageName('Meu perfil')
 
           if (!userData.document || !userData.phone_number) {
             setIncompleteProfile(true);
@@ -150,9 +176,12 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
             setIncompleteProfileCounter(counter);
           }
+
+          const countItinerariesPendingPassengerRequests = await itinerariesService.countItinerariesPendingPassengerRequestsByDriverId()
+          setCountItinerariesPendingPassengerRequests(countItinerariesPendingPassengerRequests)
+        } else {
+          redirectUserToLogin();
         }
-      } else {
-        redirectUserToLogin();
       }
     };
 
@@ -164,16 +193,17 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
       redirectUserToLogin();
     }
 
-    loadUserData();
+    loadUserData()
 
     return () => {
       isMounted = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <IonPage>
-      <PageHeader pageName="Meu perfil"></PageHeader>
+      <PageHeader pageName={pageName} showBackButton={!props.noHeaderBackButton} />
 
       <IonContent fullscreen>
         <IonCard>
@@ -308,30 +338,55 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                   <IonIcon icon={carOutline} slot="start" />
                   <IonLabel>Meus veículos</IonLabel>
                 </IonItem>
+              </>
+            )}
 
-                <IonListHeader class="text-lg mt-4">Configurações de itinerário</IonListHeader>
+            <IonListHeader class="text-lg mt-4">Configurações de itinerário</IonListHeader>
 
+            {isDriver && (
+              <>
                 <IonItem
                   button
                   onClick={() =>
-                    history.push({ pathname: "/cadastrar-itinerario" })
+                    history.push({ pathname: "/itinerario/cadastrar" })
                   }
                 >
                   <IonIcon icon={mapOutline} slot="start" />
                   <IonLabel>Cadastrar itinerário</IonLabel>
                 </IonItem>
+              </>
+            )}
+
+            <IonItem
+              button
+              onClick={() =>
+                history.push({ pathname: "/itinerario/meus" })
+              }
+            >
+              <IonIcon icon={mapOutline} slot="start" />
+              <IonLabel>Meus itinerários</IonLabel>
+            </IonItem>
+
+            {isDriver && (
+              <>
                 <IonItem
                   button
                   onClick={() =>
-                    history.push({ pathname: "/meus-itinerarios" })
+                    history.push({ pathname: '/itinerario/meus/motorista/contratos/moderar/itinerarios' })
                   }
                 >
-                  <IonIcon icon={mapOutline} slot="start" />
-                  <IonLabel>Meus itinerários</IonLabel>
+                  <IonIcon icon={hammerOutline} slot="start" />
+                  <IonLabel>Solicitações de contrato</IonLabel>
+                  {countItinerariesPendingPassengerRequests !== 0 && (
+                    <>
+                      <IonBadge color="primary">
+                        {countItinerariesPendingPassengerRequests}
+                      </IonBadge>
+                    </>
+                  )}
                 </IonItem>
               </>
-            )
-            }
+            )}
 
             {isDriver && (
               <>
@@ -347,7 +402,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
 
                 <IonItem
                   button
-                  onClick={() => history.push({ pathname: "/buscar-passageiro" })}
+                  onClick={() => history.push({ pathname: "/buscar/passageiro" })}
                 >
                   <IonIcon icon={personOutline} slot="start" />
                   <IonLabel>Buscar passageiros</IonLabel>
@@ -365,6 +420,13 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
                 >
                   <IonIcon icon={hammerOutline} slot="start" />
                   <IonLabel>Moderar documentos de vans</IonLabel>
+                  {countVehiclesPendingDocuments !== 0 && (
+                    <>
+                      <IonBadge color="primary">
+                        {countVehiclesPendingDocuments}
+                      </IonBadge>
+                    </>
+                  )}
                 </IonItem>
               </>
             )
@@ -390,7 +452,7 @@ const Perfil: React.FC<ScanNewProps> = (props) => {
           duration={2500}
         />
       </IonContent>
-    </IonPage>
+    </IonPage >
   );
 };
 

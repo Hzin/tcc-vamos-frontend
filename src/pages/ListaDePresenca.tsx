@@ -1,147 +1,84 @@
-
 import {
+  IonButton,
   IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonCard,
-  IonCardTitle,
-  IonIcon,
-  IonButtons,
-  IonBackButton,
-} from "@ionic/react";
-import React, { useContext, useState } from "react";
-import { IonGrid, IonToast } from "@ionic/react";
-import { useHistory } from "react-router-dom";
-import {
   IonItem,
-  IonLabel,
+  IonList,
+  IonPage,
+  IonToast,
 } from "@ionic/react";
+import { Color } from "@ionic/core";
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 
-import { checkmarkOutline, closeOutline } from "ionicons/icons";
+import * as itinerariesService from "../services/functions/itinerariesService";
+import { closeToast } from "../services/utils";
+import { PageHeader } from "../components/PageHeader";
 
-const Contratos: React.FC = () => {
-  const [showToast, setShowToast] = useState(false);
-  const [messageToast, setMessageToast] = useState('');
+interface ScanNewProps {
+  match: {
+    params: {
+      id: string;
+    };
+  };
+}
 
+const ListaDePresenca: React.FC<ScanNewProps> = (props) => {
   const history = useHistory();
+
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastColor, setToastColor] = useState<Color>("primary");
+
+  useEffect(() => {
+    loadItineraryData();
+  }, []);
+
+  const loadItineraryData = async () => {
+    // let itineraryId = "";
+
+    // TODO, necessário
+    // if (!props.match.params.id) history.push({ pathname: "/login" });
+
+    const itineraryId = props.match.params.id;
+
+    // get user info by ID
+    const res = await itinerariesService.getById(itineraryId);
+
+    console.log(res)
+  };
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Lista de presença</IonTitle>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/vinculo-van-editar" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader
+        pageName="Lista de presença"
+        backButtonPageUrl="/home"
+      ></PageHeader>
 
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Minhas Vans</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+      <IonContent>
+        <IonList>
+          <IonItem>
+            <IonButton onClick={() => { history.push({ pathname: "/itinerario/id/:id/contratos" }) }}>"/itinerario/id/:id/contratos"</IonButton>
+          </IonItem>
 
+          <IonItem>
+            <IonButton onClick={() => { history.push({ pathname: "/viagem/:id" }) }}>"/viagem/:id"</IonButton>
+          </IonItem>
 
-        <IonGrid>
-          <IonCardTitle>25/09/2022  16:50</IonCardTitle>
-          <IonCard>
-            <IonItem>
-              <IonIcon icon={checkmarkOutline} slot="start" />
-              <IonLabel>Carlos Augusto</IonLabel>
-            </IonItem>
-          </IonCard>
+          <IonItem>
+            <IonButton onClick={() => { history.push({ pathname: "/contrato/:id" }) }}>"/contrato/:id"</IonButton>
+          </IonItem>
 
-          <IonCard>
-            <IonItem>
-              <IonIcon icon={closeOutline} slot="start" />
-              <IonLabel>Daniela Candido</IonLabel>
-            </IonItem>
-          </IonCard>
-
-          <IonCard>
-            <IonItem>
-              <IonIcon icon={checkmarkOutline} slot="start" />
-              <IonLabel>Danielle Rosa</IonLabel>
-            </IonItem>
-          </IonCard>
-          <IonCard>
-
-            <IonItem>
-              <IonIcon icon={checkmarkOutline} slot="start" />
-              <IonLabel>Dara Silva</IonLabel>
-            </IonItem>
-          </IonCard>
-
-          <IonCard>
-            <IonItem>
-              <IonIcon icon={closeOutline} slot="start" />
-              <IonLabel>Eric Santos</IonLabel>
-            </IonItem>
-          </IonCard>
-
-          <IonCard>
-            <IonItem>
-              <IonIcon icon={checkmarkOutline} slot="start" />
-              <IonLabel>Elena Vanda</IonLabel>
-            </IonItem>
-          </IonCard>
-
-          <IonCard>
-            <IonItem>
-              <IonIcon icon={checkmarkOutline} slot="start" />
-              <IonLabel>Fabio Fernando</IonLabel>
-            </IonItem>
-          </IonCard>
-
-          <IonCard>
-            <IonItem>
-              <IonIcon icon={closeOutline} slot="start" />
-              <IonLabel>Vera Silva</IonLabel>
-            </IonItem>
-          </IonCard>
-
-          <IonCard>
-            <IonItem>
-              <IonIcon icon={checkmarkOutline} slot="start" />
-              <IonLabel>Bruna Paz</IonLabel>
-            </IonItem>
-          </IonCard>
-
-          <IonCard>
-
-            <IonItem>
-              <IonIcon icon={checkmarkOutline} slot="start" />
-              <IonLabel>Beatriz Santos</IonLabel>
-            </IonItem>
-          </IonCard>
-
-          <IonCard>
-
-            <IonItem>
-              <IonIcon icon={checkmarkOutline} slot="start" />
-              <IonLabel>Guilherme Santoro</IonLabel>
-            </IonItem>
-          </IonCard>
-
-          <IonCard>
-
-            <IonItem>
-              <IonIcon icon={checkmarkOutline} slot="start" />
-              <IonLabel>Fernando Faria</IonLabel>
-            </IonItem>
-          </IonCard>
-        </IonGrid>
+          <IonItem>
+            <IonButton onClick={() => { history.push({ pathname: "/viagem/:id/presenca" }) }}>"/viagem/:id/presenca"</IonButton>
+          </IonItem>
+        </IonList>
 
         <IonToast
           position="top"
-          color='danger'
+          color={toastColor}
           isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
-          message={messageToast}
+          onDidDismiss={() => closeToast(setShowToast)}
+          message={toastMessage}
           duration={2500}
         />
       </IonContent>
@@ -149,4 +86,4 @@ const Contratos: React.FC = () => {
   );
 };
 
-export default Contratos;
+export default ListaDePresenca;

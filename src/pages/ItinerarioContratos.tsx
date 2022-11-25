@@ -1,100 +1,175 @@
 
 import {
   IonContent,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
   IonCardSubtitle,
-  IonIcon,
-  IonButtons,
-  IonBackButton,
+  IonButton,
+  IonText,
+  IonCheckbox,
+  IonFooter,
+  IonToolbar,
 } from "@ionic/react";
-import React, { useState } from "react";
-import { IonGrid, IonToast } from "@ionic/react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { IonGrid } from "@ionic/react";
+import { useHistory, useLocation } from "react-router-dom";
 import {
-  IonItem,
   IonLabel,
 } from "@ionic/react";
 
-import { bookmarkOutline } from "ionicons/icons";
+import { PageHeader } from "../components/PageHeader";
 
-const ItinerarioContratos: React.FC = () => {
-  const [showToast, setShowToast] = useState(false);
-  const [messageToast, setMessageToast] = useState('');
+import * as itinerariesService from "../services/functions/itinerariesService";
+import { Itinerary } from "../models/itinerary.model";
+import { CardItinerary } from "../components/CardItinerary";
+import { convertNumberToPrice, getUserFullName } from "../services/utils";
+import { itineraryContractTypes } from "../constants/itineraryContractTypes";
 
+import { SearchData, ContractData } from "../constants/InterfaceContractInfo";
+
+interface LocationState {
+  searchData: SearchData
+  contractData: ContractData
+}
+
+interface ScanNewProps {
+  match: {
+    params: {
+      id: string;
+    };
+  };
+}
+
+const ItinerarioContratos: React.FC<ScanNewProps> = (props) => {
   const history = useHistory();
+
+  const location = useLocation<LocationState>();
+
+  const [itinerary, setItinerary] = useState<Itinerary>()
+  const [selectedContract, setSelectedContract] = useState<itineraryContractTypes>()
+
+  // console.log(props)
+  // console.log(location)
+
+  useEffect(() => {
+    loadItineraryData()
+  }, [])
+
+  const loadItineraryData = async () => {
+    const itineraryId = props.match.params.id;
+    const itinerary = await itinerariesService.getById(itineraryId)
+    setItinerary(itinerary)
+  };
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Escolha seu contrato</IonTitle>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/vinculo-van-editar" />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Minhas Vans</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        {itinerary && (
+          <>
+            <PageHeader pageName="Contratos" backButtonPageUrl={`/itinerario/id/${itinerary.id_itinerary}`} />
 
+            <IonGrid>
+              <CardItinerary itinerary={itinerary} onlyHeader />
 
-        <IonGrid>
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Contrato: Recorrente </IonCardTitle>
-              <IonCardSubtitle>Renovação: 22/09/2022 </IonCardSubtitle>
-            </IonCardHeader>
-            <IonCardContent>
-              O Contrato Recorrente é o plano mensal de vinculo a van da/o motorista (Nome do motorista)
-              portador do CPF (Numero do CPF) junto ao passageiro (Nome do passageiro) no valor pré estabelecido
-              R$ (Valor) a ser pago no dia (Numero do dia) e renovado a cada mês até o seu encerramento.
-              O pagamento é feito diretamente ao motorista, e o mesmo atualizará o status do contrato da van via App.
-            </IonCardContent>
-            <IonItem>
-              <IonIcon icon={bookmarkOutline} slot="start" />
-              <IonLabel>Escolher contrato</IonLabel>
-            </IonItem>
-          </IonCard>
+              <IonCard>
+                <IonCardContent>
+                  <IonLabel slot='end'>Escolha o contrato desejado</IonLabel>
+                </IonCardContent>
+              </IonCard>
 
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Contrato: Vaga Avulsa </IonCardTitle>
-              <IonCardSubtitle>Renovação: 22/09/2022 </IonCardSubtitle>
-            </IonCardHeader>
-            <IonCardContent>
-              O Contrato Vaga Avulsa é o plano de uma vaga unica em uma viagem da van da/o motorista (Nome do motorista)
-              portador do CPF (Numero do CPF) junto ao passageiro (Nome do passageiro) no valor pré estabelecido
-              R$ (Valor) a ser pago no dia (Numero do dia) e ao termino da viagem é encerrado automaticamente, caso necessario uma nova viagem deverá ser feita uma
-              nova solicitação pois esse contrato só tem validade para uma unica viagem.
-              O pagamento é feito diretamente ao motorista, e o mesmo atualizará o status do contrato da van via App.
-            </IonCardContent>
-            <IonItem>
-              <IonIcon icon={bookmarkOutline} slot="start" />
-              <IonLabel>Escolher contrato</IonLabel>
-            </IonItem>
-          </IonCard>
-        </IonGrid>
+              <IonCard button onClick={() => { setSelectedContract(itineraryContractTypes.recurring) }}>
+                <IonCardHeader>
+                  <IonCardSubtitle className="flex justify-between">
+                    <div />
+                    <div>
+                      <IonCheckbox disabled checked={selectedContract === itineraryContractTypes.recurring} />
+                    </div>
+                  </IonCardSubtitle>
+                  <IonCardTitle>Contrato: Recorrente </IonCardTitle>
+                  {/* <IonCardSubtitle>Renovação: 22/09/2022 </IonCardSubtitle> */}
+                </IonCardHeader>
+                <IonCardContent>
+                  <div>
+                    <h2>
+                      O Contrato Recorrente é o plano mensal de vínculo do itinerário do motorista <IonText color="primary">{getUserFullName(itinerary.user)}</IonText>,
+                      {' '}portador do documento de tipo <IonText color="primary">{itinerary.user.document_type}</IonText> <IonText color="primary">{itinerary.user.document}</IonText>,
+                      {' '}ao passageiro (Nome do passageiro) no valor pré estabelecido de <IonText color="primary">{itinerary.user.document}{convertNumberToPrice(itinerary.monthly_price)}</IonText>
+                      {' '}a ser pago mensalmente no dia <IonText color="primary">1</IonText> e o contrato é renovado a cada mês até o seu encerramento.
+                    </h2>
+                  </div>
+                  <div className="mt-4">
+                    <h2>
+                      O pagamento é feito diretamente ao motorista, e o mesmo atualizará o status do contrato do itinerário pelo aplicativo.
+                    </h2>
+                  </div>
+                </IonCardContent>
+              </IonCard>
 
-        <IonToast
-          position="top"
-          color='danger'
-          isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
-          message={messageToast}
-          duration={2500}
-        />
+              <IonCard button onClick={() => { setSelectedContract(itineraryContractTypes.avulse) }} disabled={!itinerary.accept_daily}>
+                <IonCardHeader>
+                  <IonCardSubtitle className="flex justify-between">
+                    <div />
+                    <div>
+                      {/* <IonCheckbox disabled={!itinerary.accept_daily} checked={selectedContract === itineraryContractTypes.avulse} /> */}
+                      <IonCheckbox disabled checked={selectedContract === itineraryContractTypes.avulse} />
+                    </div>
+                  </IonCardSubtitle>
+                  <IonCardTitle>Contrato: Vaga Avulsa </IonCardTitle>
+                  {/* <IonCardSubtitle>Renovação: 22/09/2022 </IonCardSubtitle> */}
+                </IonCardHeader>
+                <IonCardContent>
+                  <div>
+                    <h2>
+                      O Contrato Vaga Avulsa é o plano de uma vaga única em uma viagem do itinerário do motorista <IonText color="primary">{getUserFullName(itinerary.user)}</IonText>,
+                      {' '}portador do documento de tipo <IonText color="primary">{itinerary.user.document_type}</IonText> <IonText color="primary">{itinerary.user.document}</IonText>,
+                      {' '}ao passageiro (Nome do passageiro) no valor pré estabelecido {itinerary.accept_daily && (<> de <IonText color="primary">{itinerary.user.document}{convertNumberToPrice(itinerary.daily_price)}</IonText> </>)}
+                      {' '}a ser pago no dia desejado.
+                    </h2>
+                  </div>
+                  <div className='mt-4'>
+                    <h2>
+                      O contrato é encerrado automaticamente no dia seguinte.
+                    </h2>
+                  </div>
+                  <div className='mt-4'>
+                    <h2>
+                      O pagamento é feito diretamente ao motorista, e o mesmo atualizará o status do contrato do itinerário pelo aplicativo.
+                    </h2>
+                  </div>
+                </IonCardContent>
+              </IonCard>
+            </IonGrid>
+          </>
+        )}
       </IonContent>
+
+      <IonFooter>
+        <IonToolbar>
+          {itinerary && (
+            <IonButton
+              disabled={!selectedContract}
+              expand='block'
+              color='success'
+              onClick={() => {
+                history.push(
+                  {
+                    pathname: `/itinerario/id/${itinerary.id_itinerary}/contratos/resumo`,
+                    state: {
+                      searchData: location.state.searchData,
+                      contractData: {
+                        type: selectedContract,
+                      },
+                      showContractButton: true
+                    },
+                  },
+                )
+              }}
+            >Continuar</IonButton>)}
+        </IonToolbar>
+      </IonFooter>
     </IonPage>
   );
 };

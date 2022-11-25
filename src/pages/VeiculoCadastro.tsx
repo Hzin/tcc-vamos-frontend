@@ -207,8 +207,10 @@ const VeiculoCadastro: React.FC = () => {
         setShowModal(true)
         setRedirectData({
           url: '/veiculos/meus',
-          toastColor: "success",
-          toastMessage: response.message,
+          toastInfo: {
+            color: "success",
+            message: response.message,
+          }
         })
 
       })
@@ -393,7 +395,8 @@ const VeiculoCadastro: React.FC = () => {
           )}
         </IonList>
 
-        <ModalInfoEntendi id="modal-info" isOpen={showModal} messages={['Veículo cadastrado com sucesso!', 'Obs.: para criar um itinerário, você precisa enviar os documentos do veículo em "Meus Veículos" e aguardar a aprovação.']} redirectData={redirectData} />
+        {/* <ModalInfoEntendi id="modal-info" isOpen={showModal} messages={['Veículo cadastrado com sucesso!', 'Obs.: para criar um itinerário, você precisa enviar os documentos do veículo em "Meus Veículos" e aguardar a aprovação.']} redirectData={redirectData} /> */}
+        <ModalInfoEntendi isOpen={showModal} messages={['Veículo cadastrado com sucesso!', 'Obs.: para criar um itinerário, você precisa enviar os documentos do veículo em "Meus Veículos" e aguardar a aprovação.']} redirectData={redirectData} />
 
         <IonToast
           position="top"

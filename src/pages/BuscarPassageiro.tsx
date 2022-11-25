@@ -13,9 +13,11 @@ import { useEffect, useState } from "react";
 
 import { PageHeader } from "../components/PageHeader";
 import { UserSearchInfos } from "../components/UserSearchInfos/UserSearchInfos";
-import { getUsersSearching } from "../services/api/users";
+import * as searchesService from "../services/functions/searchesService";
 import RecordsStore from "../store/RecordsStore";
 import { fetchRecords } from "../store/Selectors";
+
+import { setStore } from "../store/RecordsStore";
 
 const maptilerProvider = maptiler("d5JQJPLLuap8TkJJlTdJ", "streets");
 
@@ -40,7 +42,7 @@ const BuscarPassageiro: React.FC = () => {
   // 	getUsersSearching(currentPoint);
   // });
 
-  const [currentPoint, setCurrentPoint] = useState({
+  const [currentPoint, setCurrentPoint] = useState<searchesService.SearchInRadiusBody>({
     latitude: -22.907829,
     longitude: -47.062943,
   });
@@ -80,7 +82,10 @@ const BuscarPassageiro: React.FC = () => {
   };
 
   const searchResults = async () => {
-    await getUsersSearching(currentPoint);
+    console.log(currentPoint)
+    const usersSearching = await searchesService.searchInRadius(currentPoint);
+    console.log(usersSearching)
+    setStore(usersSearching);
   };
 
   const showMarkerInfo = (e: any, index: any) => {

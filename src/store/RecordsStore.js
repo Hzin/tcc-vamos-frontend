@@ -1,9 +1,8 @@
 import { Store } from 'pullstate';
 
 const RecordsStore = new Store({
-
 	records: [],
-	center : []
+	center: []
 });
 
 export default RecordsStore;

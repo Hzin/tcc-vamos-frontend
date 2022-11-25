@@ -10,26 +10,28 @@ import {
 
 import { Color } from "@ionic/core";
 
-import { PhotoViewer } from "@awesome-cordova-plugins/photo-viewer";
+// import { PhotoViewer } from "@awesome-cordova-plugins/photo-viewer";
 
 import { vehicleDocumentStatus } from "../constants/vehicleDocumentStatus";
 
 import * as vehiclesService from "../services/functions/vehiclesService";
-import { closeToast, reloadPage } from "../services/utils";
-import { useHistory } from "react-router";
+import { closeToast, convertFilePathToStaticUrl, reloadPage } from "../services/utils";
 import { useState } from "react";
+import { ShowImageFileAsModal } from "./ShowPageAsModal/ShowImageFileAsModal";
 
-export const VehicleDocumentCard = (props: vehiclesService.GetPendingDocumentsResponse) => {
+interface VehicleDocumentCardProps extends vehiclesService.GetPendingDocumentsResponse {
+  keyId: number
+}
+
+export const VehicleDocumentCard = (props: VehicleDocumentCardProps) => {
+  const modalId = `modal-document-${props.keyId}`
+
   const [toastShow, setToastShow] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("");
   const [toastPosition, setToastPosition] = useState<"top" | "bottom" | "middle" | undefined>();
 
   const [presentAlertConfirmation] = useIonAlert();
-
-  const handleOpenDocument = () => {
-    PhotoViewer.show(props.document_url);
-  };
 
   const handleConfirmAction = async (action: "approve" | "reject") => {
     let message = "";
@@ -108,7 +110,7 @@ export const VehicleDocumentCard = (props: vehiclesService.GetPendingDocumentsRe
         {/* te amo ervilha */}
         <div className="flex justify-between">
           <div>
-            <IonButton fill="clear" onClick={() => { handleOpenDocument() }}>Abrir</IonButton>
+            <IonButton id={modalId} fill="clear">Abrir</IonButton>
           </div>
 
           <div>
@@ -117,6 +119,8 @@ export const VehicleDocumentCard = (props: vehiclesService.GetPendingDocumentsRe
           </div>
         </div>
       </IonCard>
+
+      <ShowImageFileAsModal trigger={modalId} url={convertFilePathToStaticUrl(props.document_url)} title={props.document_type} />
 
       <IonToast
         position={toastPosition}

@@ -104,7 +104,6 @@ export const TripCard = (props: ComponentProps) => {
     await tripsService.confirmTrip(itineraryId).then((response) => {
       if (!response.data) {
         refreshPage("Houve um erro ao confirmar a viagem!", "warning");
-        console.log(response);
         return;
       }
 

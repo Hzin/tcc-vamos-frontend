@@ -14,22 +14,57 @@ export interface ChangeTripStatusResponse {
   data?: tripStatus
 }
 
-export async function getTodaysTrips(): Promise<GetTripsFeedResponse[] | undefined> {
+export async function getTripsByItineraryId(id_itinerary: string): Promise<Trip[]> {
   let res: any;
 
   try {
-    res = await tripsRoutes.getTodaysTrips();
-    return res.data;
+    res = await tripsRoutes.getTripsByItineraryId(id_itinerary);
   } catch (error) {
     // TODO
   }
 }
 
-export async function getNotTodaysTrips(): Promise<GetTripsFeedResponse[]> {
+export async function getTodaysTripsAsDriver(): Promise<GetTripsFeedResponse[]> {
   let res: any;
 
   try {
-    res = await tripsRoutes.getNotTodaysTrips();
+    res = await tripsRoutes.getTodaysTripsAsDriver();
+  } catch (error) {
+    // TODO
+  }
+
+  return res.data;
+}
+
+export async function getNotTodaysTripsAsDriver(): Promise<GetTripsFeedResponse[]> {
+  let res: any;
+
+  try {
+    res = await tripsRoutes.getNotTodaysTripsAsDriver();
+  } catch (error) {
+    // TODO
+  }
+
+  return res.data;
+}
+
+export async function getTodaysTripsAsPassenger(): Promise<GetTripsFeedResponse[]> {
+  let res: any;
+
+  try {
+    res = await tripsRoutes.getTodaysTripsAsPassenger();
+  } catch (error) {
+    // TODO
+  }
+
+  return res.data;
+}
+
+export async function getNotTodaysTripsAsPassenger(): Promise<GetTripsFeedResponse[]> {
+  let res: any;
+
+  try {
+    res = await tripsRoutes.getNotTodaysTripsAsPassenger();
   } catch (error) {
     // TODO
   }
