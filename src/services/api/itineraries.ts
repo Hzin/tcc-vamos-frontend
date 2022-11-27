@@ -59,6 +59,11 @@ export async function search(body: SearchItinerariesRequest
   return response.data;
 }
 
+export async function getItineraryPassengers(id_itinerary: number) {
+
+  const response = await instance.get(transportsRoutes.get.url + "/" + id_itinerary + "/passengers");
+  return response.data;
+}
 export async function getById(id_itinerary: string) {
   const response = await instance.get(`${transportsRoutes.getById.url}/${id_itinerary}`);
   return response.data;
@@ -104,3 +109,8 @@ export async function countItinerariesPendingPassengerRequestsByDriverId() {
   const response = await instance.get(transportsRoutes.countItinerariesPendingPassengerRequestsByDriverId.url);
   return response.data;
 }
+
+// export async function createRequest(request: CreateRequest) {
+//   const response = await instance.post(transportsRoutes.request.url, request);
+//   return response.data;
+// }

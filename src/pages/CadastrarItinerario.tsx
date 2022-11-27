@@ -94,7 +94,7 @@ export default function CadastrarItinerario() {
   const [finalAddress, setFinalAddress] = useState<Address>();
   const [destinations, setDestinations] = useState<Destinations[]>([]);
   const [daysOfWeek, setDaysOfWeek] = useState<string>("0000000");
-  const [specificDay, setSpecificDay] = useState<string>("");
+  const [specificDay, setSpecificDay] = useState<string>();
   const [departureTime, setDepartureTime] = useState<string>("00:00");
   const [arrivalTime, setArrivalTime] = useState<string>("00:00");
   const [monthlyPrice, setMonthlyPrice] = useState<number>(100);
@@ -140,8 +140,7 @@ export default function CadastrarItinerario() {
 
             return;
           }
-
-          setVans(response.data);
+          setVans(response);
         })
         .catch((err: any) => {
           setToastColor("danger");
@@ -150,6 +149,7 @@ export default function CadastrarItinerario() {
         });
     };
 
+    nextButton2.current!.disabled = true;
     getUserVans();
   }, []);
 
@@ -177,14 +177,10 @@ export default function CadastrarItinerario() {
     }
   }, [van]);
 
-  useEffect(() => {
-
-  }, [destinations]);
-
   function addNeighborhood(address: Address) {
     setNeighborhoods((arr) => [...arr, address]);
-    setValueControl1("");
     nextButton2.current!.disabled = false;
+    setValueControl1("");
   }
 
   function removeNeighborhood(index: number) {
@@ -201,7 +197,6 @@ export default function CadastrarItinerario() {
   function addDestination(address: Address) {
     setDestinations((arr) => [...arr, address]);
     setValueControl2("");
-    nextButton2.current!.disabled = false;
   }
 
   function removeDestionation(index: number) {
@@ -320,8 +315,6 @@ export default function CadastrarItinerario() {
     }
   }
 
-  useEffect(() => {}, [daysOfWeek]);
-
   async function cadastrar() {
     let newDestinations: Destinations[] = [{...finalAddress!, is_final: true}]; 
     newDestinations = newDestinations.concat(destinations);
@@ -403,7 +396,6 @@ export default function CadastrarItinerario() {
               <div className="flex justify-end mb-3">
                 <IonButton
                   ref={nextButton1}
-                  disabled
                   onClick={() => onBtnClicked("next")}
                   color="primary"
                 >
@@ -465,7 +457,6 @@ export default function CadastrarItinerario() {
                 </IonButton>
                 <IonButton
                   ref={nextButton2}
-                  disabled
                   onClick={() => onBtnClicked("next")}
                   color="primary"
                 >

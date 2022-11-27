@@ -69,6 +69,10 @@ interface Destinations extends Address {
   is_final?: boolean;
 }
 
+interface ItineraryInfo {
+  itinerary: CreateItineraryRequest;
+}
+
 export default function EditarItinerario() {
   const minDate = new Date();
 
@@ -102,7 +106,6 @@ export default function EditarItinerario() {
   const [dailyPrice, setDailyPrice] = useState<number>(40);
   const [van, setVan] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
-  const [teste, setTeste] = useState<string>("");
 
   //Estados para limpar o valor dos campos após selecionar uma opção
   const [valueControl1, setValueControl1] = useState<string>("");
@@ -125,9 +128,8 @@ export default function EditarItinerario() {
     if (history.location.state === undefined) {
       history.push({ pathname: "/itinerarios" });
     } else {
-      const itinerary = history.location.state as CreateItineraryRequest;
-      setItinerary(itinerary);
-      // setTeste(itinerary.estimated_departure_address);
+      const itinerary = history.location.state as ItineraryInfo;
+      setItinerary(itinerary.itinerary);
     }
 
     const getUserVans = async () => {
@@ -166,12 +168,6 @@ export default function EditarItinerario() {
 
     getUserVans();
   }, []);
-
-  useEffect(() => {
-    if (itinerary) {
-      setTeste(itinerary.estimated_departure_address);
-    }
-  }, [itinerary]);
 
   useEffect(() => {
     if (initialAddress) {
@@ -377,7 +373,7 @@ export default function EditarItinerario() {
             redirectData: {
               showToastMessage: true,
               toastColor: "success",
-              toastMessage: "Itinerário cadastrado com sucesso!",
+              toastMessage: "Itinerário atualizado com sucesso!",
             },
           },
         });
@@ -393,7 +389,7 @@ export default function EditarItinerario() {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Cadastrar Itinerário</IonTitle>
+          <IonTitle>Editar Itinerário</IonTitle>
           <IonButtons slot="start">
             <IonBackButton icon={close} text="" defaultHref="/perfil" />
           </IonButtons>
@@ -409,11 +405,9 @@ export default function EditarItinerario() {
               </h1>
               <div className="flex items-center mb-3">
                 <IonIcon icon={locateOutline}></IonIcon>
-                <IonLabel>{teste}</IonLabel>
                 <AutoCompleteInput
-                  placeholder="R. José Paulino, 1234"
+                  placeholder={itinerary?.estimated_departure_address}
                   className="ml-2"
-                  value={teste}
                   onAddressSelected={(address: Address) =>
                     setInitialAddress(address)
                   }
