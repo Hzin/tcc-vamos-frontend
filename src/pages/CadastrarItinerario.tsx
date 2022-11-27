@@ -345,7 +345,7 @@ export default function CadastrarItinerario() {
         }
 
         history.push({
-          pathname: "/meus-itinerarios",
+          pathname: "/itinerario/meus/motorista",
           state: {
             redirectData: {
               showToastMessage: true,
@@ -781,6 +781,13 @@ export default function CadastrarItinerario() {
                   type="number"
                   className="text-2xl"
                   value={monthlyPrice}
+                  onInput={(event) =>
+                    setMonthlyPrice(
+                      typeof event.currentTarget.value === "string"
+                        ? parseInt(event.currentTarget.value)
+                        : 0
+                    )
+                  }
                 />
                 <IonIcon
                   className="text-4xl"
@@ -810,6 +817,13 @@ export default function CadastrarItinerario() {
                       type="number"
                       className="text-2xl"
                       value={dailyPrice}
+                      onInput={(event) =>
+                        setDailyPrice(
+                          typeof event.currentTarget.value === "string"
+                            ? parseInt(event.currentTarget.value)
+                            : 0
+                        )
+                      }
                     />
                     <IonIcon
                       className="text-4xl"

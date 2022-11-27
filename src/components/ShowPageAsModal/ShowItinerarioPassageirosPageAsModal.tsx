@@ -20,7 +20,7 @@ export const ShowItinerarioPassageirosPageAsModal = (props: ShowItinerarioPassag
       <IonModal ref={modal} trigger={props.trigger}>
         <ItinerarioPassageiros
           id_itinerary={props.id_itinerary}
-          noHeaderBackButton={props.noHeaderBackButton}
+          noHeaderBackButton={true}
         />
 
         <IonFooter>
