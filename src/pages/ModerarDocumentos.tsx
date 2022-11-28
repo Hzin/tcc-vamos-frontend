@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonList, IonPage } from "@ionic/react";
+import { IonContent, IonList, IonPage } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 
 import { Color } from "@ionic/core";
@@ -11,7 +11,6 @@ import { VehicleDocumentCard } from "../components/VehicleDocumentCard";
 import { useHistory, useLocation } from "react-router";
 
 import * as usersService from "../services/functions/usersService";
-import { ShowImageFileAsModal } from "../components/ShowPageAsModal/ShowImageFileAsModal";
 
 interface LocationState {
   redirectData?: {

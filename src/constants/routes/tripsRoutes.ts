@@ -4,17 +4,8 @@ const tripsRoutes = {
     url: `${tripsRoutesDefault}/itinerary/:id`
   },
 
-  getTodaysTripsAsDriver: {
-    url: `${tripsRoutesDefault}/feed/driver/today`
-  },
-  getNotTodaysTripsAsDriver: {
-    url: `${tripsRoutesDefault}/feed/driver/nottoday`
-  },
-  getTodaysTripsAsPassenger: {
-    url: `${tripsRoutesDefault}/feed/passenger/today`
-  },
-  getNotTodaysTripsAsPassenger: {
-    url: `${tripsRoutesDefault}/feed/passenger/nottoday`
+  getFeed: {
+    url: `${tripsRoutesDefault}/feed/tripDay/:tripDay/userType/:userType`
   },
 
   getTrip: {
@@ -26,11 +17,19 @@ const tripsRoutes = {
   getTodaysTripStatusByItineraryId: {
     url: `${tripsRoutesDefault}/today/status/itinerary/:id`
   },
-  cancelTrip: {
-    url: `${tripsRoutesDefault}/update/cancel`
+
+  createTrip: {
+    url: `${tripsRoutesDefault}/tripType/:tripType/update/status/:newStatus`
   },
-  confirmTrip: {
-    url: `${tripsRoutesDefault}/update/confirm`
+  updateTripStatus: {
+    // url: `${tripsRoutesDefault}/tripType/:tripType/update/status/:newStatus`
+    url: `${tripsRoutesDefault}/:id/status/new/:newStatus`
+  },
+  undoLastStatusChange: {
+    url: `${tripsRoutesDefault}/:id/status/undo`
+  },
+  getTripHistoricData: {
+    url: `${tripsRoutesDefault}/:id/status/history`
   }
 }
 

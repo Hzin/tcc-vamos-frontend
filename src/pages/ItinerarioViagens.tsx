@@ -10,6 +10,7 @@ import { Trip } from "../models/trip.model";
 import EnumUtils from "../services/EnumUtils";
 import { ShowItinerarioViagensPageAsModal } from "../components/ShowPageAsModal/ShowItinerarioViagensPageAsModal";
 import { ShowItinerarioViagemPageAsModal } from "../components/ShowPageAsModal/ShowItinerarioViagemPageAsModal";
+import { TripType } from "../models/tripType.models";
 
 export interface ItinerarioViagensProps {
   id_itinerary: string
@@ -21,6 +22,7 @@ const ItinerarioViagens: React.FC<ItinerarioViagensProps> = (props) => {
   const [trips, setTrips] = useState<Trip[]>()
 
   const [paramsIdTrip, setParamsIdTrip] = useState('')
+  const [paramsTripType, setParamsTripType] = useState<TripType>()
 
   useEffect(() => {
     if (!props.id_itinerary) return
@@ -34,8 +36,9 @@ const ItinerarioViagens: React.FC<ItinerarioViagensProps> = (props) => {
     setTrips(trips)
   }
 
-  const showTripInfo = (id_trip: string) => {
-    setParamsIdTrip(id_trip)
+  const showTripInfo = (trip: Trip) => {
+    setParamsIdTrip("" + trip.id_trip)
+    setParamsTripType(trip.type)
     document.getElementById('modal-viagem')?.click()
   }
 
@@ -57,7 +60,7 @@ const ItinerarioViagens: React.FC<ItinerarioViagensProps> = (props) => {
                   <IonItem lines="none">
                     <IonIcon icon={calendarClearOutline} />
                     <IonLabel className="ml-2">Data: {trip.date}</IonLabel>
-                    <IonChip color='secondary' onClick={() => { showTripInfo("" + trip.id_trip) }}>
+                    <IonChip color='secondary' onClick={() => { showTripInfo(trip) }}>
                       <IonIcon icon={eyeOutline} />
                       <IonLabel>Ver informações</IonLabel>
                     </IonChip>
@@ -91,7 +94,7 @@ const ItinerarioViagens: React.FC<ItinerarioViagensProps> = (props) => {
           )}
         </IonList>
 
-        <ShowItinerarioViagemPageAsModal trigger='modal-viagem' id_trip={paramsIdTrip} />
+        { paramsTripType && <ShowItinerarioViagemPageAsModal trigger='modal-viagem' id_trip={paramsIdTrip} tripType={paramsTripType} /> }
       </IonContent>
 
       <IonButton className="invisible" id='modal-passenger' />

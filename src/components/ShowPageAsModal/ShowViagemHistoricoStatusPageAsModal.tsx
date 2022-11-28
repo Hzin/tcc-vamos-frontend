@@ -1,14 +1,14 @@
 import { useRef } from "react";
 import { IonModal, IonButton, IonFooter, IonToolbar } from "@ionic/react";
 
-import Viagem, { ViagemProps } from "../../pages/Viagem";
+import ViagemHistoricoStatus, { ViagemHistoricoStatusProps } from "../../pages/ViagemHistoricoStatus";
 
-interface ShowItinerarioPassageirosPageAsModalProps extends ViagemProps {
+interface ShowViagemHistoricoStatusPageAsModalProps extends ViagemHistoricoStatusProps {
   trigger: string
   hasButtonAlready?: boolean
 }
 
-export const ShowItinerarioViagemPageAsModal = (props: ShowItinerarioPassageirosPageAsModalProps) => {
+export const ShowViagemHistoricoStatusPageAsModal = (props: ShowViagemHistoricoStatusPageAsModalProps) => {
   const modal = useRef<HTMLIonModalElement>(null);
 
   const handleDismissModal = () => {
@@ -18,12 +18,8 @@ export const ShowItinerarioViagemPageAsModal = (props: ShowItinerarioPassageiros
   return (
     <>
       <IonModal ref={modal} trigger={props.trigger}>
-        <Viagem
+        <ViagemHistoricoStatus
           id_trip={props.id_trip}
-          tripType={props.tripType}
-
-          isReturnTripCreated
-          
           noHeaderBackButton={props.noHeaderBackButton}
         />
 

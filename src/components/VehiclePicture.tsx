@@ -5,6 +5,7 @@ import { convertFilePathToStaticUrl } from "../services/utils";
 interface ComponentProps {
   picture_path: string;
   center?: boolean
+  content?: boolean
 }
 
 export const VehiclePicture = (props: ComponentProps) => {
@@ -16,6 +17,6 @@ export const VehiclePicture = (props: ComponentProps) => {
   }, [props])
 
   return (
-    <img id="vehicle_pic" alt="vehicle_pic" className="block ml-auto mr-auto h-auto max-w-[160px]" src={pictureUrl} />
+    <img slot={props.content ? 'content' : undefined} id="vehicle_pic" alt="vehicle_pic" className="block ml-auto mr-auto h-auto max-w-[160px]" src={pictureUrl} />
   );
 }

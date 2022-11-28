@@ -52,13 +52,14 @@ const HomeFeedViagensMeusPassageiro: React.FC = () => {
     useState<tripsService.GetTripsFeedResponse[]>();
 
   const getTodaysTripsAsPassenger = async () => {
-    await tripsService.getTodaysTripsAsPassenger().then((response) => {
-      setTodaysTrips(response);
-    });
+    // TODO, criar funções em services para isso
+    // await tripsService.getTodaysTripsAsPassenger().then((response) => {
+    //   setTodaysTrips(response);
+    // });
 
-    await tripsService.getNotTodaysTripsAsPassenger().then((response) => {
-      setNotTodaysTrips(response);
-    });
+    // await tripsService.getNotTodaysTripsAsPassenger().then((response) => {
+    //   setNotTodaysTrips(response);
+    // });
   };
 
   return (

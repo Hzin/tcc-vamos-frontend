@@ -1,7 +1,6 @@
 import {
   IonAccordion,
   IonAccordionGroup,
-  IonButton,
   IonContent,
   IonItem,
   IonLabel,
@@ -18,7 +17,7 @@ import { closeToast, startTime } from "../services/utils";
 
 import * as tripsService from "../services/functions/tripsService";
 import { PageHeader } from "../components/PageHeader";
-import { TripCard } from "../components/TripCard";
+import { CardTripFromFeed } from "../components/CardTripFromFeed";
 
 interface LocationState {
   redirectData?: {
@@ -38,27 +37,35 @@ const HomeFeedViagensMeusMotorista: React.FC = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
 
+  const [todaysTrips, setTodaysTrips] = useState<tripsService.GetFeedPropsReturn[]>();
+  const [notTodaysTrips, setNotTodaysTrips] = useState<tripsService.GetFeedPropsReturn[]>();
+
   useEffect(() => {
     setClock(startTime());
   }, [location.state, history]);
 
   useEffect(() => {
-    getUserTodaysTripsAsDriver();
+    getFeed()
   }, []);
 
-  const [todaysTrips, setTodaysTrips] =
-    useState<tripsService.GetTripsFeedResponse[]>();
-  const [notTodaysTrips, setNotTodaysTrips] =
-    useState<tripsService.GetTripsFeedResponse[]>();
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     getFeed()
+  //   }, 1000);
 
-  const getUserTodaysTripsAsDriver = async () => {
-    await tripsService.getTodaysTripsAsDriver().then((response) => {
+  //   return () => clearInterval(interval);
+  // }, []);
+
+  const getFeed = async () => {
+    await tripsService.getFeed({ tripDay: 'today', userType: 'driver' }).then((response) => {
       setTodaysTrips(response);
-    });
+      console.log(response)
+    })
 
-    await tripsService.getNotTodaysTripsAsDriver().then((response) => {
+    await tripsService.getFeed({ tripDay: 'not_today', userType: 'driver' }).then((response) => {
       setNotTodaysTrips(response);
-    });
+      // console.log(response)
+    })
   };
 
   return (
@@ -73,49 +80,45 @@ const HomeFeedViagensMeusMotorista: React.FC = () => {
                 <IonLabel>Viagens de hoje - {clock}</IonLabel>
               </IonItem>
 
-              {todaysTrips && todaysTrips.length !== 0 ? (
+              {todaysTrips && todaysTrips.length !== 0 ?
                 todaysTrips.map((tripInfo, index) => {
                   return (
-                    <TripCard
+                    <CardTripFromFeed
                       key={index}
                       slot="content"
-                      itinerary={tripInfo.itinerary}
-                      tripStatus={tripInfo.tripStatus}
-                      clickable={true}
-                      tripId={tripInfo.tripId}
-                    ></TripCard>
+                      tripInfo={tripInfo}
+                    />
                   );
-                })
-              ) : (
-                <div className="ion-padding" slot="content">
-                  Sem viagens para hoje!
-                </div>
-              )}
+                }) : (
+                  <div className="ion-padding" slot="content">
+                    Sem viagens para hoje!
+                  </div>
+                )
+              }
             </IonAccordion>
           </IonAccordionGroup>
 
-          <IonAccordionGroup value="nottoday">
-            <IonAccordion>
+          <IonAccordionGroup value="not_today">
+            <IonAccordion value="not_today">
               <IonItem slot="header" color="primary">
                 <IonLabel>Próximas viagens</IonLabel>
               </IonItem>
 
-              {notTodaysTrips && notTodaysTrips.length !== 0 ? (
+              {notTodaysTrips && notTodaysTrips.length !== 0 ?
                 notTodaysTrips.map((tripInfo, index) => {
                   return (
-                    <TripCard
+                    <CardTripFromFeed
                       key={index}
                       slot="content"
-                      itinerary={tripInfo.itinerary}
-                      clickable={false}
-                    ></TripCard>
+                      tripInfo={tripInfo}
+                    />
                   );
-                })
-              ) : (
-                <div className="ion-padding" slot="content">
-                  Sem próximas viagens!
-                </div>
-              )}
+                }) : (
+                  <div className="ion-padding" slot="content">
+                    Sem próximas viagens!
+                  </div>
+                )
+              }
             </IonAccordion>
           </IonAccordionGroup>
         </IonList>
@@ -129,7 +132,7 @@ const HomeFeedViagensMeusMotorista: React.FC = () => {
           duration={2500}
         />
       </IonContent>
-    </IonPage>
+    </IonPage >
   );
 };
 

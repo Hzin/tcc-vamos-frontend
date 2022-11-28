@@ -14,7 +14,7 @@ import { Color } from "@ionic/core";
 import { tripStatus } from "../constants/tripStatus";
 import { Itinerary } from "../models/itinerary.model";
 
-import * as tripsService from "../services/api/trips";
+import * as tripsService from "../services/functions/tripsService";
 
 import { reloadPage } from "../services/utils";
 
@@ -234,7 +234,7 @@ export const TripCard = (props: ComponentProps) => {
         <div className="icons-location-divider">|</div>
         <div className="addresses-itinerary">
           <IonIcon icon={locationOutline} className="mr-1"></IonIcon>
-          {props.itinerary.destinations.map((destination) => {
+          {props.itinerary.destinations && props.itinerary.destinations.map((destination) => {
             if (destination.is_final) {
               return <>{destination.formatted_address}</>;
             }
