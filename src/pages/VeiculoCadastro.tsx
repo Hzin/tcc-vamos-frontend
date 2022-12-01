@@ -87,30 +87,35 @@ const VeiculoCadastro: React.FC = () => {
       !vehicleForm.carPlate.match(/([A-z0-9]){7}/g)
     ) {
       setToastMessage("Placa do veículo inválida!");
+      setToastColor('warning')
       setShowToast(true);
       return false;
     }
 
     if (!vehicleForm.carBrand) {
       setToastMessage("Marca do veículo é obrigatório");
+      setToastColor('warning')
       setShowToast(true);
       return false;
     }
 
     if (!vehicleForm.carModel) {
       setToastMessage("Modelo do veículo é obrigatório");
+      setToastColor('warning')
       setShowToast(true);
       return false;
     }
 
     if (!vehicleForm.seats_number || !parseInt(`${vehicleForm.seats_number}`)) {
       setToastMessage("Número de passageiros inválido");
+      setToastColor('warning')
       setShowToast(true);
       return false;
     }
 
     if (Number(vehicleForm.seats_number) < 1) {
       setToastMessage("Número de passageiros deve ser positivo!");
+      setToastColor('warning')
       setShowToast(true);
       return false;
     }
