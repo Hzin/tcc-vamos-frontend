@@ -35,15 +35,15 @@ import LocalStorage from "../LocalStorage";
 import { Color } from "@ionic/core";
 import { PageHeader } from "../components/PageHeader";
 
-import { User } from "../models/user.model";
-
 import { closeToast } from "../services/utils";
 
-import * as sessionsService from "../services/functions/sessionsService";
 import * as usersService from "../services/functions/usersService";
+import * as sessionsService from "../services/functions/sessionsService";
 import * as vehiclesService from "../services/functions/vehiclesService";
-import { useAuth } from "../contexts/auth";
 import * as itinerariesService from "../services/functions/itinerariesService";
+
+import { useAuth } from "../contexts/auth";
+import { User } from "../models/user.model";
 
 interface LocationState {
   redirectData?: {
@@ -125,61 +125,88 @@ const Perfil: React.FC<PerfilProps> = (props) => {
     }
 
     const loadUserData = async () => {
-      if (user) {
-        // check if user is driver (if they have vans)
-        const userIsDriverRes = await usersService.checkIfUserIsDriver(user.id_user);
+      let userId = "";
 
-        if (!userIsDriverRes.error && userIsDriverRes.result !== undefined) {
-          setIsDriver(userIsDriverRes.result);
+      // verify if user is authenticated
+      if (props.id_user) {
+        userId = props.id_user
+      } else if (props.match && props.match.params.id) {
+        userId = props.match.params.id;
+      } else {
+        const refreshSessionRes = await sessionsService.refreshSession();
+
+        if (refreshSessionRes.error) {
+          redirectUserToLogin();
+          return;
         }
 
-        const userIsAdminRes = await usersService.checkIfUserIsAdmin();
-        if (userIsAdminRes) {
-          setIsAdmin(userIsAdminRes);
-
-          const countVehiclesPendingDocuments = await vehiclesService.countVehiclesPendingDocuments()
-          setCountVehiclesPendingDocuments(countVehiclesPendingDocuments)
+        if (refreshSessionRes.userId) {
+          userId = refreshSessionRes.userId;
         }
-        const userData = user;
+      }
 
-        if (userData && isMounted) {
-          setInputValues({
-            id: userData.id_user,
-            name: userData.name,
-            lastname: userData.lastname,
-            email: userData.email,
-            avatar: userData.avatar_image,
-            phone_number: userData.phone_number,
-            birth_date: userData.birth_date,
-            bio: userData.bio,
-            document_type: userData.document_type,
-            document: userData.document,
-          });
+      // get user info by ID
+      let userData: User | undefined
+      try {
+        userData = await usersService.getById(userId);
+      } catch {
+        history.push({ pathname: "/login" });
+      }
 
-          if (props.id_user || (props.match && props.match.params.id)) {
-            setIsVisitor(true);
-            setPageName(`Perfil de ${userData.name}`)
+      // check if user is driver (if they have vans)
+      const userIsDriverRes = await usersService.checkIfUserIsDriver(userId);
 
-            return
-          }
+      // if (userIsDriverRes.error) {
+      //   setToastColor('warning')
+      //   setToastMessage(userIsDriverRes.error.errorMessage)
+      //   setShowToast(true)
+      //   return
+      // }
 
-          setIsVisitor(false)
-          setPageName('Meu perfil')
+      if (!userIsDriverRes.error && userIsDriverRes.result !== undefined) {
+        setIsDriver(userIsDriverRes.result);
+      }
 
-          if (!userData.document || !userData.phone_number) {
-            setIncompleteProfile(true);
+      const userIsAdminRes = await usersService.checkIfUserIsAdmin();
+      setIsAdmin(userIsAdminRes);
 
-            let counter = 0;
+      if (userData && isMounted) {
+        setInputValues({
+          id: userData.id_user,
+          name: userData.name,
+          lastname: userData.lastname,
+          email: userData.email,
+          avatar: userData.avatar_image,
+          phone_number: userData.phone_number,
+          birth_date: userData.birth_date,
+          bio: userData.bio,
+          document_type: userData.document_type,
+          document: userData.document,
+        });
 
-            if (!userData.document) counter++;
-            if (!userData.phone_number) counter++;
+        if (props.id_user || (props.match && props.match.params.id)) {
+          setIsVisitor(true);
+          setPageName(`Perfil de ${userData.name}`)
 
-            setIncompleteProfileCounter(counter);
-          }
-
-          const countItinerariesPendingPassengerRequests = await itinerariesService.countItinerariesPendingPassengerRequestsByDriverId()
-          setCountItinerariesPendingPassengerRequests(countItinerariesPendingPassengerRequests)
+          return
         }
+
+        setIsVisitor(false)
+        setPageName('Meu perfil')
+
+        if (!userData.document || !userData.phone_number) {
+          setIncompleteProfile(true);
+
+          let counter = 0;
+
+          if (!userData.document) counter++;
+          if (!userData.phone_number) counter++;
+
+          setIncompleteProfileCounter(counter);
+        }
+
+        const countItinerariesPendingPassengerRequests = await itinerariesService.countItinerariesPendingPassengerRequestsByDriverId()
+        setCountItinerariesPendingPassengerRequests(countItinerariesPendingPassengerRequests)
       }
     };
 
