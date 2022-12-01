@@ -121,3 +121,27 @@ export async function confirmTrip(itineraryId: string): Promise<ChangeTripStatus
 
   return res.data;
 }
+
+export async function updatePresence(id_user: string, id_trip: number, status: "CONFIRMED" | "CANCELED"): Promise<any> {
+  let res: any;
+
+  try {
+    res = await tripsRoutes.updatePresence(id_user, id_trip, status);
+  } catch (error) {
+    // TODO
+  }
+
+  return res;
+}
+
+export async function getAttendanceList(id_trip: number): Promise<any> {
+  let res: any;
+
+  try {
+    res = await tripsRoutes.getAttendanceList(id_trip);
+  } catch (error) {
+    // TODO
+  }
+
+  return res;
+}

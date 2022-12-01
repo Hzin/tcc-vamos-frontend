@@ -8,7 +8,7 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-
+import { Color } from "@ionic/core";
 import {
   IonGrid,
   IonRow,
@@ -19,7 +19,7 @@ import {
   IonButton,
 } from "@ionic/react";
 
-import { bookmarkOutline, callOutline, documentOutline, documentTextOutline, idCardOutline, timeOutline, timeSharp, trashBinOutline } from "ionicons/icons";
+import { bookmarkOutline, callOutline, checkmarkCircleOutline, documentOutline, documentTextOutline, idCardOutline, locationOutline, timeOutline, timeSharp, trashBinOutline } from "ionicons/icons";
 
 import * as tripsService from "../services/functions/tripsService";
 import * as sessionsService from "../services/functions/sessionsService";
@@ -32,6 +32,7 @@ import { ShowContratoResumoPageAsModal } from "../components/ShowPageAsModal/Sho
 import EnumUtils from "../services/EnumUtils";
 import { ItemItineraryDetail } from "../components/ItemItineraryDetail";
 import { formatTimeField, getUserFullName } from "../services/utils";
+import { useAuth } from "../contexts/auth";
 
 export interface ViagemProps {
   match?: {
@@ -46,10 +47,13 @@ export interface ViagemProps {
 }
 
 const Viagem: React.FC<ViagemProps> = (props) => {
+  const { user } = useAuth();
+
   const [presentAlert] = useIonAlert();
 
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState('');
+  const [toastColor, setToastColor] = useState<Color>("primary");
 
   const [trip, setTrip] = useState<Trip>();
 
@@ -68,7 +72,6 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
   const getTripInfo = async (id_trip: string) => {
     const trip = await tripsService.getTrip(id_trip)
-    console.log(trip)
 
     setTrip(trip)
     getContractInfo(trip)
@@ -101,6 +104,24 @@ const Viagem: React.FC<ViagemProps> = (props) => {
     },
     );
   };
+
+  async function confirmarIda() {
+    let res = await tripsService.updatePresence(user!.id_user, trip!.id_trip, "CONFIRMED");
+    if (res) {
+      setMessageToast('Presença confirmada com sucesso!');
+      setToastColor('success');
+      setShowToast(true);
+    }
+  }
+
+  async function faltar() {
+    let res = await tripsService.updatePresence(user!.id_user, trip!.id_trip, "CANCELED");
+    if (res) {
+      setMessageToast('Falta confirmada com sucesso!');
+      setToastColor('success');
+      setShowToast(true);
+    }
+  }
 
   return (
     <IonPage>
@@ -152,9 +173,42 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
               <IonRow>
                 <IonCol>
-                  <IonButton expand="block" color='success' fill="outline">
+                  <IonButton 
+                    onClick={() => {
+                      history.push({
+                        pathname: `/viagem/${trip.id_trip}/presenca`,
+                        state: {
+                          id_trip: trip.id_trip,
+                        },
+                      });  
+                    }} 
+                    expand="block" 
+                    color='success' 
+                    fill="outline"
+                  >
                     <IonIcon icon={documentTextOutline} />
-                    <IonLabel>Lista de presença (WIP)</IonLabel>
+                    <IonLabel>Lista de presença</IonLabel>
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+              
+              <IonRow>
+                <IonCol>
+                  <IonButton 
+                    onClick={() => {
+                      history.push({
+                        pathname: `/viagem/${trip.id_trip}/rota`,
+                        state: {
+                          id_trip: trip.id_trip,
+                        },
+                      });  
+                    }} 
+                    expand="block" 
+                    color='success' 
+                    fill="outline"
+                  >
+                    <IonIcon icon={locationOutline} />
+                    <IonLabel>Iniciar rota</IonLabel>
                   </IonButton>
                 </IonCol>
               </IonRow>
@@ -179,9 +233,15 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
                   <IonRow>
                     <IonCol>
-                      <IonButton expand="block" onClick={() => { }} fill="outline" color="Blue" >
+                      <IonButton expand="block" onClick={() => faltar()} fill="outline" color="Blue" >
                         <IonIcon icon={trashBinOutline} />
-                        <IonLabel>Faltar na proxima viagem</IonLabel>
+                        <IonLabel> Faltar</IonLabel>
+                      </IonButton>
+                    </IonCol>
+                    <IonCol>
+                      <IonButton expand="block" onClick={() => confirmarIda()} fill="outline" color="success" >
+                        <IonIcon icon={checkmarkCircleOutline} />
+                        <IonLabel>Confirmar ida</IonLabel>
                       </IonButton>
                     </IonCol>
                   </IonRow>
@@ -194,7 +254,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
         <IonToast
           position="top"
-          color='danger'
+          color={toastColor}
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message={messageToast}

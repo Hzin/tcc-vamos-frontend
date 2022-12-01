@@ -31,7 +31,13 @@ const tripsRoutes = {
   },
   confirmTrip: {
     url: `${tripsRoutesDefault}/update/confirm`
-  }
+  },
+  updatePresence: {
+    url: `${tripsRoutesDefault}/presence`
+  },
+  getAttendanceList: {
+    url: `${tripsRoutesDefault}/:id/attendance-list`
+  },
 }
 
 export default tripsRoutes;
