@@ -178,31 +178,7 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
               </IonAccordionGroup>
             </IonList>
           </>
-        )
-        }
-
-        <IonAccordionGroup value="debug" className="mt-1">
-          {/* <IonListHeader className="mt-4">Debug</IonListHeader> */}
-          <IonAccordion>
-            <IonItem slot="header" color="primary">
-              <IonLabel>Debug</IonLabel>
-            </IonItem>
-
-            <div className="ion-padding" slot="content">
-              <IonItem>
-                <IonButton onClick={() => { history.push({ pathname: "/viagem/:id" }) }}>"/viagem/:id"</IonButton>
-              </IonItem>
-
-              <IonItem>
-                <IonButton onClick={() => { history.push({ pathname: "/contrato/:id" }) }}>"/contrato/:id"</IonButton>
-              </IonItem>
-
-              <IonItem className="">
-                <IonButton onClick={() => { history.push({ pathname: "/viagem/:id/presenca" }) }}>"/viagem/:id/presenca"</IonButton>
-              </IonItem>
-            </div>
-          </IonAccordion>
-        </IonAccordionGroup>
+        )}
 
         {itinerary && (
           <>

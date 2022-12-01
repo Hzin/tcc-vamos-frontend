@@ -22,7 +22,7 @@ export const ShowItinerarioViagemPageAsModal = (props: ShowItinerarioPassageiros
           id_trip={props.id_trip}
           tripType={props.tripType}
 
-          isReturnTripCreated
+          isReturnTripCreated={props.isReturnTripCreated}
           
           noHeaderBackButton={props.noHeaderBackButton}
         />

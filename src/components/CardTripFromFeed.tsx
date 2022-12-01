@@ -54,11 +54,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
   const [presentAlert] = useIonAlert();
   const [presentAlertConfirmation] = useIonAlert();
 
-  useEffect(() => {
-    if (props.tripInfo.tripReturn && props.tripInfo.tripReturn.id) {
-      // não pode mais mexer nas opções da viagem de ida
-    }
-  }, []);
+  useEffect(() => { }, []);
 
   const refreshPage = (message: string, toastColor: Color) => {
     history.push({
@@ -171,7 +167,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
 
   const redirectToTripPage = (id_trip: number) => {
     history.push({
-      pathname: `/viagem/${id_trip}`,
+      pathname: `/viagem/id/${id_trip}`,
     });
   };
 
@@ -228,9 +224,9 @@ export const CardTripFromFeed = (props: ComponentProps) => {
           <div className="addresses-itinerary">
             <IonIcon icon={locationOutline} className="mr-1"></IonIcon>
             {props.tripInfo.itinerary.destinations &&
-              props.tripInfo.itinerary.destinations.map((destination) => {
+              props.tripInfo.itinerary.destinations.map((destination, index) => {
                 if (destination.is_final) {
-                  return <>{destination.formatted_address}</>;
+                  return <div key={index}>{destination.formatted_address}</div>;
                 }
                 return undefined;
               })}
@@ -256,7 +252,17 @@ export const CardTripFromFeed = (props: ComponentProps) => {
             </IonItem>
 
             {props.tripInfo.tripGoing && props.tripInfo.tripGoing.id ? (
-              <IonItem lines="none" id='modal-trip-going'>
+              <IonItem
+                lines="none"
+                onClick={() => {
+                  history.push({
+                    pathname: `/viagem/id/${props.tripInfo.tripGoing.id}`,
+                    state: {
+                      id_trip: "" + props.tripInfo.tripGoing.id,
+                      tripType: TripType.going,
+                      isReturnTripCreated: (props.tripInfo.tripReturn && props.tripInfo.tripReturn.id) ? true : false,
+                    }
+                  }) }}>
                 Detalhes da viagem de ida
                 <IonChip slot="end" color="secondary">
                   <IonIcon icon={eyeOutline} />
@@ -339,16 +345,16 @@ export const CardTripFromFeed = (props: ComponentProps) => {
         </IonCardContent>
       </IonCard>
 
-      {props.tripInfo.tripGoing && props.tripInfo.tripGoing.id && (
+      {/* {props.tripInfo.tripGoing && props.tripInfo.tripGoing.id && (
         <ShowItinerarioViagemPageAsModal
           id_trip={"" + props.tripInfo.tripGoing.id}
           tripType={TripType.going}
-          isReturnTripCreated={props.tripInfo.tripReturn && props.tripInfo.tripReturn.id ? true : false}
+          isReturnTripCreated={(props.tripInfo.tripReturn && props.tripInfo.tripReturn.id) ? true : false}
 
           trigger="modal-trip-going"
           hasButtonAlready
         />
-      )}
+      )} */}
 
       {props.tripInfo.tripReturn && props.tripInfo.tripReturn.id && (
         <ShowItinerarioViagemPageAsModal

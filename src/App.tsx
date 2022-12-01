@@ -58,6 +58,7 @@ import HomeFeedViagensMeusPassageiro from "./pages/HomeFeedViagensMeusPassageiro
 
 import Passageiros from "./pages/Passageiros";
 import ListaPresenca from "./pages/ListaPresenca";
+import Rota from "./pages/Rota";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -83,7 +84,6 @@ import "./theme/variables.css";
 import "./theme/tailwind.css";
 
 import { AuthProvider, useAuth } from "./contexts/auth";
-import Rota from "./pages/Rota";
 
 setupIonicReact();
 
@@ -132,8 +132,7 @@ const routes = (
     <Route exact path="/buscar/passageiro" component={BuscarPassageiro}></Route>
     <Route exact path="/buscar/itinerario/lista" component={ListaItinerarios}></Route>
     
-
-    <Route exact path="/viagem" component={Home}></Route>
+    {/* <Route exact path="/viagem" component={Home}></Route> */}
     <Route exact path="/viagem/:id" component={Viagem}></Route>
 
     <Route exact path="/documentos/moderar" component={ModerarDocumentos}></Route>
