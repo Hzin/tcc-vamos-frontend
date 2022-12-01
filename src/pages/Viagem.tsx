@@ -10,7 +10,7 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-
+import { Color } from "@ionic/core";
 import {
   IonGrid,
   IonRow,
@@ -21,7 +21,7 @@ import {
   IonButton,
 } from "@ionic/react";
 
-import { bookmarkOutline, callOutline, documentOutline, documentTextOutline, idCardOutline, pinOutline, timeOutline, timeSharp, trashBinOutline } from "ionicons/icons";
+import { bookmarkOutline, callOutline, checkmarkCircleOutline, documentOutline, documentTextOutline, idCardOutline, locationOutline, pinOutline, timeOutline, timeSharp, trashBinOutline } from "ionicons/icons";
 
 import * as tripsService from "../services/functions/tripsService";
 import * as sessionsService from "../services/functions/sessionsService";
@@ -38,8 +38,9 @@ import { ShowViagemHistoricoStatusPageAsModal } from "../components/ShowPageAsMo
 import { ChipInfo } from "../components/ChipInfo";
 import { TripType } from "../models/tripType.models";
 
+import { formatTimeField, getUserFullName } from "../services/utils";
 import EnumUtils from "../services/EnumUtils";
-import { getUserFullName, formatTimeField } from "../services/utils";
+import { useAuth } from "../contexts/auth";
 
 export interface ViagemProps {
   match?: {
@@ -56,10 +57,13 @@ export interface ViagemProps {
 }
 
 const Viagem: React.FC<ViagemProps> = (props) => {
+  const { user } = useAuth();
+
   const [presentAlert] = useIonAlert();
 
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState('');
+  const [toastColor, setToastColor] = useState<Color>("primary");
 
   const [trip, setTrip] = useState<Trip>();
 
@@ -83,7 +87,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
       setOptionsButtonsCss('line-through')
     }
   }, [])
-  
+
   const loadPageInfo = () => {
     if (props.id_trip) getTripInfo(props.id_trip)
     else if (props.match) getTripInfo(props.match.params.id)
@@ -93,7 +97,6 @@ const Viagem: React.FC<ViagemProps> = (props) => {
   const getTripInfo = async (id_trip: string) => {
     setParamIdTrip(id_trip) // usado pelo modal de histórico de viagem
     const trip = await tripsService.getTrip(id_trip)
-    // console.log(trip)
 
     setTrip(trip)
     getContractInfo(trip)
@@ -164,6 +167,23 @@ const Viagem: React.FC<ViagemProps> = (props) => {
         loadPageInfo()
       });
   };
+  async function confirmarIda() {
+    let res = await tripsService.updatePresence(user!.id_user, trip!.id_trip, "CONFIRMED");
+    if (res) {
+      setMessageToast('Presença confirmada com sucesso!');
+      setToastColor('success');
+      setShowToast(true);
+    }
+  }
+
+  async function faltar() {
+    let res = await tripsService.updatePresence(user!.id_user, trip!.id_trip, "CANCELED");
+    if (res) {
+      setMessageToast('Falta confirmada com sucesso!');
+      setToastColor('success');
+      setShowToast(true);
+    }
+  }
 
   return (
     <IonPage>
@@ -197,8 +217,8 @@ const Viagem: React.FC<ViagemProps> = (props) => {
                 <>
                   <IonListHeader className="mt-2">Horários</IonListHeader>
 
-                  <ItemItineraryDetail label='Horário de estimado saída' leftIcon={timeOutline} icon={timeOutline} value={formatTimeField(trip.itinerary.estimated_departure_time_going)} />
-                  <ItemItineraryDetail label='Horário de estimado chegada' leftIcon={timeSharp} icon={timeSharp} value={formatTimeField(trip.itinerary.estimated_arrival_time_going)} />
+                  <ItemItineraryDetail label='Horário de estimado saída' leftIcon={timeOutline} icon={timeOutline} value={formatTimeField(trip.itinerary.estimated_departure_time)} />
+                  <ItemItineraryDetail label='Horário de estimado chegada' leftIcon={timeSharp} icon={timeSharp} value={formatTimeField(trip.itinerary.estimated_arrival_time)} />
                 </>
               )}
 
@@ -221,6 +241,47 @@ const Viagem: React.FC<ViagemProps> = (props) => {
                       'Você também não poderá usar as opções se criar a viagem de volta.'
                     ]
                   } />
+                  <IonRow>
+                    <IonCol>
+                      <IonButton
+                        onClick={() => {
+                          history.push({
+                            pathname: `/viagem/${trip.id_trip}/presenca`,
+                            state: {
+                              id_trip: trip.id_trip,
+                            },
+                          });
+                        }}
+                        expand="block"
+                        color='success'
+                        fill="outline"
+                      >
+                        <IonIcon icon={documentTextOutline} />
+                        <IonLabel>Lista de presença</IonLabel>
+                      </IonButton>
+                    </IonCol>
+                  </IonRow>
+
+                  <IonRow>
+                    <IonCol>
+                      <IonButton
+                        onClick={() => {
+                          history.push({
+                            pathname: `/viagem/${trip.id_trip}/rota`,
+                            state: {
+                              id_trip: trip.id_trip,
+                            },
+                          });
+                        }}
+                        expand="block"
+                        color='success'
+                        fill="outline"
+                      >
+                        <IonIcon icon={locationOutline} />
+                        <IonLabel>Iniciar rota</IonLabel>
+                      </IonButton>
+                    </IonCol>
+                  </IonRow>
 
                   <IonRow>
                     <IonCol>
@@ -240,47 +301,66 @@ const Viagem: React.FC<ViagemProps> = (props) => {
                     </IonCol>
                   </IonRow>
 
-                  {availableOptions.includes(tripStatusUpdateActions.cancel) && (
-                    <>
-                      <IonRow>
-                        <IonCol>
-                          <IonButton expand="block" color='warning' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.cancel) && !areOptionsAvailable} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'canceled', description: 'Viagem cancelada' }) }}>
-                            <IonIcon icon={documentTextOutline} />
-                            <IonLabel className={`ml-1 ${optionsButtonsCss}`}>Cancelar viagem</IonLabel>
-                          </IonButton>
-                        </IonCol>
-                      </IonRow>
-                    </>
-                  )}
+                  <IonRow>
+                    <IonCol>
+                      <IonButton expand="block" onClick={() => faltar()} fill="outline" color="Blue" >
+                        <IonIcon icon={trashBinOutline} />
+                        <IonLabel> Faltar</IonLabel>
+                      </IonButton>
+                    </IonCol>
+                    <IonCol>
+                      <IonButton expand="block" onClick={() => confirmarIda()} fill="outline" color="success" >
+                        <IonIcon icon={checkmarkCircleOutline} />
+                        <IonLabel>Confirmar ida</IonLabel>
+                      </IonButton>
+                    </IonCol>
+                  </IonRow >
 
-                  {availableOptions.includes(tripStatusUpdateActions.undoCancel) && (
-                    <>
-                      <IonRow>
-                        <IonCol>
-                          <IonButton expand="block" color='primary' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.undoCancel) && !areOptionsAvailable} onClick={() => {
-                            tripsService.undoLastStatusChange({ tripId: "" + trip.id_trip }).then((response) => {
-                              setMessageToast(response.message)
-                              setShowToast(true)
+                  {
+                    availableOptions.includes(tripStatusUpdateActions.cancel) && (
+                      <>
+                        <IonRow>
+                          <IonCol>
+                            <IonButton expand="block" color='warning' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.cancel) && !areOptionsAvailable} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'canceled', description: 'Viagem cancelada' }) }}>
+                              <IonIcon icon={documentTextOutline} />
+                              <IonLabel className={`ml-1 ${optionsButtonsCss}`}>Cancelar viagem</IonLabel>
+                            </IonButton>
+                          </IonCol>
+                        </IonRow>
+                      </>
+                    )
+                  }
 
-                              loadPageInfo()
-                            })
-                          }}>
-                            <IonIcon icon={documentTextOutline} />
-                            <IonLabel className={`ml-1 ${optionsButtonsCss}`}>Reverter cancelamento da viagem</IonLabel>
-                          </IonButton>
-                        </IonCol>
-                      </IonRow>  
-                    </>
-                  )}
+                  {
+                    availableOptions.includes(tripStatusUpdateActions.undoCancel) && (
+                      <>
+                        <IonRow>
+                          <IonCol>
+                            <IonButton expand="block" color='primary' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.undoCancel) && !areOptionsAvailable} onClick={() => {
+                              tripsService.undoLastStatusChange({ tripId: "" + trip.id_trip }).then((response) => {
+                                setMessageToast(response.message)
+                                setShowToast(true)
+
+                                loadPageInfo()
+                              })
+                            }}>
+                              <IonIcon icon={documentTextOutline} />
+                              <IonLabel className={`ml-1 ${optionsButtonsCss}`}>Reverter cancelamento da viagem</IonLabel>
+                            </IonButton>
+                          </IonCol>
+                        </IonRow>
+                      </>
+                    )
+                  }
                 </>
               )}
-            </IonGrid>
+            </IonGrid >
           </>
         )}
 
         <IonToast
           position="top"
-          color='success'
+          color={toastColor}
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message={messageToast}
@@ -289,7 +369,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
         <ShowContratoResumoPageAsModal trigger="modal-contrato" id_passenger_request={paramIdPassengerRequest} noHeaderBackButton />
         <ShowViagemHistoricoStatusPageAsModal trigger='modal-historico-viagem' id_trip={paramIdTrip} noHeaderBackButton />
-      </IonContent>
+      </IonContent >
 
       <IonFooter>
         <IonToolbar>
@@ -338,7 +418,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
           )}
         </IonToolbar>
       </IonFooter>
-    </IonPage>
+    </IonPage >
   );
 };
 

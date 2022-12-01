@@ -52,7 +52,6 @@ import ItinerarioContratos from "./pages/ItinerarioContratos";
 import ContratoResumo from "./pages/ContratoResumo";
 
 import Contrato from "./pages/Contrato";
-import ListaDePresenca from "./pages/ListaDePresenca";
 
 import HomeFeedViagensMeusMotorista from "./pages/HomeFeedViagensMeusMotorista";
 import HomeFeedViagensMeusPassageiro from "./pages/HomeFeedViagensMeusPassageiro";
@@ -84,6 +83,7 @@ import "./theme/variables.css";
 import "./theme/tailwind.css";
 
 import { AuthProvider, useAuth } from "./contexts/auth";
+import Rota from "./pages/Rota";
 
 setupIonicReact();
 
@@ -143,7 +143,9 @@ const routes = (
 
     <Route exact path="/viagem/id/:id" component={Viagem}></Route>
     <Route exact path="/contrato/id/:id" component={Contrato}></Route>
-    <Route exact path="/viagem/id/:id/presenca" component={ListaDePresenca}></Route>
+    <Route exact path="/viagem/:id/presenca" component={ListaPresenca}></Route>
+    
+    <Route exact path="/viagem/:id/rota" component={Rota}></Route>
 
     <Route exact path="/">
       <Redirect to="/home" />

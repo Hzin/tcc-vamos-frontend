@@ -13,10 +13,8 @@ export interface Itinerary {
   is_active: boolean;
   days_of_week?: string;
   specific_day?: Date;
-  estimated_departure_time_going: string;
-  estimated_arrival_time_going: string;
-  estimated_departure_time_return: string;
-  estimated_arrival_time_return: string;
+  estimated_departure_time: string;
+  estimated_arrival_time: string;
   available_seats: number;
   monthly_price: number;
   daily_price: number;

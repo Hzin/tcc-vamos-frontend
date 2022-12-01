@@ -171,8 +171,8 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
                   </IonItem>
 
                   <div className="ion-padding" slot="content">
-                    <ItemItineraryDetail label='Horário de estimado saída' icon={timeOutline} value={formatTimeField(itinerary.estimated_departure_time_going)} />
-                    <ItemItineraryDetail label='Horário de estimado chegada' icon={timeSharp} value={formatTimeField(itinerary.estimated_arrival_time_going)} />
+                    <ItemItineraryDetail label='Horário de estimado saída' icon={timeOutline} value={formatTimeField(itinerary.estimated_departure_time)} />
+                    <ItemItineraryDetail label='Horário de estimado chegada' icon={timeSharp} value={formatTimeField(itinerary.estimated_arrival_time)} />
                   </div>
                 </IonAccordion>
               </IonAccordionGroup>

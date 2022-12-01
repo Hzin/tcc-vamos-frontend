@@ -18,8 +18,8 @@ export interface CreateItineraryRequest {
   vehicle_plate: string;
   days_of_week?: string;
   specific_day?: string;
-  estimated_departure_time_going: string;
-  estimated_arrival_time_going: string;
+  estimated_departure_time: string;
+  estimated_arrival_time: string;
   monthly_price: number;
   daily_price?: number;
   accept_daily: boolean;

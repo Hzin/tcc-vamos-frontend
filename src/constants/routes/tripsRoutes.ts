@@ -30,7 +30,16 @@ const tripsRoutes = {
   },
   getTripHistoricData: {
     url: `${tripsRoutesDefault}/:id/status/history`
-  }
+  },
+  confirmTrip: {
+    url: `${tripsRoutesDefault}/update/confirm`
+  },
+  updatePresence: {
+    url: `${tripsRoutesDefault}/presence`
+  },
+  getAttendanceList: {
+    url: `${tripsRoutesDefault}/:id/attendance-list`
+  },
 }
 
 export default tripsRoutes;
