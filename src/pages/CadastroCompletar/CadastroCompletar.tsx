@@ -37,7 +37,7 @@ interface userData {
 }
 
 interface LocationState {
-  userData: userData;
+  userData?: userData;
 
   redirectData?: {
     showToastMessage: boolean;
@@ -46,25 +46,6 @@ interface LocationState {
   };
 }
 
-let items: cardItem[] = [
-  {
-    icon: documentTextOutline,
-    label: "Documentos pessoais",
-    description:
-      "Cadastre seu documento para que seu perfil possa ser verificado",
-    url: "/perfil/completar/documento",
-    required: false,
-  },
-  {
-    icon: callOutline,
-    label: "Informações de contato",
-    description:
-      "Cadastre seu número de telefone celular que para possam contatar você",
-    url: "/perfil/completar/telefone",
-    required: false,
-  },
-];
-
 const CadastroCompletar: React.FC = () => {
   const history = useHistory();
   const location = useLocation<LocationState>();
@@ -72,6 +53,8 @@ const CadastroCompletar: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState<Color>("primary");
+
+  const [items, setItems] = useState<cardItem[]>([]);
 
   const handleCardClick = (item: cardItem) => {
     if (!item.required) return;
@@ -85,6 +68,7 @@ const CadastroCompletar: React.FC = () => {
   useEffect(() => {
     if (!location.state || !location.state.userData) {
       history.push({ pathname: "/perfil" });
+      return
     }
 
     if (location.state && location.state.redirectData) {
@@ -97,8 +81,26 @@ const CadastroCompletar: React.FC = () => {
       }
     }
 
-    if (!location.state.userData.document) items[0].required = true;
-    if (!location.state.userData.phone_number) items[1].required = true;
+    setItems(
+      [
+        {
+          icon: documentTextOutline,
+          label: "Documentos pessoais",
+          description:
+            "Cadastre seu documento para que seu perfil possa ser verificado",
+          url: "/perfil/completar/documento",
+          required: !location.state.userData.document,
+        },
+        {
+          icon: callOutline,
+          label: "Informações de contato",
+          description:
+            "Cadastre seu número de telefone celular que para possam contatar você",
+          url: "/perfil/completar/telefone",
+          required: !location.state.userData.phone_number,
+        },
+      ]
+    )
   }, []);
 
   return (
@@ -112,7 +114,7 @@ const CadastroCompletar: React.FC = () => {
         {items.map((item, index) => {
           return (
             <IonCard
-              button={item.required}
+              disabled={!item.required}
               key={index}
               onClick={() => {
                 handleCardClick(item);

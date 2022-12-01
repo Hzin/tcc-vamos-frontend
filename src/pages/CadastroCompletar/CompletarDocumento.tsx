@@ -111,6 +111,7 @@ const CompletarDocumento: React.FC = () => {
   };
 
   const handleChangeDocumentType = (document_type: string) => {
+    setDocument('')
     switch(document_type) {
       case 'cpf':
         setDocumentType('cpf') // workaround para o problema de setState para valores vindos de um evento sendo triggerado por um ion-select
