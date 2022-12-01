@@ -168,7 +168,12 @@ const Perfil: React.FC<PerfilProps> = (props) => {
       }
 
       const userIsAdminRes = await usersService.checkIfUserIsAdmin();
-      setIsAdmin(userIsAdminRes);
+
+      if (userIsAdminRes) {
+        setIsAdmin(userIsAdminRes);
+        const countVehiclesPendingDocuments = await vehiclesService.countVehiclesPendingDocuments()
+        setCountVehiclesPendingDocuments(countVehiclesPendingDocuments)
+      }
 
       if (userData && isMounted) {
         setInputValues({

@@ -10,8 +10,6 @@ import {
 
 import { Color } from "@ionic/core";
 
-// import { PhotoViewer } from "@awesome-cordova-plugins/photo-viewer";
-
 import { vehicleDocumentStatus } from "../constants/vehicleDocumentStatus";
 
 import * as vehiclesService from "../services/functions/vehiclesService";
@@ -90,8 +88,9 @@ export const VehicleDocumentCard = (props: VehicleDocumentCardProps) => {
     setToastPosition('bottom')
     setToastShow(true)
 
-    const elm = document.getElementById('component')
-    elm?.classList.add('invisible')
+    // const elm = document.getElementById('component')
+    // elm?.classList.add('invisible')
+    reloadPage()
   }
 
   return (
@@ -107,7 +106,6 @@ export const VehicleDocumentCard = (props: VehicleDocumentCardProps) => {
           </IonCardTitle>
         </IonCardHeader>
 
-        {/* te amo ervilha */}
         <div className="flex justify-between">
           <div>
             <IonButton id={modalId} fill="clear">Abrir</IonButton>
