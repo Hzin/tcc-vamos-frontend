@@ -293,10 +293,12 @@ const Perfil: React.FC<PerfilProps> = (props) => {
               <>
                 {inputValues.phone_number ? (
                   <>
-                    <IonChip>
-                      <IonIcon icon={callOutline} />
-                      <IonLabel>{inputValues.phone_number}</IonLabel>
-                    </IonChip>
+                    <a href={`tel:${inputValues.phone_number}`}>
+                      <IonChip>
+                        <IonIcon icon={callOutline} />
+                        <IonLabel>{inputValues.phone_number}</IonLabel>
+                      </IonChip>
+                    </a>
                   </>
                 ) : (
                   <></>
