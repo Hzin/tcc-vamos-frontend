@@ -92,7 +92,7 @@ const MeusVeiculos: React.FC = () => {
       <IonContent>
         {vehiclesList ? (
           <>
-            <CardInfoBasic size="small" message='Toque em um veículo cadastrado para ver suas viagens e itinerários!' />
+            {/* <CardInfoBasic size="small" message='Toque em um veículo cadastrado para ver suas viagens e itinerários!' /> */}
 
             {vehiclesList.map((vehicle, index) => {
               return (<CardVehicle key={index} vehicle={vehicle} />);

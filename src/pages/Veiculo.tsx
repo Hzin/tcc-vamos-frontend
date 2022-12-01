@@ -527,12 +527,9 @@ const Veiculo: React.FC<ScanNewProps> = (props) => {
             <VehiclePicture picture_path={vehicleInfo.picture} center />
 
             <IonFab vertical="top" horizontal="end" slot="fixed">
-              <IonFabButton>
+              <IonFabButton onClick={() => { showActionSheet("picture"); }}>
                 <IonIcon
                   icon={cameraOutline}
-                  onClick={() => {
-                    showActionSheet("picture");
-                  }}
                 />
               </IonFabButton>
             </IonFab>
