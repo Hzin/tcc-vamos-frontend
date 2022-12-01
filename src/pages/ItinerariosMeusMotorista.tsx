@@ -191,6 +191,7 @@ const ItinerariosMeusMotorista: React.FC = () => {
               <div>
                 <h1>{selectedItinerary.itinerary_nickname}</h1>
                 <h1>{selectedItinerary.estimated_departure_address}</h1>
+                <h1>{selectedItinerary.estimated_departure_time}</h1>
                 <h1>{selectedItinerary.estimated_arrival_time}</h1>
               </div>
             ) : (

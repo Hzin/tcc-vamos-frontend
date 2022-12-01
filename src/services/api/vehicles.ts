@@ -119,8 +119,13 @@ export async function countVehiclesPendingDocuments(): Promise<any> {
   return response.data;
 }
 
-// TODO, fazer
+export async function getUserElegibleVehiclesToCreateItineraries(): Promise<any> {
+  const response = await instance.get(vehiclesRoutes.getUserElegibleVehiclesToCreateItineraries.url);
+  return response.data;
+}
+
 export async function canCreateItineraries(plate: string): Promise<any> {
-  const response = await instance.get(`${vehiclesRoutes.canCreateItineraries.url}/${plate}`);
+  const finalUrl = vehiclesRoutes.canCreateItineraries.url.replace(':plate', plate)
+  const response = await instance.get(finalUrl);
   return response.data;
 }

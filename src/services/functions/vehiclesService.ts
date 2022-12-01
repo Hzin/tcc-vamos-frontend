@@ -118,6 +118,18 @@ export interface CanCreateItinerariesResponse {
   data: boolean
 }
 
+export async function getUserElegibleVehiclesToCreateItineraries(): Promise<CanCreateItinerariesResponse> {
+  let res: any;
+
+  try {
+    res = await vehiclesRoutes.getUserElegibleVehiclesToCreateItineraries();
+  } catch (error) {
+    // TODO
+  }
+
+  return res;
+}
+
 export async function canCreateItineraries(plate: string): Promise<CanCreateItinerariesResponse> {
   let res: any;
 

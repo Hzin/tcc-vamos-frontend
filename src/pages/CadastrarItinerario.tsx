@@ -131,7 +131,8 @@ export default function CadastrarItinerario() {
       }
 
       await vehiclesRoutes
-        .getByUserId(userId)
+        // .getByUserId(userId)
+        .getUserElegibleVehiclesToCreateItineraries()
         .then((response: any) => {
           if (response.status === "error") {
             setToastColor("danger");
@@ -140,7 +141,7 @@ export default function CadastrarItinerario() {
 
             return;
           }
-          setVans(response);
+          setVans(response.data);
         })
         .catch((err: any) => {
           setToastColor("danger");

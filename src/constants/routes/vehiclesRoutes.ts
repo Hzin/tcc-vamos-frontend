@@ -51,8 +51,11 @@ const vehiclesRoutes = {
     url: `${vehiclesRoutesDefault}/picture/delete`
   },
 
-  canCreateItineraries: {
+  getUserElegibleVehiclesToCreateItineraries: {
     url: `${vehiclesRoutesDefault}/can_create_itineraries`
+  },
+  canCreateItineraries: {
+    url: `${vehiclesRoutesDefault}/can_create_itineraries/:plate`
   }
 }
 
