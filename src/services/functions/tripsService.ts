@@ -1,4 +1,4 @@
-import { MessageAndData } from "../../constants/responses/MessageAndData";
+import { MessageAndData } from '../../constants/responses/MessageAndData';
 import { tripStatus } from "../../constants/tripStatus";
 import { Itinerary } from "../../models/itinerary.model";
 import { Trip } from "../../models/trip.model";
