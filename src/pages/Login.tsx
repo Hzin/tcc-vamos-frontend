@@ -35,6 +35,12 @@ const Page: React.FC = () => {
   const {signed, signIn} =  useAuth();
 
   useEffect(() => {
+    if (signed) {
+      history.push("/home");
+    }
+  }, []);
+
+  useEffect(() => {
     if (location.state && location.state.redirectData) {
       const redirectData = location.state.redirectData;
 

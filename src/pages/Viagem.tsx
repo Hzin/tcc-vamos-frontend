@@ -10,7 +10,7 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-
+import { Color } from "@ionic/core";
 import {
   IonGrid,
   IonRow,
@@ -21,7 +21,7 @@ import {
   IonButton,
 } from "@ionic/react";
 
-import { bookmarkOutline, callOutline, documentOutline, documentTextOutline, idCardOutline, pinOutline, timeOutline, timeSharp, trashBinOutline } from "ionicons/icons";
+import { bookmarkOutline, callOutline, checkmarkCircleOutline, documentOutline, documentTextOutline, idCardOutline, locationOutline, timeOutline, timeSharp, trashBinOutline, pinOutline } from "ionicons/icons";
 
 import * as tripsService from "../services/functions/tripsService";
 import * as sessionsService from "../services/functions/sessionsService";
@@ -41,6 +41,8 @@ import { TripType } from "../models/tripType.models";
 import EnumUtils from "../services/EnumUtils";
 import { getUserFullName, formatTimeField } from "../services/utils";
 
+import { useAuth } from "../contexts/auth";
+
 export interface ViagemProps {
   match?: {
     params: {
@@ -56,10 +58,13 @@ export interface ViagemProps {
 }
 
 const Viagem: React.FC<ViagemProps> = (props) => {
+  const { user } = useAuth();
+
   const [presentAlert] = useIonAlert();
 
   const [showToast, setShowToast] = useState(false);
   const [messageToast, setMessageToast] = useState('');
+  const [toastColor, setToastColor] = useState<Color>("primary");
 
   const [trip, setTrip] = useState<Trip>();
 
@@ -93,7 +98,6 @@ const Viagem: React.FC<ViagemProps> = (props) => {
   const getTripInfo = async (id_trip: string) => {
     setParamIdTrip(id_trip) // usado pelo modal de histórico de viagem
     const trip = await tripsService.getTrip(id_trip)
-    // console.log(trip)
 
     setTrip(trip)
     getContractInfo(trip)
@@ -124,6 +128,23 @@ const Viagem: React.FC<ViagemProps> = (props) => {
     );
   };
 
+  async function confirmarIda() {
+    let res = await tripsService.updatePresence(user!.id_user, trip!.id_trip, "CONFIRMED");
+    if (res) {
+      setMessageToast('Presença confirmada com sucesso!');
+      setToastColor('success');
+      setShowToast(true);
+    }
+  }
+
+  async function faltar() {
+    let res = await tripsService.updatePresence(user!.id_user, trip!.id_trip, "CANCELED");
+    if (res) {
+      setMessageToast('Falta confirmada com sucesso!');
+      setToastColor('success');
+      setShowToast(true);
+    }
+  }
   const [availableOptions, setAvailableOptions] = useState<tripStatusUpdateActions[]>([]);
   const updateAvailableOptions = (currentTripStatus: tripStatus) => {
     switch (currentTripStatus) {
@@ -143,8 +164,6 @@ const Viagem: React.FC<ViagemProps> = (props) => {
         break;
     }
   }
-
-  // useEffect(() => console.log(availableOptions), [availableOptions])
 
   const updateTripStatus = async ({
     tripId,
@@ -211,6 +230,50 @@ const Viagem: React.FC<ViagemProps> = (props) => {
                 </>
               )}
 
+              <IonListHeader className="mt-4">Outras opções</IonListHeader>
+
+              <IonRow>
+                <IonCol>
+                  <IonButton 
+                    onClick={() => {
+                      history.push({
+                        pathname: `/viagem/${trip.id_trip}/presenca`,
+                        state: {
+                          id_trip: trip.id_trip,
+                        },
+                      });  
+                    }} 
+                    expand="block" 
+                    color='success' 
+                    fill="outline"
+                  >
+                    <IonIcon icon={documentTextOutline} />
+                    <IonLabel>Lista de presença</IonLabel>
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+              
+              <IonRow>
+                <IonCol>
+                  <IonButton 
+                    onClick={() => {
+                      history.push({
+                        pathname: `/viagem/${trip.id_trip}/rota`,
+                        state: {
+                          id_trip: trip.id_trip,
+                        },
+                      });  
+                    }} 
+                    expand="block" 
+                    color='success' 
+                    fill="outline"
+                  >
+                    <IonIcon icon={locationOutline} />
+                    <IonLabel>Iniciar rota</IonLabel>
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+
               {!isPassenger && (
                 <>
                   <IonListHeader className="mt-4">Opções</IonListHeader>
@@ -223,6 +286,18 @@ const Viagem: React.FC<ViagemProps> = (props) => {
                   } />
 
                   <IonRow>
+                    <IonCol>
+                      <IonButton expand="block" onClick={() => faltar()} fill="outline" color="Blue" >
+                        <IonIcon icon={trashBinOutline} />
+                        <IonLabel> Faltar</IonLabel>
+                      </IonButton>
+                    </IonCol>
+                    <IonCol>
+                      <IonButton expand="block" onClick={() => confirmarIda()} fill="outline" color="success" >
+                        <IonIcon icon={checkmarkCircleOutline} />
+                        <IonLabel>Confirmar ida</IonLabel>
+                      </IonButton>
+                    </IonCol>
                     <IonCol>
                       <IonButton expand="block" color='success' fill="outline" disabled={!availableOptions.includes(tripStatusUpdateActions.start) && !areOptionsAvailable} onClick={() => { updateTripStatus({ tripId: "" + trip.id_trip, newStatus: 'inProgress', description: 'Início de viagem' }) }}>
                         <IonIcon icon={documentTextOutline} />
@@ -280,7 +355,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
         <IonToast
           position="top"
-          color='success'
+          color={toastColor}
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message={messageToast}

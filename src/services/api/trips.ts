@@ -64,3 +64,14 @@ export async function getFeed({ userType, tripDay }: GetFeedProps): Promise<Chan
   const response = await instance.get(finalUrl)
   return response.data;
 }
+
+export async function updatePresence(id_user: string, id_trip: number, status: "CONFIRMED" | "CANCELED"): Promise<any> {
+  const response = await instance.patch(tripsRoutes.updatePresence.url, { id_user, id_trip, status })
+  return response.data;
+}
+
+export async function getAttendanceList(id_trip: number): Promise<any> {
+  const finalUrl = tripsRoutes.getAttendanceList.url.replace(':id', id_trip.toString())
+  const response = await instance.get(finalUrl)
+  return response.data;
+}

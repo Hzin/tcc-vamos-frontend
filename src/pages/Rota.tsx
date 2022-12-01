@@ -6,10 +6,11 @@ import {
   IonCardTitle,
   IonContent,
   IonIcon,
+  IonLabel,
   IonPage,
   IonToast,
 } from "@ionic/react";
-import { locateOutline, search } from "ionicons/icons";
+import { locateOutline, locationOutline, search } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { PageHeader } from "../components/PageHeader";
 import { Color } from "@ionic/core";
@@ -22,7 +23,7 @@ interface LocationState {
   id_trip: number;
 }
 
-export default function ListaPresenca() {
+export default function Rota() {
   const history = useHistory();
 
   const [passengers, setPassengers] = useState<PassengerWithAttendanceList[]>([]);
@@ -53,21 +54,35 @@ export default function ListaPresenca() {
       <IonContent fullscreen>
         {passengers.length !== 0 ? (
           passengers.map((passenger, index) => {
-            return (
-              <IonCard key={index} className={passenger.attendance_lists[0].status === "CANCELED" ? "opacity-50" : ""}>
-                <IonCardHeader>
-                  <IonCardTitle>
-                    {passenger.user.name} {passenger.user.lastname}
-                  </IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
-                    <IonIcon icon={locateOutline} className="mr-1"></IonIcon>
-                    {passenger.formatted_address_origin}
-                  </div>
-                </IonCardContent>
-              </IonCard>
-            );
+            if (passenger.attendance_lists[0].status === "CONFIRMED") {
+              return (
+                <IonCard key={index}>
+                  <IonCardHeader>
+                    <IonCardTitle>
+                      {passenger.user.name} {passenger.user.lastname}
+                    </IonCardTitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
+                      <IonIcon icon={locateOutline} className="mr-1"></IonIcon>
+                      {passenger.formatted_address_origin}
+                    </div>
+                    <div>
+                    <IonButton 
+                      expand="block" 
+                      color='success' 
+                      fill="outline"
+                      href={`https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=${passenger.lat_origin},${passenger.lng_origin}&travelmode=driving`}
+                      target="_blank"
+                    >
+                      <IonIcon icon={locationOutline} />
+                      <IonLabel>Buscar passageiro</IonLabel>
+                    </IonButton>
+                    </div>
+                  </IonCardContent>
+                </IonCard>
+              );
+            }
           })
         ) : (
           <>

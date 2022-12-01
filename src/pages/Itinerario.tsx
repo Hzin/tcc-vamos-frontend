@@ -248,7 +248,7 @@ const Itinerario: React.FC<ScanNewProps> = (props) => {
             <>
               <IonButton id='modal-passageiros' expand='full' fill='solid' color='tertiary'>Ver passageiros</IonButton>
               <IonButton id='modal-viagens' expand='full' fill='solid' color='success'>Ver viagens</IonButton>
-              <IonButton onClick={history.goBack} expand='full' fill='solid' color='light'>Voltar</IonButton>
+              {/* <IonButton onClick={history.goBack} expand='full' fill='solid' color='light'>Voltar</IonButton> */}
             </>
           )}
         </IonToolbar>
