@@ -47,14 +47,14 @@ export default function Rota() {
   return (
     <IonPage>
       <PageHeader
-        pageName="Lista de Presença"
+        pageName="Buscar passageiros"
         backButtonPageUrl="/perfil"
       ></PageHeader>
 
       <IonContent fullscreen>
         {passengers.length !== 0 ? (
           passengers.map((passenger, index) => {
-            if (passenger.attendance_lists[0].status === "CONFIRMED") {
+            if (passenger.attendance_lists[0]?.status === "CONFIRMED") {
               return (
                 <IonCard key={index}>
                   <IonCardHeader>
@@ -73,7 +73,7 @@ export default function Rota() {
                       color='success' 
                       fill="outline"
                       href={`https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=${passenger.lat_origin},${passenger.lng_origin}&travelmode=driving`}
-                      target="_blank"
+                      // target="_blank"
                     >
                       <IonIcon icon={locationOutline} />
                       <IonLabel>Buscar passageiro</IonLabel>

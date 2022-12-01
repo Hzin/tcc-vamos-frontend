@@ -67,7 +67,7 @@ export default function ListaPresenca() {
         {passengers.length !== 0 ? (
           passengers.map((passenger, index) => {
             return (
-              <IonCard key={index} className={passenger.attendance_lists[0].status === "CANCELED" ? "opacity-50" : ""}>
+              <IonCard key={index} className={passenger.attendance_lists[0]?.status === "CANCELED" ? "opacity-50" : ""}>
                 <IonCardHeader>
                   <IonCardTitle>
                     {passenger.user.name} {passenger.user.lastname}
@@ -76,7 +76,7 @@ export default function ListaPresenca() {
                 <IonCardContent>
                   <IonIcon icon={bookmarkOutline} slot="start" />
                   <IonLabel></IonLabel>
-                  <IonLabel slot='end' color={EnumUtils.getAttendanceListStatusEnumColor(passenger.attendance_lists[0].status)}>{EnumUtils.getAttendanceListStatusEnumFormatted(passenger.attendance_lists[0].status)}</IonLabel>
+                  <IonLabel slot='end' color={EnumUtils.getAttendanceListStatusEnumColor(passenger.attendance_lists[0]?.status)}>{EnumUtils.getAttendanceListStatusEnumFormatted(passenger.attendance_lists[0]?.status)}</IonLabel>
 
                   <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
                     <IonIcon icon={locateOutline} className="mr-1"></IonIcon>

@@ -60,8 +60,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
   const [isPassenger, setIsPassenger] = useState(false);
 
   useEffect(() => {
-    getContractInfo()
-    // console.log(props.tripInfo)
+    getContractInfo();
   }, []);
 
   const getContractInfo = async () => {
@@ -283,7 +282,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
                       }
                     })
                   }}
-                  disabled={props.tripInfo.tripReturn && !props.tripInfo.tripReturn.id}>
+                  disabled={!(props.tripInfo.tripGoing && props.tripInfo.tripGoing.id) ? true : false}>
                   Detalhes da viagem de ida
                   <IonChip slot="end" color="secondary">
                     <IonIcon icon={eyeOutline} />
@@ -352,7 +351,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
 
                   {isPassenger ?
                     <>
-                      <IonItem lines="none" disabled={!!props.tripInfo.tripReturn.id}
+                      <IonItem lines="none" disabled={!props.tripInfo.tripReturn.id}
                         onClick={() => {
                           history.push({
                             pathname: props.tripInfo.tripReturn && `/viagem/id/${props.tripInfo.tripReturn.id}`,
