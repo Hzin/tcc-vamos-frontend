@@ -3,6 +3,7 @@ import { schoolPeriods } from "../constants/schoolPeriods"
 import { tripStatus } from "../constants/tripStatus"
 
 import { Color } from "@ionic/core";
+import { TripType } from "../models/tripType.models";
 
 class EnumUtils {
   public static getSchoolPeriodEnumFormatted = (schoolPeriod: schoolPeriods): string => {
@@ -27,7 +28,18 @@ class EnumUtils {
     }
   }
 
-  public static getTripStatusEnumFormatted = (tripStatusString: tripStatus): string => {
+  public static getTripTypeEnumFormatted = (tripTypeString: TripType | string): string => {
+    switch (tripTypeString) {
+      case TripType.going:
+        return 'Ida'
+      case TripType.return:
+        return 'Volta'
+    }
+
+    throw new Error("tripTypeString inválido.")
+  }
+
+  public static getTripStatusEnumFormatted = (tripStatusString: tripStatus | string): string => {
     switch (tripStatusString) {
       case tripStatus.pending:
         return 'Pendente'
@@ -39,22 +51,32 @@ class EnumUtils {
         return 'Em progresso'
       case tripStatus.finished:
         return 'Finalizada'
+
+      case tripStatus.pendingGoingTrip:
+        return 'Pendente viagem de ida'
     }
+
+    throw new Error("tripStatusString inválido.")
   }
 
-  public static getTripStatusEnumColor = (tripStatusString: tripStatus): Color => {
+  public static getTripStatusEnumColor = (tripStatusString: tripStatus | string): Color => {
     switch (tripStatusString) {
       case tripStatus.pending:
         return 'secondary'
       case tripStatus.confirmed:
         return 'success'
       case tripStatus.canceled:
-        return 'light'
+        return 'warning'
       case tripStatus.inProgress:
         return 'primary'
       case tripStatus.finished:
         return 'success'
+
+      case tripStatus.pendingGoingTrip:
+        return 'warning'
     }
+
+    throw new Error(`tripStatusString "${tripStatusString}" inválido.`)
   }
 }
 

@@ -7,6 +7,6 @@ export interface TripHistory {
     old_status: tripStatus;
     new_status: tripStatus;
     description: string;
-    // created_at: Date;
+    created_at: string;
     // updated_at: Date;
 }

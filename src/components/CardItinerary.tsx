@@ -79,13 +79,13 @@ export const CardItinerary = (props: ComponentProps) => {
     cardTimeInfoArray.push({
       icon: timeOutline,
       label: 'Horário de saída estimado',
-      value: formatTimeField(props.itinerary.estimated_departure_time)
+      value: formatTimeField(props.itinerary.estimated_departure_time_going)
     })
 
     cardTimeInfoArray.push({
       icon: timeSharp,
       label: 'Horário de chegada estimado',
-      value: formatTimeField(props.itinerary.estimated_arrival_time)
+      value: formatTimeField(props.itinerary.estimated_arrival_time_going)
     })
 
     setCardInfo(cardInfoArray)

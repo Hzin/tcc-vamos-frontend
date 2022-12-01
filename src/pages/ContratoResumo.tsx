@@ -145,7 +145,7 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
       if (locationProps.showContractButton) setShowContractButton(true)
       if (locationProps.showContractModerateButton) setShowContractModerateButton(true)
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -167,7 +167,7 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
         contractData = props.contractData
       }
     }
-    
+
     if (locationProps) {
       if (locationProps.id_passenger_request) idPassengerRequest = locationProps.id_passenger_request
 
@@ -411,7 +411,7 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
               {contractData.type === itineraryContractTypes.recurring ?
                 (
                   <>
-                    <ChipsItineraryDaysOfWeek showCalendarIcon itineraryDaysOfWeek={convertDaysOfWeekToObject(itinerary.days_of_week)} />
+                    {itinerary.days_of_week && (<ChipsItineraryDaysOfWeek showCalendarIcon itineraryDaysOfWeek={convertDaysOfWeekToObject(itinerary.days_of_week)} />)}
                   </>
                 ) :
                 (
@@ -431,8 +431,8 @@ const ContratoResumo: React.FC<ContratoResumoProps> = (props) => {
 
               {itinerary && (
                 <>
-                  <ContractDetailSumaryItem label='Horário de estimado saída' icon={timeOutline} value={formatTimeField(itinerary.estimated_departure_time)} />
-                  <ContractDetailSumaryItem label='Horário de estimado chegada' icon={timeSharp} value={formatTimeField(itinerary.estimated_arrival_time)} />
+                  <ContractDetailSumaryItem label='Horário de estimado saída' icon={timeOutline} value={formatTimeField(itinerary.estimated_departure_time_going)} />
+                  <ContractDetailSumaryItem label='Horário de estimado chegada' icon={timeSharp} value={formatTimeField(itinerary.estimated_arrival_time_going)} />
                 </>
               )}
             </IonList>

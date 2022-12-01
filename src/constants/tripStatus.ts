@@ -1,7 +1,15 @@
 export enum tripStatus {
+  // mostrado na tabela
   pending = 'PENDING',
   confirmed = 'CONFIRMED',
   canceled = 'CANCELED',
   inProgress = 'IN_PROGRESS',
-  finished = 'FINISHED',
+  finished = 'FINISHED_CONFIRMED',
+
+  // para mostrar em rotas
+  pendingGoingTrip = 'PENDING_GOING_TRIP',
+
+  // startedUnconfirmed = 'STARTED_UNCONFIRMED',
+  // started = 'STARTED_CONFIRMED',
+  // finishedUnconfirmed = 'FINISHED_UNCONFIRMED',
 }

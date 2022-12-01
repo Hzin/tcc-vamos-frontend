@@ -18,8 +18,8 @@ export interface CreateItineraryRequest {
   vehicle_plate: string;
   days_of_week?: string;
   specific_day?: string;
-  estimated_departure_time: string;
-  estimated_arrival_time: string;
+  estimated_departure_time_going: string;
+  estimated_arrival_time_going: string;
   monthly_price: number;
   daily_price?: number;
   accept_daily: boolean;
@@ -88,8 +88,8 @@ export async function createContractRequest({ id_itinerary, body }: CreateContra
   return response.data;
 }
 
-export async function updateContractStatus({ id_itinerary, id_user, status }: UpdateContractStatusRequest) {
-  const response = await instance.patch(transportsRoutes.updateContractStatus.url, { id_itinerary, id_user, status });
+export async function updateContractStatus({ id_user, id_itinerary, status }: UpdateContractStatusRequest) {
+  const response = await instance.patch(transportsRoutes.updateContractStatus.url, { id_user, id_itinerary, status });
   return response.data;
 }
 
