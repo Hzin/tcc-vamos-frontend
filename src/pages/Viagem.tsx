@@ -21,11 +21,12 @@ import {
   IonButton,
 } from "@ionic/react";
 
-import { bookmarkOutline, callOutline, checkmarkCircleOutline, checkmarkOutline, closeOutline, documentOutline, documentTextOutline, idCardOutline, locationOutline, pinOutline, thumbsUpOutline, timeOutline, timeSharp, trashBinOutline } from "ionicons/icons";
+import { bookmarkOutline, bookOutline, callOutline, checkmarkCircleOutline, checkmarkOutline, closeOutline, documentOutline, documentTextOutline, idCardOutline, locationOutline, pinOutline, thumbsUpOutline, timeOutline, timeSharp, trashBinOutline } from "ionicons/icons";
 
 import * as tripsService from "../services/functions/tripsService";
 import * as sessionsService from "../services/functions/sessionsService";
 import * as passengersRequestsService from "../services/functions/passengersRequestsService";
+import * as attendanceListsService from "../services/functions/attendanceListsService";
 
 import { PageHeader } from "../components/PageHeader";
 import { CardItinerary } from "../components/CardItinerary";
@@ -41,6 +42,7 @@ import { TripType } from "../models/tripType.models";
 import { formatTimeField, getUserFullName } from "../services/utils";
 import EnumUtils from "../services/EnumUtils";
 import { useAuth } from "../contexts/auth";
+import { AttendanceListStatus } from "../constants/enumAttendanceListStatus";
 
 export interface ViagemProps {
   match?: {
@@ -83,6 +85,8 @@ const Viagem: React.FC<ViagemProps> = (props) => {
   const [tripType, setTripType] = useState<TripType>()
   const [isReturnTripCreated, setIsReturnTripCreated] = useState(false)
 
+  const [currentAttendanceStatus, setCurrentAttendanceStatus] = useState<AttendanceListStatus>()
+
   useEffect(() => {
     if (location.state.tripType) setTripType(location.state.tripType)
     if (location.state.isReturnTripCreated) setIsReturnTripCreated(location.state.isReturnTripCreated)
@@ -110,8 +114,17 @@ const Viagem: React.FC<ViagemProps> = (props) => {
     setTrip(trip)
     getContractInfo(trip)
     updateAvailableOptions(trip.status)
+    updateAvailableOptionsAsPassenger()
 
     if (trip.itinerary) setDriverPhoneNumber(trip.itinerary.user.phone_number)
+  }
+
+  const updateAvailableOptionsAsPassenger = async () => {
+    const { userId } = await sessionsService.refreshSession()
+    if (!userId || !trip) return
+
+    const currentAttendanceStatus = await attendanceListsService.getUserStatusInTrip({ id_trip: "" + trip.id_trip, id_user: userId })
+    setCurrentAttendanceStatus(currentAttendanceStatus)
   }
 
   const getContractInfo = async (trip: Trip) => {
@@ -156,8 +169,6 @@ const Viagem: React.FC<ViagemProps> = (props) => {
     }
   }
 
-  // useEffect(() => console.log(availableOptions), [availableOptions])
-
   const updateTripStatus = async ({
     tripId,
     newStatus,
@@ -176,12 +187,15 @@ const Viagem: React.FC<ViagemProps> = (props) => {
         loadPageInfo()
       });
   };
+
   async function confirmarIda() {
     let res = await tripsService.updatePresence(user!.id_user, trip!.id_trip, "CONFIRMED");
     if (res) {
       setMessageToast('Presença confirmada com sucesso!');
       setToastColor('success');
       setShowToast(true);
+
+      updateAvailableOptionsAsPassenger()
     }
   }
 
@@ -191,6 +205,8 @@ const Viagem: React.FC<ViagemProps> = (props) => {
       setMessageToast('Falta confirmada com sucesso!');
       setToastColor('success');
       setShowToast(true);
+
+      updateAvailableOptionsAsPassenger()
     }
   }
 
@@ -233,26 +249,42 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
               {isPassenger && (
                 <>
-                  <IonItem button onClick={() => { document.getElementById('modal-contrato')?.click() }}>
+                  <IonListHeader className="mt-2">Minhas informações</IonListHeader>
+
+                  {/* <IonItem button onClick={() => { document.getElementById('modal-contrato')?.click() }}>
                     <IonIcon icon={documentOutline} slot="start" />
                     <IonLabel>Meu Contrato</IonLabel>
+                  </IonItem> */}
+
+                  <IonItem>
+                    <IonIcon icon={bookOutline} slot="start" />
+                    <IonLabel>Meu contrato</IonLabel>
+                    <IonLabel slot='end' color='primary' onClick={() => { document.getElementById('modal-contrato')?.click() }}>Ver</IonLabel>
                   </IonItem>
                 </>
               )}
 
               {isPassenger ?
                 <>
+                  <IonListHeader className="mt-2">Presença</IonListHeader>
+
+                  <IonItem>
+                    <IonIcon icon={bookmarkOutline} slot="start" />
+                    <IonLabel>Status</IonLabel>
+                    <IonLabel slot='end' color={EnumUtils.getAttendanceListStatusEnumColor(currentAttendanceStatus)}>{EnumUtils.getAttendanceListStatusEnumFormatted(currentAttendanceStatus)}</IonLabel>
+                  </IonItem>
+
                   <IonRow>
                     <IonCol>
-                      <IonButton expand="block" onClick={() => confirmarIda()} fill="outline" color="success" >
+                      <IonButton expand="block" onClick={() => confirmarIda()} fill="outline" color="success" disabled={currentAttendanceStatus === AttendanceListStatus.confirmed}>
                         <IonIcon icon={checkmarkCircleOutline} />
-                        <IonLabel> Confirmar ida</IonLabel>
+                        <IonLabel className="ml-2">Confirmar ida</IonLabel>
                       </IonButton>
                     </IonCol>
                     <IonCol>
-                      <IonButton expand="block" onClick={() => faltar()} fill="outline" color="Blue" >
+                      <IonButton expand="block" onClick={() => faltar()} fill="outline" color="Blue" disabled={currentAttendanceStatus === AttendanceListStatus.canceled}>
                         <IonIcon icon={trashBinOutline} />
-                        <IonLabel> Faltar</IonLabel>
+                        <IonLabel className="ml-2">Faltar</IonLabel>
                       </IonButton>
                     </IonCol>
                   </IonRow>
@@ -343,7 +375,7 @@ const Viagem: React.FC<ViagemProps> = (props) => {
 
       <IonFooter>
         <IonToolbar>
-          {trip &&
+          {trip && !isPassenger &&
             <>
               <IonButton
                 expand="block"
@@ -377,13 +409,13 @@ const Viagem: React.FC<ViagemProps> = (props) => {
                 <IonIcon icon={pinOutline} />
                 <IonLabel className="ml-1">Rota de viagem</IonLabel>
               </IonButton>
+
+              <IonButton expand="block" color='primary' fill="outline" disabled={!!!paramIdTrip} onClick={() => { document.getElementById('modal-historico-viagem')?.click() }}>
+                <IonIcon icon={timeOutline} />
+                <IonLabel className="ml-1">Histórico de status da viagem</IonLabel>
+              </IonButton>
             </>
           }
-
-          <IonButton expand="block" color='primary' fill="outline" disabled={!!!paramIdTrip} onClick={() => { document.getElementById('modal-historico-viagem')?.click() }}>
-            <IonIcon icon={timeOutline} />
-            <IonLabel className="ml-1">Histórico de status da viagem</IonLabel>
-          </IonButton>
 
           {isPassenger && (
             <>
@@ -402,15 +434,6 @@ const Viagem: React.FC<ViagemProps> = (props) => {
                   </IonCol>
                 </IonRow>
               )}
-
-              <IonRow>
-                <IonCol>
-                  <IonButton expand="block" onClick={() => { }} fill="outline" color="Blue" >
-                    <IonIcon icon={trashBinOutline} />
-                    <IonLabel>Faltar na proxima viagem</IonLabel>
-                  </IonButton>
-                </IonCol>
-              </IonRow>
             </>
           )}
         </IonToolbar>

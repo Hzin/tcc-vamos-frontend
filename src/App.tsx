@@ -104,7 +104,7 @@ const routes = (
 
     <Route exact path="/home" component={Home}></Route>
     <Route exact path="/feed/meus/motorista" component={HomeFeedViagensMeusMotorista}></Route>
-    {/* <Route exact path="/feed/meus/passageiro" component={HomeFeedViagensMeusPassageiro}></Route> */}
+    <Route exact path="/feed/meus/passageiro" component={HomeFeedViagensMeusPassageiro}></Route>
 
     <Route exact path="/login" component={Login}></Route>
     <Route exact path="/perfil" component={Perfil}></Route>

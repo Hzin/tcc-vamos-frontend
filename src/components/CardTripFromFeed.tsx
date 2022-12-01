@@ -5,7 +5,6 @@ import {
   IonCardContent,
   IonIcon,
   IonChip,
-  IonCardSubtitle,
   useIonAlert,
   IonItem,
   IonList,
@@ -22,7 +21,7 @@ import { Color } from "@ionic/core";
 
 import { tripStatus } from "../constants/tripStatus";
 
-import * as tripsService from "../services/functions/tripsService";
+import * as passengersRequestsService from "../services/functions/passengersRequestsService";
 
 import { reloadPage } from "../services/utils";
 
@@ -30,10 +29,14 @@ import { useHistory } from "react-router";
 import {
   GetFeedPropsReturn,
 } from "../services/functions/tripsService";
+
+import * as tripsService from "../services/functions/tripsService";
+import * as sessionsService from "../services/functions/sessionsService";
+
 import { ShowItinerarioViagemPageAsModal } from "./ShowPageAsModal/ShowItinerarioViagemPageAsModal";
 import { Separator } from "./Separator";
 import { VehiclePicture } from "./VehiclePicture";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { IonChipTripStatus } from "./IonChipTripStatus";
 import { ChipInfo } from "./ChipInfo";
 import { TripType } from "../models/tripType.models";
@@ -54,7 +57,22 @@ export const CardTripFromFeed = (props: ComponentProps) => {
   const [presentAlert] = useIonAlert();
   const [presentAlertConfirmation] = useIonAlert();
 
-  useEffect(() => { }, []);
+  const [isPassenger, setIsPassenger] = useState(false);
+
+  useEffect(() => {
+    getContractInfo()
+    // console.log(props.tripInfo)
+  }, []);
+
+  const getContractInfo = async () => {
+    const user = await sessionsService.refreshSession()
+    if (!user.userId) return
+
+    const passengerRequest = await passengersRequestsService.searchByIdUserAndIdItinerary(user.userId, "" + props.tripInfo.itinerary.id_itinerary)
+    if (!passengerRequest) return
+
+    setIsPassenger(true)
+  }
 
   const refreshPage = (message: string, toastColor: Color) => {
     history.push({
@@ -251,43 +269,69 @@ export const CardTripFromFeed = (props: ComponentProps) => {
               <IonChipTripStatus status={props.tripInfo.tripGoing.status} />
             </IonItem>
 
-            {props.tripInfo.tripGoing && props.tripInfo.tripGoing.id ? (
-              <IonItem
-                lines="none"
-                onClick={() => {
-                  history.push({
-                    pathname: `/viagem/id/${props.tripInfo.tripGoing.id}`,
-                    state: {
-                      id_trip: "" + props.tripInfo.tripGoing.id,
-                      tripType: TripType.going,
-                      isReturnTripCreated: (props.tripInfo.tripReturn && props.tripInfo.tripReturn.id) ? true : false,
-                    }
-                  }) }}>
-                Detalhes da viagem de ida
-                <IonChip slot="end" color="secondary">
-                  <IonIcon icon={eyeOutline} />
-                  <IonLabel>Ir</IonLabel>
-                </IonChip>
-              </IonItem>
-            ) : (
-              <IonItem
-                lines="none"
-                onClick={() => {
-                  handleLoadTrip(
-                    "going",
-                    "" + props.tripInfo.itinerary.id_itinerary,
-                    props.tripInfo.itinerary.itinerary_nickname,
-                    props.tripInfo.tripGoing.id
-                  );
-                }}
-              >
-                Confirmar viagem de ida
-                <IonChip slot="end" color="success">
-                  <IonIcon icon={eyeOutline} />
-                  <IonLabel>Ir</IonLabel>
-                </IonChip>
-              </IonItem>
-            )}
+            {isPassenger ?
+              <>
+                <IonItem
+                  lines="none"
+                  onClick={() => {
+                    history.push({
+                      pathname: `/viagem/id/${props.tripInfo.tripGoing.id}`,
+                      state: {
+                        id_trip: "" + props.tripInfo.tripGoing.id,
+                        tripType: TripType.going,
+                        isReturnTripCreated: (props.tripInfo.tripReturn && props.tripInfo.tripReturn.id) ? true : false,
+                      }
+                    })
+                  }}
+                  disabled={props.tripInfo.tripReturn && !props.tripInfo.tripReturn.id}>
+                  Detalhes da viagem de ida
+                  <IonChip slot="end" color="secondary">
+                    <IonIcon icon={eyeOutline} />
+                    <IonLabel>Ir</IonLabel>
+                  </IonChip>
+                </IonItem>
+              </>
+              :
+              <>
+                {props.tripInfo.tripGoing && props.tripInfo.tripGoing.id ? (
+                  <IonItem
+                    lines="none"
+                    onClick={() => {
+                      history.push({
+                        pathname: `/viagem/id/${props.tripInfo.tripGoing.id}`,
+                        state: {
+                          id_trip: "" + props.tripInfo.tripGoing.id,
+                          tripType: TripType.going,
+                          isReturnTripCreated: (props.tripInfo.tripReturn && props.tripInfo.tripReturn.id) ? true : false,
+                        }
+                      })
+                    }}>
+                    Detalhes da viagem de ida
+                    <IonChip slot="end" color="secondary">
+                      <IonIcon icon={eyeOutline} />
+                      <IonLabel>Ir</IonLabel>
+                    </IonChip>
+                  </IonItem>
+                ) : (
+                  <IonItem
+                    lines="none"
+                    onClick={() => {
+                      handleLoadTrip(
+                        "going",
+                        "" + props.tripInfo.itinerary.id_itinerary,
+                        props.tripInfo.itinerary.itinerary_nickname,
+                        props.tripInfo.tripGoing.id
+                      );
+                    }}
+                  >
+                    Confirmar viagem de ida
+                    <IonChip slot="end" color="success">
+                      <IonIcon icon={eyeOutline} />
+                      <IonLabel>Ir</IonLabel>
+                    </IonChip>
+                  </IonItem>
+                )}
+              </>}
 
             {props.tripInfo.tripReturn && (
               <>
@@ -306,38 +350,73 @@ export const CardTripFromFeed = (props: ComponentProps) => {
                     <IonChipTripStatus status={props.tripInfo.tripReturn.status} />
                   </IonItem>
 
-                  {props.tripInfo.tripReturn && props.tripInfo.tripReturn.id ? (
-                    <IonItem lines="none" id='modal-trip-return'>
-                      Detalhes da viagem de volta
-                      <IonChip slot="end" color="secondary">
-                        <IonIcon icon={eyeOutline} />
-                        <IonLabel>Ir</IonLabel>
-                      </IonChip>
-                    </IonItem>
-                  ) : (
-                    <IonItem lines="none">
-                      Confirmar viagem de retorno
-                      <IonChip
-                        slot="end"
-                        color="success"
-                        disabled={
-                          props.tripInfo.tripReturn.status ===
-                          tripStatus.pendingGoingTrip
-                        }
+                  {isPassenger ?
+                    <>
+                      <IonItem lines="none" disabled={!!props.tripInfo.tripReturn.id}
                         onClick={() => {
-                          handleLoadTrip(
-                            "return",
-                            "" + props.tripInfo.itinerary.id_itinerary,
-                            props.tripInfo.itinerary.itinerary_nickname,
-                            props.tripInfo.tripReturn?.id
-                          );
+                          history.push({
+                            pathname: props.tripInfo.tripReturn && `/viagem/id/${props.tripInfo.tripReturn.id}`,
+                            state: {
+                              id_trip: props.tripInfo.tripReturn && props.tripInfo.tripReturn.id ? "" + props.tripInfo.tripReturn.id : undefined,
+                              tripType: TripType.return,
+                            }
+                          })
                         }}
                       >
-                        <IonIcon icon={eyeOutline} />
-                        <IonLabel>Ir</IonLabel>
-                      </IonChip>
-                    </IonItem>
-                  )}
+                        Detalhes da viagem de volta
+                        <IonChip slot="end" color="secondary">
+                          <IonIcon icon={eyeOutline} />
+                          <IonLabel>Ir</IonLabel>
+                        </IonChip>
+                      </IonItem>
+                    </>
+                    :
+                    <>
+                      {props.tripInfo.tripReturn && props.tripInfo.tripReturn.id ? (
+                        <IonItem
+                          lines="none"
+                          onClick={() => {
+                            history.push({
+                              pathname: props.tripInfo.tripReturn && `/viagem/id/${props.tripInfo.tripReturn.id}`,
+                              state: {
+                                id_trip: props.tripInfo.tripReturn && props.tripInfo.tripReturn.id ? "" + props.tripInfo.tripReturn.id : undefined,
+                                tripType: TripType.return,
+                              }
+                            })
+                          }}
+                        >
+                          Detalhes da viagem de volta
+                          <IonChip slot="end" color="secondary">
+                            <IonIcon icon={eyeOutline} />
+                            <IonLabel>Ir</IonLabel>
+                          </IonChip>
+                        </IonItem>
+                      ) : (
+                        <IonItem lines="none">
+                          Confirmar viagem de retorno
+                          <IonChip
+                            slot="end"
+                            color="success"
+                            disabled={
+                              props.tripInfo.tripReturn.status ===
+                              tripStatus.pendingGoingTrip
+                            }
+                            onClick={() => {
+                              handleLoadTrip(
+                                "return",
+                                "" + props.tripInfo.itinerary.id_itinerary,
+                                props.tripInfo.itinerary.itinerary_nickname,
+                                props.tripInfo.tripReturn?.id
+                              );
+                            }}
+                          >
+                            <IonIcon icon={eyeOutline} />
+                            <IonLabel>Ir</IonLabel>
+                          </IonChip>
+                        </IonItem>
+                      )}
+                    </>
+                  }
                 </div>
               </>
             )}
@@ -356,7 +435,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
         />
       )} */}
 
-      {props.tripInfo.tripReturn && props.tripInfo.tripReturn.id && (
+      {/* {props.tripInfo.tripReturn && props.tripInfo.tripReturn.id && (
         <ShowItinerarioViagemPageAsModal
           id_trip={"" + props.tripInfo.tripReturn.id}
           tripType={TripType.return}
@@ -364,7 +443,7 @@ export const CardTripFromFeed = (props: ComponentProps) => {
           trigger="modal-trip-return"
           hasButtonAlready
         />
-      )}
+      )} */}
     </>
   );
 };

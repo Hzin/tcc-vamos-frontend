@@ -4,6 +4,7 @@ import { tripStatus } from "../constants/tripStatus"
 
 import { Color } from "@ionic/core";
 import { TripType } from "../models/tripType.models";
+import { AttendanceListStatus } from "../constants/enumAttendanceListStatus";
 
 class EnumUtils {
   public static getSchoolPeriodEnumFormatted = (schoolPeriod: schoolPeriods): string => {
@@ -77,6 +78,32 @@ class EnumUtils {
     }
 
     throw new Error(`tripStatusString "${tripStatusString}" inválido.`)
+  }
+
+  public static getAttendanceListStatusEnumFormatted = (attendanceListStatusString?: AttendanceListStatus | string): string => {
+    switch (attendanceListStatusString) {
+      case AttendanceListStatus.canceled:
+        return 'Irei faltar'
+      case AttendanceListStatus.confirmed:
+        return 'Estarei presente'
+    }
+
+    if (!attendanceListStatusString) return 'Não confirmado (estarei presente)'
+
+    throw new Error("attendanceListStatusString inválido.")
+  }
+
+  public static getAttendanceListStatusEnumColor = (attendanceListStatusString?: AttendanceListStatus | string): Color => {
+    switch (attendanceListStatusString) {
+      case AttendanceListStatus.canceled:
+        return 'primary'
+      case AttendanceListStatus.confirmed:
+        return 'success'
+    }
+
+    if (!attendanceListStatusString) return 'primary'
+
+    throw new Error(`attendanceListStatusString "${attendanceListStatusString}" inválido.`)
   }
 }
 

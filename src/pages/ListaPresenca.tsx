@@ -6,10 +6,11 @@ import {
   IonCardTitle,
   IonContent,
   IonIcon,
+  IonLabel,
   IonPage,
   IonToast,
 } from "@ionic/react";
-import { locateOutline, search } from "ionicons/icons";
+import { bookmarkOutline, locateOutline, search } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { PageHeader } from "../components/PageHeader";
 import { Color } from "@ionic/core";
@@ -17,6 +18,7 @@ import { closeToast } from "../services/utils";
 import { useHistory } from "react-router";
 import * as tripsService from "../services/functions/tripsService";
 import { PassengerWithAttendanceList } from "../models/passengerWithAttendanceList.model";
+import EnumUtils from "../services/EnumUtils";
 
 interface LocationState {
   id_trip: number;
@@ -33,15 +35,26 @@ export default function ListaPresenca() {
 
   useEffect(() => {
     // get parameter from url
-    if (history.location.state === undefined) {
+    if (!history.location.state) {
       history.push({ pathname: "/itinerarios" });
-    } else {
-      const infos = history.location.state as LocationState;
-      tripsService.getAttendanceList(infos.id_trip).then((response) => {
-        setPassengers(response.data);
-      });
+      return
     }
+
+    loadPassengers()
+
+    const interval = setInterval(() => {
+      loadPassengers()
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
+
+  const loadPassengers = () => {
+    const infos = history.location.state as LocationState;
+    tripsService.getAttendanceList(infos.id_trip).then((response) => {
+      setPassengers(response.data);
+    });
+  }
 
   return (
     <IonPage>
@@ -61,6 +74,10 @@ export default function ListaPresenca() {
                   </IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
+                  <IonIcon icon={bookmarkOutline} slot="start" />
+                  <IonLabel></IonLabel>
+                  <IonLabel slot='end' color={EnumUtils.getAttendanceListStatusEnumColor(passenger.attendance_lists[0].status)}>{EnumUtils.getAttendanceListStatusEnumFormatted(passenger.attendance_lists[0].status)}</IonLabel>
+
                   <div className="overflow-ellipsis whitespace-nowrap overflow-hidden">
                     <IonIcon icon={locateOutline} className="mr-1"></IonIcon>
                     {passenger.formatted_address_origin}

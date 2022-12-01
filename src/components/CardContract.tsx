@@ -23,15 +23,14 @@ export const CardContract = (props: ComponentProps) => {
     ...otherProps
   } = props
 
-  useEffect(() => {
-  }, [props])
+  // useEffect(() => { }, [props])
 
   return (
     <IonCard button={!!props.onClickFunction} onClick={props.onClickFunction} {...otherProps}>
-      <VehiclePicture picture_path={''} />
+      <img id="user_pic" alt="user_pic" className="block ml-auto mr-auto h-auto max-w-[160px]" src={props.contract.user.avatar_image} />
       <IonCardHeader>
-        <IonCardSubtitle className="text-[13px]">Informação</IonCardSubtitle>
-        <IonCardTitle>Nome: {getUserFullName(props.contract.user)}</IonCardTitle>
+        <IonCardSubtitle className="text-[13px]">Nome: {getUserFullName(props.contract.user)}</IonCardSubtitle>
+        <IonCardTitle>Itinerário: {props.contract.itinerary.itinerary_nickname}</IonCardTitle>
       </IonCardHeader>
 
       {/* <IonCardContent>
