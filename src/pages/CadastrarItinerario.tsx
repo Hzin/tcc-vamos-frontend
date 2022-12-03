@@ -379,198 +379,44 @@ export default function CadastrarItinerario() {
           <IonSlide>
             <div className="m-3">
               <h1 className="mb-3 text-xl">
-                Digite o endereço de onde você iniciará a rota do itinerário
+                Escolha o veículo que será utilizado no itinerário
               </h1>
-              <div className="flex items-center mb-3">
-                <IonIcon icon={locateOutline}></IonIcon>
-                <AutoCompleteInput
-                  placeholder="R. José Paulino, 1234"
-                  className="ml-2"
-                  onAddressSelected={(address: Address) =>
-                    setInitialAddress(address)
-                  }
-                  onChange={(e: any) => {
-                    nextButton1.current!.disabled = true;
-                  }}
-                />
-              </div>
-              <div className="flex justify-end mb-3">
-                <IonButton
-                  ref={nextButton1}
-                  onClick={() => onBtnClicked("next")}
-                  color="primary"
-                >
-                  <IonIcon icon={arrowForward} />
-                </IonButton>
-              </div>
-              <div className="flex items-center">
-                <IonIcon
-                  icon={informationCircle}
-                  size="large"
-                  className="mr-4"
-                />
-                <small className="text-gray-500">
-                  Essa informação é importante para que possamos informar aos
-                  passageiros um horário aproximado que você passará para
-                  pegá-lo.
-                </small>
-              </div>
-            </div>
-          </IonSlide>
-          <IonSlide>
-            <div className="m-3">
-              <h1 className="mb-3 text-xl">
-                Adicione os bairros que você atenderá
-              </h1>
-              <div className="flex items-center mb-3">
-                <IonIcon icon={locationOutline}></IonIcon>
-                <AutoCompleteInput
-                  placeholder="R. José Paulino, 1234"
-                  className="ml-2"
-                  value={valueControl1}
-                  onAddressSelected={(address: Address) =>
-                    addNeighborhood(address)
-                  }
-                  onChange={(e: any) => {
-                    setValueControl1(e.target.value);
-                  }}
-                />
-              </div>
               <div className="mb-3">
-                <IonList class="w-screen">
-                  {neighborhoods.map((neighborhood, index) => (
-                    <IonItem key={index}>
-                      <IonButton
-                        slot="end"
-                        color={"light"}
-                        onClick={() => removeNeighborhood(index)}
-                      >
-                        <IonIcon icon={trash} />
-                      </IonButton>
-                      <IonLabel>{neighborhood.formatted_address}</IonLabel>
-                    </IonItem>
-                  ))}
-                </IonList>
-              </div>
-              <div className="flex justify-between mb-3">
-                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
-                  <IonIcon icon={arrowBack} />
-                </IonButton>
-                <IonButton
-                  ref={nextButton2}
-                  onClick={() => onBtnClicked("next")}
-                  color="primary"
+                <IonSelect
+                  interface="action-sheet"
+                  placeholder="Selecione o veículo"
+                  onIonChange={(event) => setVan(event.detail.value)}
+                  className="w-screen"
                 >
-                  <IonIcon icon={arrowForward} />
-                </IonButton>
-              </div>
-              <div className="flex items-center">
-                <IonIcon
-                  icon={informationCircle}
-                  size="large"
-                  className="mr-4"
-                />
-                <small className="text-gray-500">
-                  Não se preocupe, você poderá adicionar ou remover bairros
-                  posteriormente caso precise editando o itinerário.
-                </small>
-              </div>
-            </div>
-          </IonSlide>
-          <IonSlide>
-            <div className="m-3">
-              <h1 className="mb-3 text-xl">
-                Digite o endereço de destino final do itinerário
-              </h1>
-              <div className="flex items-center mb-3">
-                <IonIcon icon={locationOutline}></IonIcon>
-                <AutoCompleteInput
-                  placeholder="R. José Paulino, 1234"
-                  className="ml-2"
-                  onAddressSelected={(address: Address) =>
-                    setFinalAddress(address)
-                  }
-                />
+                  {vans ? (
+                    vans.map((van, index) => {
+                      return (
+                        <IonSelectOption key={index} value={van.plate}>
+                          {van.brand +
+                            " - " +
+                            van.model +
+                            " | Placa: " +
+                            van.plate}
+                        </IonSelectOption>
+                      );
+                    })
+                  ) : (
+                    <></>
+                  )}
+                </IonSelect>
               </div>
               <div className="flex justify-between mb-3">
                 <IonButton onClick={() => onBtnClicked("prev")} color="primary">
                   <IonIcon icon={arrowBack} />
                 </IonButton>
                 <IonButton
-                  ref={nextButton3}
+                  ref={nextButton4}
                   disabled
                   onClick={() => onBtnClicked("next")}
                   color="primary"
                 >
                   <IonIcon icon={arrowForward} />
                 </IonButton>
-              </div>
-              <div className="flex items-center">
-                <IonIcon
-                  icon={informationCircle}
-                  size="large"
-                  className="mr-4"
-                />
-                <small className="text-gray-500">
-                  Não se preocupe, você poderá adicionar paradas.
-                </small>
-              </div>
-            </div>
-          </IonSlide>
-          <IonSlide>
-            <div className="m-3">
-              <h1 className="mb-3 text-xl">
-                Adicione paradas durante o trajeto do itinerário para encontrar
-                mais passageiros
-              </h1>
-              <div className="flex items-center mb-3">
-                <IonIcon icon={locationOutline}></IonIcon>
-                <AutoCompleteInput
-                  placeholder="R. José Paulino, 1234"
-                  className="ml-2"
-                  value={valueControl2}
-                  onAddressSelected={(address: Address) =>
-                    addDestination(address)
-                  }
-                  onChange={(e: any) => {
-                    setValueControl2(e.target.value);
-                  }}
-                />
-              </div>
-              <div className="mb-3">
-                <IonList class="w-screen">
-                  {destinations.map((destination, index) => (
-                    <IonItem key={index}>
-                      <IonButton
-                        slot="end"
-                        color={"light"}
-                        onClick={() => removeDestionation(index)}
-                      >
-                        <IonIcon icon={trash} />
-                      </IonButton>
-                      <IonLabel>{destination.formatted_address}</IonLabel>
-                    </IonItem>
-                  ))}
-                </IonList>
-              </div>
-              <div className="flex justify-between mb-3">
-                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
-                  <IonIcon icon={arrowBack} />
-                </IonButton>
-                <IonButton onClick={() => onBtnClicked("next")} color="primary">
-                  <IonIcon icon={arrowForward} />
-                </IonButton>
-              </div>
-              <div className="flex items-center">
-                <IonIcon
-                  icon={informationCircle}
-                  size="large"
-                  className="mr-4"
-                />
-                <small className="text-gray-500">
-                  Não se preocupe, você poderá adicionar ou remover paradas
-                  posteriormente caso precise editando o itinerário.
-                </small>
               </div>
             </div>
           </IonSlide>
@@ -769,6 +615,204 @@ export default function CadastrarItinerario() {
           <IonSlide>
             <div className="m-3">
               <h1 className="mb-3 text-xl">
+                Digite o endereço de onde você iniciará a rota do itinerário
+              </h1>
+              <div className="flex items-center mb-3">
+                <IonIcon icon={locateOutline}></IonIcon>
+                <AutoCompleteInput
+                  placeholder="R. José Paulino, 1234"
+                  className="ml-2"
+                  onAddressSelected={(address: Address) =>
+                    setInitialAddress(address)
+                  }
+                  onChange={(e: any) => {
+                    nextButton1.current!.disabled = true;
+                  }}
+                />
+              </div>
+              <div className="flex justify-end mb-3">
+                <IonButton
+                  ref={nextButton1}
+                  onClick={() => onBtnClicked("next")}
+                  color="primary"
+                >
+                  <IonIcon icon={arrowForward} />
+                </IonButton>
+              </div>
+              <div className="flex items-center">
+                <IonIcon
+                  icon={informationCircle}
+                  size="large"
+                  className="mr-4"
+                />
+                <small className="text-gray-500">
+                  Essa informação é importante para que possamos informar aos
+                  passageiros um horário aproximado que você passará para
+                  pegá-lo.
+                </small>
+              </div>
+            </div>
+          </IonSlide>
+          <IonSlide>
+            <div className="m-3">
+              <h1 className="mb-3 text-xl">
+                Adicione os bairros que você atenderá
+              </h1>
+              <div className="flex items-center mb-3">
+                <IonIcon icon={locationOutline}></IonIcon>
+                <AutoCompleteInput
+                  placeholder="R. José Paulino, 1234"
+                  className="ml-2"
+                  value={valueControl1}
+                  onAddressSelected={(address: Address) =>
+                    addNeighborhood(address)
+                  }
+                  onChange={(e: any) => {
+                    setValueControl1(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="mb-3">
+                <IonList class="w-screen">
+                  {neighborhoods.map((neighborhood, index) => (
+                    <IonItem key={index}>
+                      <IonButton
+                        slot="end"
+                        color={"light"}
+                        onClick={() => removeNeighborhood(index)}
+                      >
+                        <IonIcon icon={trash} />
+                      </IonButton>
+                      <IonLabel>{neighborhood.formatted_address}</IonLabel>
+                    </IonItem>
+                  ))}
+                </IonList>
+              </div>
+              <div className="flex justify-between mb-3">
+                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
+                  <IonIcon icon={arrowBack} />
+                </IonButton>
+                <IonButton
+                  ref={nextButton2}
+                  onClick={() => onBtnClicked("next")}
+                  color="primary"
+                >
+                  <IonIcon icon={arrowForward} />
+                </IonButton>
+              </div>
+              <div className="flex items-center">
+                <IonIcon
+                  icon={informationCircle}
+                  size="large"
+                  className="mr-4"
+                />
+                <small className="text-gray-500">
+                  Não se preocupe, você poderá adicionar ou remover bairros
+                  posteriormente caso precise editando o itinerário.
+                </small>
+              </div>
+            </div>
+          </IonSlide>
+          <IonSlide>
+            <div className="m-3">
+              <h1 className="mb-3 text-xl">
+                Digite o endereço de destino final do itinerário
+              </h1>
+              <div className="flex items-center mb-3">
+                <IonIcon icon={locationOutline}></IonIcon>
+                <AutoCompleteInput
+                  placeholder="R. José Paulino, 1234"
+                  className="ml-2"
+                  onAddressSelected={(address: Address) =>
+                    setFinalAddress(address)
+                  }
+                />
+              </div>
+              <div className="flex justify-between mb-3">
+                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
+                  <IonIcon icon={arrowBack} />
+                </IonButton>
+                <IonButton
+                  ref={nextButton3}
+                  disabled
+                  onClick={() => onBtnClicked("next")}
+                  color="primary"
+                >
+                  <IonIcon icon={arrowForward} />
+                </IonButton>
+              </div>
+              <div className="flex items-center">
+                <IonIcon
+                  icon={informationCircle}
+                  size="large"
+                  className="mr-4"
+                />
+                <small className="text-gray-500">
+                  Não se preocupe, você poderá adicionar paradas.
+                </small>
+              </div>
+            </div>
+          </IonSlide>
+          <IonSlide>
+            <div className="m-3">
+              <h1 className="mb-3 text-xl">
+                Adicione paradas durante o trajeto do itinerário para encontrar
+                mais passageiros
+              </h1>
+              <div className="flex items-center mb-3">
+                <IonIcon icon={locationOutline}></IonIcon>
+                <AutoCompleteInput
+                  placeholder="R. José Paulino, 1234"
+                  className="ml-2"
+                  value={valueControl2}
+                  onAddressSelected={(address: Address) =>
+                    addDestination(address)
+                  }
+                  onChange={(e: any) => {
+                    setValueControl2(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="mb-3">
+                <IonList class="w-screen">
+                  {destinations.map((destination, index) => (
+                    <IonItem key={index}>
+                      <IonButton
+                        slot="end"
+                        color={"light"}
+                        onClick={() => removeDestionation(index)}
+                      >
+                        <IonIcon icon={trash} />
+                      </IonButton>
+                      <IonLabel>{destination.formatted_address}</IonLabel>
+                    </IonItem>
+                  ))}
+                </IonList>
+              </div>
+              <div className="flex justify-between mb-3">
+                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
+                  <IonIcon icon={arrowBack} />
+                </IonButton>
+                <IonButton onClick={() => onBtnClicked("next")} color="primary">
+                  <IonIcon icon={arrowForward} />
+                </IonButton>
+              </div>
+              <div className="flex items-center">
+                <IonIcon
+                  icon={informationCircle}
+                  size="large"
+                  className="mr-4"
+                />
+                <small className="text-gray-500">
+                  Não se preocupe, você poderá adicionar ou remover paradas
+                  posteriormente caso precise editando o itinerário.
+                </small>
+              </div>
+            </div>
+          </IonSlide>
+          <IonSlide>
+            <div className="m-3">
+              <h1 className="mb-3 text-xl">
                 Preencha as informações de pagamento
               </h1>
               <IonLabel>Valor cobrado mensalmente</IonLabel>
@@ -858,50 +902,6 @@ export default function CadastrarItinerario() {
                     destino.
                   </b>
                 </small>
-              </div>
-            </div>
-          </IonSlide>
-          <IonSlide>
-            <div className="m-3">
-              <h1 className="mb-3 text-xl">
-                Escolha o veículo que será utilizado no itinerário
-              </h1>
-              <div className="mb-3">
-                <IonSelect
-                  interface="action-sheet"
-                  placeholder="Selecione o veículo"
-                  onIonChange={(event) => setVan(event.detail.value)}
-                  className="w-screen"
-                >
-                  {vans ? (
-                    vans.map((van, index) => {
-                      return (
-                        <IonSelectOption key={index} value={van.plate}>
-                          {van.brand +
-                            " - " +
-                            van.model +
-                            " | Placa: " +
-                            van.plate}
-                        </IonSelectOption>
-                      );
-                    })
-                  ) : (
-                    <></>
-                  )}
-                </IonSelect>
-              </div>
-              <div className="flex justify-between mb-3">
-                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
-                  <IonIcon icon={arrowBack} />
-                </IonButton>
-                <IonButton
-                  ref={nextButton4}
-                  disabled
-                  onClick={() => onBtnClicked("next")}
-                  color="primary"
-                >
-                  <IonIcon icon={arrowForward} />
-                </IonButton>
               </div>
             </div>
           </IonSlide>

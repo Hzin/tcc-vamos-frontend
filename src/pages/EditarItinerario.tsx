@@ -401,6 +401,242 @@ export default function EditarItinerario() {
           <IonSlide>
             <div className="m-3">
               <h1 className="mb-3 text-xl">
+                Escolha o veículo que será utilizado no itinerário
+              </h1>
+              <div className="mb-3">
+                <IonSelect
+                  interface="action-sheet"
+                  placeholder="Selecione o veículo"
+                  onIonChange={(event) => setVan(event.detail.value)}
+                  className="w-screen"
+                >
+                  {vans ? (
+                    vans.map((van, index) => {
+                      return (
+                        <IonSelectOption key={index} value={van.plate}>
+                          {van.brand +
+                            " - " +
+                            van.model +
+                            " | Placa: " +
+                            van.plate}
+                        </IonSelectOption>
+                      );
+                    })
+                  ) : (
+                    <></>
+                  )}
+                </IonSelect>
+              </div>
+              <div className="flex justify-between mb-3">
+                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
+                  <IonIcon icon={arrowBack} />
+                </IonButton>
+                <IonButton
+                  ref={nextButton4}
+                  disabled
+                  onClick={() => onBtnClicked("next")}
+                  color="primary"
+                >
+                  <IonIcon icon={arrowForward} />
+                </IonButton>
+              </div>
+            </div>
+          </IonSlide>
+          <IonSlide>
+            <div className="m-3">
+              <h1 className="mb-3 text-xl">
+                Escolha o(s) dia(s) da semana ou um dia específico que o
+                itinerário será realizado
+              </h1>
+              <div hidden={specificDate} className="mb-3">
+                <div className="grid grid-cols-7 gap-4">
+                  <div>
+                    <IonLabel>D</IonLabel>
+                  </div>
+                  <div>
+                    <IonLabel>S</IonLabel>
+                  </div>
+                  <div>
+                    <IonLabel>T</IonLabel>
+                  </div>
+                  <div>
+                    <IonLabel>Q</IonLabel>
+                  </div>
+                  <div>
+                    <IonLabel>Q</IonLabel>
+                  </div>
+                  <div>
+                    <IonLabel>S</IonLabel>
+                  </div>
+                  <div>
+                    <IonLabel>S</IonLabel>
+                  </div>
+                </div>
+                <div className="grid grid-cols-7 gap-4">
+                  <div>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Domingo", e.target.checked)
+                      }
+                    ></IonCheckbox>
+                  </div>
+                  <div>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Segunda", e.target.checked)
+                      }
+                    ></IonCheckbox>
+                  </div>
+                  <div>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Terça", e.target.checked)
+                      }
+                    ></IonCheckbox>
+                  </div>
+                  <div>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Quarta", e.target.checked)
+                      }
+                    ></IonCheckbox>
+                  </div>
+                  <div>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Quinta", e.target.checked)
+                      }
+                    ></IonCheckbox>
+                  </div>
+                  <div>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Sexta", e.target.checked)
+                      }
+                    ></IonCheckbox>
+                  </div>
+                  <div>
+                    <IonCheckbox
+                      onIonChange={(e) =>
+                        setDayOfWeekSeleted("Sábado", e.target.checked)
+                      }
+                    ></IonCheckbox>
+                  </div>
+                </div>
+              </div>
+              <div className="mb-3">
+                <IonItem className="mb-3">
+                  <IonLabel>Dia Específico ?</IonLabel>
+                  <IonCheckbox
+                    onIonChange={(event) =>
+                      event.detail.checked
+                        ? setSpecificDate(true)
+                        : setSpecificDate(false)
+                    }
+                  ></IonCheckbox>
+                </IonItem>
+                <IonDatetime
+                  min={minDate.toISOString()}
+                  presentation="date"
+                  hidden={!specificDate}
+                  value={specificDay}
+                  onIonChange={(e) =>
+                    setSpecificDay(
+                      typeof e.detail.value === "string" ? e.detail.value : ""
+                    )
+                  }
+                ></IonDatetime>
+              </div>
+              <div className="flex justify-between mb-3">
+                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
+                  <IonIcon icon={arrowBack} />
+                </IonButton>
+                <IonButton onClick={() => onBtnClicked("next")} color="primary">
+                  <IonIcon icon={arrowForward} />
+                </IonButton>
+              </div>
+            </div>
+          </IonSlide>
+          <IonSlide>
+            <div className="m-3">
+              <h1 className="mb-3 text-xl">
+                Qual o horário estimado de ínicio do itinerário ?
+              </h1>
+              <div className="mb-3">
+                <IonDatetime
+                  presentation="time"
+                  value={departureTime}
+                  onIonChange={(event) =>
+                    setDepartureTime(
+                      typeof event.detail.value === "string"
+                        ? event.detail.value
+                        : "00:00"
+                    )
+                  }
+                ></IonDatetime>
+              </div>
+              <div className="flex justify-between mb-3">
+                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
+                  <IonIcon icon={arrowBack} />
+                </IonButton>
+                <IonButton onClick={() => onBtnClicked("next")} color="primary">
+                  <IonIcon icon={arrowForward} />
+                </IonButton>
+              </div>
+              <div className="flex items-center">
+                <IonIcon
+                  icon={informationCircle}
+                  size="large"
+                  className="mr-4"
+                />
+                <small className="text-gray-500">
+                  Não se preocupe, é apenas um horário estimado.
+                </small>
+              </div>
+            </div>
+          </IonSlide>
+          <IonSlide>
+            <div className="m-3">
+              <h1 className="mb-3 text-xl">
+                Qual o horário estimado de chegado no último destino do
+                itinerário ?
+              </h1>
+              <div className="mb-3">
+                <IonDatetime
+                  presentation="time"
+                  value={arrivalTime}
+                  onIonChange={(event) =>
+                    setArrivalTime(
+                      typeof event.detail.value === "string"
+                        ? event.detail.value
+                        : "00:00"
+                    )
+                  }
+                ></IonDatetime>
+              </div>
+              <div className="flex justify-between mb-3">
+                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
+                  <IonIcon icon={arrowBack} />
+                </IonButton>
+                <IonButton onClick={() => onBtnClicked("next")} color="primary">
+                  <IonIcon icon={arrowForward} />
+                </IonButton>
+              </div>
+              <div className="flex items-center">
+                <IonIcon
+                  icon={informationCircle}
+                  size="large"
+                  className="mr-4"
+                />
+                <small className="text-gray-500">
+                  Não se preocupe, é apenas um horário estimado.
+                </small>
+              </div>
+            </div>
+          </IonSlide>
+          <IonSlide>
+            <div className="m-3">
+              <h1 className="mb-3 text-xl">
                 Digite o endereço de onde você iniciará a rota do itinerário
               </h1>
               <div className="flex items-center mb-3">
@@ -601,198 +837,6 @@ export default function EditarItinerario() {
           <IonSlide>
             <div className="m-3">
               <h1 className="mb-3 text-xl">
-                Escolha o(s) dia(s) da semana ou um dia específico que o
-                itinerário será realizado
-              </h1>
-              <div hidden={specificDate} className="mb-3">
-                <div className="grid grid-cols-7 gap-4">
-                  <div>
-                    <IonLabel>D</IonLabel>
-                  </div>
-                  <div>
-                    <IonLabel>S</IonLabel>
-                  </div>
-                  <div>
-                    <IonLabel>T</IonLabel>
-                  </div>
-                  <div>
-                    <IonLabel>Q</IonLabel>
-                  </div>
-                  <div>
-                    <IonLabel>Q</IonLabel>
-                  </div>
-                  <div>
-                    <IonLabel>S</IonLabel>
-                  </div>
-                  <div>
-                    <IonLabel>S</IonLabel>
-                  </div>
-                </div>
-                <div className="grid grid-cols-7 gap-4">
-                  <div>
-                    <IonCheckbox
-                      onIonChange={(e) =>
-                        setDayOfWeekSeleted("Domingo", e.target.checked)
-                      }
-                    ></IonCheckbox>
-                  </div>
-                  <div>
-                    <IonCheckbox
-                      onIonChange={(e) =>
-                        setDayOfWeekSeleted("Segunda", e.target.checked)
-                      }
-                    ></IonCheckbox>
-                  </div>
-                  <div>
-                    <IonCheckbox
-                      onIonChange={(e) =>
-                        setDayOfWeekSeleted("Terça", e.target.checked)
-                      }
-                    ></IonCheckbox>
-                  </div>
-                  <div>
-                    <IonCheckbox
-                      onIonChange={(e) =>
-                        setDayOfWeekSeleted("Quarta", e.target.checked)
-                      }
-                    ></IonCheckbox>
-                  </div>
-                  <div>
-                    <IonCheckbox
-                      onIonChange={(e) =>
-                        setDayOfWeekSeleted("Quinta", e.target.checked)
-                      }
-                    ></IonCheckbox>
-                  </div>
-                  <div>
-                    <IonCheckbox
-                      onIonChange={(e) =>
-                        setDayOfWeekSeleted("Sexta", e.target.checked)
-                      }
-                    ></IonCheckbox>
-                  </div>
-                  <div>
-                    <IonCheckbox
-                      onIonChange={(e) =>
-                        setDayOfWeekSeleted("Sábado", e.target.checked)
-                      }
-                    ></IonCheckbox>
-                  </div>
-                </div>
-              </div>
-              <div className="mb-3">
-                <IonItem className="mb-3">
-                  <IonLabel>Dia Específico ?</IonLabel>
-                  <IonCheckbox
-                    onIonChange={(event) =>
-                      event.detail.checked
-                        ? setSpecificDate(true)
-                        : setSpecificDate(false)
-                    }
-                  ></IonCheckbox>
-                </IonItem>
-                <IonDatetime
-                  min={minDate.toISOString()}
-                  presentation="date"
-                  hidden={!specificDate}
-                  value={specificDay}
-                  onIonChange={(e) =>
-                    setSpecificDay(
-                      typeof e.detail.value === "string" ? e.detail.value : ""
-                    )
-                  }
-                ></IonDatetime>
-              </div>
-              <div className="flex justify-between mb-3">
-                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
-                  <IonIcon icon={arrowBack} />
-                </IonButton>
-                <IonButton onClick={() => onBtnClicked("next")} color="primary">
-                  <IonIcon icon={arrowForward} />
-                </IonButton>
-              </div>
-            </div>
-          </IonSlide>
-          <IonSlide>
-            <div className="m-3">
-              <h1 className="mb-3 text-xl">
-                Qual o horário estimado de ínicio do itinerário ?
-              </h1>
-              <div className="mb-3">
-                <IonDatetime
-                  presentation="time"
-                  value={departureTime}
-                  onIonChange={(event) =>
-                    setDepartureTime(
-                      typeof event.detail.value === "string"
-                        ? event.detail.value
-                        : "00:00"
-                    )
-                  }
-                ></IonDatetime>
-              </div>
-              <div className="flex justify-between mb-3">
-                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
-                  <IonIcon icon={arrowBack} />
-                </IonButton>
-                <IonButton onClick={() => onBtnClicked("next")} color="primary">
-                  <IonIcon icon={arrowForward} />
-                </IonButton>
-              </div>
-              <div className="flex items-center">
-                <IonIcon
-                  icon={informationCircle}
-                  size="large"
-                  className="mr-4"
-                />
-                <small className="text-gray-500">
-                  Não se preocupe, é apenas um horário estimado.
-                </small>
-              </div>
-            </div>
-          </IonSlide>
-          <IonSlide>
-            <div className="m-3">
-              <h1 className="mb-3 text-xl">
-                Qual o horário estimado de chegado no último destino do
-                itinerário ?
-              </h1>
-              <div className="mb-3">
-                <IonDatetime
-                  presentation="time"
-                  value={arrivalTime}
-                  onIonChange={(event) =>
-                    setArrivalTime(
-                      typeof event.detail.value === "string"
-                        ? event.detail.value
-                        : "00:00"
-                    )
-                  }
-                ></IonDatetime>
-              </div>
-              <div className="flex justify-between mb-3">
-                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
-                  <IonIcon icon={arrowBack} />
-                </IonButton>
-                <IonButton onClick={() => onBtnClicked("next")} color="primary">
-                  <IonIcon icon={arrowForward} />
-                </IonButton>
-              </div>
-              <div className="flex items-center">
-                <IonIcon
-                  icon={informationCircle}
-                  size="large"
-                  className="mr-4"
-                />
-                <small className="text-gray-500">
-                  Não se preocupe, é apenas um horário estimado.
-                </small>
-              </div>
-            </div>
-          </IonSlide>
-          <IonSlide>
-            <div className="m-3">
-              <h1 className="mb-3 text-xl">
                 Preencha as informações de pagamento
               </h1>
               <IonLabel>Valor cobrado mensalmente</IonLabel>
@@ -868,50 +912,6 @@ export default function EditarItinerario() {
                     destino.
                   </b>
                 </small>
-              </div>
-            </div>
-          </IonSlide>
-          <IonSlide>
-            <div className="m-3">
-              <h1 className="mb-3 text-xl">
-                Escolha o veículo que será utilizado no itinerário
-              </h1>
-              <div className="mb-3">
-                <IonSelect
-                  interface="action-sheet"
-                  placeholder="Selecione o veículo"
-                  onIonChange={(event) => setVan(event.detail.value)}
-                  className="w-screen"
-                >
-                  {vans ? (
-                    vans.map((van, index) => {
-                      return (
-                        <IonSelectOption key={index} value={van.plate}>
-                          {van.brand +
-                            " - " +
-                            van.model +
-                            " | Placa: " +
-                            van.plate}
-                        </IonSelectOption>
-                      );
-                    })
-                  ) : (
-                    <></>
-                  )}
-                </IonSelect>
-              </div>
-              <div className="flex justify-between mb-3">
-                <IonButton onClick={() => onBtnClicked("prev")} color="primary">
-                  <IonIcon icon={arrowBack} />
-                </IonButton>
-                <IonButton
-                  ref={nextButton4}
-                  disabled
-                  onClick={() => onBtnClicked("next")}
-                  color="primary"
-                >
-                  <IonIcon icon={arrowForward} />
-                </IonButton>
               </div>
             </div>
           </IonSlide>
