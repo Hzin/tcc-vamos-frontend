@@ -27,7 +27,7 @@ const Buscas: React.FC = () => {
         </IonCard>
 
         <IonCard button class="cardItem" onClick={ () => history.push({ pathname: "/buscar/passageiro"}) }>
-          <img alt="" src="https://aqwra1nnpxg1d7ppd3phnnll-wpengine.netdna-ssl.com/wp-content/uploads/2017/10/pexels-mentatdgt-1399282-1024x683.jpg" />
+          <img alt="" src="https://img3.stockfresh.com/files/d/dolgachov/m/60/8590463_stock-photo-group-of-happy-passengers-in-travel-bus.jpg" />
           <IonCardHeader>
             <IonCardTitle>Buscar passageiros</IonCardTitle>
           </IonCardHeader>
