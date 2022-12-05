@@ -116,6 +116,8 @@ const ListaItinerarios: React.FC = () => {
     searchesService.create({
       latitude_from: props.searchData.lat_origin,
       longitude_from: props.searchData.lng_origin,
+      latitude_to: props.searchData.lat_destination,
+      longitude_to: props.searchData.lng_destination,
       address_to: props.searchData.formatted_address_destination
     }).then(() => {
       setMessageToast("Alerta criado com sucesso!");

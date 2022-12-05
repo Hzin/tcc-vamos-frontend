@@ -15,6 +15,8 @@ export async function list(): Promise<any[]> {
 export interface CreateBody {
   latitude_from: number;
   longitude_from: number;
+  latitude_to: number;
+  longitude_to: number;
   address_to: string;
 }
 
