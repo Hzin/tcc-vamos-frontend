@@ -54,7 +54,7 @@ export default function Rota() {
       <IonContent fullscreen>
         {passengers.length !== 0 ? (
           passengers.map((passenger, index) => {
-            if (passenger.attendance_lists[0]?.status === "CONFIRMED") {
+            if (passenger.attendance_lists[0]?.status === "CONFIRMED" || passenger.attendance_lists[0]?.status == null) {
               return (
                 <IonCard key={index}>
                   <IonCardHeader>
